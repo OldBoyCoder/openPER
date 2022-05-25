@@ -1,4 +1,5 @@
 ﻿using Microsoft.Data.Sqlite;
+using Microsoft.Extensions.Caching.Memory;
 using openPER.Interfaces;
 using openPER.Models;
 using System;
@@ -8,6 +9,11 @@ namespace openPER.Repositories
     public class Release20Repository : IRepository
 
     {
+        private readonly IMemoryCache _cache;
+        public Release20Repository(IMemoryCache cache)
+        {
+            _cache = cache;
+        }
         public TableViewModel GetTable(string makeCode, string modelCode, string catalogueCode, string groupCode, string subGroupCode, string languageCode)
         {
             var t = new TableViewModel();
@@ -23,19 +29,25 @@ namespace openPER.Repositories
 
         private string GetCatalogueDescription(string makeCode, string modelCode, string catalogueCode, SqliteConnection connection)
         {
-            var command = connection.CreateCommand();
-            command.CommandText = @"SELECT CMD_DSC FROM COMM_MODELS WHERE MOD_COD = $modelCode AND CAT_COD = $catalogueCode ";
-            command.Parameters.AddWithValue("$modelCode", modelCode);
-            command.Parameters.AddWithValue("$catalogueCode", catalogueCode);
-
-            using (var reader = command.ExecuteReader())
+            var cacheKeys = new { type = "CAT", k1 = modelCode, k2 = catalogueCode };
+            if (!_cache.TryGetValue(cacheKeys, out string rc))
             {
-                while (reader.Read())
+                var command = connection.CreateCommand();
+                command.CommandText = @"SELECT CMD_DSC FROM COMM_MODELS WHERE MOD_COD = $modelCode AND CAT_COD = $catalogueCode ";
+                command.Parameters.AddWithValue("$modelCode", modelCode);
+                command.Parameters.AddWithValue("$catalogueCode", catalogueCode);
+
+                using (var reader = command.ExecuteReader())
                 {
-                    return reader.GetString(0);
+                    while (reader.Read())
+                    {
+                        rc = reader.GetString(0);
+                    }
                 }
+                var cacheEntryOptions = new MemoryCacheEntryOptions().SetSlidingExpiration(TimeSpan.FromSeconds(10));
+                _cache.Set(cacheKeys, rc, cacheEntryOptions);
             }
-            return "";
+            return rc;
         }
 
         private static string GetMakeDescription(string makeCode, SqliteConnection connection)
