@@ -1,0 +1,25 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 17
+VisualStudioVersion = 17.2.32519.379
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "openPER", "c:\dev\openPER\openPER\openPER.csproj", "{D39418FD-FB3D-458B-A4F6-56D0871B20B7}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{D39418FD-FB3D-458B-A4F6-56D0871B20B7}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{D39418FD-FB3D-458B-A4F6-56D0871B20B7}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{D39418FD-FB3D-458B-A4F6-56D0871B20B7}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{D39418FD-FB3D-458B-A4F6-56D0871B20B7}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {37D593FA-7967-451D-9448-3E5EF86EFD0A}
+	EndGlobalSection
+EndGlobal
