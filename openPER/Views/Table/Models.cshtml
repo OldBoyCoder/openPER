@@ -1,0 +1,33 @@
+﻿@model IEnumerable<openPER.Models.ModelViewModel>
+
+@{
+    ViewData["Title"] = "Models";
+}
+
+<h1>Models</h1>
+
+<table class="table">
+    <thead>
+        <tr>
+            <th>
+                @Html.DisplayNameFor(model => model.Code)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Description)
+            </th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+@foreach (var item in Model) {
+        <tr>
+            <td>
+                @Html.DisplayFor(modelItem => item.Code)
+            </td>
+            <td>
+                @Html.ActionLink(item.Description, "Catalogues", new {Make=item.MakeCode, Model=item.Code})
+            </td>
+        </tr>
+}
+    </tbody>
+</table>
