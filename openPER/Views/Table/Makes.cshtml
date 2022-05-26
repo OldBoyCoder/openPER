@@ -1,0 +1,28 @@
+﻿@model IEnumerable<openPER.Models.MakeViewModel>
+
+@{
+    ViewData["Title"] = "Makes";
+}
+
+<h1>Makes</h1>
+
+<table class="table">
+    <thead>
+        <tr>
+            <th>
+                @Html.DisplayNameFor(model => model.Description)
+            </th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+@foreach (var item in Model) {
+        <tr>
+            <td>
+                @Html.ActionLink(item.Description, "Models", new {Make=item.Code})
+            </td>
+
+        </tr>
+}
+    </tbody>
+</table>

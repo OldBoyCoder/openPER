@@ -35,6 +35,32 @@ namespace openPER.Repositories
             }
             return t;
         }
+        public List<MakeViewModel> GetAllMakes()
+        {
+            var rc = new List<MakeViewModel>();
+            using (var connection = new SqliteConnection(@"Data Source=C:\Temp\ePerOutput\eperRelease20.db"))
+            {
+                connection.Open();
+                var command = connection.CreateCommand();
+                command.CommandText = @"SELECT MK_COD, MK_DSC FROM MAKES ORDER BY MK_DSC ";
+
+                using (var reader = command.ExecuteReader())
+                {
+                    while (reader.Read())
+                    {
+                        var m = new MakeViewModel
+                        {
+                            Code = reader.GetString(0),
+                            Description = reader.GetString(1)
+                        };
+                        rc.Add(m);
+                    }
+                }
+
+            }
+            return rc;
+
+        }
 
         private List<int> GetDrawingNumbers(string catalogueCode, int groupCode, int subGroupCode, int sgsCode, SqliteConnection connection)
         {
@@ -191,6 +217,62 @@ namespace openPER.Repositories
                 }
             }
             return "";
+        }
+
+        public List<ModelViewModel> GetAllModels(string makeCode)
+        {
+            var rc = new List<ModelViewModel>();
+            using (var connection = new SqliteConnection(@"Data Source=C:\Temp\ePerOutput\eperRelease20.db"))
+            {
+                connection.Open();
+                var command = connection.CreateCommand();
+                command.CommandText = @"SELECT CMG_COD, CMG_DSC FROM COMM_MODGRP WHERE MK2_COD = $makeCode  ORDER BY CMG_SORT_KEY ";
+                command.Parameters.AddWithValue("$makeCode", makeCode);
+
+                using (var reader = command.ExecuteReader())
+                {
+                    while (reader.Read())
+                    {
+                        var m = new ModelViewModel
+                        {
+                            Code = reader.GetString(0),
+                            Description = reader.GetString(1),
+                            MakeCode = makeCode
+                        };
+                        rc.Add(m);
+                    }
+                }
+
+            }
+            return rc;
+        }
+
+        public List<CatalogueViewModel> GetAllCatalogues(string makeCode, string modelCode)
+        {
+            var rc = new List<CatalogueViewModel>();
+            using (var connection = new SqliteConnection(@"Data Source=C:\Temp\ePerOutput\eperRelease20.db"))
+            {
+                connection.Open();
+                var command = connection.CreateCommand();
+                command.CommandText = @"SELECT CAT_COD, CAT_DSC FROM CATALOGUES WHERE MK2_COD = $makeCode AND CMG_COD = $modelCode  ORDER BY CAT_SORT_KEY ";
+                command.Parameters.AddWithValue("$makeCode", makeCode);
+                command.Parameters.AddWithValue("$modelCode", modelCode);
+
+                using (var reader = command.ExecuteReader())
+                {
+                    while (reader.Read())
+                    {
+                        var m = new CatalogueViewModel
+                        {
+                            Code = reader.GetString(0),
+                            Description = reader.GetString(1)
+                        };
+                        rc.Add(m);
+                    }
+                }
+
+            }
+            return rc;
         }
     }
 }
