@@ -78,7 +78,7 @@
         </dd>
     </dl>
     <p>
-        <img src="@Url.Action("Image", "Table", new {Make=Model.MakeCode, Model=Model.ModelCode, Catalogue=Model.CatalogueCode, Group = Model.GroupCode, SubGroup = Model.SubGroupCode, SgsCode = Model.SgsCode, Drawing=1})"></img>
+        <img src="@Url.Action("Image", "Table", new {Make=Model.MakeCode, Model=Model.ModelCode, Catalogue=Model.CatalogueCode, Group = Model.GroupCode, SubGroup = Model.SubGroupCode, SgsCode = Model.SgsCode, Drawing=Model.CurrentDrawing})"></img>
     </p>
     <table>
         @foreach (var item in Model.Parts)
@@ -92,8 +92,14 @@
             </tr>
         }
     </table>
-</div>
-<div>
-    @Html.ActionLink("Edit", "Edit", new { /* id = Model.PrimaryKey */ }) |
-    <a asp-action="Index">Back to List</a>
+    @foreach (var drawing in Model.DrawingNumbers)
+    {
+        <p>
+            <a href="@Url.Action("Details", "Table",  new {Make=Model.MakeCode, Model=Model.ModelCode, Catalogue=Model.CatalogueCode, Group = Model.GroupCode, SubGroup = Model.SubGroupCode, SgsCode = Model.SgsCode, Drawing=drawing})">
+    <img src="@Url.Action("Thumbnail", "Table", new {Make=Model.MakeCode, Model=Model.ModelCode, Catalogue=Model.CatalogueCode, Group = Model.GroupCode, SubGroup = Model.SubGroupCode, SgsCode = Model.SgsCode, Drawing=drawing})">
+    </a>
+    </p>
+        
+    }
+
 </div>

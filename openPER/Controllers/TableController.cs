@@ -23,7 +23,7 @@ namespace openPER.Controllers
         [Route("Table/Details/{Make}/{Model}/{Catalogue}/{Group}/{Subgroup}/{SgsCode}/{Drawing}")]
         public ActionResult Details(string make, string model, string catalogue, int group, int subgroup, int sgsCode, int drawing)
         {
-            var x = rep.GetTable(make, model, catalogue, group, subgroup, sgsCode, "3");
+            var x = rep.GetTable(make, model, catalogue, group, subgroup, sgsCode, drawing, "3");
             x.MakeCode = make;
             x.ModelCode = model;
             x.CatalogueCode = catalogue;
