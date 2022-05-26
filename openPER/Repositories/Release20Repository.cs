@@ -15,7 +15,7 @@ namespace openPER.Repositories
         {
             _cache = cache;
         }
-        public TableViewModel GetTable(string makeCode, string modelCode, string catalogueCode, int groupCode, int subGroupCode, int sgsCode, string languageCode)
+        public TableViewModel GetTable(string makeCode, string modelCode, string catalogueCode, int groupCode, int subGroupCode, int sgsCode, int drawingNumber, string languageCode)
         {
             var t = new TableViewModel();
             using (var connection = new SqliteConnection(@"Data Source=C:\Temp\ePerOutput\eperRelease20.db"))
@@ -28,10 +28,35 @@ namespace openPER.Repositories
                 t.SubGroupDesc = GetSubGroupDescription(groupCode,subGroupCode, languageCode, connection);
                 // TODO Add variant information to sgs description
                 t.SgsDesc = GetSubGroupDescription(groupCode, subGroupCode, languageCode, connection);
-                t.Parts = GetTableParts(catalogueCode, groupCode, subGroupCode, sgsCode, 1,languageCode, connection);
+                t.Parts = GetTableParts(catalogueCode, groupCode, subGroupCode, sgsCode, drawingNumber,languageCode, connection);
+                t.DrawingNumbers = GetDrawingNumbers(catalogueCode, groupCode, subGroupCode, sgsCode, connection);
+                t.CurrentDrawing = drawingNumber;
+
             }
             return t;
         }
+
+        private List<int> GetDrawingNumbers(string catalogueCode, int groupCode, int subGroupCode, int sgsCode, SqliteConnection connection)
+        {
+            var rc = new List<int>();
+            var command = connection.CreateCommand();
+            command.CommandText = @"SELECT DISTINCT DRW_NUM FROM TBDATA  WHERE SGS_COD = $sgsCode AND SGRP_COD = $subGroupCode AND GRP_COD = $groupCode AND CAT_COD = $catalogueCode ";
+            command.Parameters.AddWithValue("$sgsCode", sgsCode);
+            command.Parameters.AddWithValue("$subGroupCode", subGroupCode);
+            command.Parameters.AddWithValue("$groupCode", groupCode);
+            command.Parameters.AddWithValue("$catalogueCode", catalogueCode);
+
+            using (var reader = command.ExecuteReader())
+            {
+                while (reader.Read())
+                {
+                    rc.Add(reader.GetInt32(0));
+                }
+            }
+            return rc;
+
+        }
+
         private List<TablePartViewModel> GetTableParts(string catalogueCode, int groupCode, int subGroupCode, int sgsCode, int drawingNumber, string languageCode, SqliteConnection connection)
         {
             var parts = new List<TablePartViewModel>();

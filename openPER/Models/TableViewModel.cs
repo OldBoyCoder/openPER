@@ -16,9 +16,11 @@ namespace openPER.Models
         public string GroupDesc { get; set; }
         public string SubGroupDesc { get; set; }
         public string SgsDesc { get; set; }
+        public List<int> DrawingNumbers { get; set; }
         public List<TablePartViewModel> Parts { get; set; }
         public List<TablePartViewModel> Cliches { get; set; }
         public List<TablePartViewModel> Kits { get; set; }
+        public int CurrentDrawing { get; set; }
 
         public  string Path
         {
