@@ -7,9 +7,9 @@ namespace openPER.Models
         public string MakeCode { get; set; }    
         public string ModelCode { get; set; }
         public string CatalogueCode { get; set; }
-        public string GroupCode { get; set; }
-        public string SubGroupCode { get; set; }
-        public string SgsCode { get; set; }
+        public int GroupCode { get; set; }
+        public int SubGroupCode { get; set; }
+        public int SgsCode { get; set; }
         public string ModelDesc { get; set; }
         public string MakeDesc { get; set; }
         public string CatalogueDesc { get; set; }
