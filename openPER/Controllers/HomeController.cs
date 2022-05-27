@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
+using openPER.Interfaces;
 using openPER.Models;
 using System;
 using System.Collections.Generic;
@@ -12,15 +13,18 @@ namespace openPER.Controllers
     public class HomeController : Controller
     {
         private readonly ILogger<HomeController> _logger;
+        private IRepository rep;
 
-        public HomeController(ILogger<HomeController> logger)
+
+        public HomeController(ILogger<HomeController> logger, IRepository repository)
         {
             _logger = logger;
+            rep = repository;
         }
 
         public IActionResult Index()
         {
-            return View();
+            return View(rep.GetAllMakes());
         }
 
         public IActionResult Privacy()

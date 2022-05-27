@@ -247,7 +247,7 @@ namespace openPER.Repositories
             return rc;
         }
 
-        public List<CatalogueViewModel> GetAllCatalogues(string makeCode, string modelCode)
+        public List<CatalogueViewModel> GetAllCatalogues(string makeCode, string modelCode, string languageCode)
         {
             var rc = new List<CatalogueViewModel>();
             using (var connection = new SqliteConnection(@"Data Source=C:\Temp\ePerOutput\eperRelease20.db"))
@@ -273,6 +273,11 @@ namespace openPER.Repositories
                     }
                 }
 
+            }
+            foreach (var item in rc)
+            {
+                // TODO pass through language code
+                item.Groups = GetGroupsForCatalogue(item.Code, languageCode);
             }
             return rc;
         }
@@ -305,6 +310,146 @@ namespace openPER.Repositories
                 }
 
             }
+            foreach (var group in rc)
+            {
+                group.SubGroups = GetSubgroupsForCatalogueGroup(catalogueCode, group.Code, languageCode);
+            }
+            return rc;
+        }
+
+        private List<SubGroupViewModel> GetSubgroupsForCatalogueGroup(string catalogueCode, int groupCode, string languageCode)
+        {
+            var rc = new List<SubGroupViewModel>();
+            using (var connection = new SqliteConnection(@"Data Source=C:\Temp\ePerOutput\eperRelease20.db"))
+            {
+                connection.Open();
+                var command = connection.CreateCommand();
+                command.CommandText = @"select distinct T.SGRP_COD, SGRP_DSC FROM TBDATA T
+                            JOIN SUBGROUPS_DSC G ON G.GRP_COD = T.GRP_COD AND G.SGRP_COD = T.SGRP_COD AND G.LNG_COD = $languageCode
+                            WHERE CAT_COD = $catalogueCode AND T.GRP_COD = $groupCode
+                            order by T.SGRP_COD";
+                command.Parameters.AddWithValue("$catalogueCode", catalogueCode);
+                command.Parameters.AddWithValue("$groupCode", groupCode);
+                command.Parameters.AddWithValue("$languageCode", languageCode);
+
+                using (var reader = command.ExecuteReader())
+                {
+                    while (reader.Read())
+                    {
+                        var m = new SubGroupViewModel
+                        {
+                            Code = reader.GetInt32(0),
+                            Description = reader.GetString(1)
+                        };
+                        rc.Add(m);
+                    }
+                }
+
+            }
+            foreach (var item in rc)
+            {
+                item.SgsGroups = GetSgsGroupsForCatalogueGroup(catalogueCode, groupCode, item.Code, languageCode);
+            }
+            return rc;
+        }
+        private List<SgsViewModel> GetSgsGroupsForCatalogueGroup(string catalogueCode, int groupCode, int subGroupCode, string languageCode)
+        {
+            var rc = new List<SgsViewModel>();
+            using (var connection = new SqliteConnection(@"Data Source=C:\Temp\ePerOutput\eperRelease20.db"))
+            {
+                connection.Open();
+                var command = connection.CreateCommand();
+                command.CommandText = @"select distinct T.SGS_COD FROM TBDATA T
+                            WHERE CAT_COD = $catalogueCode AND T.GRP_COD = $groupCode AND T.SGRP_COD = $subGroupCode
+                            order by T.SGS_COD";
+                command.Parameters.AddWithValue("$catalogueCode", catalogueCode);
+                command.Parameters.AddWithValue("$groupCode", groupCode);
+                command.Parameters.AddWithValue("$subGroupCode", subGroupCode);
+                command.Parameters.AddWithValue("$languageCode", languageCode);
+
+                using (var reader = command.ExecuteReader())
+                {
+                    while (reader.Read())
+                    {
+                        var m = new SgsViewModel
+                        {
+                            Code = reader.GetInt32(0),
+                            
+                        };
+                        m.Narrative = GetSgsNarrative(catalogueCode, groupCode, subGroupCode, m.Code, languageCode);
+                        rc.Add(m);
+                    }
+                }
+
+            }
+            return rc;
+        }
+        private List<string> GetSgsNarrative(string catalogueCode, int groupCode, int subGroupCode, int sgsCode, string languageCode)
+        {
+            var rc = new List<string>();
+            using (var connection = new SqliteConnection(@"Data Source=C:\Temp\ePerOutput\eperRelease20.db"))
+            {
+                connection.Open();
+                // Variants
+                var command = connection.CreateCommand();
+                command.CommandText = @"select V.VMK_TYPE,V.VMK_COD,VMK_DSC from SGS_VAL S
+                        JOIN VMK_DSC V ON S.VMK_TYPE = V.VMK_TYPE AND S.VMK_COD = V.VMK_COD AND S.CAT_COD = V.CAT_COD
+                        where S.CAT_COD = $catalogueCode AND GRP_COD = $groupCode AND SGRP_COD = $subGroupCode AND SGS_COD = $sgsCode AND LNG_COD = $languageCode
+                        ";
+                command.Parameters.AddWithValue("$catalogueCode", catalogueCode);
+                command.Parameters.AddWithValue("$groupCode", groupCode);
+                command.Parameters.AddWithValue("$subGroupCode", subGroupCode);
+                command.Parameters.AddWithValue("$sgsCode", sgsCode);
+                command.Parameters.AddWithValue("$languageCode", languageCode);
+
+                using (var reader = command.ExecuteReader())
+                {
+                    while (reader.Read())
+                    {
+                        rc.Add(reader.GetString(0) + reader.GetString(1) + " " + reader.GetString(2));
+                    }
+                }
+                // Modifications
+                command = connection.CreateCommand();
+                command.CommandText = @"select SGSMOD_CD,S.MDF_COD,MDF_DSC from SGS_MOD S
+                        JOIN MODIF_DSC M ON M.MDF_COD = S.MDF_COD 
+                        where S.CAT_COD = $catalogueCode AND GRP_COD = $groupCode AND SGRP_COD = $subGroupCode AND SGS_COD = $sgsCode AND LNG_COD = $languageCode
+                        ";
+                command.Parameters.AddWithValue("$catalogueCode", catalogueCode);
+                command.Parameters.AddWithValue("$groupCode", groupCode);
+                command.Parameters.AddWithValue("$subGroupCode", subGroupCode);
+                command.Parameters.AddWithValue("$sgsCode", sgsCode);
+                command.Parameters.AddWithValue("$languageCode", languageCode);
+
+                using (var reader = command.ExecuteReader())
+                {
+                    while (reader.Read())
+                    {
+                        rc.Add(reader.GetString(0) + reader.GetString(1) + " " + reader.GetString(2));
+                    }
+                }
+                // Options
+                command = connection.CreateCommand();
+                command.CommandText = @"select O.OPTK_TYPE,O.OPTK_COD,OPTK_DSC from SGS_OPT S
+                        JOIN OPTKEYS_DSC O ON O.OPTK_TYPE = S.OPTK_TYPE AND O.OPTK_COD = S.OPTK_COD 
+                        where S.CAT_COD = $catalogueCode AND GRP_COD = $groupCode AND SGRP_COD = $subGroupCode AND SGS_COD = $sgsCode AND LNG_COD = $languageCode
+                        ";
+                command.Parameters.AddWithValue("$catalogueCode", catalogueCode);
+                command.Parameters.AddWithValue("$groupCode", groupCode);
+                command.Parameters.AddWithValue("$subGroupCode", subGroupCode);
+                command.Parameters.AddWithValue("$sgsCode", sgsCode);
+                command.Parameters.AddWithValue("$languageCode", languageCode);
+
+                using (var reader = command.ExecuteReader())
+                {
+                    while (reader.Read())
+                    {
+                        rc.Add(reader.GetString(0) + reader.GetString(1) + " " + reader.GetString(2));
+                    }
+                }
+
+            }
+
             return rc;
         }
     }

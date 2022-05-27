@@ -43,15 +43,15 @@ namespace openPER.Controllers
         {
             return View(rep.GetAllModels(make));
         }
-        [Route("Table/Catalogues/{Make}/{Model}")]
-        public ActionResult Catalogues(string make, string model)
+        [Route("Table/Catalogues/{Make}/{Model}/{Language}")]
+        public ActionResult Catalogues(string make, string model, string language)
         {
-            return View(rep.GetAllCatalogues(make, model));
+            return View(rep.GetAllCatalogues(make, model, language));
         }
         [Route("Table/Groups/{Make}/{Model}/{Catalogue}")]
         public ActionResult Groups(string make, string model, string catalogue)
         {
-            return View(rep.GetGroupsForCatalogue(catalogue, "3"));
+            return View(rep.GetGroupsForCatalogue(catalogue, ViewData["Language"].ToString()));
         }
         [Route("Table/Image/{Make}/{Model}/{Catalogue}/{Group}/{Subgroup}/{SgsCode}/{Drawing}")]
         public ActionResult Image(string make, string model, string catalogue, int group, int subgroup, int sgsCode, int drawing)

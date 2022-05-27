@@ -2,6 +2,7 @@
 
 @{
     ViewData["Title"] = "Models";
+    ViewData["Language"] = "3";
 }
 
 <h1>Models</h1>
@@ -25,11 +26,11 @@
                 @Html.DisplayFor(modelItem => item.Code)
             </td>
             <td>
-                @Html.ActionLink(item.Description, "Catalogues", new {Make=item.MakeCode, Model=item.Code})
+                @Html.ActionLink(item.Description, "Catalogues", new {Make=item.MakeCode, Model=item.Code, Language=ViewData["Language"]})
             </td>
         </tr>
 }
     </tbody>
-        <vc:models-widget models=Model></vc:models-widget>
+        <!-- <vc:models-widget models=Model></vc:models-widget>-->
 
 </table>
