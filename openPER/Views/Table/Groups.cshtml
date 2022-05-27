@@ -1,10 +1,10 @@
-﻿@model IEnumerable<openPER.Models.ModelViewModel>
+﻿@model IEnumerable<openPER.Models.GroupViewModel>
 
 @{
-    ViewData["Title"] = "Models";
+    ViewData["Title"] = "Groups";
 }
 
-<h1>Models</h1>
+<h1>Groups</h1>
 
 <table class="table">
     <thead>
@@ -25,11 +25,9 @@
                 @Html.DisplayFor(modelItem => item.Code)
             </td>
             <td>
-                @Html.ActionLink(item.Description, "Catalogues", new {Make=item.MakeCode, Model=item.Code})
+                @Html.DisplayFor(modelItem => item.Description)
             </td>
         </tr>
 }
     </tbody>
-        <vc:models-widget models=Model></vc:models-widget>
-
 </table>

@@ -24,9 +24,10 @@
                 @Html.DisplayFor(modelItem => item.Code)
             </td>
             <td>
-                @Html.DisplayFor(modelItem => item.Description)
+                @Html.ActionLink(item.Description, "Groups", new {Make=item.MakeCode, Model=item.Code, Catalogue=item.Code})
             </td>
         </tr>
 }
     </tbody>
+
 </table>
