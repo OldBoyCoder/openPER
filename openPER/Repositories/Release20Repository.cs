@@ -25,10 +25,10 @@ namespace openPER.Repositories
                 t.ModelDesc = GetModelDescription(makeCode, modelCode, connection);
                 t.CatalogueDesc = GetCatalogueDescription(makeCode, modelCode, catalogueCode, connection);
                 t.GroupDesc = GetGroupDescription(groupCode, languageCode, connection);
-                t.SubGroupDesc = GetSubGroupDescription(groupCode,subGroupCode, languageCode, connection);
+                t.SubGroupDesc = GetSubGroupDescription(groupCode, subGroupCode, languageCode, connection);
                 // TODO Add variant information to sgs description
                 t.SgsDesc = GetSubGroupDescription(groupCode, subGroupCode, languageCode, connection);
-                t.Parts = GetTableParts(catalogueCode, groupCode, subGroupCode, sgsCode, drawingNumber,languageCode, connection);
+                t.Parts = GetTableParts(catalogueCode, groupCode, subGroupCode, sgsCode, drawingNumber, languageCode, connection);
                 t.DrawingNumbers = GetDrawingNumbers(catalogueCode, groupCode, subGroupCode, sgsCode, connection);
                 t.CurrentDrawing = drawingNumber;
 
@@ -164,7 +164,7 @@ namespace openPER.Repositories
 
         private string GetSubGroupDescription(int groupCode, int subGroupCode, string languageCode, SqliteConnection connection)
         {
-            var cacheKeys = new { type = "SUBGROUP", k1 = languageCode, k2 = groupCode, k3=subGroupCode };
+            var cacheKeys = new { type = "SUBGROUP", k1 = languageCode, k2 = groupCode, k3 = subGroupCode };
             if (!_cache.TryGetValue(cacheKeys, out string rc))
             {
                 var command = connection.CreateCommand();
@@ -374,7 +374,7 @@ namespace openPER.Repositories
                         var m = new SgsViewModel
                         {
                             Code = reader.GetInt32(0),
-                            
+
                         };
                         m.Narrative = GetSgsNarrative(catalogueCode, groupCode, subGroupCode, m.Code, languageCode);
                         rc.Add(m);
@@ -387,15 +387,32 @@ namespace openPER.Repositories
         private List<string> GetSgsNarrative(string catalogueCode, int groupCode, int subGroupCode, int sgsCode, string languageCode)
         {
             var rc = new List<string>();
+            var sql = @"select V.VMK_TYPE,V.VMK_COD,VMK_DSC from SGS_VAL S
+                        JOIN VMK_DSC V ON S.VMK_TYPE = V.VMK_TYPE AND S.VMK_COD = V.VMK_COD AND S.CAT_COD = V.CAT_COD
+                        where S.CAT_COD = $catalogueCode AND GRP_COD = $groupCode AND SGRP_COD = $subGroupCode AND SGS_COD = $sgsCode AND LNG_COD = $languageCode
+                        ";
+            AddSgsNarratives(catalogueCode, groupCode, subGroupCode, sgsCode, languageCode, sql, rc);
+            sql = @"select SGSMOD_CD,S.MDF_COD,MDF_DSC from SGS_MOD S
+                        JOIN MODIF_DSC M ON M.MDF_COD = S.MDF_COD 
+                        where S.CAT_COD = $catalogueCode AND GRP_COD = $groupCode AND SGRP_COD = $subGroupCode AND SGS_COD = $sgsCode AND LNG_COD = $languageCode
+                        ";
+            AddSgsNarratives(catalogueCode, groupCode, subGroupCode, sgsCode, languageCode, sql, rc);
+            sql = @"select O.OPTK_TYPE,O.OPTK_COD,OPTK_DSC from SGS_OPT S
+                        JOIN OPTKEYS_DSC O ON O.OPTK_TYPE = S.OPTK_TYPE AND O.OPTK_COD = S.OPTK_COD 
+                        where S.CAT_COD = $catalogueCode AND GRP_COD = $groupCode AND SGRP_COD = $subGroupCode AND SGS_COD = $sgsCode AND LNG_COD = $languageCode
+                        ";
+            AddSgsNarratives(catalogueCode, groupCode, subGroupCode, sgsCode, languageCode, sql, rc);
+
+            return rc;
+        }
+        private void AddSgsNarratives(string catalogueCode, int groupCode, int subGroupCode, int sgsCode, string languageCode, string sql, List<string> narratives)
+        {
             using (var connection = new SqliteConnection(@"Data Source=C:\Temp\ePerOutput\eperRelease20.db"))
             {
                 connection.Open();
                 // Variants
                 var command = connection.CreateCommand();
-                command.CommandText = @"select V.VMK_TYPE,V.VMK_COD,VMK_DSC from SGS_VAL S
-                        JOIN VMK_DSC V ON S.VMK_TYPE = V.VMK_TYPE AND S.VMK_COD = V.VMK_COD AND S.CAT_COD = V.CAT_COD
-                        where S.CAT_COD = $catalogueCode AND GRP_COD = $groupCode AND SGRP_COD = $subGroupCode AND SGS_COD = $sgsCode AND LNG_COD = $languageCode
-                        ";
+                command.CommandText = sql;
                 command.Parameters.AddWithValue("$catalogueCode", catalogueCode);
                 command.Parameters.AddWithValue("$groupCode", groupCode);
                 command.Parameters.AddWithValue("$subGroupCode", subGroupCode);
@@ -406,51 +423,10 @@ namespace openPER.Repositories
                 {
                     while (reader.Read())
                     {
-                        rc.Add(reader.GetString(0) + reader.GetString(1) + " " + reader.GetString(2));
+                        narratives.Add(reader.GetString(0) + reader.GetString(1) + " " + reader.GetString(2));
                     }
                 }
-                // Modifications
-                command = connection.CreateCommand();
-                command.CommandText = @"select SGSMOD_CD,S.MDF_COD,MDF_DSC from SGS_MOD S
-                        JOIN MODIF_DSC M ON M.MDF_COD = S.MDF_COD 
-                        where S.CAT_COD = $catalogueCode AND GRP_COD = $groupCode AND SGRP_COD = $subGroupCode AND SGS_COD = $sgsCode AND LNG_COD = $languageCode
-                        ";
-                command.Parameters.AddWithValue("$catalogueCode", catalogueCode);
-                command.Parameters.AddWithValue("$groupCode", groupCode);
-                command.Parameters.AddWithValue("$subGroupCode", subGroupCode);
-                command.Parameters.AddWithValue("$sgsCode", sgsCode);
-                command.Parameters.AddWithValue("$languageCode", languageCode);
-
-                using (var reader = command.ExecuteReader())
-                {
-                    while (reader.Read())
-                    {
-                        rc.Add(reader.GetString(0) + reader.GetString(1) + " " + reader.GetString(2));
-                    }
-                }
-                // Options
-                command = connection.CreateCommand();
-                command.CommandText = @"select O.OPTK_TYPE,O.OPTK_COD,OPTK_DSC from SGS_OPT S
-                        JOIN OPTKEYS_DSC O ON O.OPTK_TYPE = S.OPTK_TYPE AND O.OPTK_COD = S.OPTK_COD 
-                        where S.CAT_COD = $catalogueCode AND GRP_COD = $groupCode AND SGRP_COD = $subGroupCode AND SGS_COD = $sgsCode AND LNG_COD = $languageCode
-                        ";
-                command.Parameters.AddWithValue("$catalogueCode", catalogueCode);
-                command.Parameters.AddWithValue("$groupCode", groupCode);
-                command.Parameters.AddWithValue("$subGroupCode", subGroupCode);
-                command.Parameters.AddWithValue("$sgsCode", sgsCode);
-                command.Parameters.AddWithValue("$languageCode", languageCode);
-
-                using (var reader = command.ExecuteReader())
-                {
-                    while (reader.Read())
-                    {
-                        rc.Add(reader.GetString(0) + reader.GetString(1) + " " + reader.GetString(2));
-                    }
-                }
-
             }
-
-            return rc;
         }
     }
 }
