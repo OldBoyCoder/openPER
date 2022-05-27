@@ -5,29 +5,35 @@
 }
 
 <h1>Catalogues</h1>
-<table class="table">
-    <thead>
-        <tr>
-            <th>
-                @Html.DisplayNameFor(model => model.Code)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.Description)
-            </th>
-            <th></th>
-        </tr>
-    </thead>
-    <tbody>
-@foreach (var item in Model) {
-        <tr>
-            <td>
-                @Html.DisplayFor(modelItem => item.Code)
-            </td>
-            <td>
-                @Html.ActionLink(item.Description, "Groups", new {Make=item.MakeCode, Model=item.Code, Catalogue=item.Code})
-            </td>
-        </tr>
-}
-    </tbody>
 
-</table>
+@foreach (var item in Model)
+{
+    <details>
+        <summary>@Html.DisplayFor(modelItem => item.Code) @Html.DisplayFor(modelItem => item.Description)</summary>
+        @foreach (var group in item.Groups)
+        {
+            <details>
+                <summary>@Html.DisplayFor(modelItem => group.Code) @Html.DisplayFor(modelItem => group.Description)</summary>
+                <ul>
+                @foreach (var subGroup in group.SubGroups)
+                {
+                    @foreach (var sgsGroup in subGroup.SgsGroups)
+                        {
+                            <li>
+            <a href="@Url.Action("Details", "Table",  new {Make=item.MakeCode, Model=item.ModelCode, Catalogue=item.Code, Group = group.Code, SubGroup = subGroup.Code, SgsCode = sgsGroup.Code, Drawing=1})">
+                                
+                                @group.Code.ToString("000")@subGroup.Code.ToString("00")/@sgsGroup.Code.ToString("00")</a> @Html.DisplayFor(modelItem => subGroup.Description) - 
+                                @foreach (var narr in sgsGroup.Narrative)
+                                {
+                                    @Html.DisplayFor(modelItem => narr)<br/>
+                                }
+                                
+                            </li>
+                        }
+                }
+                </ul>
+            </details>
+        }
+    </details>
+}
+            

@@ -2,10 +2,10 @@
 
 namespace openPER.Models
 {
-    public class GroupViewModel
+    public class SubGroupViewModel
     {
         public int Code { get; set; }
         public string Description { get; set; }
-        public List<SubGroupViewModel> SubGroups { get; set; }
+        public List<SgsViewModel> SgsGroups { get; set; }
     }
 }

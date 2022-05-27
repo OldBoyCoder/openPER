@@ -1,13 +1,34 @@
-﻿@{
+﻿@model IEnumerable<openPER.Models.MakeViewModel>
+@{
     ViewData["Title"] = "Home Page";
 }
 
 <div class="text-center">
+
+
     <h1 class="display-4">Wotcha</h1>
-    <p>Learn about <a href="https://docs.microsoft.com/aspnet/core">building Web apps with ASP.NET Core</a>.</p>
-    <p>See a table <a href="@Url.Action("Details", "Table", new {Make="F", Model="183", Catalogue="PK", Group = "443", SubGroup = "05", SgsCode = "0", Drawing=2})">cHEESE</a></p>
-    <p>
-    <img src="@Url.Action("Thumbnail", "Table", new {Make="F", Model="183", Catalogue="PK", Group = "443", SubGroup = "05", SgsCode = "0", Drawing=2})"> 
-    </p>
+
+<h1>Makes</h1>
+
+<table class="table">
+    <thead>
+        <tr>
+            <th>
+                @Html.DisplayNameFor(model => model.Description)
+            </th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+@foreach (var item in Model) {
+        <tr>
+            <td>
+                @Html.ActionLink(item.Description, "Models", "Table", new {Make=item.Code})
+            </td>
+
+        </tr>
+}
+    </tbody>
+</table>
     	
 </div>
