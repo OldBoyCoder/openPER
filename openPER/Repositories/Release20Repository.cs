@@ -265,6 +265,39 @@ namespace openPER.Repositories
                         var m = new CatalogueViewModel
                         {
                             Code = reader.GetString(0),
+                            Description = reader.GetString(1),
+                            MakeCode = makeCode,
+                            ModelCode = modelCode
+                        };
+                        rc.Add(m);
+                    }
+                }
+
+            }
+            return rc;
+        }
+
+        public List<GroupViewModel> GetGroupsForCatalogue(string catalogueCode, string languageCode)
+        {
+            var rc = new List<GroupViewModel>();
+            using (var connection = new SqliteConnection(@"Data Source=C:\Temp\ePerOutput\eperRelease20.db"))
+            {
+                connection.Open();
+                var command = connection.CreateCommand();
+                command.CommandText = @"select distinct T.GRP_COD, GRP_DSC FROM TBDATA T
+                            JOIN GROUPS_DSC G ON G.GRP_COD = T.GRP_COD AND G.LNG_COD = $languageCode
+                            WHERE CAT_COD = $catalogueCode
+                            order by T.GRP_COD";
+                command.Parameters.AddWithValue("$catalogueCode", catalogueCode);
+                command.Parameters.AddWithValue("$languageCode", languageCode);
+
+                using (var reader = command.ExecuteReader())
+                {
+                    while (reader.Read())
+                    {
+                        var m = new GroupViewModel
+                        {
+                            Code = reader.GetInt32(0),
                             Description = reader.GetString(1)
                         };
                         rc.Add(m);

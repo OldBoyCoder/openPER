@@ -9,5 +9,6 @@ namespace openPER.Interfaces
         List<MakeViewModel> GetAllMakes();
         List<ModelViewModel> GetAllModels(string make);
         List<CatalogueViewModel> GetAllCatalogues(string make, string model);
+        List<GroupViewModel> GetGroupsForCatalogue(string catalogueCode, string languageCode);
     }
 }
