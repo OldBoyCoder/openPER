@@ -30,6 +30,7 @@ namespace openPER.Repositories
                 t.SgsDesc = GetSubGroupDescription(groupCode, subGroupCode, languageCode, connection);
                 t.Parts = GetTableParts(catalogueCode, groupCode, subGroupCode, sgsCode, drawingNumber, languageCode, connection);
                 t.DrawingNumbers = GetDrawingNumbers(catalogueCode, groupCode, subGroupCode, sgsCode, connection);
+                t.Narratives = GetSgsNarrative(catalogueCode, groupCode, subGroupCode, sgsCode, languageCode);
                 t.CurrentDrawing = drawingNumber;
 
             }
@@ -87,11 +88,14 @@ namespace openPER.Repositories
         {
             var parts = new List<TablePartViewModel>();
             var command = connection.CreateCommand();
-            command.CommandText = @"SELECT TBD_RIF, PRT_COD, TBD_QTY, CDS_DSC 
+            // TODO Modifications and whatever need to be attached lists not a single string.  Redo this sql
+            command.CommandText = @"SELECT TBD_RIF, PRT_COD, TBD_QTY, CDS_DSC, TBD_NOTE1, TBD_NOTE2, TBD_NOTE3,
+                                        TBD_SEQ, NTS_DSC, TBD_VAL_FORMULA, TBD_AGG_DSC
                                         FROM TBDATA
                                         JOIN CODES_DSC ON TBDATA.CDS_COD = CODES_DSC.CDS_COD AND CODES_DSC.LNG_COD = $languageCode
+                                        LEFT OUTER JOIN NOTES_DSC ON NOTES_DSC.NTS_COD = TBDATA.NTS_COD AND NOTES_DSC.LNG_COD = $languageCode
                                         WHERE DRW_NUM = $drawingNumber AND SGS_COD = $sgsCode AND SGRP_COD = $subGroupCode AND GRP_COD = $groupCode AND CAT_COD = $catalogueCode 
-                                        ORDER BY TBD_SEQ";
+                                        ORDER BY TBD_RIF,TBD_SEQ";
             command.Parameters.AddWithValue("$drawingNumber", drawingNumber);
             command.Parameters.AddWithValue("$sgsCode", sgsCode);
             command.Parameters.AddWithValue("$subGroupCode", subGroupCode);
@@ -108,13 +112,100 @@ namespace openPER.Repositories
                     part.TableOrder = reader.GetInt32(0);
                     part.Quantity = reader.GetString(2);
                     part.Description = reader.GetString(3);
+                    part.Notes1 = reader.IsDBNull(4)? "": reader.GetString(4);
+                    part.Notes2 = reader.IsDBNull(5) ? "" : reader.GetString(5);
+                    part.Notes3 = reader.IsDBNull(6) ? "" : reader.GetString(6);
+                    part.Sequence = reader.GetString(7);
+                    part.Notes = reader.IsDBNull(8) ? "" : reader.GetString(8);
+                    part.Compatibility = reader.IsDBNull(9) ? "" : reader.GetString(9);
+                    part.FurtherDescription = reader.IsDBNull(10) ? "" : reader.GetString(10);
                     parts.Add(part);
 
                 }
             }
-
+            foreach (var part in parts)
+            {
+                part.Modifications = GetPartModifications(part, catalogueCode, groupCode, subGroupCode, sgsCode, drawingNumber, languageCode, connection);
+            }
             return parts;
 
+        }
+        private List<ModificationViewModel> GetPartModifications(TablePartViewModel part, string catalogueCode, int groupCode, int subGroupCode, int sgsCode, int drawingNumber, string languageCode, SqliteConnection connection)
+        {
+            var modifications = new List<ModificationViewModel>();
+            var command = connection.CreateCommand();
+            // TODO Modifications and whatever need to be attached lists not a single string.  Redo this sql
+            command.CommandText = @"SELECT TBDM_CD, TBDATA_MOD.MDF_COD, TBDM_PROG , MDF_DSC
+                                        FROM TBDATA_MOD
+                                        JOIN MODIF_DSC ON TBDATA_MOD.MDF_COD = MODIF_DSC.MDF_COD AND MODIF_DSC.LNG_COD = $languageCode
+                                        WHERE DRW_NUM = $drawingNumber AND SGS_COD = $sgsCode AND SGRP_COD = $subGroupCode AND GRP_COD = $groupCode AND CAT_COD = $catalogueCode 
+                                            AND TBD_RIF = $rif AND TBD_SEQ = $sequence
+                                        ORDER BY TBDM_PROG";
+            command.Parameters.AddWithValue("$drawingNumber", drawingNumber);
+            command.Parameters.AddWithValue("$sgsCode", sgsCode);
+            command.Parameters.AddWithValue("$subGroupCode", subGroupCode);
+            command.Parameters.AddWithValue("$groupCode", groupCode);
+            command.Parameters.AddWithValue("$languageCode", languageCode);
+            command.Parameters.AddWithValue("$catalogueCode", catalogueCode);
+            command.Parameters.AddWithValue("$rif", part.TableOrder);
+            command.Parameters.AddWithValue("$sequence", part.Sequence);
+
+            using (var reader = command.ExecuteReader())
+            {
+                while (reader.Read())
+                {
+                    var mod = new ModificationViewModel();
+                    mod.Type = reader.GetString(0);
+                    mod.Code = reader.GetInt32(1);
+                    mod.Progression = reader.GetInt32(2);
+                    mod.Description = reader.GetString(3);
+                    modifications.Add(mod);
+
+                }
+            }
+            // Get activations for modifications
+            foreach (var mod in modifications)
+            {
+                mod.Activations = GetActivationsForModification(catalogueCode, mod.Code, languageCode, connection);
+            }
+            return modifications;
+        }
+        private List<ActivationViewModel> GetActivationsForModification(string catalogueCode, int modCode, string languageCode, SqliteConnection connection )
+        {
+            var modifications = new List<ActivationViewModel>();
+            var command = connection.CreateCommand();
+            // TODO Modifications and whatever need to be attached lists not a single string.  Redo this sql
+            command.CommandText = @"SELECT IFNULL(A.ACT_MASK, ''),IFNULL(M.MDFACT_SPEC, ''), IFNULL(M.ACT_COD, ''), IFNULL(O.OPTK_TYPE, ''), IFNULL(O.OPTK_COD, ''), IFNULL(O.OPTK_DSC, ''),
+                    IFNULL(V.VMK_TYPE, ''), IFNULL(V.VMK_COD, ''), IFNULL(V.VMK_DSC, '')
+                    FROM MDF_ACT M
+                    LEFT OUTER JOIN ACTIVATIONS A ON A.ACT_COD = M.ACT_COD
+                    LEFT OUTER JOIN VMK_DSC V ON V.CAT_COD = M.CAT_COD AND V.VMK_TYPE = M.VMK_TYPE AND V.VMK_COD = M.VMK_COD AND V.LNG_COD = $languageCode
+                    LEFT OUTER JOIN OPTKEYS_DSC O ON O.OPTK_TYPE = M.OPTK_TYPE AND O.OPTK_COD = M.OPTK_COD AND O.LNG_COD = $languageCode
+                    WHERE M.CAT_COD = $catalogueCode AND M.MDF_COD = $modCode";
+            command.Parameters.AddWithValue("$modCode", modCode);
+            command.Parameters.AddWithValue("$languageCode", languageCode);
+            command.Parameters.AddWithValue("$catalogueCode", catalogueCode);
+
+            using (var reader = command.ExecuteReader())
+            {
+                while (reader.Read())
+                {
+                    var mod = new ActivationViewModel();
+                    mod.ActivationDescription = reader.GetString(0) +" "+reader.GetString(1);
+                    mod.ActivationCode = reader.GetString(2);
+                    mod.OptionType = reader.GetString(3);
+                    mod.OptionCode = reader.GetString(4);
+                    mod.OptionDescription = reader.GetString(5);
+                    mod.VariationType = reader.GetString(6);
+                    mod.VariationCode = reader.GetString(7);
+                    mod.VariationDescription = reader.GetString(8);
+                    modifications.Add(mod);
+
+                }
+            }
+            // Get activations for modifications
+
+            return modifications;
         }
         private string GetCatalogueDescription(string makeCode, string modelCode, string catalogueCode, SqliteConnection connection)
         {
@@ -276,7 +367,6 @@ namespace openPER.Repositories
             }
             foreach (var item in rc)
             {
-                // TODO pass through language code
                 item.Groups = GetGroupsForCatalogue(item.Code, languageCode);
             }
             return rc;

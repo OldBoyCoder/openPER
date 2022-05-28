@@ -21,6 +21,7 @@ namespace openPER.Models
         public List<TablePartViewModel> Cliches { get; set; }
         public List<TablePartViewModel> Kits { get; set; }
         public int CurrentDrawing { get; set; }
+        public List<string> Narratives { get; set; }
 
         public  string Path
         {
