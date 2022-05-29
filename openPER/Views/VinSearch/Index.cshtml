@@ -1,0 +1,26 @@
+﻿@model openPER.Models.VinSearchViewModel
+
+@{
+    ViewData["Title"] = "VinSearchView";
+}
+
+<h1>VinSearchView</h1>
+@using(Html.BeginForm("Index", "VinSearch", FormMethod.Post))
+{
+@Html.DropDownListFor(m=>m.SelectedModel, new SelectList(Model.Models, "Code", "Description"))
+@Html.TextBoxFor(m=>m.ChassisNumber)
+<button type="submit" class="btn btn-info">Search</button>
+}
+@if (Model.Result != null)
+{
+    @Html.DisplayTextFor(m=>m.Result.MVS)
+    @Html.DisplayTextFor(m=>m.MvsData.MvsCode)
+    @Html.DisplayTextFor(m=>m.MvsData.MvsVersion)
+    @Html.DisplayTextFor(m=>m.MvsData.MvsSeries)
+    @Html.DisplayTextFor(m=>m.MvsData.Description)
+    @Html.DisplayTextFor(m=>m.MvsData.SincomVersion)
+    @Html.DisplayTextFor(m=>m.MvsData.EngineType)
+    @Html.DisplayTextFor(m=>m.MvsData.EngineDescription)
+    @Html.DisplayTextFor(m=>m.MvsData.VariantDescription)
+
+}
