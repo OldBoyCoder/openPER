@@ -309,7 +309,33 @@ namespace openPER.Repositories
             }
             return "";
         }
+        public List<ModelViewModel> GetAllModels()
+        {
+            var rc = new List<ModelViewModel>();
+            using (var connection = new SqliteConnection(@"Data Source=C:\Temp\ePerOutput\eperRelease20.db"))
+            {
+                connection.Open();
+                var command = connection.CreateCommand();
+                command.CommandText = @"SELECT MOD_COD, MOD_DSC, MK_COD FROM MODELS ORDER BY MOD_SORT_KEY ";
 
+                using (var reader = command.ExecuteReader())
+                {
+                    while (reader.Read())
+                    {
+                        var m = new ModelViewModel
+                        {
+                            Code = reader.GetString(0),
+                            Description = reader.GetString(1),
+                            MakeCode = reader.GetString(2)
+                        };
+                        rc.Add(m);
+                    }
+                }
+
+            }
+            return rc;
+
+        }
         public List<ModelViewModel> GetAllModels(string makeCode)
         {
             var rc = new List<ModelViewModel>();
@@ -517,6 +543,41 @@ namespace openPER.Repositories
                     }
                 }
             }
+        }
+
+        public MvsViewModel GetMvsDetails(string mvsCode, string mvsVersion, string mvsSeries)
+        {
+            var m = new MvsViewModel();
+            using (var connection = new SqliteConnection(@"Data Source=C:\Temp\ePerOutput\eperRelease20.db"))
+            {
+                connection.Open();
+                // Variants
+                var command = connection.CreateCommand();
+                command.CommandText = @"					select M.MOD_COD, M.MVS_VERSION, M.MVS_SERIE, MVS_DSC, MVS_SINCOM_VERS,MVS_ENGINE_TYPE, MV.VMK_DSC, VV.VMK_DSC from MVS M 
+						LEFT OUTER JOIN VMK_DSC MV ON MV.CAT_COD = M.CAT_COD AND MV.VMK_TYPE = M.VMK_TYPE_M AND MV.VMK_COD = M.VMK_COD_M AND MV.LNG_COD = '3'
+						LEFT OUTER JOIN VMK_DSC VV ON VV.CAT_COD = M.CAT_COD AND VV.VMK_TYPE = M.VMK_TYPE_V AND VV.VMK_COD = M.VMK_COD_V AND VV.LNG_COD = '3'
+					where MOD_COD = $mvsCode AND MVS_VERSION = $mvsVersion AND MVS_SERIE = $mvsSeries
+";
+                command.Parameters.AddWithValue("$mvsCode", mvsCode);
+                command.Parameters.AddWithValue("$mvsVersion", mvsVersion);
+                command.Parameters.AddWithValue("$mvsSeries", mvsSeries);
+
+                using (var reader = command.ExecuteReader())
+                {
+                    if (reader.Read())
+                    {
+                        m.MvsCode = reader.GetString(0);
+                        m.MvsVersion = reader.GetString(1);
+                        m.MvsSeries = reader.GetString(2);
+                        m.Description = reader.GetString(3);
+                        m.SincomVersion = reader.GetString(4);
+                        m.EngineType = reader.GetString(5);
+                        m.EngineDescription = reader.GetString(6);
+                        m.VariantDescription = reader.GetString(7);
+                    }
+                }
+            }
+            return m;
         }
     }
 }

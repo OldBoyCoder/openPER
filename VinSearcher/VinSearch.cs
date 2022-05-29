@@ -15,7 +15,6 @@ namespace VinSearcher
         }
         public VinResult FindVehicleByModelAndChassis(string modelNumber, int chassisNumber)
         {
-            var vehicles = new List<VinResult>();
             var x = new KtdReader.KtdReader();
             var searchKey = modelNumber + chassisNumber.ToString("00000000");
             var record = x.RecordsForKey(@"C:\ePer installs\Release 20\SP.CH.00900.FCTLR", searchKey, 1, this);
