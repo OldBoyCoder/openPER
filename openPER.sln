@@ -5,6 +5,10 @@ VisualStudioVersion = 17.2.32519.379
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "openPER", "c:\dev\openPER\openPER\openPER.csproj", "{D39418FD-FB3D-458B-A4F6-56D0871B20B7}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "VinSearcher", "VinSearcher\VinSearcher.csproj", "{839F5685-85A3-47A1-B900-42B6E5B814E4}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "VinSearcherTests", "VinSearcherTests\VinSearcherTests.csproj", "{5EE2389A-3661-47DF-90C0-E724DA6DB6D1}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -15,6 +19,14 @@ Global
 		{D39418FD-FB3D-458B-A4F6-56D0871B20B7}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{D39418FD-FB3D-458B-A4F6-56D0871B20B7}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{D39418FD-FB3D-458B-A4F6-56D0871B20B7}.Release|Any CPU.Build.0 = Release|Any CPU
+		{839F5685-85A3-47A1-B900-42B6E5B814E4}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{839F5685-85A3-47A1-B900-42B6E5B814E4}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{839F5685-85A3-47A1-B900-42B6E5B814E4}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{839F5685-85A3-47A1-B900-42B6E5B814E4}.Release|Any CPU.Build.0 = Release|Any CPU
+		{5EE2389A-3661-47DF-90C0-E724DA6DB6D1}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{5EE2389A-3661-47DF-90C0-E724DA6DB6D1}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{5EE2389A-3661-47DF-90C0-E724DA6DB6D1}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{5EE2389A-3661-47DF-90C0-E724DA6DB6D1}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
