@@ -554,7 +554,7 @@ namespace openPER.Repositories
                 // Variants
                 var command = connection.CreateCommand();
                 command.CommandText = @"					select M.MOD_COD, M.MVS_VERSION, M.MVS_SERIE, MVS_DSC, MVS_SINCOM_VERS,MVS_ENGINE_TYPE, MV.VMK_DSC, VV.VMK_DSC,
-                        M.VMK_TYPE_M+VMK_COD_M, M.VMK_TYPE_V+VMK_COD_V,
+                        M.VMK_TYPE_M||VMK_COD_M, M.VMK_TYPE_V||VMK_COD_V,
                         C.CAT_COD, C.CMD_DSC, COL.DSC_COLORE_INT_VET, MM.MOD_DSC from MVS M 
                         JOIN COMM_MODELS C ON C.MOD_COD = M.MOD_COD
                         JOIN MODELS MM ON MM.MOD_COD = M.MOD_COD
