@@ -35,8 +35,14 @@ namespace openPER.Controllers
                 var mvsCode = searchResult.MVS.Substring(0, 3);
                 var mvsVersion = searchResult.MVS.Substring(3, 3);
                 var mvsSeries = searchResult.MVS.Substring(6, 1);
-                model.Result = searchResult;
-                model.MvsData = rep.GetMvsDetails(mvsCode, mvsVersion, mvsSeries);
+
+                // TODO get language code
+                model.MvsData = rep.GetMvsDetails(mvsCode, mvsVersion, mvsSeries, searchResult.InteriorColour, "3");
+                model.ChassisNumber = searchResult.Chassis;
+                model.Organization = searchResult.Organization;
+                model.ProductionDate = searchResult.Date;
+                model.EngineNumber = searchResult.Motor;
+
 
             }
             model.Models = rep.GetAllModels();

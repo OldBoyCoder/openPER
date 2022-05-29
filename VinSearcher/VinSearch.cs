@@ -13,10 +13,10 @@ namespace VinSearcher
 
             return vehicles;
         }
-        public VinResult FindVehicleByModelAndChassis(string modelNumber, int chassisNumber)
+        public VinResult FindVehicleByModelAndChassis(string modelNumber, string chassisNumber)
         {
             var x = new KtdReader.KtdReader();
-            var searchKey = modelNumber + chassisNumber.ToString("00000000");
+            var searchKey = modelNumber + chassisNumber.PadLeft(8, '0');
             var record = x.RecordsForKey(@"C:\ePer installs\Release 20\SP.CH.00900.FCTLR", searchKey, 1, this);
             if (record != null)
             {

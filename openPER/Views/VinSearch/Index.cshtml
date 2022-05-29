@@ -11,16 +11,20 @@
 @Html.TextBoxFor(m=>m.ChassisNumber)
 <button type="submit" class="btn btn-info">Search</button>
 }
-@if (Model.Result != null)
+@if (Model.MvsData != null)
 {
-    @Html.DisplayTextFor(m=>m.Result.MVS)
-    @Html.DisplayTextFor(m=>m.MvsData.MvsCode)
-    @Html.DisplayTextFor(m=>m.MvsData.MvsVersion)
-    @Html.DisplayTextFor(m=>m.MvsData.MvsSeries)
-    @Html.DisplayTextFor(m=>m.MvsData.Description)
-    @Html.DisplayTextFor(m=>m.MvsData.SincomVersion)
-    @Html.DisplayTextFor(m=>m.MvsData.EngineType)
-    @Html.DisplayTextFor(m=>m.MvsData.EngineDescription)
-    @Html.DisplayTextFor(m=>m.MvsData.VariantDescription)
-
+    <table>
+        <tr><td>Model</td><td>@Html.DisplayTextFor(m=>m.MvsData.MvsCode) | @Html.DisplayTextFor(m=>m.MvsData.ModelDescription)</td></tr>
+        <tr><td>Chassis No.</td><td>@Html.DisplayTextFor(m=>m.ChassisNumber)</td></tr>
+        <tr><td>Catalogue</td><td>@Html.DisplayTextFor(m=>m.MvsData.CatalogueCode) | @Html.DisplayTextFor(m=>m.MvsData.CatalogueDescription)</td></tr>
+        <tr><td>MVS</td><td>@Html.DisplayTextFor(m=>m.MvsData.FullMvsCode) | @Html.DisplayTextFor(m=>m.MvsData.Description)</td></tr>
+        <tr><td>Engine stamp</td><td>@Html.DisplayTextFor(m=>m.MvsData.EngineType)</td></tr>
+        <tr><td>Version code</td><td>@Html.DisplayTextFor(m=>m.MvsData.SincomVersion)</td></tr>
+        <tr><td>Version</td><td>@Html.DisplayTextFor(m=>m.MvsData.VariantCode) | @Html.DisplayTextFor(m=>m.MvsData.VariantDescription)</td></tr>
+        <tr><td>Engine version</td><td>@Html.DisplayTextFor(m=>m.MvsData.EngineCode) | @Html.DisplayTextFor(m=>m.MvsData.EngineDescription)</td></tr>
+        <tr><td>Interior colour</td><td>@Html.DisplayTextFor(m=>m.MvsData.ColourCode) | @Html.DisplayTextFor(m=>m.MvsData.ColourDescription)</td></tr>
+        <tr><td>Production date</td><td>@Html.DisplayTextFor(m=>m.ProductionDate)</td></tr>
+        <tr><td>Vehicle No.</td><td>@Html.DisplayTextFor(m=>m.Organization)</td></tr>
+        <tr><td>Engine No.</td><td>@Html.DisplayTextFor(m=>m.EngineNumber)</td></tr>
+    </table>
 }
