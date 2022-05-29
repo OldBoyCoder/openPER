@@ -23,14 +23,14 @@ namespace VinSearcher.Tests
         public void FindVehiclesByModelAndChassisTestWithDobloChassis()
         {
             var x = new VinSearch();
-            var result = x.FindVehicleByModelAndChassis("223", 05050806);
+            var result = x.FindVehicleByModelAndChassis("223", "05050806");
             Assert.AreEqual("2608455", result.Motor);
         }
         [TestMethod()]
         public void FindVehiclesByModelAndChassisTestWithInvalidVehicle()
         {
             var x = new VinSearch();
-            var result = x.FindVehicleByModelAndChassis("1XX", 01001276);
+            var result = x.FindVehicleByModelAndChassis("1XX", "01001276");
             Assert.AreEqual(null, result);
         }
     }

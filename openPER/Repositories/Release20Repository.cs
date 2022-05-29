@@ -112,7 +112,7 @@ namespace openPER.Repositories
                     part.TableOrder = reader.GetInt32(0);
                     part.Quantity = reader.GetString(2);
                     part.Description = reader.GetString(3);
-                    part.Notes1 = reader.IsDBNull(4)? "": reader.GetString(4);
+                    part.Notes1 = reader.IsDBNull(4) ? "" : reader.GetString(4);
                     part.Notes2 = reader.IsDBNull(5) ? "" : reader.GetString(5);
                     part.Notes3 = reader.IsDBNull(6) ? "" : reader.GetString(6);
                     part.Sequence = reader.GetString(7);
@@ -170,7 +170,7 @@ namespace openPER.Repositories
             }
             return modifications;
         }
-        private List<ActivationViewModel> GetActivationsForModification(string catalogueCode, int modCode, string languageCode, SqliteConnection connection )
+        private List<ActivationViewModel> GetActivationsForModification(string catalogueCode, int modCode, string languageCode, SqliteConnection connection)
         {
             var modifications = new List<ActivationViewModel>();
             var command = connection.CreateCommand();
@@ -191,7 +191,7 @@ namespace openPER.Repositories
                 while (reader.Read())
                 {
                     var mod = new ActivationViewModel();
-                    mod.ActivationDescription = reader.GetString(0) +" "+reader.GetString(1);
+                    mod.ActivationDescription = reader.GetString(0) + " " + reader.GetString(1);
                     mod.ActivationCode = reader.GetString(2);
                     mod.OptionType = reader.GetString(3);
                     mod.OptionCode = reader.GetString(4);
@@ -545,7 +545,7 @@ namespace openPER.Repositories
             }
         }
 
-        public MvsViewModel GetMvsDetails(string mvsCode, string mvsVersion, string mvsSeries)
+        public MvsViewModel GetMvsDetails(string mvsCode, string mvsVersion, string mvsSeries, string colourCode, string languageCode)
         {
             var m = new MvsViewModel();
             using (var connection = new SqliteConnection(@"Data Source=C:\Temp\ePerOutput\eperRelease20.db"))
@@ -553,14 +553,21 @@ namespace openPER.Repositories
                 connection.Open();
                 // Variants
                 var command = connection.CreateCommand();
-                command.CommandText = @"					select M.MOD_COD, M.MVS_VERSION, M.MVS_SERIE, MVS_DSC, MVS_SINCOM_VERS,MVS_ENGINE_TYPE, MV.VMK_DSC, VV.VMK_DSC from MVS M 
-						LEFT OUTER JOIN VMK_DSC MV ON MV.CAT_COD = M.CAT_COD AND MV.VMK_TYPE = M.VMK_TYPE_M AND MV.VMK_COD = M.VMK_COD_M AND MV.LNG_COD = '3'
-						LEFT OUTER JOIN VMK_DSC VV ON VV.CAT_COD = M.CAT_COD AND VV.VMK_TYPE = M.VMK_TYPE_V AND VV.VMK_COD = M.VMK_COD_V AND VV.LNG_COD = '3'
-					where MOD_COD = $mvsCode AND MVS_VERSION = $mvsVersion AND MVS_SERIE = $mvsSeries
+                command.CommandText = @"					select M.MOD_COD, M.MVS_VERSION, M.MVS_SERIE, MVS_DSC, MVS_SINCOM_VERS,MVS_ENGINE_TYPE, MV.VMK_DSC, VV.VMK_DSC,
+                        M.VMK_TYPE_M+VMK_COD_M, M.VMK_TYPE_V+VMK_COD_V,
+                        C.CAT_COD, C.CMD_DSC, COL.DSC_COLORE_INT_VET, MM.MOD_DSC from MVS M 
+                        JOIN COMM_MODELS C ON C.MOD_COD = M.MOD_COD
+                        JOIN MODELS MM ON MM.MOD_COD = M.MOD_COD
+						LEFT OUTER JOIN VMK_DSC MV ON MV.CAT_COD = M.CAT_COD AND MV.VMK_TYPE = M.VMK_TYPE_M AND MV.VMK_COD = M.VMK_COD_M AND MV.LNG_COD = $languageCode
+						LEFT OUTER JOIN VMK_DSC VV ON VV.CAT_COD = M.CAT_COD AND VV.VMK_TYPE = M.VMK_TYPE_V AND VV.VMK_COD = M.VMK_COD_V AND VV.LNG_COD = $languageCode
+                        LEFT OUTER JOIN INTERNAL_COLOURS_DSC COL ON COL.CAT_COD = C.CAT_COD AND COD_COLORE_INT_VET = $colourCode
+					where M.MOD_COD = $mvsCode AND MVS_VERSION = $mvsVersion AND MVS_SERIE = $mvsSeries
 ";
                 command.Parameters.AddWithValue("$mvsCode", mvsCode);
                 command.Parameters.AddWithValue("$mvsVersion", mvsVersion);
                 command.Parameters.AddWithValue("$mvsSeries", mvsSeries);
+                command.Parameters.AddWithValue("$languageCode", languageCode);
+                command.Parameters.AddWithValue("$colourCode", colourCode);
 
                 using (var reader = command.ExecuteReader())
                 {
@@ -574,6 +581,13 @@ namespace openPER.Repositories
                         m.EngineType = reader.GetString(5);
                         m.EngineDescription = reader.GetString(6);
                         m.VariantDescription = reader.GetString(7);
+                        m.EngineCode = reader.GetString(8);
+                        m.VariantCode = reader.GetString(9);
+                        m.CatalogueCode = reader.GetString(10);
+                        m.CatalogueDescription = reader.GetString(11);
+                        m.ColourCode = colourCode;
+                        m.ColourDescription = reader.GetString(12);
+                        m.ModelDescription = reader.GetString(13);
                     }
                 }
             }

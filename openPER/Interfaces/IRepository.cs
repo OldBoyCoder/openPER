@@ -11,6 +11,6 @@ namespace openPER.Interfaces
         List<ModelViewModel> GetAllModels();
         List<CatalogueViewModel> GetAllCatalogues(string make, string model, string languageCode);
         List<GroupViewModel> GetGroupsForCatalogue(string catalogueCode, string languageCode);
-        MvsViewModel GetMvsDetails(string mvsCode, string mvsVersion, string mvsSeries);
+        MvsViewModel GetMvsDetails(string mvsCode, string mvsVersion, string mvsSeries, string colourCode, string languageCode);
     }
 }
