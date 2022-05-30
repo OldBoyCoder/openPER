@@ -88,7 +88,6 @@ namespace openPER.Repositories
         {
             var parts = new List<TablePartViewModel>();
             var command = connection.CreateCommand();
-            // TODO Modifications and whatever need to be attached lists not a single string.  Redo this sql
             command.CommandText = @"SELECT TBD_RIF, PRT_COD, TBD_QTY, CDS_DSC, TBD_NOTE1, TBD_NOTE2, TBD_NOTE3,
                                         TBD_SEQ, NTS_DSC, TBD_VAL_FORMULA, TBD_AGG_DSC
                                         FROM TBDATA
@@ -134,7 +133,6 @@ namespace openPER.Repositories
         {
             var modifications = new List<ModificationViewModel>();
             var command = connection.CreateCommand();
-            // TODO Modifications and whatever need to be attached lists not a single string.  Redo this sql
             command.CommandText = @"SELECT TBDM_CD, TBDATA_MOD.MDF_COD, TBDM_PROG , MDF_DSC
                                         FROM TBDATA_MOD
                                         JOIN MODIF_DSC ON TBDATA_MOD.MDF_COD = MODIF_DSC.MDF_COD AND MODIF_DSC.LNG_COD = $languageCode
@@ -174,7 +172,6 @@ namespace openPER.Repositories
         {
             var modifications = new List<ActivationViewModel>();
             var command = connection.CreateCommand();
-            // TODO Modifications and whatever need to be attached lists not a single string.  Redo this sql
             command.CommandText = @"SELECT IFNULL(A.ACT_MASK, ''),IFNULL(M.MDFACT_SPEC, ''), IFNULL(M.ACT_COD, ''), IFNULL(O.OPTK_TYPE, ''), IFNULL(O.OPTK_COD, ''), IFNULL(O.OPTK_DSC, ''),
                     IFNULL(V.VMK_TYPE, ''), IFNULL(V.VMK_COD, ''), IFNULL(V.VMK_DSC, '')
                     FROM MDF_ACT M
@@ -203,8 +200,6 @@ namespace openPER.Repositories
 
                 }
             }
-            // Get activations for modifications
-
             return modifications;
         }
         private string GetCatalogueDescription(string makeCode, string modelCode, string catalogueCode, SqliteConnection connection)
@@ -666,10 +661,11 @@ where P.PRT_COD = $partNumber";
                 var command = connection.CreateCommand();
                 command.CommandText = @"SELECT DISTINCT T.CAT_COD,CAT_DSC, T.GRP_COD, T.SGRP_COD, SGS_COD, DRW_NUM, SGRP_DSC,
                                         MK_COD, CMG_COD
-FROM TBDATA T 
+FROM APPLICABILITY A
+JOIN TBDATA T ON T.PRT_COD = A.PRT_COD AND T.GRP_COD = A.GRP_COD AND T.SGRP_COD = A.SGRP_COD
 JOIN SUBGROUPS_DSC SD ON SD.SGRP_COD = T.SGRP_COD AND SD.GRP_COD = T.GRP_COD AND SD.LNG_COD = $languageCode
 JOIN CATALOGUES C ON C.CAT_COD = T.CAT_COD
-WHERE T.PRT_COD = $partNumber";
+WHERE A.PRT_COD = $partNumber";
                 command.Parameters.AddWithValue("$partNumber", partNumber);
                 command.Parameters.AddWithValue("$languageCode", languageCode);
 
