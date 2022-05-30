@@ -4,12 +4,11 @@
     ViewData["Title"] = "PartView";
 }
 
-<h1>PartView</h1>
+<h1>Part search results</h1>
 
 <div>
-    <h4>PartViewModel</h4>
     <hr />
-    @if (Model.Result != null)
+    @if (Model != null && Model.Result != null)
     {
         <table>
             <tr><th>@Model.Result.PartNumber</th><th>@Model.Result.Description</th><th></th><th></th></tr>
@@ -32,6 +31,10 @@
 
             }
         </table>
+    }
+    else
+    {
+        <p>Part not found</p>
     }
 </div>
 

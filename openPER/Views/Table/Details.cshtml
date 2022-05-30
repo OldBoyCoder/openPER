@@ -107,7 +107,7 @@
                         }
                                     <tr class="partrow">
                                         <td>&nbsp;</td>
-                                        <td class="partrowproductcode"><a href="@Url.Action("Index", "Part", new {PartNumber=item.PartNumber})">@Html.DisplayFor(model=>item.PartNumber)</a></td>
+                                        <td class="partrowproductcode"><a href="@Url.Action("SearchResults", "Part", new {PartNumber=item.PartNumber} )">@Html.DisplayFor(model=>item.PartNumber)</a></td>
                                         <td>@Html.DisplayFor(model=>item.FurtherDescription)</td>
                                         <td>@Html.DisplayFor(model=>item.Compatibility)</td>
                                         <td>

@@ -1,24 +1,24 @@
 ﻿@model SearchViewModel
 <div>
+    @using (Html.BeginForm("SearchByChassisAndVin", "VinSearch", FormMethod.Get))
+    {
+        @Html.DisplayText("Model :") @Html.DropDownListFor(m=>m.SelectedModel, new SelectList(Model.VinSearch.Models, "Code", "Description"))
+        <br/>
+        @Html.DisplayText("Chassis No. :")@Html.TextBoxFor(m=>m.ChassisNumber)
+        <button type="submit" class="btn btn-info">Search</button>
+    }
     <div>
-        @using (Html.BeginForm("SearchByChassisAndVin", "VinSearch", FormMethod.Post))
-        {
-            @Html.DropDownListFor(m=>m.VinSearch.SelectedModel, new SelectList(Model.VinSearch.Models, "Code", "Description"))
-            @Html.TextBoxFor(m=>m.VinSearch.ChassisNumber)
-            <button type="submit" class="btn btn-info">Search</button>
-        }
-        <div>
-        </div>
-        @using (Html.BeginForm("SearchByFullVin", "VinSearch", FormMethod.Post))
-        {
-            @Html.TextBoxFor(m=>m.FullVin)
-            <button type="submit" class="btn btn-info">Search</button>
-        }
-        <div>
-        </div>
-        @using (@Html.BeginForm("Search", "Part",new { PartNumber = Model.PartNumber }, FormMethod.Get))
-        {
-            @Html.TextBoxFor(m=>m.PartNumber)
-            <button type="submit" class="btn btn-info">Search</button>
-        }
     </div>
+    @using (Html.BeginForm("SearchByFullVin", "VinSearch", FormMethod.Get))
+    {
+        @Html.DisplayText("Full VIN :")@Html.TextBoxFor(m=>m.FullVin)
+        <button type="submit" class="btn btn-info">Search</button>
+    }
+    <div>
+    </div>
+    @using (@Html.BeginForm("SearchResults", "Part", FormMethod.Get))
+    {
+        @Html.DisplayText("Part number :")@Html.TextBoxFor(m=>m.PartNumber)
+        <button type="submit" class="btn btn-info">Search</button>
+    }
+</div>

@@ -16,28 +16,17 @@ namespace openPER.Controllers
             var p = new PartViewModel();
             return View(p);
         }
-        [Route("Part/Search/{PartNumber}")]
-        public ActionResult Search(string partNumber)
+
+        [HttpGet]
+        public ActionResult SearchResults(string PartNumber)
         {
             var p = new PartViewModel();
             var language = Helpers.LanguageSupport.SetCultureBasedOnCookie(HttpContext);
-
-            p.PartNumberSearch = partNumber;
+            if (PartNumber == null) return View("Index", null);
+            p.PartNumberSearch = PartNumber;
 
             p.Result = rep.GetPartDetails(p.PartNumberSearch, language);
-            return View(p);
+            return View("Index", p);
         }
-
-        //public ActionResult Search(SearchViewModel model)
-        //{
-        //    var p = new PartViewModel();
-        //    var language = Helpers.LanguageSupport.SetCultureBasedOnCookie(HttpContext);
-
-        //    p.PartNumberSearch = model.PartNumber;
-
-        //    p.Result = rep.GetPartDetails(p.PartNumberSearch, language);
-        //    return View(p);
-        //}
-
     }
 }
