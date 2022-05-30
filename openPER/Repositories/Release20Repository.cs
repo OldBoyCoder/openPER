@@ -617,5 +617,83 @@ namespace openPER.Repositories
             }
             return languages;
         }
+
+        public PartModel GetPartDetails(string partNumberSearch, string languageCode)
+        {
+            PartModel p = null; ;
+            using (var connection = new SqliteConnection(@"Data Source=C:\Temp\ePerOutput\eperRelease20.db"))
+            {
+                connection.Open();
+                // Variants
+                var command = connection.CreateCommand();
+                command.CommandText = @"select P.PRT_COD, C.CDS_COD, C.CDS_DSC,F.FAM_COD, F.FAM_DSC, U.UM_COD, U.UM_DSC, PRT_WEIGHT  from PARTS P 
+JOIN CODES_DSC C ON C.CDS_COD = P.CDS_COD AND C.LNG_COD = $languageCode
+JOIN FAM_DSC F ON F.FAM_COD = P.PRT_FAM_COD AND F.LNG_COD = $languageCode
+LEFT OUTER  JOIN UN_OF_MEAS U ON U.UM_COD = P.UM_COD
+LEFT OUTER JOIN RPLNT R ON R.RPL_COD = P.PRT_COD
+where P.PRT_COD = $partNumber";
+                command.Parameters.AddWithValue("$partNumber", partNumberSearch);
+                command.Parameters.AddWithValue("$languageCode", languageCode);
+
+                using (var reader = command.ExecuteReader())
+                {
+                    if (reader.Read())
+                    {
+                        p = new PartModel();
+                        p.PartNumber = reader.GetDouble(0);
+                        p.Description = reader.GetString(2);
+                        p.FamilyCode = reader.GetString(3);
+                        p.FamilyDescription = reader.GetString(4);
+                        p.UnitOfSale = reader.GetString(5);
+                        p.Weight = reader.GetInt32(6);
+                    }
+
+                }
+            }
+            if (p != null)
+            {
+                p.Drawings = GetDrawingsForPartNumber(p.PartNumber, languageCode);
+            }
+            return p;
+        }
+
+        private List<PartDrawing> GetDrawingsForPartNumber(double partNumber, string languageCode)
+        {
+            var drawings = new List<PartDrawing>();
+            using (var connection = new SqliteConnection(@"Data Source=C:\Temp\ePerOutput\eperRelease20.db"))
+            {
+                connection.Open();
+                var command = connection.CreateCommand();
+                command.CommandText = @"SELECT DISTINCT T.CAT_COD,CAT_DSC, T.GRP_COD, T.SGRP_COD, SGS_COD, DRW_NUM, SGRP_DSC,
+                                        MK_COD, CMG_COD
+FROM TBDATA T 
+JOIN SUBGROUPS_DSC SD ON SD.SGRP_COD = T.SGRP_COD AND SD.GRP_COD = T.GRP_COD AND SD.LNG_COD = $languageCode
+JOIN CATALOGUES C ON C.CAT_COD = T.CAT_COD
+WHERE T.PRT_COD = $partNumber";
+                command.Parameters.AddWithValue("$partNumber", partNumber);
+                command.Parameters.AddWithValue("$languageCode", languageCode);
+
+                using (var reader = command.ExecuteReader())
+                {
+                    while (reader.Read())
+                    {
+                        var p = new PartDrawing();
+                        p.Make = reader.GetString(7);
+                        p.Model = reader.GetString(8);
+                        p.CatalogueCode = reader.GetString(0);
+                        p.CatalogueDescription = reader.GetString(1);
+                        p.GroupCode = reader.GetInt32(2);
+                        p.SubGroupCode = reader.GetInt32(3);
+                        p.SgsCode = reader.GetInt32(4);
+                        p.DrawingNumber = reader.GetInt32(5);
+                        p.SubGroupDescription = reader.GetString(6);
+                        drawings.Add(p);
+                    }
+
+                }
+            }
+
+            return drawings;
+        }
     }
 }
