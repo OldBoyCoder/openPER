@@ -25,6 +25,7 @@ namespace openPER.Controllers
 
         public IActionResult Index()
         {
+            var language = Helpers.LanguageSupport.SetCultureBasedOnCookie(HttpContext);
             return View(rep.GetAllMakes());
         }
 
@@ -38,13 +39,14 @@ namespace openPER.Controllers
         {
             return View(new ErrorViewModel { RequestId = Activity.Current?.Id ?? HttpContext.TraceIdentifier });
         }
-
         [HttpPost]
         public IActionResult Index(LanguagesViewModel model)
         {
-            var newCulture = Helpers.Converters.ConvertLanguageCodeToCulture(model.CurrentLanguage);
+            HttpContext.Response.Cookies.Append("PreferredLanguage", model.CurrentLanguage);
+            var newCulture = Helpers.LanguageSupport.ConvertLanguageCodeToCulture(model.CurrentLanguage);
             Thread.CurrentThread.CurrentCulture = newCulture;
             Thread.CurrentThread.CurrentUICulture = newCulture;
+
             return View(rep.GetAllMakes());
         }
 

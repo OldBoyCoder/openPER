@@ -16,6 +16,10 @@ namespace openPER.Views.Shared.Components.LanguageChoiceWidget
         {
             var model = new LanguagesViewModel();
             model.Languages = rep.GetAllLanguages();
+            if (HttpContext.Request.Cookies.ContainsKey("PreferredLanguage"))
+            {
+                model.CurrentLanguage = HttpContext.Request.Cookies["PreferredLanguage"];
+            }
             return View("Default", model);
         }
 

@@ -26,7 +26,7 @@
                 @Html.DisplayFor(modelItem => item.Code)
             </td>
             <td>
-                @Html.ActionLink(item.Description, "Catalogues", new {Make=item.MakeCode, Model=item.Code, Language=ViewData["Language"]})
+                @Html.ActionLink(item.Description, "Catalogues", new {Make=item.MakeCode, Model=item.Code})
             </td>
         </tr>
 }
