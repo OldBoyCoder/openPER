@@ -1,9 +1,8 @@
-﻿using Microsoft.AspNetCore.Http;
-using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Mvc;
 using openPER.Interfaces;
-using openPER.Models;
 using System;
-using System.Threading;
+using System.Collections.Generic;
+using System.Linq;
 
 namespace openPER.Controllers
 {
@@ -75,6 +74,35 @@ namespace openPER.Controllers
             var imageName = $"{group}{subgroup.ToString("00")}{sgsCode.ToString("00")}{drawing.ToString("000")}";
 
             return File(GetImageFromNaFile(fileName, imageName, true), "image/png");
+        }
+        [Route("Table/{Model}")]
+        public ActionResult ModelImage(string model)
+        {
+            return File(GetImageForCatalogue(model), "image/png");
+        }
+
+        private byte[] GetImageForGroup(string mapName)
+        {
+            var _basePath = @"C:\ePer installs\Release 20";
+            // Generate file name
+            var fileName = System.IO.Path.Combine(_basePath, "SP.MP.00900.FCTLR", $"{mapName}.jpg");
+            var fileBytes = System.IO.File.ReadAllBytes(fileName);
+            return fileBytes;
+        }
+        private byte[] GetImageForCatalogue(string cmgCode)
+        {
+            // Generate file name
+            var _basePath = @"C:\ePer installs\Release 20";
+            var lines = System.IO.File.ReadAllLines(System.IO.Path.Combine(_basePath, @"SP.IM.00900.FXXXX\img.conf"));
+            var matches = lines.Where(x => x.Contains($",{cmgCode},"));
+            var line = matches.FirstOrDefault(x => x.Contains("s2"));
+            if (line == null)
+            {
+                line = matches.FirstOrDefault(x => x.Contains("s1"));
+                if (line == null) return null;
+            }
+            var fileName = line.Split(new[] { ',' })[3];
+            return System.IO.File.ReadAllBytes(System.IO.Path.Combine(_basePath, @"SP.IM.00900.FXXXX", fileName));
         }
         private static byte[] GetImageFromNaFile(string fileName, string imageName, bool wantThumbail)
         {

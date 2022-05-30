@@ -28,6 +28,7 @@ namespace openPER.Controllers
         public IActionResult Index(VinSearchViewModel model)
         {
             var x = new VinSearch();
+            var language = Helpers.LanguageSupport.SetCultureBasedOnCookie(HttpContext);
             model.SelectedModel = model.SelectedModel.PadLeft(3, '0');
             var searchResult = x.FindVehicleByModelAndChassis(model.SelectedModel, model.ChassisNumber);
             if (searchResult != null)
@@ -35,9 +36,7 @@ namespace openPER.Controllers
                 var mvsCode = searchResult.MVS.Substring(0, 3);
                 var mvsVersion = searchResult.MVS.Substring(3, 3);
                 var mvsSeries = searchResult.MVS.Substring(6, 1);
-
-                // TODO get language code
-                model.MvsData = rep.GetMvsDetails(mvsCode, mvsVersion, mvsSeries, searchResult.InteriorColour, "3");
+                model.MvsData = rep.GetMvsDetails(mvsCode, mvsVersion, mvsSeries, searchResult.InteriorColour, language);
                 model.ChassisNumber = searchResult.Chassis;
                 model.Organization = searchResult.Organization;
                 model.ProductionDate = searchResult.Date;

@@ -28,6 +28,9 @@
             <td>
                 @Html.ActionLink(item.Description, "Catalogues", new {Make=item.MakeCode, Model=item.Code})
             </td>
+            <td>
+<img src="@Url.Action("ModelImage", "Table", new {Model=item.Code})">
+            </td>
         </tr>
 }
     </tbody>
