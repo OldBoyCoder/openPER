@@ -4,14 +4,8 @@
     ViewData["Title"] = "VinSearchView";
 }
 
-<h1>VinSearchView</h1>
-@using(Html.BeginForm("Index", "VinSearch", FormMethod.Post))
-{
-@Html.DropDownListFor(m=>m.SelectedModel, new SelectList(Model.Models, "Code", "Description"))
-@Html.TextBoxFor(m=>m.ChassisNumber)
-<button type="submit" class="btn btn-info">Search</button>
-}
-@if (Model.MvsData != null)
+<h1>Vehicle search results</h1>
+@if (Model != null && Model.MvsData != null)
 {
     <table>
         <tr><td>Model</td><td>@Html.DisplayTextFor(m=>m.MvsData.MvsCode) | @Html.DisplayTextFor(m=>m.MvsData.ModelDescription)</td></tr>
@@ -27,4 +21,8 @@
         <tr><td>Vehicle No.</td><td>@Html.DisplayTextFor(m=>m.Organization)</td></tr>
         <tr><td>Engine No.</td><td>@Html.DisplayTextFor(m=>m.EngineNumber)</td></tr>
     </table>
+}
+else
+{
+    <p>Vehicle not found</p>
 }

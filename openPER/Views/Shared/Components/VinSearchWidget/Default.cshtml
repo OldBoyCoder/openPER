@@ -1,7 +1,0 @@
-﻿@model VinSearchViewModel
-@using(Html.BeginForm("Index", "VinSearch", FormMethod.Post))
-{
-@Html.DropDownListFor(m=>m.SelectedModel, new SelectList(Model.Models, "Code", "Description"))
-@Html.TextBoxFor(m=>m.ChassisNumber)
-<button type="submit" class="btn btn-info">Search</button>
-}
