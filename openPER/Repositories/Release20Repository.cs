@@ -593,5 +593,29 @@ namespace openPER.Repositories
             }
             return m;
         }
+
+        public List<LanguageModel> GetAllLanguages()
+        {
+            var languages = new List<LanguageModel>();
+            using (var connection = new SqliteConnection(@"Data Source=C:\Temp\ePerOutput\eperRelease20.db"))
+            {
+                connection.Open();
+                // Variants
+                var command = connection.CreateCommand();
+                command.CommandText = @"SELECT LNG_COD, LNG_DSC FROM LANG ORDER BY LNG_COD";
+
+                using (var reader = command.ExecuteReader())
+                {
+                    while (reader.Read())
+                    {
+                        var language = new LanguageModel();
+                        language.Code = reader.GetString(0);
+                        language.Description = reader.GetString(1);
+                        languages.Add(language);
+                    }
+                }
+            }
+            return languages;
+        }
     }
 }
