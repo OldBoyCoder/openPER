@@ -1,0 +1,32 @@
+﻿@model openPER.Models.PartViewModel
+
+@{
+    ViewData["Title"] = "PartView";
+}
+
+<h1>PartView</h1>
+
+<div>
+    <h4>PartViewModel</h4>
+    <hr />
+    <table>
+        <tr><th>@Model.Result.PartNumber</th><th>@Model.Result.Description</th><th></th><th></th></tr>
+        <tr><td>Family</td><td>@Model.Result.FamilyCode - @Model.Result.FamilyDescription</td><td><td></td></td></tr>
+        <tr><td>Weight (grams)</td><td>@Model.Result.Weight</td><td><td></td></td></tr>
+        <tr><td>Measurement unit</td><td>@Model.Result.UnitOfSale</td><td><td></td></td></tr>
+    </table>
+    <table>
+        @foreach (var drawing in Model.Result.Drawings)
+        {
+            <tr><td>@drawing.CatalogueCode @drawing.CatalogueDescription</td><td>
+            <a href="@Url.Action("Details", "Table",  new {Make=drawing.Make,Model=drawing.Model, Catalogue=drawing.CatalogueCode, Group = drawing.GroupCode, SubGroup = drawing.SubGroupCode, SgsCode = drawing.SgsCode, Drawing=drawing.DrawingNumber})">
+
+                @drawing.GroupCode.ToString("000")@drawing.SubGroupCode.ToString("00")/@drawing.SgsCode.ToString("00") - @drawing.SubGroupDescription</a></td></tr>
+
+        }
+    </table>
+</div>
+
+<div>
+    <a asp-action="Index">Back to List</a>
+</div>
