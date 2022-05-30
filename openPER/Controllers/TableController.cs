@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Mvc;
 using openPER.Interfaces;
 using openPER.Models;
 using System;
+using System.Threading;
 
 namespace openPER.Controllers
 {
@@ -23,7 +24,8 @@ namespace openPER.Controllers
         [Route("Table/Details/{Make}/{Model}/{Catalogue}/{Group}/{Subgroup}/{SgsCode}/{Drawing}")]
         public ActionResult Details(string make, string model, string catalogue, int group, int subgroup, int sgsCode, int drawing)
         {
-            var x = rep.GetTable(make, model, catalogue, group, subgroup, sgsCode, drawing, "3");
+            var language = Helpers.LanguageSupport.SetCultureBasedOnCookie(HttpContext);
+            var x = rep.GetTable(make, model, catalogue, group, subgroup, sgsCode, drawing, language);
             x.MakeCode = make;
             x.ModelCode = model;
             x.CatalogueCode = catalogue;
@@ -43,15 +45,18 @@ namespace openPER.Controllers
         {
             return View(rep.GetAllModels(make));
         }
-        [Route("Table/Catalogues/{Make}/{Model}/{Language}")]
-        public ActionResult Catalogues(string make, string model, string language)
+        [Route("Table/Catalogues/{Make}/{Model}")]
+        public ActionResult Catalogues(string make, string model)
         {
+            var language = Helpers.LanguageSupport.SetCultureBasedOnCookie(HttpContext);
             return View(rep.GetAllCatalogues(make, model, language));
         }
         [Route("Table/Groups/{Make}/{Model}/{Catalogue}")]
         public ActionResult Groups(string make, string model, string catalogue)
         {
-            return View(rep.GetGroupsForCatalogue(catalogue, ViewData["Language"].ToString()));
+            var language = Helpers.LanguageSupport.SetCultureBasedOnCookie(HttpContext);
+
+            return View(rep.GetGroupsForCatalogue(catalogue, language));
         }
         [Route("Table/Image/{Make}/{Model}/{Catalogue}/{Group}/{Subgroup}/{SgsCode}/{Drawing}")]
         public ActionResult Image(string make, string model, string catalogue, int group, int subgroup, int sgsCode, int drawing)
