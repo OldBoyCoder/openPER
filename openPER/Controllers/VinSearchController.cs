@@ -25,28 +25,52 @@ namespace openPER.Controllers
             return View(model);
         }
         [HttpPost]
-        public IActionResult Index(VinSearchViewModel model)
+        public IActionResult SearchByChassisAndVin(SearchViewModel model)
         {
             var x = new VinSearch();
             var language = Helpers.LanguageSupport.SetCultureBasedOnCookie(HttpContext);
-            model.SelectedModel = model.SelectedModel.PadLeft(3, '0');
-            var searchResult = x.FindVehicleByModelAndChassis(model.SelectedModel, model.ChassisNumber);
+            model.VinSearch.SelectedModel = model.VinSearch.SelectedModel.PadLeft(3, '0');
+            var searchResult = x.FindVehicleByModelAndChassis(model.VinSearch.SelectedModel, model.VinSearch.ChassisNumber);
             if (searchResult != null)
             {
                 var mvsCode = searchResult.MVS.Substring(0, 3);
                 var mvsVersion = searchResult.MVS.Substring(3, 3);
                 var mvsSeries = searchResult.MVS.Substring(6, 1);
-                model.MvsData = rep.GetMvsDetails(mvsCode, mvsVersion, mvsSeries, searchResult.InteriorColour, language);
-                model.ChassisNumber = searchResult.Chassis;
-                model.Organization = searchResult.Organization;
-                model.ProductionDate = searchResult.Date;
-                model.EngineNumber = searchResult.Motor;
+                model.VinSearch.MvsData = rep.GetMvsDetails(mvsCode, mvsVersion, mvsSeries, searchResult.InteriorColour, language);
+                model.VinSearch.ChassisNumber = searchResult.Chassis;
+                model.VinSearch.Organization = searchResult.Organization;
+                model.VinSearch.ProductionDate = searchResult.Date;
+                model.VinSearch.EngineNumber = searchResult.Motor;
 
 
             }
-            model.Models = rep.GetAllModels();
+            model.VinSearch.Models = rep.GetAllModels();
+            return View("Index", model.VinSearch);
+        }
+        [HttpPost]
+        public IActionResult SearchByFullVin(SearchViewModel model)
+        {
+            var x = new VinSearch();
+            var language = Helpers.LanguageSupport.SetCultureBasedOnCookie(HttpContext);
+            if (string.IsNullOrEmpty(model.FullVin) || model.FullVin.Length != 17)
+                return View();
+            
+            var searchResult = x.FindVehicleByModelAndChassis(model.FullVin.Substring(3,3), model.FullVin.Substring(9, 8));
+            if (searchResult != null)
+            {
+                var mvsCode = searchResult.MVS.Substring(0, 3);
+                var mvsVersion = searchResult.MVS.Substring(3, 3);
+                var mvsSeries = searchResult.MVS.Substring(6, 1);
+                model.VinSearch.MvsData = rep.GetMvsDetails(mvsCode, mvsVersion, mvsSeries, searchResult.InteriorColour, language);
+                model.VinSearch.ChassisNumber = searchResult.Chassis;
+                model.VinSearch.Organization = searchResult.Organization;
+                model.VinSearch.ProductionDate = searchResult.Date;
+                model.VinSearch.EngineNumber = searchResult.Motor;
 
-            return View(model);
+
+            }
+            model.VinSearch.Models = rep.GetAllModels();
+            return View("Index", model.VinSearch);
         }
     }
 }

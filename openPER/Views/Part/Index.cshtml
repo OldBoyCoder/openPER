@@ -13,9 +13,9 @@
     {
         <table>
             <tr><th>@Model.Result.PartNumber</th><th>@Model.Result.Description</th><th></th><th></th></tr>
-            <tr><td>Family</td><td>@Model.Result.FamilyCode - @Model.Result.FamilyDescription</td><td><td></td></td></tr>
-            <tr><td>Weight (grams)</td><td>@Model.Result.Weight</td><td><td></td></td></tr>
-            <tr><td>Measurement unit</td><td>@Model.Result.UnitOfSale</td><td><td></td></td></tr>
+            <tr><td>Family</td><td>@Model.Result.FamilyCode - @Model.Result.FamilyDescription</td><td></td><td></td></tr>
+            <tr><td>Weight (grams)</td><td>@Model.Result.Weight</td><td></td><td></td></tr>
+            <tr><td>Measurement unit</td><td>@Model.Result.UnitOfSale</td><td></td><td></td></tr>
         </table>
         <table>
             @foreach (var drawing in Model.Result.Drawings)
