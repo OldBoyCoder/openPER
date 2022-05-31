@@ -4,6 +4,6 @@ namespace openPER.ViewModels
 {
     public class MakesViewModel
     {
-        public List<MakeModel> Makes { get; set; }
+        public List<MakeViewModel> Makes { get; set; }
     }
 }
