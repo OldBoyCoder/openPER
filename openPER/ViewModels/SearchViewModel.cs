@@ -1,4 +1,4 @@
-﻿namespace openPER.Models
+﻿namespace openPER.ViewModels
 {
     public class SearchViewModel
     {

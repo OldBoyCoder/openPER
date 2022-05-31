@@ -10,9 +10,9 @@ namespace openPER.Repositories
     public class Release20Repository : IRepository
 
     {
-        public TableViewModel GetTable(string makeCode, string modelCode, string catalogueCode, int groupCode, int subGroupCode, int sgsCode, int drawingNumber, string languageCode)
+        public TableModel GetTable(string makeCode, string modelCode, string catalogueCode, int groupCode, int subGroupCode, int sgsCode, int drawingNumber, string languageCode)
         {
-            var t = new TableViewModel();
+            var t = new TableModel();
             using (var connection = new SqliteConnection(@"Data Source=C:\Temp\ePerOutput\eperRelease20.db"))
             {
                 t.MakeDesc = GetMakeDescription(makeCode, connection);
@@ -64,9 +64,9 @@ namespace openPER.Repositories
             return rc;
         }
 
-        private List<TablePartViewModel> GetTableParts(string catalogueCode, int groupCode, int subGroupCode, int sgsCode, int drawingNumber, string languageCode, SqliteConnection connection)
+        private List<TablePartModel> GetTableParts(string catalogueCode, int groupCode, int subGroupCode, int sgsCode, int drawingNumber, string languageCode, SqliteConnection connection)
         {
-            var parts = new List<TablePartViewModel>();
+            var parts = new List<TablePartModel>();
             var sql = @"SELECT TBD_RIF, PRT_COD, TBD_QTY, CDS_DSC, TBD_NOTE1, TBD_NOTE2, TBD_NOTE3,
                                         TBD_SEQ, NTS_DSC, TBD_VAL_FORMULA, TBD_AGG_DSC
                                         FROM TBDATA
@@ -76,7 +76,7 @@ namespace openPER.Repositories
                                         ORDER BY TBD_RIF,TBD_SEQ";
             connection.RunSqlAllRows(sql, (reader) =>
                 {
-                    var part = new TablePartViewModel();
+                    var part = new TablePartModel();
                     part.PartNumber = reader.GetDouble(1);
                     part.TableOrder = reader.GetInt32(0);
                     part.Quantity = reader.GetString(2);
@@ -99,9 +99,9 @@ namespace openPER.Repositories
             return parts;
 
         }
-        private List<ModificationViewModel> GetPartModifications(TablePartViewModel part, string catalogueCode, int groupCode, int subGroupCode, int sgsCode, int drawingNumber, string languageCode, SqliteConnection connection)
+        private List<ModificationModel> GetPartModifications(TablePartModel part, string catalogueCode, int groupCode, int subGroupCode, int sgsCode, int drawingNumber, string languageCode, SqliteConnection connection)
         {
-            var modifications = new List<ModificationViewModel>();
+            var modifications = new List<ModificationModel>();
             var sql = @"SELECT TBDM_CD, TBDATA_MOD.MDF_COD, TBDM_PROG , MDF_DSC
                                         FROM TBDATA_MOD
                                         JOIN MODIF_DSC ON TBDATA_MOD.MDF_COD = MODIF_DSC.MDF_COD AND MODIF_DSC.LNG_COD = $p1
@@ -110,7 +110,7 @@ namespace openPER.Repositories
                                         ORDER BY TBDM_PROG";
             connection.RunSqlAllRows(sql, (reader) =>
                 {
-                    var mod = new ModificationViewModel();
+                    var mod = new ModificationModel();
                     mod.Type = reader.GetString(0);
                     mod.Code = reader.GetInt32(1);
                     mod.Progression = reader.GetInt32(2);
@@ -125,9 +125,9 @@ namespace openPER.Repositories
             }
             return modifications;
         }
-        private List<ActivationViewModel> GetActivationsForModification(string catalogueCode, int modCode, string languageCode, SqliteConnection connection)
+        private List<ActivationModel> GetActivationsForModification(string catalogueCode, int modCode, string languageCode, SqliteConnection connection)
         {
-            var modifications = new List<ActivationViewModel>();
+            var modifications = new List<ActivationModel>();
             var sql = @"SELECT IFNULL(A.ACT_MASK, ''),IFNULL(M.MDFACT_SPEC, ''), IFNULL(M.ACT_COD, ''), IFNULL(O.OPTK_TYPE, ''), IFNULL(O.OPTK_COD, ''), IFNULL(O.OPTK_DSC, ''),
                     IFNULL(V.VMK_TYPE, ''), IFNULL(V.VMK_COD, ''), IFNULL(V.VMK_DSC, '')
                     FROM MDF_ACT M
@@ -137,7 +137,7 @@ namespace openPER.Repositories
                     WHERE M.CAT_COD = $p3 AND M.MDF_COD = $p1";
             connection.RunSqlAllRows(sql, (reader) =>
                 {
-                    var mod = new ActivationViewModel();
+                    var mod = new ActivationModel();
                     mod.ActivationDescription = reader.GetString(0) + " " + reader.GetString(1);
                     mod.ActivationCode = reader.GetString(2);
                     mod.OptionType = reader.GetString(3);
@@ -276,9 +276,9 @@ namespace openPER.Repositories
             return rc;
         }
 
-        public List<GroupViewModel> GetGroupsForCatalogue(string catalogueCode, string languageCode)
+        public List<GroupModel> GetGroupsForCatalogue(string catalogueCode, string languageCode)
         {
-            var rc = new List<GroupViewModel>();
+            var rc = new List<GroupModel>();
             using (var connection = new SqliteConnection(@"Data Source=C:\Temp\ePerOutput\eperRelease20.db"))
             {
                 var sql = @"select distinct T.GRP_COD, GRP_DSC FROM TBDATA T
@@ -287,7 +287,7 @@ namespace openPER.Repositories
                             order by T.GRP_COD";
                 connection.RunSqlAllRows(sql, (reader) =>
                     {
-                        var m = new GroupViewModel
+                        var m = new GroupModel
                         {
                             Code = reader.GetInt32(0),
                             Description = reader.GetString(1)
@@ -303,9 +303,9 @@ namespace openPER.Repositories
             return rc;
         }
 
-        private List<SubGroupViewModel> GetSubgroupsForCatalogueGroup(string catalogueCode, int groupCode, string languageCode)
+        private List<SubGroupModel> GetSubgroupsForCatalogueGroup(string catalogueCode, int groupCode, string languageCode)
         {
-            var rc = new List<SubGroupViewModel>();
+            var rc = new List<SubGroupModel>();
             using (var connection = new SqliteConnection(@"Data Source=C:\Temp\ePerOutput\eperRelease20.db"))
             {
                 var sql = @"select distinct T.SGRP_COD, SGRP_DSC FROM TBDATA T
@@ -314,7 +314,7 @@ namespace openPER.Repositories
                             order by T.SGRP_COD";
                 connection.RunSqlAllRows(sql, (reader) =>
                     {
-                        var m = new SubGroupViewModel
+                        var m = new SubGroupModel
                         {
                             Code = reader.GetInt32(0),
                             Description = reader.GetString(1)
@@ -383,9 +383,9 @@ namespace openPER.Repositories
             }
         }
 
-        public MvsViewModel GetMvsDetails(string mvsCode, string mvsVersion, string mvsSeries, string colourCode, string languageCode)
+        public MvsModel GetMvsDetails(string mvsCode, string mvsVersion, string mvsSeries, string colourCode, string languageCode)
         {
-            var m = new MvsViewModel();
+            var m = new MvsModel();
             using (var connection = new SqliteConnection(@"Data Source=C:\Temp\ePerOutput\eperRelease20.db"))
             {
                 var sql = @"select M.MOD_COD, M.MVS_VERSION, M.MVS_SERIE, MVS_DSC, MVS_SINCOM_VERS,MVS_ENGINE_TYPE, MV.VMK_DSC, VV.VMK_DSC,

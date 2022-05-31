@@ -1,6 +1,6 @@
 ﻿namespace openPER.Models
 {
-    public class MvsViewModel
+    public class MvsModel
     {
         public string MvsCode { get; set; }
         public string MvsVersion { get; set; }

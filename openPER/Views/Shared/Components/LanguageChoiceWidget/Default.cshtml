@@ -1,4 +1,5 @@
-﻿@model SessionOptionsViewModel
+﻿@using openPER.ViewModels
+@model SessionOptionsViewModel
 @using(Html.BeginForm("Index", "Home", FormMethod.Post))
 {
 @Html.DropDownListFor(m=>m.CurrentLanguage, new SelectList(Model.Languages, "Code", "Description"))

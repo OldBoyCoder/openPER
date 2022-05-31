@@ -1,6 +1,6 @@
 using System;
 
-namespace openPER.Models
+namespace openPER.ViewModels
 {
     public class ErrorViewModel
     {

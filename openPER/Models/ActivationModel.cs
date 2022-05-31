@@ -1,6 +1,6 @@
 ﻿namespace openPER.Models
 {
-    public class ActivationViewModel
+    public class ActivationModel
     {
         public string ActivationCode { get; set; }
         public string ActivationDescription { get; set; }

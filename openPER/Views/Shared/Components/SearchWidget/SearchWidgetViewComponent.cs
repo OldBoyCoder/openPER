@@ -1,6 +1,6 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using openPER.Interfaces;
-using openPER.Models;
+using openPER.ViewModels;
 using System.Collections.Generic;
 namespace openPER.Views.Shared.Components.SearchWidget
 {

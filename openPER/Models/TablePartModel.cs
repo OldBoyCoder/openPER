@@ -2,7 +2,7 @@
 
 namespace openPER.Models
 {
-    public class TablePartViewModel
+    public class TablePartModel
     {
         public double PartNumber { get; set; }
         public string Description { get; set; }
@@ -14,7 +14,7 @@ namespace openPER.Models
         public string Notes2 { get; set; }
         public string Notes3 { get; set; }
         public string Sequence { get; set; }
-        public List<ModificationViewModel> Modifications { get; set; }
+        public List<ModificationModel> Modifications { get; set; }
         public string Compatibility { get; internal set; }
     }
 }
