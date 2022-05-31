@@ -25,7 +25,7 @@ namespace openPER
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
-            services.AddScoped<IRepository, Release20Repository>();
+            services.AddScoped<IRepository, CachedRelease20Repository>();
             services.AddControllersWithViews();
         }
 

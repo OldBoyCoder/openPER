@@ -15,7 +15,7 @@ namespace openPER.Controllers
         public IActionResult Index(string makeCode)
         {
             var model = new ModelsViewModel();
-            model.Models = rep.GetAllModels(makeCode);
+            model.Models = rep.GetAllModelsForMake(makeCode);
             return View(model);
 
         }
