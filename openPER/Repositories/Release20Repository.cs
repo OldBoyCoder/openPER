@@ -36,28 +36,62 @@ namespace openPER.Repositories
             }
             return t;
         }
-        public List<MakeModel> GetAllMakes()
+        private static void RunSqlAllRows(SqliteConnection connection, string sql, Action<SqliteDataReader> rowHandler, params object[] parameters)
+        {
+            var command = connection.CreateCommand();
+            command.CommandText = sql;
+            if (parameters != null)
+            {
+                for (int i = 0; i < parameters.Length; i++)
+                {
+                    command.Parameters.AddWithValue("$p" + (i + 1).ToString(), parameters[i]);
+                }
+            }
+            using (var reader = command.ExecuteReader())
+            {
+                while (reader.Read())
+                {
+                    rowHandler(reader);
+                }
+            }
+
+        }
+        private static void RunSqlFirstRowOnly(SqliteConnection connection, string sql, Action<SqliteDataReader> rowHandler, params object[] parameters)
+        {
+            var command = connection.CreateCommand();
+            command.CommandText = sql;
+            if (parameters != null)
+            {
+                for (int i = 0; i < parameters.Length; i++)
+                {
+                    command.Parameters.AddWithValue("$p" + (i + 1).ToString(), parameters[i]);
+                }
+            }
+            using (var reader = command.ExecuteReader())
+            {
+                if (reader.Read())
+                {
+                    rowHandler(reader);
+                }
+            }
+
+        }
+        public static List<MakeModel> GetAllMakes()
         {
             var rc = new List<MakeModel>();
             using (var connection = new SqliteConnection(@"Data Source=C:\Temp\ePerOutput\eperRelease20.db"))
             {
                 connection.Open();
-                var command = connection.CreateCommand();
-                command.CommandText = @"SELECT MK_COD, MK_DSC FROM MAKES ORDER BY MK_DSC ";
-
-                using (var reader = command.ExecuteReader())
-                {
-                    while (reader.Read())
+                var sql = @"SELECT MK_COD, MK_DSC FROM MAKES ORDER BY MK_DSC ";
+                RunSqlAllRows(connection, sql, (reader)=>{
+                    var m = new MakeModel
                     {
-                        var m = new MakeModel
-                        {
-                            Code = reader.GetString(0),
-                            Description = reader.GetString(1)
-                        };
-                        rc.Add(m);
-                    }
-                }
+                        Code = reader.GetString(0),
+                        Description = reader.GetString(1)
+                    };
+                    rc.Add(m);
 
+                }, null );
             }
             return rc;
 
@@ -338,22 +372,18 @@ namespace openPER.Repositories
             {
                 connection.Open();
                 var command = connection.CreateCommand();
-                command.CommandText = @"SELECT CMG_COD, CMG_DSC FROM COMM_MODGRP WHERE MK2_COD = $makeCode  ORDER BY CMG_SORT_KEY ";
-                command.Parameters.AddWithValue("$makeCode", makeCode);
-
-                using (var reader = command.ExecuteReader())
+                var sql = @"SELECT CMG_COD, CMG_DSC FROM COMM_MODGRP WHERE MK2_COD = $p1  ORDER BY CMG_SORT_KEY ";
+                RunSql(connection, sql, (reader) =>
                 {
-                    while (reader.Read())
+
+                    var m = new ModelModel
                     {
-                        var m = new ModelModel
-                        {
-                            Code = reader.GetString(0),
-                            Description = reader.GetString(1),
-                            MakeCode = makeCode
-                        };
-                        rc.Add(m);
-                    }
-                }
+                        Code = reader.GetString(0),
+                        Description = reader.GetString(1),
+                        MakeCode = makeCode
+                    };
+                    rc.Add(m);
+                }, makeCode );
 
             }
             return rc;
