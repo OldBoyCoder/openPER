@@ -36,9 +36,9 @@ namespace openPER.Repositories
             }
             return t;
         }
-        public List<MakeViewModel> GetAllMakes()
+        public List<MakeModel> GetAllMakes()
         {
-            var rc = new List<MakeViewModel>();
+            var rc = new List<MakeModel>();
             using (var connection = new SqliteConnection(@"Data Source=C:\Temp\ePerOutput\eperRelease20.db"))
             {
                 connection.Open();
@@ -49,7 +49,7 @@ namespace openPER.Repositories
                 {
                     while (reader.Read())
                     {
-                        var m = new MakeViewModel
+                        var m = new MakeModel
                         {
                             Code = reader.GetString(0),
                             Description = reader.GetString(1)
@@ -304,9 +304,9 @@ namespace openPER.Repositories
             }
             return "";
         }
-        public List<ModelViewModel> GetAllModels()
+        public List<ModelModel> GetAllModels()
         {
-            var rc = new List<ModelViewModel>();
+            var rc = new List<ModelModel>();
             using (var connection = new SqliteConnection(@"Data Source=C:\Temp\ePerOutput\eperRelease20.db"))
             {
                 connection.Open();
@@ -317,7 +317,7 @@ namespace openPER.Repositories
                 {
                     while (reader.Read())
                     {
-                        var m = new ModelViewModel
+                        var m = new ModelModel
                         {
                             Code = reader.GetString(0),
                             Description = reader.GetString(1),
@@ -331,9 +331,9 @@ namespace openPER.Repositories
             return rc;
 
         }
-        public List<ModelViewModel> GetAllModels(string makeCode)
+        public List<ModelModel> GetAllModels(string makeCode)
         {
-            var rc = new List<ModelViewModel>();
+            var rc = new List<ModelModel>();
             using (var connection = new SqliteConnection(@"Data Source=C:\Temp\ePerOutput\eperRelease20.db"))
             {
                 connection.Open();
@@ -345,7 +345,7 @@ namespace openPER.Repositories
                 {
                     while (reader.Read())
                     {
-                        var m = new ModelViewModel
+                        var m = new ModelModel
                         {
                             Code = reader.GetString(0),
                             Description = reader.GetString(1),
@@ -359,9 +359,9 @@ namespace openPER.Repositories
             return rc;
         }
 
-        public List<CatalogueViewModel> GetAllCatalogues(string makeCode, string modelCode, string languageCode)
+        public List<CatalogueModel> GetAllCatalogues(string makeCode, string modelCode, string languageCode)
         {
-            var rc = new List<CatalogueViewModel>();
+            var rc = new List<CatalogueModel>();
             using (var connection = new SqliteConnection(@"Data Source=C:\Temp\ePerOutput\eperRelease20.db"))
             {
                 connection.Open();
@@ -374,7 +374,7 @@ namespace openPER.Repositories
                 {
                     while (reader.Read())
                     {
-                        var m = new CatalogueViewModel
+                        var m = new CatalogueModel
                         {
                             Code = reader.GetString(0),
                             Description = reader.GetString(1),
@@ -388,7 +388,7 @@ namespace openPER.Repositories
             }
             foreach (var item in rc)
             {
-                item.Groups = GetGroupsForCatalogue(item.Code, languageCode);
+          //      item.Groups = GetGroupsForCatalogue(item.Code, languageCode);
             }
             return rc;
         }

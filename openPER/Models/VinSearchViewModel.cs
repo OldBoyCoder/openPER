@@ -5,7 +5,7 @@ namespace openPER.Models
 {
     public class VinSearchViewModel
     {
-        public List<ModelViewModel> Models { get; set; }
+        public List<ModelModel> Models { get; set; }
         public MvsViewModel MvsData { get; set; }
         public string Organization { get; internal set; }
         public string ProductionDate { get; internal set; }

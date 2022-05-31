@@ -33,17 +33,6 @@ namespace openPER.Controllers
             x.SgsCode = sgsCode;
             return View(x);
         }
-        // GET: TableController/Details/5
-        [Route("Table/Makes")]
-        public ActionResult Makes()
-        {
-            return View(rep.GetAllMakes());
-        }
-        [Route("Table/Models/{Make}")]
-        public ActionResult Models(string make)
-        {
-            return View(rep.GetAllModels(make));
-        }
         [Route("Table/Catalogues/{Make}/{Model}")]
         public ActionResult Catalogues(string make, string model)
         {
