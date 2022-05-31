@@ -1,8 +1,8 @@
 ﻿namespace openPER.Models
 {
-    public class MakeModel
+    public class VersionModel
     {
-        public string Code { get; set; }
+        public int Release { get; set; }
         public string Description { get; set; }
     }
 }

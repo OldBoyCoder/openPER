@@ -1,4 +1,4 @@
-﻿@model IEnumerable<openPER.Models.CatalogueViewModel>
+﻿@model IEnumerable<openPER.Models.CatalogueModel>
 
 @{
     ViewData["Title"] = "Catalogues";
@@ -10,7 +10,7 @@
 {
     <details>
         <summary>@Html.DisplayFor(modelItem => item.Code) @Html.DisplayFor(modelItem => item.Description)</summary>
-        @foreach (var group in item.Groups)
+@*        @foreach (var group in item.Groups)
         {
             <details>
                 <summary>@Html.DisplayFor(modelItem => group.Code) @Html.DisplayFor(modelItem => group.Description)</summary>
@@ -33,7 +33,7 @@
                 }
                 </ul>
             </details>
-        }
+        }*@
     </details>
 }
             

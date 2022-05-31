@@ -1,0 +1,24 @@
+﻿@model openPER.ViewModels.ModelsViewModel
+
+@{
+    ViewData["Title"] = "Index";
+}
+
+<h1>Index</h1>
+
+<table class="table">
+    <thead>
+        <tr>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+@foreach (var item in Model.Models) {
+        <tr>
+            <td>
+                @Html.ActionLink(item.Description, "Index", "Catalogues", new {MakeCode=item.MakeCode, ModelCode=item.Code})
+            </td>
+        </tr>
+}
+    </tbody>
+</table>

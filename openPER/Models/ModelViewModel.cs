@@ -1,6 +1,6 @@
 ﻿namespace openPER.Models
 {
-    public class ModelViewModel
+    public class ModelModel
     {
         public string MakeCode { get; set; }
         public string Code { get; set; }

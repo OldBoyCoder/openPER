@@ -1,0 +1,18 @@
+﻿@model openPER.ViewModels.CataloguesViewModel
+
+@{
+    ViewData["Title"] = "Index";
+}
+
+<h1>Index</h1>
+
+<div>
+    <h4>CataloguesViewModel</h4>
+    <table class="table">
+        @foreach (var item in Model.Catalogues)
+        {
+            <tr><td>@item.Description</td></tr>
+        }
+    </table>
+</div>
+
