@@ -10,11 +10,6 @@ namespace openPER.Repositories
     public class Release20Repository : IRepository
 
     {
-        private readonly IMemoryCache _cache;
-        public Release20Repository(IMemoryCache cache)
-        {
-            _cache = cache;
-        }
         public TableViewModel GetTable(string makeCode, string modelCode, string catalogueCode, int groupCode, int subGroupCode, int sgsCode, int drawingNumber, string languageCode)
         {
             var t = new TableViewModel();
@@ -158,51 +153,37 @@ namespace openPER.Repositories
         }
         private string GetCatalogueDescription(string makeCode, string modelCode, string catalogueCode, SqliteConnection connection)
         {
-            var cacheKeys = new { type = "CAT", k1 = modelCode, k2 = catalogueCode };
-            if (!_cache.TryGetValue(cacheKeys, out string rc))
-            {
-                var sql = @"SELECT CMD_DSC FROM COMM_MODELS WHERE MOD_COD = $p1 AND CAT_COD = $p2 ";
-                connection.RunSqlFirstRowOnly(sql, (reader) =>
-                {
-                    rc = reader.GetString(0);
-                }, modelCode, catalogueCode);
+            string rc = "";
 
-                var cacheEntryOptions = new MemoryCacheEntryOptions().SetSlidingExpiration(TimeSpan.FromSeconds(10));
-                _cache.Set(cacheKeys, rc, cacheEntryOptions);
-            }
+            var sql = @"SELECT CMD_DSC FROM COMM_MODELS WHERE MOD_COD = $p1 AND CAT_COD = $p2 ";
+            connection.RunSqlFirstRowOnly(sql, (reader) =>
+            {
+                rc = reader.GetString(0);
+            }, modelCode, catalogueCode);
+
             return rc;
         }
 
         private string GetGroupDescription(int groupCode, string languageCode, SqliteConnection connection)
         {
-            var cacheKeys = new { type = "GROUP", k1 = languageCode, k2 = groupCode };
-            if (!_cache.TryGetValue(cacheKeys, out string rc))
-            {
-                var sql = @"SELECT GRP_DSC FROM GROUPS_DSC WHERE GRP_COD = $p1 AND LNG_COD = $p2 ";
+            string rc = "";
+            var sql = @"SELECT GRP_DSC FROM GROUPS_DSC WHERE GRP_COD = $p1 AND LNG_COD = $p2 ";
 
-                connection.RunSqlFirstRowOnly(sql, (reader) =>
-                {
-                    rc = reader.GetString(0);
-                }, groupCode, languageCode);
-                var cacheEntryOptions = new MemoryCacheEntryOptions().SetSlidingExpiration(TimeSpan.FromSeconds(10));
-                _cache.Set(cacheKeys, rc, cacheEntryOptions);
-            }
+            connection.RunSqlFirstRowOnly(sql, (reader) =>
+            {
+                rc = reader.GetString(0);
+            }, groupCode, languageCode);
             return rc;
         }
 
         private string GetSubGroupDescription(int groupCode, int subGroupCode, string languageCode, SqliteConnection connection)
         {
-            var cacheKeys = new { type = "SUBGROUP", k1 = languageCode, k2 = groupCode, k3 = subGroupCode };
-            if (!_cache.TryGetValue(cacheKeys, out string rc))
-            {
-                var sql = @"SELECT SGRP_DSC FROM SUBGROUPS_DSC WHERE SGRP_COD = $p2 AND GRP_COD = $p1 AND LNG_COD = $p3 ";
-                connection.RunSqlFirstRowOnly(sql, (reader) =>
-                    {
-                        rc = reader.GetString(0);
-                    }, groupCode, subGroupCode, languageCode);
-                var cacheEntryOptions = new MemoryCacheEntryOptions().SetSlidingExpiration(TimeSpan.FromSeconds(10));
-                _cache.Set(cacheKeys, rc, cacheEntryOptions);
-            }
+            var rc = "";
+            var sql = @"SELECT SGRP_DSC FROM SUBGROUPS_DSC WHERE SGRP_COD = $p2 AND GRP_COD = $p1 AND LNG_COD = $p3 ";
+            connection.RunSqlFirstRowOnly(sql, (reader) =>
+                {
+                    rc = reader.GetString(0);
+                }, groupCode, subGroupCode, languageCode);
             return rc;
         }
 
@@ -248,7 +229,7 @@ namespace openPER.Repositories
             return rc;
 
         }
-        public List<ModelModel> GetAllModels(string makeCode)
+        public List<ModelModel> GetAllModelsForMake(string makeCode)
         {
             var rc = new List<ModelModel>();
             using (var connection = new SqliteConnection(@"Data Source=C:\Temp\ePerOutput\eperRelease20.db"))
