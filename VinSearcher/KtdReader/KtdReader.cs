@@ -10,8 +10,6 @@ namespace VinSearcher.KtdReader
     public partial class KtdReader
     {
         private DbTableHeader _header;
-        private string _columnFilter;
-        private string _valueFilter;
         public IndexBlock FindIndexBlockForKey(string pathToDataFile, string searchKey)
         {
             var indexBlocks = GetIndexBlocks(pathToDataFile, 1);
@@ -202,11 +200,6 @@ namespace VinSearcher.KtdReader
                 var content = new byte[dataLength - length];
                 unpackedContent.Read(content, 0, dataLength - length);
                 var record = Unpack(content, dataLength - length);
-                if (_columnFilter != null)
-                {
-                    if (!record[_columnFilter].StartsWith(_valueFilter))
-                        continue;
-                }
                 foreach (var value in record.Values)
                 {
                     tw.Write($"{value}\t");
