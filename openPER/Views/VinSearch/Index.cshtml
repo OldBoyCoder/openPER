@@ -7,7 +7,8 @@
 <h1>Vehicle search results</h1>
 @if (Model != null && Model.MvsData != null)
 {
-    <table>
+    <table class="table">
+        <caption>List of vehicle details</caption>
         <tr><td>Model</td><td>@Html.DisplayTextFor(m=>m.MvsData.MvsCode) | @Html.DisplayTextFor(m=>m.MvsData.ModelDescription)</td></tr>
         <tr><td>Chassis No.</td><td>@Html.DisplayTextFor(m=>m.ChassisNumber)</td></tr>
         <tr><td>Catalogue</td><td>@Html.DisplayTextFor(m=>m.MvsData.CatalogueCode) | @Html.DisplayTextFor(m=>m.MvsData.CatalogueDescription)</td></tr>

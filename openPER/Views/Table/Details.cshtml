@@ -6,7 +6,7 @@
 
 <h1>TableView</h1>
 <p>
-@Resources.FrontEnd.IntroParagraph
+    @Resources.FrontEnd.IntroParagraph
 </p>
 
 <div>
@@ -80,60 +80,61 @@
             @Html.DisplayFor(model => model.SgsDesc)
         </dd>
     </dl>
-                @foreach (var item in Model.Narratives)
-            {
-                <p>
-                    Hello
-                @item
-                </p>
-            }
+    @foreach (var item in Model.Narratives)
+    {
+        <p>
+            Hello
+            @item
+        </p>
+    }
 
-    <br/>
+    <br />
     <div class="flex-container">
         <div>
-        <img src="@Url.Action("Image", "Table", new {Make=Model.MakeCode, Model=Model.ModelCode, Catalogue=Model.CatalogueCode, Group = Model.GroupCode, SubGroup = Model.SubGroupCode, SgsCode = Model.SgsCode, Drawing=Model.CurrentDrawing})">
+            <img src="@Url.Action("Image", "Table", new {Make=Model.MakeCode, Model=Model.ModelCode, Catalogue=Model.CatalogueCode, Group = Model.GroupCode, SubGroup = Model.SubGroupCode, SgsCode = Model.SgsCode, Drawing=Model.CurrentDrawing})">
         </div>
         <div>
-    <table>
-        <tr><th>&nbsp;</th><th>Prod. code</th><th>Fur. Descr.</th><th>Comp.</th><th>Modif.</th><th>Qty</th><th>Notes</th><th>Components</th></tr>
+            <table class="table table-sm">
+                <tr><th>&nbsp;</th><th>Prod. code</th><th>Fur. Descr.</th><th>Comp.</th><th>Modif.</th><th>Qty</th><th>Notes</th><th>Components</th></tr>
                 @{
-                    int lastOrder=999;
+                    int lastOrder = 999;
                     foreach (var item in Model.Parts)
                     {
                         if (item.TableOrder != lastOrder)
                         {
-                                        <tr class="partrowheader"><td>@Html.DisplayFor(model=>item.TableOrder)</td><td colspan="7">@Html.DisplayFor(model=>item.Description)</td></tr>
+                            <tr class="partrowheader"><td>@Html.DisplayFor(model=>item.TableOrder)</td><td colspan="7">@Html.DisplayFor(model=>item.Description)</td></tr>
                             lastOrder = item.TableOrder;
                         }
-                                    <tr class="partrow">
-                                        <td>&nbsp;</td>
-                                        <td class="partrowproductcode"><a href="@Url.Action("SearchResults", "Part", new {PartNumber=item.PartNumber} )">@Html.DisplayFor(model=>item.PartNumber)</a></td>
-                                        <td>@Html.DisplayFor(model=>item.FurtherDescription)</td>
-                                        <td>@Html.DisplayFor(model=>item.Compatibility)</td>
-                                        <td>
-                                            <ul>
-                                                @foreach (var mod in item.Modifications)
+                        <tr class="partrow">
+                            <td>&nbsp;</td>
+                            <td class="partrowproductcode"><a href="@Url.Action("SearchResults", "Part", new {PartNumber=item.PartNumber} )">@Html.DisplayFor(model=>item.PartNumber)</a></td>
+                            <td>@Html.DisplayFor(model=>item.FurtherDescription)</td>
+                            <td>@Html.DisplayFor(model=>item.Compatibility)</td>
+                            <td>
+                                <ul>
+                                    @foreach (var mod in item.Modifications)
                                     {
-                                                    <li title="@mod.FullDescription">@Html.DisplayFor(model=>mod.Type)@Html.DisplayFor(model=>mod.Code)</li>
+                                        <li title="@mod.FullDescription">@Html.DisplayFor(model=>mod.Type)@Html.DisplayFor(model=>mod.Code)</li>
                                     }
-                                            </ul>
-                                        </td>
-                                        <td>@Html.DisplayFor(model=>item.Quantity)</td>
-                                        <td>@Html.DisplayFor(model=>item.Notes)</td>
+                                </ul>
+                            </td>
+                            <td>@Html.DisplayFor(model=>item.Quantity)</td>
+                            <td>@Html.DisplayFor(model=>item.Notes)</td>
 
-                                    </tr>
+                        </tr>
                     }
                 }
-        </table>
-    </div></div>
+            </table>
+        </div>
+    </div>
     @foreach (var drawing in Model.DrawingNumbers)
     {
-            <p>
-                <a href="@Url.Action("Details", "Table",  new {Make=Model.MakeCode, Model=Model.ModelCode, Catalogue=Model.CatalogueCode, Group = Model.GroupCode, SubGroup = Model.SubGroupCode, SgsCode = Model.SgsCode, Drawing=drawing})">
-        <img src="@Url.Action("Thumbnail", "Table", new {Make=Model.MakeCode, Model=Model.ModelCode, Catalogue=Model.CatalogueCode, Group = Model.GroupCode, SubGroup = Model.SubGroupCode, SgsCode = Model.SgsCode, Drawing=drawing})">
-        </a>
+        <p>
+            <a href="@Url.Action("Details", "Table",  new {Make=Model.MakeCode, Model=Model.ModelCode, Catalogue=Model.CatalogueCode, Group = Model.GroupCode, SubGroup = Model.SubGroupCode, SgsCode = Model.SgsCode, Drawing=drawing})">
+                <img src="@Url.Action("Thumbnail", "Table", new {Make=Model.MakeCode, Model=Model.ModelCode, Catalogue=Model.CatalogueCode, Group = Model.GroupCode, SubGroup = Model.SubGroupCode, SgsCode = Model.SgsCode, Drawing=drawing})">
+            </a>
         </p>
-        
+
     }
 
-    </div>
+</div>

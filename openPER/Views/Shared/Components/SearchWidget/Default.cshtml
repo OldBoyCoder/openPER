@@ -3,25 +3,28 @@
     <div class="input-group">
         @using (Html.BeginForm("SearchByChassisAndVin", "VinSearch", FormMethod.Get))
         {
-            @Html.DisplayText("Model :") @Html.DropDownListFor(m=>m.SelectedModel, new SelectList(Model.VinSearch.Models, "Code", "Description"))
-            <br />
-            @Html.DisplayText("Chassis No. :")
-
-            @Html.TextBoxFor(m=>m.ChassisNumber)
-            <button type="submit" class="btn btn-info">Search</button>
+            <div class="input-group mb-3">
+                @Html.DropDownListFor(m=>m.SelectedModel, new SelectList(Model.VinSearch.Models, "Code", "Description"), new {@class="form-select"})
+                @Html.TextBoxFor(m=>m.ChassisNumber, new {@class="form-control", @type="search", @placeholder="Chassis No."})
+                <span class="input-group-append">
+                    <button type="submit" class="btn btn-outline-primary"><i class="fa fa-search"></i></button>
+                </span>
+            </div>
         }
     </div>
-    @using (Html.BeginForm("SearchByFullVin", "VinSearch", FormMethod.Get, new { @class = "form-horizontal", role = "form" }))
-    {
-        <div class="input-group mb-3">
-            @Html.TextBoxFor(m=>m.FullVin, new {@class="form-control", @type="search", @placeholder="Full VIN"})
-            <div class="input-group-append">
-                <button type="submit" class="btn btn-outline-primary"><i class="fa fa-search"></i></button>
+    <div class="input-group">
+        @using (Html.BeginForm("SearchByFullVin", "VinSearch", FormMethod.Get, new { @class = "form-horizontal", role = "form" }))
+        {
+            <div class="input-group mb-3">
+                @Html.TextBoxFor(m=>m.FullVin, new {@class="form-control", @type="search", @placeholder="Full VIN"})
+                <span class="input-group-append">
+                    <button type="submit" class="btn btn-outline-primary"><i class="fa fa-search"></i></button>
+                </span>
             </div>
-        </div>
 
-    }
-    <div>
+        }
+    </div>
+    <div class="input-group">
         @using (@Html.BeginForm("SearchResults", "Part", FormMethod.Get))
         {
             <div class="input-group mb-3">
