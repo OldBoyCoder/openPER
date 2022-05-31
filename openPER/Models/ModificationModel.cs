@@ -2,7 +2,7 @@
 
 namespace openPER.Models
 {
-    public class ModificationViewModel
+    public class ModificationModel
     {
         public string Type { get; set; }
         public int Code { get; set; }
@@ -10,7 +10,7 @@ namespace openPER.Models
         public string Description { get; set; }
         public int Progression { get; set; }
 
-        public List<ActivationViewModel> Activations { get; set; }
+        public List<ActivationModel> Activations { get; set; }
         public string FullDescription
         {
             get

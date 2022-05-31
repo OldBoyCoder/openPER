@@ -1,5 +1,6 @@
-﻿using System.Collections.Generic;
-namespace openPER.Models
+﻿using openPER.Models;
+using System.Collections.Generic;
+namespace openPER.ViewModels
 {
     public class SessionOptionsViewModel
     {

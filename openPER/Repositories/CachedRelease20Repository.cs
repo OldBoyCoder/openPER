@@ -75,10 +75,10 @@ namespace openPER.Repositories
             return rc;
         }
 
-        public List<GroupViewModel> GetGroupsForCatalogue(string catalogueCode, string languageCode)
+        public List<GroupModel> GetGroupsForCatalogue(string catalogueCode, string languageCode)
         {
             var cacheKeys = new { type = "GetGroupsForCatalogue", k1 = catalogueCode, k2=languageCode };
-            if (!_cache.TryGetValue(cacheKeys, out List<GroupViewModel> rc))
+            if (!_cache.TryGetValue(cacheKeys, out List<GroupModel> rc))
             {
                 rc = rep.GetGroupsForCatalogue(catalogueCode, languageCode);
                 var cacheEntryOptions = new MemoryCacheEntryOptions().SetSlidingExpiration(TimeSpan.FromHours(24));
@@ -87,10 +87,10 @@ namespace openPER.Repositories
             return rc;
         }
 
-        public MvsViewModel GetMvsDetails(string mvsCode, string mvsVersion, string mvsSeries, string colourCode, string languageCode)
+        public MvsModel GetMvsDetails(string mvsCode, string mvsVersion, string mvsSeries, string colourCode, string languageCode)
         {
             var cacheKeys = new { type = "GetMvsDetails", k1 = mvsCode, k2 = mvsVersion, k3 = mvsSeries, k4 = colourCode, k5=languageCode };
-            if (!_cache.TryGetValue(cacheKeys, out MvsViewModel rc))
+            if (!_cache.TryGetValue(cacheKeys, out MvsModel rc))
             {
                 rc = rep.GetMvsDetails(mvsCode, mvsVersion, mvsSeries, colourCode, languageCode);
                 var cacheEntryOptions = new MemoryCacheEntryOptions().SetSlidingExpiration(TimeSpan.FromHours(24));
@@ -111,10 +111,10 @@ namespace openPER.Repositories
             return rc;
         }
 
-        public TableViewModel GetTable(string makeCode, string modelCode, string catalogueCode, int groupCode, int subGroupCode, int sgsCode, int drawingNumber, string languageCode)
+        public TableModel GetTable(string makeCode, string modelCode, string catalogueCode, int groupCode, int subGroupCode, int sgsCode, int drawingNumber, string languageCode)
         {
             var cacheKeys = new { type = "GetTable", k1 = makeCode, k2 = modelCode, k3=catalogueCode, k4=groupCode, k5=subGroupCode, k6=sgsCode, k7=drawingNumber, k8=languageCode };
-            if (!_cache.TryGetValue(cacheKeys, out TableViewModel rc))
+            if (!_cache.TryGetValue(cacheKeys, out TableModel rc))
             {
                 rc = rep.GetTable(makeCode, modelCode, catalogueCode, groupCode, subGroupCode, sgsCode, drawingNumber, languageCode);
                 var cacheEntryOptions = new MemoryCacheEntryOptions().SetSlidingExpiration(TimeSpan.FromHours(24));

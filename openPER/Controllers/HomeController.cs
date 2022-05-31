@@ -2,6 +2,7 @@
 using Microsoft.Extensions.Logging;
 using openPER.Interfaces;
 using openPER.Models;
+using openPER.ViewModels;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;

@@ -1,4 +1,6 @@
-﻿namespace openPER.Models
+﻿using openPER.Models;
+
+namespace openPER.ViewModels
 {
     public class PartViewModel
     {
