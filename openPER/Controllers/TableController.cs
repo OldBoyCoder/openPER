@@ -50,7 +50,7 @@ namespace openPER.Controllers
         public ActionResult Image(string make, string model, string catalogue, int group, int subgroup, int sgsCode, int drawing)
         {
             // TODO get rid of hard coded file name
-            var fileName = System.IO.Path.Combine(@"C:\ePer installs\Release 20\SP.NA.00900.FCTLR", $"{make}{catalogue}.na");
+            var fileName = System.IO.Path.Combine(@"C:\ePer installs\Release 18\SP.NA.00900.FCTLR", $"{make}{catalogue}.na");
             var imageName = $"{group}{subgroup.ToString("00")}{sgsCode.ToString("00")}{drawing.ToString("000")}";
 
             return File(GetImageFromNaFile(fileName, imageName, false), "image/png");
@@ -59,7 +59,7 @@ namespace openPER.Controllers
         public ActionResult Thumbnail(string make, string model, string catalogue, int group, int subgroup, int sgsCode, int drawing)
         {
             // TODO get rid of hard coded file name
-            var fileName = System.IO.Path.Combine(@"C:\ePer installs\Release 20\SP.NA.00900.FCTLR", $"{make}{catalogue}.na");
+            var fileName = System.IO.Path.Combine(@"C:\ePer installs\Release 18\SP.NA.00900.FCTLR", $"{make}{catalogue}.na");
             var imageName = $"{group}{subgroup.ToString("00")}{sgsCode.ToString("00")}{drawing.ToString("000")}";
 
             return File(GetImageFromNaFile(fileName, imageName, true), "image/png");
@@ -72,7 +72,7 @@ namespace openPER.Controllers
 
         private byte[] GetImageForGroup(string mapName)
         {
-            var _basePath = @"C:\ePer installs\Release 20";
+            var _basePath = @"C:\ePer installs\Release 18";
             // Generate file name
             var fileName = System.IO.Path.Combine(_basePath, "SP.MP.00900.FCTLR", $"{mapName}.jpg");
             var fileBytes = System.IO.File.ReadAllBytes(fileName);
@@ -81,7 +81,7 @@ namespace openPER.Controllers
         private byte[] GetImageForCatalogue(string cmgCode)
         {
             // Generate file name
-            var _basePath = @"C:\ePer installs\Release 20";
+            var _basePath = @"C:\ePer installs\Release 18";
             var lines = System.IO.File.ReadAllLines(System.IO.Path.Combine(_basePath, @"SP.IM.00900.FXXXX\img.conf"));
             var matches = lines.Where(x => x.Contains($",{cmgCode},"));
             var line = matches.FirstOrDefault(x => x.Contains("s2"));

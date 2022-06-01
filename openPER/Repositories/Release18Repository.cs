@@ -7,13 +7,13 @@ using System.Collections.Generic;
 
 namespace openPER.Repositories
 {
-    public class Release20Repository : IRepository
+    public class Release18Repository : IRepository
 
     {
         public TableModel GetTable(string makeCode, string modelCode, string catalogueCode, int groupCode, int subGroupCode, int sgsCode, int drawingNumber, string languageCode)
         {
             var t = new TableModel();
-            using (var connection = new SqliteConnection(@"Data Source=C:\Temp\ePerOutput\eperRelease20.db"))
+            using (var connection = new SqliteConnection(@"Data Source=C:\Temp\ePerOutput\eperRelease18.db"))
             {
                 t.MakeDesc = GetMakeDescription(makeCode, connection);
                 t.ModelDesc = GetModelDescription(makeCode, modelCode, connection);
@@ -33,7 +33,7 @@ namespace openPER.Repositories
         public List<MakeModel> GetAllMakes()
         {
             var rc = new List<MakeModel>();
-            using (var connection = new SqliteConnection(@"Data Source=C:\Temp\ePerOutput\eperRelease20.db"))
+            using (var connection = new SqliteConnection(@"Data Source=C:\Temp\ePerOutput\eperRelease18.db"))
             {
                 var sql = @"SELECT MK_COD, MK_DSC FROM MAKES ORDER BY MK_DSC ";
                 connection.RunSqlAllRows(sql, (reader) =>
@@ -211,7 +211,7 @@ namespace openPER.Repositories
         public List<ModelModel> GetAllModels()
         {
             var rc = new List<ModelModel>();
-            using (var connection = new SqliteConnection(@"Data Source=C:\Temp\ePerOutput\eperRelease20.db"))
+            using (var connection = new SqliteConnection(@"Data Source=C:\Temp\ePerOutput\eperRelease18.db"))
             {
                 var sql = @"SELECT MOD_COD, MOD_DSC, MK_COD FROM MODELS ORDER BY MOD_SORT_KEY ";
                 connection.RunSqlAllRows(sql, (reader) =>
@@ -232,7 +232,7 @@ namespace openPER.Repositories
         public List<ModelModel> GetAllModelsForMake(string makeCode)
         {
             var rc = new List<ModelModel>();
-            using (var connection = new SqliteConnection(@"Data Source=C:\Temp\ePerOutput\eperRelease20.db"))
+            using (var connection = new SqliteConnection(@"Data Source=C:\Temp\ePerOutput\eperRelease18.db"))
             {
                 var sql = @"SELECT CMG_COD, CMG_DSC FROM COMM_MODGRP WHERE MK2_COD = $p1  ORDER BY CMG_SORT_KEY ";
                 connection.RunSqlAllRows(sql, (reader) =>
@@ -254,7 +254,7 @@ namespace openPER.Repositories
         public List<CatalogueModel> GetAllCatalogues(string makeCode, string modelCode, string languageCode)
         {
             var rc = new List<CatalogueModel>();
-            using (var connection = new SqliteConnection(@"Data Source=C:\Temp\ePerOutput\eperRelease20.db"))
+            using (var connection = new SqliteConnection(@"Data Source=C:\Temp\ePerOutput\eperRelease18.db"))
             {
                 var sql = @"SELECT CAT_COD, CAT_DSC FROM CATALOGUES WHERE MK2_COD = $p1 AND CMG_COD = $p2  ORDER BY CAT_SORT_KEY ";
                 connection.RunSqlAllRows(sql, (reader) =>
@@ -279,7 +279,7 @@ namespace openPER.Repositories
         public List<GroupModel> GetGroupsForCatalogue(string catalogueCode, string languageCode)
         {
             var rc = new List<GroupModel>();
-            using (var connection = new SqliteConnection(@"Data Source=C:\Temp\ePerOutput\eperRelease20.db"))
+            using (var connection = new SqliteConnection(@"Data Source=C:\Temp\ePerOutput\eperRelease18.db"))
             {
                 var sql = @"select distinct T.GRP_COD, GRP_DSC FROM TBDATA T
                             JOIN GROUPS_DSC G ON G.GRP_COD = T.GRP_COD AND G.LNG_COD = $p2
@@ -306,7 +306,7 @@ namespace openPER.Repositories
         private List<SubGroupModel> GetSubgroupsForCatalogueGroup(string catalogueCode, int groupCode, string languageCode)
         {
             var rc = new List<SubGroupModel>();
-            using (var connection = new SqliteConnection(@"Data Source=C:\Temp\ePerOutput\eperRelease20.db"))
+            using (var connection = new SqliteConnection(@"Data Source=C:\Temp\ePerOutput\eperRelease18.db"))
             {
                 var sql = @"select distinct T.SGRP_COD, SGRP_DSC FROM TBDATA T
                             JOIN SUBGROUPS_DSC G ON G.GRP_COD = T.GRP_COD AND G.SGRP_COD = T.SGRP_COD AND G.LNG_COD = $p1
@@ -332,7 +332,7 @@ namespace openPER.Repositories
         private List<SgsViewModel> GetSgsGroupsForCatalogueGroup(string catalogueCode, int groupCode, int subGroupCode, string languageCode)
         {
             var rc = new List<SgsViewModel>();
-            using (var connection = new SqliteConnection(@"Data Source=C:\Temp\ePerOutput\eperRelease20.db"))
+            using (var connection = new SqliteConnection(@"Data Source=C:\Temp\ePerOutput\eperRelease18.db"))
             {
                 var sql = @"select distinct T.SGS_COD FROM TBDATA T
                             WHERE CAT_COD = $p1 AND T.GRP_COD = $p2 AND T.SGRP_COD = $p3
@@ -374,7 +374,7 @@ namespace openPER.Repositories
         }
         private void AddSgsNarratives(string catalogueCode, int groupCode, int subGroupCode, int sgsCode, string languageCode, string sql, List<string> narratives)
         {
-            using (var connection = new SqliteConnection(@"Data Source=C:\Temp\ePerOutput\eperRelease20.db"))
+            using (var connection = new SqliteConnection(@"Data Source=C:\Temp\ePerOutput\eperRelease18.db"))
             {
                 connection.RunSqlAllRows(sql, (reader) =>
                     {
@@ -386,7 +386,7 @@ namespace openPER.Repositories
         public MvsModel GetMvsDetails(string mvsCode, string mvsVersion, string mvsSeries, string colourCode, string languageCode)
         {
             var m = new MvsModel();
-            using (var connection = new SqliteConnection(@"Data Source=C:\Temp\ePerOutput\eperRelease20.db"))
+            using (var connection = new SqliteConnection(@"Data Source=C:\Temp\ePerOutput\eperRelease18.db"))
             {
                 var sql = @"select M.MOD_COD, M.MVS_VERSION, M.MVS_SERIE, MVS_DSC, MVS_SINCOM_VERS,MVS_ENGINE_TYPE, MV.VMK_DSC, VV.VMK_DSC,
                         M.VMK_TYPE_M||VMK_COD_M, M.VMK_TYPE_V||VMK_COD_V,
@@ -422,7 +422,7 @@ namespace openPER.Repositories
         public List<LanguageModel> GetAllLanguages()
         {
             var languages = new List<LanguageModel>();
-            using (var connection = new SqliteConnection(@"Data Source=C:\Temp\ePerOutput\eperRelease20.db"))
+            using (var connection = new SqliteConnection(@"Data Source=C:\Temp\ePerOutput\eperRelease18.db"))
             {
                 var sql = @"SELECT LNG_COD, LNG_DSC FROM LANG ORDER BY LNG_COD";
                 connection.RunSqlAllRows(sql, (reader) =>
@@ -440,7 +440,7 @@ namespace openPER.Repositories
         public PartModel GetPartDetails(string partNumberSearch, string languageCode)
         {
             PartModel p = null; ;
-            using (var connection = new SqliteConnection(@"Data Source=C:\Temp\ePerOutput\eperRelease20.db"))
+            using (var connection = new SqliteConnection(@"Data Source=C:\Temp\ePerOutput\eperRelease18.db"))
             {
                 var sql = @"select P.PRT_COD, C.CDS_COD, C.CDS_DSC,F.FAM_COD, F.FAM_DSC, U.UM_COD, U.UM_DSC, PRT_WEIGHT  from PARTS P 
                                 JOIN CODES_DSC C ON C.CDS_COD = P.CDS_COD AND C.LNG_COD = $p2
@@ -470,7 +470,7 @@ namespace openPER.Repositories
         private List<PartDrawing> GetDrawingsForPartNumber(double partNumber, string languageCode)
         {
             var drawings = new List<PartDrawing>();
-            using (var connection = new SqliteConnection(@"Data Source=C:\Temp\ePerOutput\eperRelease20.db"))
+            using (var connection = new SqliteConnection(@"Data Source=C:\Temp\ePerOutput\eperRelease18.db"))
             {
                 var sql = @"SELECT DISTINCT T.CAT_COD,CAT_DSC, T.GRP_COD, T.SGRP_COD, SGS_COD, DRW_NUM, SGRP_DSC,
                                         MK_COD, CMG_COD

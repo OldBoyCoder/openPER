@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="UTF-8"?><sqlb_project><db path="C:/Temp/ePerOutput/eperRelease20.db" readonly="0" foreign_keys="1" case_sensitive_like="0" temp_store="0" wal_autocheckpoint="1000" synchronous="2"/><attached/><window><main_tabs open="structure browser pragmas query" current="3"/></window><tab_structure><column_width id="0" width="300"/><column_width id="1" width="0"/><column_width id="2" width="125"/><column_width id="3" width="3271"/><column_width id="4" width="0"/><expanded_item id="0" parent="1"/><expanded_item id="1" parent="1"/><expanded_item id="2" parent="1"/><expanded_item id="3" parent="1"/></tab_structure><tab_browse><current_table name="4,5:mainMAKES"/><default_encoding codec=""/><browse_table_settings><table schema="main" name="MAKES" show_row_id="0" encoding="" plot_x_axis="" unlock_view_pk="_rowid_"><sort/><column_widths><column index="1" value="85"/><column index="2" value="104"/></column_widths><filter_values/><conditional_formats/><row_id_formats/><display_formats/><hidden_columns/><plot_y_axes/><global_filter/></table></browse_table_settings></tab_browse><tab_sql><sql name="SQL 1">select distinct (MK_COD) from models
+select distinct (MK2_COD) from CATALOGUES
+select DISTINCT(CMG_COD) from CATALOGUES where MK2_COD = 'F'
+select * from COMM_MODGRP where MK2_COD = 'F' order by CMG_SORT_KEY
+select * from COMM_MODELS where CMD_DSC LIKE '%PUNTO VAN%'
+select COUNT(*) from COMM_MODELS
+SELECT C.CAT_DSC, CM.CMD_DSC, CMG_DSC
+FROM CATALOGUES C
+JOIN COMM_MODELS CM ON CM.CAT_COD = C.CAT_COD
+JOIN COMM_MODGRP CMG ON CMG.MK2_COD = C.MK2_COD AND CMG.CMG_COD = C.CMG_COD
+WHERE C.MK2_COD = 'F'
+
+SELECT DISTINCT CMG.CMG_COD, CMG.CMG_DSC
+FROM CATALOGUES C
+JOIN COMM_MODELS CM ON CM.CAT_COD = C.CAT_COD
+JOIN COMM_MODGRP CMG ON CMG.MK2_COD = C.MK2_COD AND CMG.CMG_COD = C.CMG_COD
+WHERE C.MK2_COD = 'F'
+select * from catalogues where CAT_DSC LIKE '%CROMA%'
+SELECT * FROM COMM_MODGRP WHERE CMG_DSC LIKE '%CROMA%'
+SELECT * FROM COMM_MODELS WHERE CMD_DSC LIKE '%CROMA%'
+SELECT * FROM MODELS WHERE MOD_DSC LIKE '%CROMA%'
+
+SELECT m.name as tableName, 
+       p.name as columnName
+FROM sqlite_master m
+left outer join pragma_table_info((m.name)) p
+     on m.name &lt;&gt; p.name
+where columnName = 'MOD_COD'	 
+order by tableName, columnName
+
+   select distinct mod_cod, mod_dsc from 
+(select  a.mod_cod, a.mod_dsc from models a, catalogues b, comm_models c  
+
+where b.cat_cod = c.cat_cod and c.mod_cod = a.mod_cod and b.mk2_cod = 'F'
+order by a.mod_sort_key)
+
+SELECT DISTINCT M.MOD_COD, M.MOD_DSC, M.MOD_SORT_KEY 
+FROM MODELS M, COMM_MODELS CM, CATALOGUES C 
+WHERE C.CMG_COD = 'CPUN' 
+AND M.MOD_COD = CM.MOD_COD 
+AND CM.CAT_COD = C.CAT_COD 
+AND C.MK2_COD = 'F'
+ORDER BY M.MOD_SORT_KEY</sql><current_tab id="0"/></tab_sql></sqlb_project>
