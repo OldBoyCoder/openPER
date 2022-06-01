@@ -9,10 +9,11 @@ namespace openPER.Repositories
     public class CachedRelease18Repository : IRepository
     {
         private readonly IMemoryCache _cache;
-        private readonly IRepository rep = new Release18Repository();
-        public CachedRelease18Repository(IMemoryCache cache)
+        private readonly IRepository rep;
+        public CachedRelease18Repository(IMemoryCache cache, Microsoft.Extensions.Configuration.IConfiguration config)
         {
             _cache = cache;
+            rep = new Release18Repository(config);
         }
 
         public List<CatalogueModel> GetAllCatalogues(string make, string model, string languageCode)
