@@ -34,14 +34,14 @@ namespace openPER.Controllers
             }
             var v = new VersionModel();
             model.Versions = new List<VersionModel>();
-            v.Release = 20;
-            v.Description = "Release 20";
+            v.Release = 18;
+            v.Description = "Release 18";
             model.Versions.Add(v);
             v = new VersionModel();
             v.Release = 84;
             v.Description = "Release 84";
             model.Versions.Add(v);
-            model.CurrentVersion = 20;
+            model.CurrentVersion = 18;
             return View( model);
         }
 

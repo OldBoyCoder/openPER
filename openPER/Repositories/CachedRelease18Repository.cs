@@ -6,11 +6,11 @@ using System.Collections.Generic;
 
 namespace openPER.Repositories
 {
-    public class CachedRelease20Repository : IRepository
+    public class CachedRelease18Repository : IRepository
     {
         private readonly IMemoryCache _cache;
-        private readonly IRepository rep = new Release20Repository();
-        public CachedRelease20Repository(IMemoryCache cache)
+        private readonly IRepository rep = new Release18Repository();
+        public CachedRelease18Repository(IMemoryCache cache)
         {
             _cache = cache;
         }
