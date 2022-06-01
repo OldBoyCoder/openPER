@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.Extensions.Configuration;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using openPER.Interfaces;
 using openPER.Models;
@@ -16,12 +17,13 @@ namespace openPER.Controllers
     {
         private readonly ILogger<HomeController> _logger;
         private IRepository rep;
+        private IConfiguration _config;
 
-
-        public HomeController(ILogger<HomeController> logger, IRepository repository)
+        public HomeController(ILogger<HomeController> logger, IRepository repository, IConfiguration config)
         {
             _logger = logger;
             rep = repository;
+            _config = config;
         }
 
         public IActionResult Index()
@@ -32,16 +34,18 @@ namespace openPER.Controllers
             {
                 model.CurrentLanguage = HttpContext.Request.Cookies["PreferredLanguage"];
             }
-            var v = new VersionModel();
+            var s = _config.GetSection("Releases").Get<ReleaseModel[]>();
             model.Versions = new List<VersionModel>();
-            v.Release = 18;
-            v.Description = "Release 18";
-            model.Versions.Add(v);
-            v = new VersionModel();
-            v.Release = 84;
-            v.Description = "Release 84";
-            model.Versions.Add(v);
-            model.CurrentVersion = 18;
+            foreach (var release in s)
+            {
+                var v = new VersionModel();
+                v.Release = release.Release;
+                v.Description = release.Description;
+                model.Versions.Add(v);
+
+            }
+
+            model.CurrentVersion = model.Versions[0].Release;
             return View( model);
         }
 

@@ -4,6 +4,7 @@ using Microsoft.AspNetCore.HttpsPolicy;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
+using openPER.Models;
 using openPER.Interfaces;
 using openPER.Repositories;
 using System;
@@ -29,6 +30,7 @@ namespace openPER
             services.AddScoped<IRepository, CachedRelease18Repository>();
             services.AddControllersWithViews();
             services.AddAutoMapper(Assembly.GetExecutingAssembly());
+            var x = Configuration.GetSection("Releases");
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -57,7 +59,7 @@ namespace openPER
                     name: "default",
                     pattern: "{controller=Home}/{action=Index}/{id?}");
             });
-            var s = Configuration.GetSection("Releases").Get<string[]>();
+            var s = Configuration.GetSection("Releases").Get<ReleaseModel[]>();
         }
     }
 }
