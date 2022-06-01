@@ -57,6 +57,7 @@ namespace openPER
                     name: "default",
                     pattern: "{controller=Home}/{action=Index}/{id?}");
             });
+            var s = Configuration.GetSection("Releases").Get<string[]>();
         }
     }
 }
