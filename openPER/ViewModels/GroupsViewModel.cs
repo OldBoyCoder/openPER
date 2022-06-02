@@ -4,7 +4,7 @@ namespace openPER.ViewModels
 {
     public class GroupsViewModel
     {
-        public List<GroupModel> Groups { get; set; }
+        public List<GroupViewModel> Groups { get; set; }
         public string CatalogueCode { get; internal set; }
     }
 }
