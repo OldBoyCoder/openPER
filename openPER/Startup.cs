@@ -28,6 +28,7 @@ namespace openPER
         public void ConfigureServices(IServiceCollection services)
         {
             services.AddScoped<IVersionedRepository, VersionedRepository>();
+            services.AddScoped<IVersionedImageRespository, VersionedImageRepository>();
             services.AddControllersWithViews();
             services.AddAutoMapper(Assembly.GetExecutingAssembly());
             var x = Configuration.GetSection("Releases");

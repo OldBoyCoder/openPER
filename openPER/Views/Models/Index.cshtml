@@ -8,18 +8,19 @@
 <h1>Index</h1>
 
 <table class="table table-sm">
-    <thead>
-        <tr>
-            <th></th>
-        </tr>
-    </thead>
+
     <tbody>
-@foreach (var item in Model.Models) {
-        <tr>
-            <td>
-                @Html.ActionLink(item.Description, "Index", "Catalogues", new {ReleaseCode = Model.ReleaseCode, MakeCode=item.MakeCode, ModelCode=item.Code})
-            </td>
-        </tr>
-}
+        @foreach (var item in Model.Models)
+        {
+            <tr>
+                <td>
+                    @Html.ActionLink(item.Description, "Index", "Catalogues", new {ReleaseCode = Model.ReleaseCode, MakeCode=item.MakeCode, ModelCode=item.Code})
+                </td>
+                <td>
+                    <img src="@Url.Action("ModelImage", "Image", new {ReleaseCode=Model.ReleaseCode, Model=item.Code})">
+                </td>
+
+            </tr>
+        }
     </tbody>
 </table>
