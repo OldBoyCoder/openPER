@@ -26,7 +26,6 @@ namespace openPER
             services.AddScoped<IVersionedImageRespository, VersionedImageRepository>();
             services.AddControllersWithViews();
             services.AddAutoMapper(Assembly.GetExecutingAssembly());
-            var x = Configuration.GetSection("Releases");
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -55,7 +54,6 @@ namespace openPER
                     name: "default",
                     pattern: "{controller=Home}/{action=Index}/{id?}");
             });
-            var s = Configuration.GetSection("Releases").Get<ReleaseModel[]>();
         }
     }
 }
