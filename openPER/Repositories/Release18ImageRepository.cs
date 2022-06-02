@@ -9,23 +9,22 @@ namespace openPER.Repositories
     public class Release18ImageRepository:IImageRepository
     {
         IConfiguration _config;
-        private string _pathToDb;
+        private string _pathToImages;
         public Release18ImageRepository(IConfiguration config)
         {
             _config = config;
             var s = config.GetSection("Releases").Get<ReleaseModel[]>();
-            var release = s.FirstOrDefault(x => x.Release == 84);
+            var release = s.FirstOrDefault(x => x.Release == 18);
             if (release != null)
             {
-                _pathToDb = System.IO.Path.Combine(release.FolderName, release.DbName);
+                _pathToImages = release.FolderName;
             }
         }
 
-        public byte[] GetImageForCatalogue(string cmgCode)
+        public byte[] GetImageForCatalogue(string makeCode, string cmgCode)
         {
             // Generate file name
-            var _basePath = @"C:\ePer installs\Release 18";
-            var lines = System.IO.File.ReadAllLines(System.IO.Path.Combine(_basePath, @"SP.IM.00900.FXXXX\img.conf"));
+            var lines = System.IO.File.ReadAllLines(System.IO.Path.Combine(_pathToImages, $"ModelImages{makeCode}", "img.conf"));
             var matches = lines.Where(x => x.Contains($",{cmgCode},"));
             var line = matches.FirstOrDefault(x => x.Contains("s2"));
             if (line == null)
@@ -34,7 +33,7 @@ namespace openPER.Repositories
                 if (line == null) return null;
             }
             var fileName = line.Split(new[] { ',' })[3];
-            return System.IO.File.ReadAllBytes(System.IO.Path.Combine(_basePath, @"SP.IM.00900.FXXXX", fileName));
+            return System.IO.File.ReadAllBytes(System.IO.Path.Combine(_pathToImages, $"ModelImages{makeCode}", fileName));
         }
         private byte[] GetImageForGroup(string mapName)
         {

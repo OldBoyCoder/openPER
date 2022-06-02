@@ -2,6 +2,6 @@
 {
     public interface IVersionedImageRespository
     {
-        byte[] GetImageForCatalogue(int releaseCode, string cmgCode);
+        byte[] GetImageForCatalogue(int releaseCode, string makeCode, string cmgCode);
     }
 }

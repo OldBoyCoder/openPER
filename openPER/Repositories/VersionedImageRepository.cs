@@ -10,12 +10,12 @@ namespace openPER.Repositories
         {
             _repository18 = new Release18ImageRepository(config);
         }
-        public byte[] GetImageForCatalogue(int releaseCode, string cmgCode)
+        public byte[] GetImageForCatalogue(int releaseCode, string makeCode, string cmgCode)
         {
             switch (releaseCode)
             {
                 case 18:
-                    return _repository18.GetImageForCatalogue(cmgCode);
+                    return _repository18.GetImageForCatalogue(makeCode, cmgCode);
                 default:
                     break;
             }

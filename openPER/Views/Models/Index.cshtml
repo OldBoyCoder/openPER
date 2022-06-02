@@ -17,7 +17,7 @@
                     @Html.ActionLink(item.Description, "Index", "Catalogues", new {ReleaseCode = Model.ReleaseCode, MakeCode=item.MakeCode, ModelCode=item.Code})
                 </td>
                 <td>
-                    <img src="@Url.Action("ModelImage", "Image", new {ReleaseCode=Model.ReleaseCode, Model=item.Code})">
+                    <img src="@Url.Action("ModelImage", "Image", new {ReleaseCode=Model.ReleaseCode,Make=Model.MakeCode, Model=item.Code})">
                 </td>
 
             </tr>
