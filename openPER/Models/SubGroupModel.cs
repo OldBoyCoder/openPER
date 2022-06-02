@@ -6,6 +6,6 @@ namespace openPER.Models
     {
         public int Code { get; set; }
         public string Description { get; set; }
-        public List<SgsViewModel> SgsGroups { get; set; }
+        public int GroupCode { get; set; }
     }
 }
