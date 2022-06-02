@@ -4,6 +4,6 @@ namespace openPER.ViewModels
 {
     public class CataloguesViewModel
     {
-        public List<CatalogueModel> Catalogues { get; set; }
+        public List<CatalogueViewModel> Catalogues { get; set; }
     }
 }

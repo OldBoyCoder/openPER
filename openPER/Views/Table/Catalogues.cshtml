@@ -9,7 +9,7 @@
 @foreach (var item in Model)
 {
     <details>
-        <summary>@Html.DisplayFor(modelItem => item.Code) @Html.DisplayFor(modelItem => item.Description)</summary>
+        <summary>@Html.DisplayFor(modelItem => item.Code) @Html.ActionLink(item.Description, "Groups", new {CatalogueCode=item.Code})</summary>
 @*        @foreach (var group in item.Groups)
         {
             <details>

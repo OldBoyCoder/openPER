@@ -1,0 +1,18 @@
+﻿@model openPER.ViewModels.SubGroupsViewModel
+
+@{
+    ViewData["Title"] = "Index";
+}
+
+<h1>SubGroupsView</h1>
+
+<div>
+    <h4>SubGroups</h4>
+    <hr />
+    <table class="table table-sm">
+    @foreach (var group in Model.SubGroups)
+    {
+        <tr><td>@group.Code</td><td>@group.Description</td></tr>
+    }
+    </table>
+</div>

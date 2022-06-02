@@ -6,6 +6,5 @@ namespace openPER.Models
     {
         public int Code { get; set; }
         public string Description { get; set; }
-        public List<SubGroupModel> SubGroups { get; set; }
     }
 }
