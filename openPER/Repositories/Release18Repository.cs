@@ -333,16 +333,17 @@ namespace openPER.Repositories
                         var m = new SubGroupModel
                         {
                             Code = reader.GetInt32(0),
-                            Description = reader.GetString(1)
+                            Description = reader.GetString(1),
+                            GroupCode = groupCode
                         };
                         rc.Add(m);
                     }, languageCode, catalogueCode, groupCode);
 
             }
-            foreach (var item in rc)
-            {
-                item.SgsGroups = GetSgsGroupsForCatalogueGroup(catalogueCode, groupCode, item.Code, languageCode);
-            }
+            //foreach (var item in rc)
+            //{
+            //    item.SgsGroups = GetSgsGroupsForCatalogueGroup(catalogueCode, groupCode, item.Code, languageCode);
+            //}
             return rc;
         }
         private List<SgsViewModel> GetSgsGroupsForCatalogueGroup(string catalogueCode, int groupCode, int subGroupCode, string languageCode)
