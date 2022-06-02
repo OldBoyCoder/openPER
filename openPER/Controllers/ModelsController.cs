@@ -9,20 +9,25 @@ namespace openPER.Controllers
 {
     public class ModelsController : Controller
     {
-        IRepository _rep;
+        IVersionedRepository _rep;
         IMapper _mapper;
-        public ModelsController(IRepository rep, IMapper mapper)
+        public ModelsController(IVersionedRepository rep, IMapper mapper)
         {
             _rep = rep;
             _mapper = mapper;
         }
-        [Route("Models/{MakeCode}")]
-        public IActionResult Index(string makeCode)
+        [Route("Models/{ReleaseCode}/{MakeCode}")]
+        public IActionResult Index(int releaseCode, string makeCode)
         {
+            // Standard prologue
+            var language = Helpers.LanguageSupport.SetCultureBasedOnCookie(HttpContext);
+            ControllerHelpers.ResetReleaseCookie(HttpContext, releaseCode);
+
             var model = new ModelsViewModel
             {
-                Models = _mapper.Map<List<ModelModel>, List<ModelViewModel>>(_rep.GetAllModelsForMake(makeCode))
+                Models = _mapper.Map<List<ModelModel>, List<ModelViewModel>>(_rep.GetAllModelsForMake(releaseCode, makeCode))
             };
+            model.ReleaseCode = releaseCode;
             return View(model);
 
         }

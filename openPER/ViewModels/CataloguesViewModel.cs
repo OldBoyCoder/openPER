@@ -2,8 +2,9 @@
 using openPER.Models;
 namespace openPER.ViewModels
 {
-    public class CataloguesViewModel
+    public class CataloguesViewModel : VersionedViewModel
     {
         public List<CatalogueViewModel> Catalogues { get; set; }
+
     }
 }

@@ -16,10 +16,10 @@ namespace openPER.Controllers
     public class HomeController : Controller
     {
         private readonly ILogger<HomeController> _logger;
-        private IRepository rep;
+        private IVersionedRepository rep;
         private IConfiguration _config;
 
-        public HomeController(ILogger<HomeController> logger, IRepository repository, IConfiguration config)
+        public HomeController(ILogger<HomeController> logger, IVersionedRepository repository, IConfiguration config)
         {
             _logger = logger;
             rep = repository;
@@ -29,7 +29,7 @@ namespace openPER.Controllers
         public IActionResult Index()
         {
             var model = new SessionOptionsViewModel();
-            model.Languages = rep.GetAllLanguages();
+            model.Languages = rep.GetAllLanguages(18);
             if (HttpContext.Request.Cookies.ContainsKey("PreferredLanguage"))
             {
                 model.CurrentLanguage = HttpContext.Request.Cookies["PreferredLanguage"];
@@ -68,7 +68,7 @@ namespace openPER.Controllers
             Thread.CurrentThread.CurrentCulture = newCulture;
             Thread.CurrentThread.CurrentUICulture = newCulture;
 
-            return RedirectToAction("Index", "Makes");
+            return RedirectToAction("Index", "Makes", new { ReleaseCode =model.CurrentVersion});
         }
 
     }

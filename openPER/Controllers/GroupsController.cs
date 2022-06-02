@@ -9,23 +9,25 @@ namespace openPER.Controllers
 {
     public class GroupsController : Controller
     {
-        IRepository _rep;
+        IVersionedRepository _rep;
         IMapper _mapper;
-        public GroupsController(IRepository rep, IMapper mapper)
+        public GroupsController(IVersionedRepository rep, IMapper mapper)
         {
             _rep = rep;
             _mapper = mapper;
         }
-        [Route("Groups/{CatalogueCode}")]
-        public IActionResult Index(string catalogueCode)
+        [Route("Groups/{ReleaseCode}/{CatalogueCode}")]
+        public IActionResult Index(int releaseCode, string catalogueCode)
         {
+            // Standard prologue
             var language = Helpers.LanguageSupport.SetCultureBasedOnCookie(HttpContext);
+            ControllerHelpers.ResetReleaseCookie(HttpContext, releaseCode);
 
             var model = new GroupsViewModel
             {
-                Groups = _mapper.Map<List<GroupModel>, List<GroupViewModel>>(_rep.GetGroupsForCatalogue(catalogueCode, language))
+                Groups = _mapper.Map<List<GroupModel>, List<GroupViewModel>>(_rep.GetGroupsForCatalogue(releaseCode, catalogueCode, language))
             };
-
+            model.ReleaseCode = releaseCode;
             model.CatalogueCode = catalogueCode; 
             return View(model);
         }
