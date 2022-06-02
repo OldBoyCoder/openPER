@@ -314,7 +314,7 @@ namespace openPER.Repositories
             }
             //foreach (var group in rc)
             //{
-            //    group.SubGroups = GetSubgroupsForCatalogueGroup(catalogueCode, group.Code, languageCode);
+            //    group.SubSubGroups = GetSubgroupsForCatalogueGroup(catalogueCode, group.Code, languageCode);
             //}
             return rc;
         }
@@ -342,13 +342,13 @@ namespace openPER.Repositories
             }
             //foreach (var item in rc)
             //{
-            //    item.SgsGroups = GetSgsGroupsForCatalogueGroup(catalogueCode, groupCode, item.Code, languageCode);
+            //    item.SubSubGroups = GetSubSubGroupsForCatalogueGroup(catalogueCode, groupCode, item.Code, languageCode);
             //}
             return rc;
         }
-        private List<SgsViewModel> GetSgsGroupsForCatalogueGroup(string catalogueCode, int groupCode, int subGroupCode, string languageCode)
+        public List<SubSubGroupModel> GetSubSubGroupsForCatalogueGroupSubGroup(string catalogueCode, int groupCode, int subGroupCode, string languageCode)
         {
-            var rc = new List<SgsViewModel>();
+            var rc = new List<SubSubGroupModel>();
             using (var connection = new SqliteConnection($"Data Source={_pathToDb}"))
             {
                 var sql = @"select distinct T.SGS_COD FROM TBDATA T
@@ -356,7 +356,7 @@ namespace openPER.Repositories
                             order by T.SGS_COD";
                 connection.RunSqlAllRows(sql, (reader) =>
                                     {
-                                        var m = new SgsViewModel
+                                        var m = new SubSubGroupModel
                                         {
                                             Code = reader.GetInt32(0),
 
@@ -514,5 +514,6 @@ namespace openPER.Repositories
 
             return drawings;
         }
+
     }
 }

@@ -135,5 +135,16 @@ namespace openPER.Repositories
             return rc;
         }
 
+        public List<SubSubGroupModel> GetSubSubGroupsForCatalogueGroupSubGroup(string catalogueCode, int groupCode, int subGroupCode, string languageCode)
+        {
+            var cacheKeys = new { type = "GetSubSubGroupsForCatalogueGroupSubGroup", k1 = catalogueCode, k2 = groupCode, k3 = languageCode };
+            if (!_cache.TryGetValue(cacheKeys, out List<SubSubGroupModel> rc))
+            {
+                rc = rep.GetSubSubGroupsForCatalogueGroupSubGroup(catalogueCode, groupCode,subGroupCode, languageCode);
+                var cacheEntryOptions = new MemoryCacheEntryOptions().SetSlidingExpiration(TimeSpan.FromHours(24));
+                _cache.Set(cacheKeys, rc, cacheEntryOptions);
+            }
+            return rc;
+        }
     }
 }

@@ -95,6 +95,18 @@ namespace openPER.Repositories
             throw new System.NotImplementedException();
         }
 
+        public List<SubSubGroupModel> GetSubSubGroupsForCatalogueGroupSubGroup(int release, string catalogueCode, int groupCode, int subGroupCode, string languageCode)
+        {
+            switch (release)
+            {
+                case 18:
+                    return _repository18.GetSubSubGroupsForCatalogueGroupSubGroup(catalogueCode, groupCode,subGroupCode, languageCode);
+                default:
+                    break;
+            }
+            throw new System.NotImplementedException();
+        }
+
         public List<SubGroupModel> GetSubGroupsForCatalogueGroup(int release, string catalogueCode, int groupCode, string languageCode)
         {
             switch (release)
