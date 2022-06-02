@@ -6,15 +6,20 @@ namespace openPER.Views.Shared.Components.SearchWidget
 {
     public class SearchWidgetViewComponent:ViewComponent
     {
-        IRepository rep;
-        public SearchWidgetViewComponent(IRepository _rep)
+        IVersionedRepository rep;
+        public SearchWidgetViewComponent(IVersionedRepository _rep)
         {
             rep = _rep;
         }
         public IViewComponentResult Invoke()
         {
             var model = new SearchViewModel();
-            model.VinSearch.Models = rep.GetAllModels();
+            int releaseCode = -1;
+            if (HttpContext.Request.Cookies.ContainsKey("Release"))
+            {
+                releaseCode = int.Parse(HttpContext.Request.Cookies["Release"]);
+            }
+            model.VinSearch.Models = rep.GetAllModels(releaseCode);
 
             return View("Default", model);
         }

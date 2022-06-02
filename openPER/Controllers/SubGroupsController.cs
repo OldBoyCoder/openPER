@@ -9,19 +9,22 @@ namespace openPER.Controllers
 {
     public class SubGroupsController : Controller
     {
-        IRepository _rep;
+        IVersionedRepository _rep;
         IMapper _mapper;
-        public SubGroupsController(IRepository rep, IMapper mapper)
+        public SubGroupsController(IVersionedRepository rep, IMapper mapper)
         {
             _rep = rep;
             _mapper = mapper;
         }
-        [Route("SubGroups/{CatalogueCode}/{GroupCode}")]
-        public IActionResult Index(string catalogueCode, int groupCode)
+        [Route("SubGroups/{ReleaseCode}/{CatalogueCode}/{GroupCode}")]
+        public IActionResult Index(int releaseCode, string catalogueCode, int groupCode)
         {
+            // Standard prologue
             var language = Helpers.LanguageSupport.SetCultureBasedOnCookie(HttpContext);
+            ControllerHelpers.ResetReleaseCookie(HttpContext, releaseCode);
+
             var model = new SubGroupsViewModel();
-            model.SubGroups = _mapper.Map<List<SubGroupModel>, List<SubGroupViewModel>>(_rep.GetSubGroupsForCatalogueGroup(catalogueCode, groupCode, language));
+            model.SubGroups = _mapper.Map<List<SubGroupModel>, List<SubGroupViewModel>>(_rep.GetSubGroupsForCatalogueGroup(releaseCode,catalogueCode, groupCode, language));
             model.CatalogueCode = catalogueCode;
             model.GroupCode = groupCode;
             return View(model);
