@@ -11,6 +11,7 @@ namespace openPER.AutoMapper
             CreateMap<MakeModel, MakeViewModel>();
             CreateMap<ModelModel, ModelViewModel>();
             CreateMap<CatalogueModel, CatalogueViewModel>();
+            CreateMap<GroupModel, GroupViewModel>();
         }
     }
 }
