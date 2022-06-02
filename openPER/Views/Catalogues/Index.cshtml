@@ -8,10 +8,10 @@
 
 <div>
     <h4>CataloguesViewModel</h4>
-    <table class="table">
+    <table class="table table-sm">
         @foreach (var item in Model.Catalogues)
         {
-            <tr><td>@item.Description</td></tr>
+            <tr><td>@item.Code</td><td>@Html.ActionLink(item.Description, "Index", "Groups", new {CatalogueCode=item.Code})</td></tr>
         }
     </table>
 </div>

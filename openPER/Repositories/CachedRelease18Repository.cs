@@ -87,6 +87,17 @@ namespace openPER.Repositories
             }
             return rc;
         }
+        public List<SubGroupModel> GetSubGroupsForCatalogueGroup(string catalogueCode, int groupCode, string languageCode)
+        {
+            var cacheKeys = new { type = "GetSubGroupsForCatalogueGroup", k1 = catalogueCode,k2=groupCode, k3 = languageCode };
+            if (!_cache.TryGetValue(cacheKeys, out List<SubGroupModel> rc))
+            {
+                rc = rep.GetSubGroupsForCatalogueGroup(catalogueCode,groupCode, languageCode);
+                var cacheEntryOptions = new MemoryCacheEntryOptions().SetSlidingExpiration(TimeSpan.FromHours(24));
+                _cache.Set(cacheKeys, rc, cacheEntryOptions);
+            }
+            return rc;
+        }
 
         public MvsModel GetMvsDetails(string mvsCode, string mvsVersion, string mvsSeries, string colourCode, string languageCode)
         {
@@ -123,5 +134,6 @@ namespace openPER.Repositories
             }
             return rc;
         }
+
     }
 }

@@ -312,14 +312,14 @@ namespace openPER.Repositories
                     }, catalogueCode, languageCode);
 
             }
-            foreach (var group in rc)
-            {
-                group.SubGroups = GetSubgroupsForCatalogueGroup(catalogueCode, group.Code, languageCode);
-            }
+            //foreach (var group in rc)
+            //{
+            //    group.SubGroups = GetSubgroupsForCatalogueGroup(catalogueCode, group.Code, languageCode);
+            //}
             return rc;
         }
 
-        private List<SubGroupModel> GetSubgroupsForCatalogueGroup(string catalogueCode, int groupCode, string languageCode)
+        public List<SubGroupModel> GetSubGroupsForCatalogueGroup(string catalogueCode, int groupCode, string languageCode)
         {
             var rc = new List<SubGroupModel>();
             using (var connection = new SqliteConnection($"Data Source={_pathToDb}"))
