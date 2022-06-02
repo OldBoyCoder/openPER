@@ -7,7 +7,7 @@ namespace openPER.Repositories
 {
     public class VersionedRepository : IVersionedRepository
     {
-        IRepository _repository18;
+        readonly IRepository _repository18;
         IRepository _repository84;
         public VersionedRepository(IConfiguration config)
         {
@@ -19,8 +19,6 @@ namespace openPER.Repositories
             {
                 case 18:
                     return _repository18.GetAllCatalogues(make, model, languageCode);
-                default:
-                    break;
             }
             throw new System.NotImplementedException();
         }
@@ -31,8 +29,6 @@ namespace openPER.Repositories
             {
                 case 18:
                     return _repository18.GetAllLanguages();
-                default:
-                    break;
             }
             throw new System.NotImplementedException();
         }
@@ -43,8 +39,6 @@ namespace openPER.Repositories
             {
                 case 18:
                     return _repository18.GetAllMakes();
-                default:
-                    break;
             }
             throw new System.NotImplementedException();
         }
@@ -55,8 +49,6 @@ namespace openPER.Repositories
             {
                 case 18:
                     return _repository18.GetAllModels();
-                default:
-                    break;
             }
             throw new System.NotImplementedException();
         }
@@ -67,8 +59,6 @@ namespace openPER.Repositories
             {
                 case 18:
                     return _repository18.GetAllModelsForMake(make);
-                default:
-                    break;
             }
             throw new System.NotImplementedException();
         }
@@ -79,8 +69,6 @@ namespace openPER.Repositories
             {
                 case 18:
                     return _repository18.GetGroupsForCatalogue(catalogueCode, languageCode);
-                default:
-                    break;
             }
             throw new System.NotImplementedException();
         }
@@ -101,8 +89,6 @@ namespace openPER.Repositories
             {
                 case 18:
                     return _repository18.GetSubSubGroupsForCatalogueGroupSubGroup(catalogueCode, groupCode,subGroupCode, languageCode);
-                default:
-                    break;
             }
             throw new System.NotImplementedException();
         }
@@ -113,8 +99,6 @@ namespace openPER.Repositories
             {
                 case 18:
                     return _repository18.GetSubGroupsForCatalogueGroup(catalogueCode,groupCode, languageCode);
-                default:
-                    break;
             }
             throw new System.NotImplementedException();
         }

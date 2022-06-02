@@ -1,5 +1,3 @@
-using System;
-
 namespace openPER.ViewModels
 {
     public class ErrorViewModel

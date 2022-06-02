@@ -9,7 +9,7 @@ namespace openPER.Repositories
     public class Release18ImageRepository:IImageRepository
     {
         IConfiguration _config;
-        private string _pathToImages;
+        private readonly string _pathToImages;
         public Release18ImageRepository(IConfiguration config)
         {
             _config = config;

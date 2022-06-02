@@ -9,8 +9,8 @@ namespace openPER.Controllers
 {
     public class SubGroupsController : Controller
     {
-        IVersionedRepository _rep;
-        IMapper _mapper;
+        readonly IVersionedRepository _rep;
+        readonly IMapper _mapper;
         public SubGroupsController(IVersionedRepository rep, IMapper mapper)
         {
             _rep = rep;
@@ -23,11 +23,13 @@ namespace openPER.Controllers
             var language = Helpers.LanguageSupport.SetCultureBasedOnCookie(HttpContext);
             ControllerHelpers.ResetReleaseCookie(HttpContext, releaseCode);
 
-            var model = new SubGroupsViewModel();
-            model.SubGroups = _mapper.Map<List<SubGroupModel>, List<SubGroupViewModel>>(_rep.GetSubGroupsForCatalogueGroup(releaseCode,catalogueCode, groupCode, language));
-            model.CatalogueCode = catalogueCode;
-            model.GroupCode = groupCode;
-            model.ReleaseCode = releaseCode;
+            var model = new SubGroupsViewModel
+            {
+                SubGroups = _mapper.Map<List<SubGroupModel>, List<SubGroupViewModel>>(_rep.GetSubGroupsForCatalogueGroup(releaseCode,catalogueCode, groupCode, language)),
+                CatalogueCode = catalogueCode,
+                GroupCode = groupCode,
+                ReleaseCode = releaseCode
+            };
             return View(model);
         }
     }

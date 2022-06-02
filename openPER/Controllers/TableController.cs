@@ -1,22 +1,14 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using openPER.Interfaces;
-using System;
-using System.Collections.Generic;
-using System.Linq;
 
 namespace openPER.Controllers
 {
     public class TableController : Controller
     {
-        private IRepository rep;
+        private readonly IRepository _rep;
         public TableController(IRepository repository)
         {
-            rep = repository;
-        }
-        // GET: TableController
-        public ActionResult Index()
-        {
-            return View();
+            _rep = repository;
         }
 
         // GET: TableController/Details/5
@@ -24,7 +16,7 @@ namespace openPER.Controllers
         public ActionResult Details(string make, string model, string catalogue, int group, int subgroup, int sgsCode, int drawing)
         {
             var language = Helpers.LanguageSupport.SetCultureBasedOnCookie(HttpContext);
-            var x = rep.GetTable(make, model, catalogue, group, subgroup, sgsCode, drawing, language);
+            var x = _rep.GetTable(make, model, catalogue, group, subgroup, sgsCode, drawing, language);
             x.MakeCode = make;
             x.ModelCode = model;
             x.CatalogueCode = catalogue;
@@ -37,14 +29,14 @@ namespace openPER.Controllers
         public ActionResult Catalogues(string make, string model)
         {
             var language = Helpers.LanguageSupport.SetCultureBasedOnCookie(HttpContext);
-            return View(rep.GetAllCatalogues(make, model, language));
+            return View(_rep.GetAllCatalogues(make, model, language));
         }
         [Route("Table/Groups/{Make}/{Model}/{Catalogue}")]
         public ActionResult Groups(string make, string model, string catalogue)
         {
             var language = Helpers.LanguageSupport.SetCultureBasedOnCookie(HttpContext);
 
-            return View(rep.GetGroupsForCatalogue(catalogue, language));
+            return View(_rep.GetGroupsForCatalogue(catalogue, language));
         }
         //[Route("Table/Image/{Make}/{Model}/{Catalogue}/{Group}/{Subgroup}/{SgsCode}/{Drawing}")]
         //public ActionResult Image(string make, string model, string catalogue, int group, int subgroup, int sgsCode, int drawing)

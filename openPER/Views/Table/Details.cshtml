@@ -90,7 +90,7 @@
     <br />
     <div class="flex-container">
         <div>
-            <img src="@Url.Action("Image", "Table", new {Make=Model.MakeCode, Model=Model.ModelCode, Catalogue=Model.CatalogueCode, Group = Model.GroupCode, SubGroup = Model.SubGroupCode, SgsCode = Model.SgsCode, Drawing=Model.CurrentDrawing})">
+            <img src="@Url.Action("Image", "Table", new {Make=Model.MakeCode, Model=Model.ModelCode, Catalogue=Model.CatalogueCode, Group = Model.GroupCode, SubGroup = Model.SubGroupCode, Model.SgsCode, Drawing=Model.CurrentDrawing})">
         </div>
         <div>
             <table class="table table-sm">
@@ -106,7 +106,7 @@
                         }
                         <tr class="partrow">
                             <td>&nbsp;</td>
-                            <td class="partrowproductcode"><a href="@Url.Action("SearchResults", "Part", new {PartNumber=item.PartNumber} )">@Html.DisplayFor(model=>item.PartNumber)</a></td>
+                            <td class="partrowproductcode"><a href="@Url.Action("SearchResults", "Part", new {item.PartNumber} )">@Html.DisplayFor(model=>item.PartNumber)</a></td>
                             <td>@Html.DisplayFor(model=>item.FurtherDescription)</td>
                             <td>@Html.DisplayFor(model=>item.Compatibility)</td>
                             <td>
@@ -129,8 +129,8 @@
     @foreach (var drawing in Model.DrawingNumbers)
     {
         <p>
-            <a href="@Url.Action("Details", "Table",  new {Make=Model.MakeCode, Model=Model.ModelCode, Catalogue=Model.CatalogueCode, Group = Model.GroupCode, SubGroup = Model.SubGroupCode, SgsCode = Model.SgsCode, Drawing=drawing})">
-                <img src="@Url.Action("Thumbnail", "Table", new {Make=Model.MakeCode, Model=Model.ModelCode, Catalogue=Model.CatalogueCode, Group = Model.GroupCode, SubGroup = Model.SubGroupCode, SgsCode = Model.SgsCode, Drawing=drawing})">
+            <a href="@Url.Action("Details", "Table",  new {Make=Model.MakeCode, Model=Model.ModelCode, Catalogue=Model.CatalogueCode, Group = Model.GroupCode, SubGroup = Model.SubGroupCode, Model.SgsCode, Drawing=drawing})">
+                <img src="@Url.Action("Thumbnail", "Table", new {Make=Model.MakeCode, Model=Model.ModelCode, Catalogue=Model.CatalogueCode, Group = Model.GroupCode, SubGroup = Model.SubGroupCode, Model.SgsCode, Drawing=drawing})">
             </a>
         </p>
 

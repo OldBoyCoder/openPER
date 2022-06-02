@@ -23,11 +23,6 @@ namespace openPER.Models
         public int CurrentDrawing { get; set; }
         public List<string> Narratives { get; set; }
 
-        public  string Path
-        {
-            get { return $"{MakeCode}/{ModelCode}/{CatalogueCode}/{GroupCode:00}/{SubGroupCode:000}/{SgsCode:00}"; }
-
-        }
-
+        public  string Path => $"{MakeCode}/{ModelCode}/{CatalogueCode}/{GroupCode:00}/{SubGroupCode:000}/{SgsCode:00}";
     }
 }

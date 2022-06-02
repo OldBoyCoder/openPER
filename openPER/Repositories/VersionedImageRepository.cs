@@ -4,7 +4,7 @@ namespace openPER.Repositories
 {
     public class VersionedImageRepository : IVersionedImageRespository
     {
-        IImageRepository _repository18;
+        readonly IImageRepository _repository18;
         IImageRepository _repository84;
         public VersionedImageRepository(IConfiguration config)
         {
@@ -16,8 +16,6 @@ namespace openPER.Repositories
             {
                 case 18:
                     return _repository18.GetImageForCatalogue(makeCode, cmgCode);
-                default:
-                    break;
             }
             return null;
         }

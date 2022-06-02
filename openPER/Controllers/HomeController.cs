@@ -4,32 +4,31 @@ using Microsoft.Extensions.Logging;
 using openPER.Interfaces;
 using openPER.Models;
 using openPER.ViewModels;
-using System;
 using System.Collections.Generic;
 using System.Diagnostics;
-using System.Linq;
 using System.Threading;
-using System.Threading.Tasks;
 
 namespace openPER.Controllers
 {
     public class HomeController : Controller
     {
         private readonly ILogger<HomeController> _logger;
-        private IVersionedRepository rep;
-        private IConfiguration _config;
+        private readonly IVersionedRepository _rep;
+        private readonly IConfiguration _config;
 
         public HomeController(ILogger<HomeController> logger, IVersionedRepository repository, IConfiguration config)
         {
             _logger = logger;
-            rep = repository;
+            _rep = repository;
             _config = config;
         }
 
         public IActionResult Index()
         {
-            var model = new SessionOptionsViewModel();
-            model.Languages = rep.GetAllLanguages(18);
+            var model = new SessionOptionsViewModel
+            {
+                Languages = _rep.GetAllLanguages(18)
+            };
             if (HttpContext.Request.Cookies.ContainsKey("PreferredLanguage"))
             {
                 model.CurrentLanguage = HttpContext.Request.Cookies["PreferredLanguage"];
@@ -38,9 +37,11 @@ namespace openPER.Controllers
             model.Versions = new List<VersionModel>();
             foreach (var release in s)
             {
-                var v = new VersionModel();
-                v.Release = release.Release;
-                v.Description = release.Description;
+                var v = new VersionModel
+                {
+                    Release = release.Release,
+                    Description = release.Description
+                };
                 model.Versions.Add(v);
 
             }

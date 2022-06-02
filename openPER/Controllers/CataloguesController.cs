@@ -9,12 +9,12 @@ namespace openPER.Controllers
 {
     public class CataloguesController : Controller
     {
-        IVersionedRepository rep;
-        IMapper _mapper;
+        readonly IVersionedRepository _rep;
+        readonly IMapper _mapper;
 
-        public CataloguesController(IVersionedRepository _rep, IMapper mapper)
+        public CataloguesController(IVersionedRepository rep, IMapper mapper)
         {
-            rep = _rep;
+            _rep = rep;
             _mapper = mapper;
         }
         [Route("Catalogues/{ReleaseCode}/{MakeCode}/{ModelCode}")]
@@ -26,9 +26,9 @@ namespace openPER.Controllers
 
             var model = new CataloguesViewModel
             {
-                Catalogues = _mapper.Map<List<CatalogueModel>, List<CatalogueViewModel>>(rep.GetAllCatalogues(releaseCode, makeCode, modelCode, language))
+                Catalogues = _mapper.Map<List<CatalogueModel>, List<CatalogueViewModel>>(_rep.GetAllCatalogues(releaseCode, makeCode, modelCode, language)),
+                ReleaseCode = releaseCode
             };
-            model.ReleaseCode = releaseCode;
 
             return View(model);
         }

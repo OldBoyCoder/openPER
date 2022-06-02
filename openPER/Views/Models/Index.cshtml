@@ -14,10 +14,10 @@
         {
             <tr>
                 <td>
-                    @Html.ActionLink(item.Description, "Index", "Catalogues", new {ReleaseCode = Model.ReleaseCode, MakeCode=item.MakeCode, ModelCode=item.Code})
+                    @Html.ActionLink(item.Description, "Index", "Catalogues", new { Model.ReleaseCode, item.MakeCode, ModelCode=item.Code})
                 </td>
                 <td>
-                    <img src="@Url.Action("ModelImage", "Image", new {ReleaseCode=Model.ReleaseCode,Make=Model.MakeCode, Model=item.Code})">
+                    <img src="@Url.Action("ModelImage", "Image", new {Model.ReleaseCode,Make=Model.MakeCode, Model=item.Code})">
                 </td>
 
             </tr>

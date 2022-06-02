@@ -1,6 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using VinSearcher.KtdReader;
+﻿using System.Collections.Generic;
 
 namespace VinSearcher
 {
@@ -20,13 +18,15 @@ namespace VinSearcher
             var record = x.RecordsForKey(@"C:\ePer installs\Release 18\SP.CH.00900.FCTLR", searchKey, 1, this);
             if (record != null)
             {
-                var vehicle = new VinResult();
-                vehicle.MVS = record[0];
-                vehicle.Chassis = record[1];
-                vehicle.Organization = record[2];
-                vehicle.Motor = record[3];
-                vehicle.Date = record[4];
-                vehicle.InteriorColour = record[5];
+                var vehicle = new VinResult
+                {
+                    MVS = record[0],
+                    Chassis = record[1],
+                    Organization = record[2],
+                    Motor = record[3],
+                    Date = record[4],
+                    InteriorColour = record[5]
+                };
                 return vehicle;
             }
             return null;

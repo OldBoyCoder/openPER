@@ -1,5 +1,4 @@
-﻿using openPER.Models;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 namespace openPER.ViewModels
 {
     public class MakesViewModel : VersionedViewModel
