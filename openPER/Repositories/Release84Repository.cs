@@ -28,40 +28,35 @@ namespace openPER.Repositories
         public TableModel GetTable(string makeCode, string modelCode, string catalogueCode, int groupCode, int subGroupCode, int sgsCode, int drawingNumber, string languageCode)
         {
             var t = new TableModel();
-            using (var connection = new SqliteConnection($"Data Source={_pathToDb}"))
-            {
-                t.MakeDesc = GetMakeDescription(makeCode, connection);
-                t.ModelDesc = GetModelDescription(makeCode, modelCode, connection);
-                t.CatalogueDesc = GetCatalogueDescription(makeCode, modelCode, catalogueCode, connection);
-                t.GroupDesc = GetGroupDescription(groupCode, languageCode, connection);
-                t.SubGroupDesc = GetSubGroupDescription(groupCode, subGroupCode, languageCode, connection);
-                // TODO Add variant information to sgs description
-                t.SgsDesc = GetSubGroupDescription(groupCode, subGroupCode, languageCode, connection);
-                t.Parts = GetTableParts(catalogueCode, groupCode, subGroupCode, sgsCode, drawingNumber, languageCode, connection);
-                t.DrawingNumbers = GetDrawingNumbers(catalogueCode, groupCode, subGroupCode, sgsCode, connection);
-                t.Narratives = GetSgsNarrative(catalogueCode, groupCode, subGroupCode, sgsCode, languageCode);
-                t.CurrentDrawing = drawingNumber;
-
-            }
+            using var connection = new SqliteConnection($"Data Source={_pathToDb}");
+            t.MakeDesc = GetMakeDescription(makeCode, connection);
+            t.ModelDesc = GetModelDescription(makeCode, modelCode, connection);
+            t.CatalogueDesc = GetCatalogueDescription(makeCode, modelCode, catalogueCode, connection);
+            t.GroupDesc = GetGroupDescription(groupCode, languageCode, connection);
+            t.SubGroupDesc = GetSubGroupDescription(groupCode, subGroupCode, languageCode, connection);
+            // TODO Add variant information to sgs description
+            t.SgsDesc = GetSubGroupDescription(groupCode, subGroupCode, languageCode, connection);
+            t.Parts = GetTableParts(catalogueCode, groupCode, subGroupCode, sgsCode, drawingNumber, languageCode, connection);
+            t.DrawingNumbers = GetDrawingNumbers(catalogueCode, groupCode, subGroupCode, sgsCode, connection);
+            t.Narratives = GetSgsNarrative(catalogueCode, groupCode, subGroupCode, sgsCode, languageCode);
+            t.CurrentDrawing = drawingNumber;
             return t;
         }
         public List<MakeModel> GetAllMakes()
         {
             var rc = new List<MakeModel>();
-            using (var connection = new SqliteConnection($"Data Source={_pathToDb}"))
+            using var connection = new SqliteConnection($"Data Source={_pathToDb}");
+            var sql = @"SELECT MK_COD, MK_DSC FROM MAKES ORDER BY MK_DSC ";
+            connection.RunSqlAllRows(sql, (reader) =>
             {
-                var sql = @"SELECT MK_COD, MK_DSC FROM MAKES ORDER BY MK_DSC ";
-                connection.RunSqlAllRows(sql, (reader) =>
+                var m = new MakeModel
                 {
-                    var m = new MakeModel
-                    {
-                        Code = reader.GetString(0),
-                        Description = reader.GetString(1)
-                    };
-                    rc.Add(m);
+                    Code = reader.GetString(0),
+                    Description = reader.GetString(1)
+                };
+                rc.Add(m);
 
-                }, null);
-            }
+            }, null);
             return rc;
 
         }
@@ -232,91 +227,76 @@ namespace openPER.Repositories
         public List<ModelModel> GetAllModels()
         {
             var rc = new List<ModelModel>();
-            using (var connection = new SqliteConnection($"Data Source={_pathToDb}"))
+            using var connection = new SqliteConnection($"Data Source={_pathToDb}");
+            var sql = @"SELECT MOD_COD, MOD_DSC, MK_COD FROM MODELS ORDER BY MOD_SORT_KEY ";
+            connection.RunSqlAllRows(sql, (reader) =>
             {
-                var sql = @"SELECT MOD_COD, MOD_DSC, MK_COD FROM MODELS ORDER BY MOD_SORT_KEY ";
-                connection.RunSqlAllRows(sql, (reader) =>
-                                    {
-                                        var m = new ModelModel
-                                        {
-                                            Code = reader.GetString(0),
-                                            Description = reader.GetString(1),
-                                            MakeCode = reader.GetString(2)
-                                        };
-                                        rc.Add(m);
-                                    });
-
-            }
+                var m = new ModelModel
+                {
+                    Code = reader.GetString(0),
+                    Description = reader.GetString(1),
+                    MakeCode = reader.GetString(2)
+                };
+                rc.Add(m);
+            });
             return rc;
 
         }
         public List<ModelModel> GetAllModelsForMake(string makeCode)
         {
             var rc = new List<ModelModel>();
-            using (var connection = new SqliteConnection($"Data Source={_pathToDb}"))
+            using var connection = new SqliteConnection($"Data Source={_pathToDb}");
+            var sql = @"SELECT CMG_COD, CMG_DSC FROM COMM_MODGRP WHERE MK2_COD = $p1  ORDER BY CMG_SORT_KEY ";
+            connection.RunSqlAllRows(sql, (reader) =>
             {
-                var sql = @"SELECT CMG_COD, CMG_DSC FROM COMM_MODGRP WHERE MK2_COD = $p1  ORDER BY CMG_SORT_KEY ";
-                connection.RunSqlAllRows(sql, (reader) =>
+
+                var m = new ModelModel
                 {
-
-                    var m = new ModelModel
-                    {
-                        Code = reader.GetString(0),
-                        Description = reader.GetString(1),
-                        MakeCode = makeCode
-                    };
-                    rc.Add(m);
-                }, makeCode);
-
-            }
+                    Code = reader.GetString(0),
+                    Description = reader.GetString(1),
+                    MakeCode = makeCode
+                };
+                rc.Add(m);
+            }, makeCode);
             return rc;
         }
 
         public List<CatalogueModel> GetAllCatalogues(string makeCode, string modelCode, string languageCode)
         {
             var rc = new List<CatalogueModel>();
-            using (var connection = new SqliteConnection($"Data Source={_pathToDb}"))
+            using var connection = new SqliteConnection($"Data Source={_pathToDb}");
+            var sql = @"SELECT CAT_COD, CAT_DSC FROM CATALOGUES WHERE MK2_COD = $p1 AND CMG_COD = $p2  ORDER BY CAT_SORT_KEY ";
+            connection.RunSqlAllRows(sql, (reader) =>
             {
-                var sql = @"SELECT CAT_COD, CAT_DSC FROM CATALOGUES WHERE MK2_COD = $p1 AND CMG_COD = $p2  ORDER BY CAT_SORT_KEY ";
-                connection.RunSqlAllRows(sql, (reader) =>
+                var m = new CatalogueModel
                 {
-                    var m = new CatalogueModel
-                    {
-                        Code = reader.GetString(0),
-                        Description = reader.GetString(1),
-                        MakeCode = makeCode,
-                        ModelCode = modelCode
-                    };
-                    rc.Add(m);
-                }, makeCode, modelCode);
-            }
-            foreach (var item in rc)
-            {
-                //      item.Groups = GetGroupsForCatalogue(item.Code, languageCode);
-            }
+                    Code = reader.GetString(0),
+                    Description = reader.GetString(1),
+                    MakeCode = makeCode,
+                    ModelCode = modelCode
+                };
+                rc.Add(m);
+            }, makeCode, modelCode);
             return rc;
         }
 
         public List<GroupModel> GetGroupsForCatalogue(string catalogueCode, string languageCode)
         {
             var rc = new List<GroupModel>();
-            using (var connection = new SqliteConnection($"Data Source={_pathToDb}"))
-            {
-                var sql = @"select distinct T.GRP_COD, GRP_DSC FROM TBDATA T
+            using var connection = new SqliteConnection($"Data Source={_pathToDb}");
+            var sql = @"select distinct T.GRP_COD, GRP_DSC FROM TBDATA T
                             JOIN GROUPS_DSC G ON G.GRP_COD = T.GRP_COD AND G.LNG_COD = $p2
                             WHERE CAT_COD = $p1
                             order by T.GRP_COD";
-                connection.RunSqlAllRows(sql, (reader) =>
-                    {
-                        var m = new GroupModel
-                        {
-                            Code = reader.GetInt32(0),
-                            Description = reader.GetString(1)
-                        };
-                        rc.Add(m);
-                    }, catalogueCode, languageCode);
-
-            }
+            connection.RunSqlAllRows(sql, (reader) =>
+            {
+                var m = new GroupModel
+                {
+                    Code = reader.GetInt32(0),
+                    Description = reader.GetString(1)
+                };
+                rc.Add(m);
+            }, catalogueCode, languageCode);
             //foreach (var group in rc)
             //{
             //    group.SubSubGroups = GetSubgroupsForCatalogueGroup(catalogueCode, group.Code, languageCode);
@@ -327,24 +307,21 @@ namespace openPER.Repositories
         public List<SubGroupModel> GetSubGroupsForCatalogueGroup(string catalogueCode, int groupCode, string languageCode)
         {
             var rc = new List<SubGroupModel>();
-            using (var connection = new SqliteConnection($"Data Source={_pathToDb}"))
-            {
-                var sql = @"select distinct T.SGRP_COD, SGRP_DSC FROM TBDATA T
+            using var connection = new SqliteConnection($"Data Source={_pathToDb}");
+            var sql = @"select distinct T.SGRP_COD, SGRP_DSC FROM TBDATA T
                             JOIN SUBGROUPS_DSC G ON G.GRP_COD = T.GRP_COD AND G.SGRP_COD = T.SGRP_COD AND G.LNG_COD = $p1
                             WHERE CAT_COD = $p2 AND T.GRP_COD = $p3
                             order by T.SGRP_COD";
-                connection.RunSqlAllRows(sql, (reader) =>
-                    {
-                        var m = new SubGroupModel
-                        {
-                            Code = reader.GetInt32(0),
-                            Description = reader.GetString(1),
-                            GroupCode = groupCode
-                        };
-                        rc.Add(m);
-                    }, languageCode, catalogueCode, groupCode);
-
-            }
+            connection.RunSqlAllRows(sql, (reader) =>
+            {
+                var m = new SubGroupModel
+                {
+                    Code = reader.GetInt32(0),
+                    Description = reader.GetString(1),
+                    GroupCode = groupCode
+                };
+                rc.Add(m);
+            }, languageCode, catalogueCode, groupCode);
             //foreach (var item in rc)
             //{
             //    item.SubSubGroups = GetSubSubGroupsForCatalogueGroup(catalogueCode, groupCode, item.Code, languageCode);
@@ -354,23 +331,20 @@ namespace openPER.Repositories
         public List<SubSubGroupModel> GetSubSubGroupsForCatalogueGroupSubGroup(string catalogueCode, int groupCode, int subGroupCode, string languageCode)
         {
             var rc = new List<SubSubGroupModel>();
-            using (var connection = new SqliteConnection($"Data Source={_pathToDb}"))
-            {
-                var sql = @"select distinct T.SGS_COD FROM TBDATA T
+            using var connection = new SqliteConnection($"Data Source={_pathToDb}");
+            var sql = @"select distinct T.SGS_COD FROM TBDATA T
                             WHERE CAT_COD = $p1 AND T.GRP_COD = $p2 AND T.SGRP_COD = $p3
                             order by T.SGS_COD";
-                connection.RunSqlAllRows(sql, (reader) =>
-                                    {
-                                        var m = new SubSubGroupModel
-                                        {
-                                            Code = reader.GetInt32(0),
+            connection.RunSqlAllRows(sql, (reader) =>
+            {
+                var m = new SubSubGroupModel
+                {
+                    Code = reader.GetInt32(0),
 
-                                        };
-                                        m.Narrative = GetSgsNarrative(catalogueCode, groupCode, subGroupCode, m.Code, languageCode);
-                                        rc.Add(m);
-                                    }, catalogueCode, groupCode, subGroupCode);
-
-            }
+                };
+                m.Narrative = GetSgsNarrative(catalogueCode, groupCode, subGroupCode, m.Code, languageCode);
+                rc.Add(m);
+            }, catalogueCode, groupCode, subGroupCode);
             return rc;
         }
         private List<string> GetSgsNarrative(string catalogueCode, int groupCode, int subGroupCode, int sgsCode, string languageCode)
@@ -396,21 +370,18 @@ namespace openPER.Repositories
         }
         private void AddSgsNarratives(string catalogueCode, int groupCode, int subGroupCode, int sgsCode, string languageCode, string sql, List<string> narratives)
         {
-            using (var connection = new SqliteConnection($"Data Source={_pathToDb}"))
+            using var connection = new SqliteConnection($"Data Source={_pathToDb}");
+            connection.RunSqlAllRows(sql, (reader) =>
             {
-                connection.RunSqlAllRows(sql, (reader) =>
-                    {
-                        narratives.Add(reader.GetString(0) + reader.GetString(1) + " " + reader.GetString(2));
-                    }, catalogueCode, groupCode, subGroupCode, sgsCode, languageCode);
-            }
+                narratives.Add(reader.GetString(0) + reader.GetString(1) + " " + reader.GetString(2));
+            }, catalogueCode, groupCode, subGroupCode, sgsCode, languageCode);
         }
 
         public MvsModel GetMvsDetails(string mvsCode, string mvsVersion, string mvsSeries, string colourCode, string languageCode)
         {
             var m = new MvsModel();
-            using (var connection = new SqliteConnection($"Data Source={_pathToDb}"))
-            {
-                var sql = @"select M.MOD_COD, M.MVS_VERSION, M.MVS_SERIE, MVS_DSC, MVS_SINCOM_VERS,MVS_ENGINE_TYPE, MV.VMK_DSC, VV.VMK_DSC,
+            using var connection = new SqliteConnection($"Data Source={_pathToDb}");
+            var sql = @"select M.MOD_COD, M.MVS_VERSION, M.MVS_SERIE, MVS_DSC, MVS_SINCOM_VERS,MVS_ENGINE_TYPE, MV.VMK_DSC, VV.VMK_DSC,
                         M.VMK_TYPE_M||VMK_COD_M, M.VMK_TYPE_V||VMK_COD_V,
                         C.CAT_COD, C.CMD_DSC, COL.DSC_COLORE_INT_VET, MM.MOD_DSC from MVS M 
                         JOIN COMM_MODELS C ON C.MOD_COD = M.MOD_COD
@@ -419,45 +390,41 @@ namespace openPER.Repositories
 						LEFT OUTER JOIN VMK_DSC VV ON VV.CAT_COD = M.CAT_COD AND VV.VMK_TYPE = M.VMK_TYPE_V AND VV.VMK_COD = M.VMK_COD_V AND VV.LNG_COD = $p1
                         LEFT OUTER JOIN INTERNAL_COLOURS_DSC COL ON COL.CAT_COD = C.CAT_COD AND COD_COLORE_INT_VET = $p5
 					where M.MOD_COD = $p2 AND MVS_VERSION = $p3 AND MVS_SERIE = $p4";
-                connection.RunSqlFirstRowOnly(sql, (reader) =>
-                                    {
-                                        m.MvsCode = reader.GetString(0);
-                                        m.MvsVersion = reader.GetString(1);
-                                        m.MvsSeries = reader.GetString(2);
-                                        m.Description = reader.GetString(3);
-                                        m.SincomVersion = reader.GetString(4);
-                                        m.EngineType = reader.GetString(5);
-                                        m.EngineDescription = reader.GetString(6);
-                                        m.VariantDescription = reader.GetString(7);
-                                        m.EngineCode = reader.GetString(8);
-                                        m.VariantCode = reader.GetString(9);
-                                        m.CatalogueCode = reader.GetString(10);
-                                        m.CatalogueDescription = reader.GetString(11);
-                                        m.ColourCode = colourCode;
-                                        m.ColourDescription = reader.GetString(12);
-                                        m.ModelDescription = reader.GetString(13);
-                                    }, languageCode, mvsCode, mvsVersion, mvsSeries, colourCode);
-            }
+            connection.RunSqlFirstRowOnly(sql, (reader) =>
+            {
+                m.MvsCode = reader.GetString(0);
+                m.MvsVersion = reader.GetString(1);
+                m.MvsSeries = reader.GetString(2);
+                m.Description = reader.GetString(3);
+                m.SincomVersion = reader.GetString(4);
+                m.EngineType = reader.GetString(5);
+                m.EngineDescription = reader.GetString(6);
+                m.VariantDescription = reader.GetString(7);
+                m.EngineCode = reader.GetString(8);
+                m.VariantCode = reader.GetString(9);
+                m.CatalogueCode = reader.GetString(10);
+                m.CatalogueDescription = reader.GetString(11);
+                m.ColourCode = colourCode;
+                m.ColourDescription = reader.GetString(12);
+                m.ModelDescription = reader.GetString(13);
+            }, languageCode, mvsCode, mvsVersion, mvsSeries, colourCode);
             return m;
         }
 
         public List<LanguageModel> GetAllLanguages()
         {
             var languages = new List<LanguageModel>();
-            using (var connection = new SqliteConnection($"Data Source={_pathToDb}"))
+            using var connection = new SqliteConnection($"Data Source={_pathToDb}");
+            var sql = @"SELECT LNG_COD, LNG_DSC FROM LANG ORDER BY LNG_COD";
+            connection.RunSqlAllRows(sql, (reader) =>
             {
-                var sql = @"SELECT LNG_COD, LNG_DSC FROM LANG ORDER BY LNG_COD";
-                connection.RunSqlAllRows(sql, (reader) =>
-                    {
-                        var language = new LanguageModel
-                        {
-                            Code = reader.GetString(0),
-                            Description = reader.GetString(1)
-                        };
-                        languages.Add(language);
-                    });
-
-            }
+                var language = new LanguageModel
+                {
+                    Code = reader.GetString(0),
+                    Description = reader.GetString(1)
+                };
+                languages.Add(language);
+            });
             return languages;
         }
 
@@ -496,32 +463,30 @@ namespace openPER.Repositories
         private List<PartDrawing> GetDrawingsForPartNumber(double partNumber, string languageCode)
         {
             var drawings = new List<PartDrawing>();
-            using (var connection = new SqliteConnection($"Data Source={_pathToDb}"))
-            {
-                var sql = @"SELECT DISTINCT T.CAT_COD,CAT_DSC, T.GRP_COD, T.SGRP_COD, SGS_COD, DRW_NUM, SGRP_DSC,
+            using var connection = new SqliteConnection($"Data Source={_pathToDb}");
+            var sql = @"SELECT DISTINCT T.CAT_COD,CAT_DSC, T.GRP_COD, T.SGRP_COD, SGS_COD, DRW_NUM, SGRP_DSC,
                                         MK_COD, CMG_COD
                                 FROM APPLICABILITY A
                                 JOIN TBDATA T ON T.PRT_COD = A.PRT_COD AND T.GRP_COD = A.GRP_COD AND T.SGRP_COD = A.SGRP_COD
                                 JOIN SUBGROUPS_DSC SD ON SD.SGRP_COD = T.SGRP_COD AND SD.GRP_COD = T.GRP_COD AND SD.LNG_COD = $p2
                                 JOIN CATALOGUES C ON C.CAT_COD = T.CAT_COD
                                 WHERE A.PRT_COD = $p1";
-                connection.RunSqlAllRows(sql, (reader) =>
-                                    {
-                                        var p = new PartDrawing
-                                        {
-                                            Make = reader.GetString(7),
-                                            Model = reader.GetString(8),
-                                            CatalogueCode = reader.GetString(0),
-                                            CatalogueDescription = reader.GetString(1),
-                                            GroupCode = reader.GetInt32(2),
-                                            SubGroupCode = reader.GetInt32(3),
-                                            SgsCode = reader.GetInt32(4),
-                                            DrawingNumber = reader.GetInt32(5),
-                                            SubGroupDescription = reader.GetString(6)
-                                        };
-                                        drawings.Add(p);
-                                    }, partNumber, languageCode);
-            }
+            connection.RunSqlAllRows(sql, (reader) =>
+            {
+                var p = new PartDrawing
+                {
+                    Make = reader.GetString(7),
+                    Model = reader.GetString(8),
+                    CatalogueCode = reader.GetString(0),
+                    CatalogueDescription = reader.GetString(1),
+                    GroupCode = reader.GetInt32(2),
+                    SubGroupCode = reader.GetInt32(3),
+                    SgsCode = reader.GetInt32(4),
+                    DrawingNumber = reader.GetInt32(5),
+                    SubGroupDescription = reader.GetString(6)
+                };
+                drawings.Add(p);
+            }, partNumber, languageCode);
 
             return drawings;
         }

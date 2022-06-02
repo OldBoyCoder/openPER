@@ -1,4 +1,5 @@
-﻿using openPER.Interfaces;
+﻿using Microsoft.Extensions.Caching.Memory;
+using openPER.Interfaces;
 using openPER.Models;
 using System.Collections.Generic;
 using Microsoft.Extensions.Configuration;
@@ -9,9 +10,9 @@ namespace openPER.Repositories
     {
         readonly IRepository _repository18;
         IRepository _repository84;
-        public VersionedRepository(IConfiguration config)
+        public VersionedRepository(IMemoryCache cache, IConfiguration config)
         {
-            _repository18 = new Release18Repository(config);
+            _repository18 = new CachedRelease18Repository(cache, config);
         }
         public List<CatalogueModel> GetAllCatalogues(int release, string make, string model, string languageCode)
         {
@@ -88,7 +89,7 @@ namespace openPER.Repositories
             switch (release)
             {
                 case 18:
-                    return _repository18.GetSubSubGroupsForCatalogueGroupSubGroup(catalogueCode, groupCode,subGroupCode, languageCode);
+                    return _repository18.GetSubSubGroupsForCatalogueGroupSubGroup(catalogueCode, groupCode, subGroupCode, languageCode);
             }
             throw new System.NotImplementedException();
         }
@@ -98,7 +99,7 @@ namespace openPER.Repositories
             switch (release)
             {
                 case 18:
-                    return _repository18.GetSubGroupsForCatalogueGroup(catalogueCode,groupCode, languageCode);
+                    return _repository18.GetSubGroupsForCatalogueGroup(catalogueCode, groupCode, languageCode);
             }
             throw new System.NotImplementedException();
         }

@@ -18,14 +18,12 @@ namespace openPER.Repositories
                     command.Parameters.AddWithValue("$p" + (i + 1).ToString(), parameters[i]);
                 }
             }
-            using (var reader = command.ExecuteReader())
-            {
-                while (reader.Read())
-                {
-                    rowHandler(reader);
-                }
-            }
 
+            using var reader = command.ExecuteReader();
+            while (reader.Read())
+            {
+                rowHandler(reader);
+            }
         }
         internal static void RunSqlFirstRowOnly(this SqliteConnection connection, string sql, Action<SqliteDataReader> rowHandler, params object[] parameters)
         {
@@ -40,14 +38,12 @@ namespace openPER.Repositories
                     command.Parameters.AddWithValue("$p" + (i + 1).ToString(), parameters[i]);
                 }
             }
-            using (var reader = command.ExecuteReader())
-            {
-                if (reader.Read())
-                {
-                    rowHandler(reader);
-                }
-            }
 
+            using var reader = command.ExecuteReader();
+            if (reader.Read())
+            {
+                rowHandler(reader);
+            }
         }
 
     }
