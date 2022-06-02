@@ -2,6 +2,6 @@
 {
     public interface IImageRepository
     {
-        byte[] GetImageForCatalogue(string cmgCode);
+        byte[] GetImageForCatalogue(string makeCode, string cmgCode);
     }
 }

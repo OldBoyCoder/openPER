@@ -18,10 +18,10 @@ namespace openPER.Controllers
         {
             return View();
         }
-        [Route("Image/{ReleaseCode}/{Model}")]
-        public ActionResult ModelImage(int releaseCode, string model)
+        [Route("Image/{ReleaseCode}/{Make}/{Model}")]
+        public ActionResult ModelImage(int releaseCode,string make, string model)
         {
-            return File(_imageRep.GetImageForCatalogue(releaseCode, model), "image/png");
+            return File(_imageRep.GetImageForCatalogue(releaseCode,make, model), "image/png");
         }
 
 

@@ -28,6 +28,7 @@ namespace openPER.Controllers
                 Models = _mapper.Map<List<ModelModel>, List<ModelViewModel>>(_rep.GetAllModelsForMake(releaseCode, makeCode))
             };
             model.ReleaseCode = releaseCode;
+            model.MakeCode = makeCode;
             return View(model);
 
         }

@@ -362,3 +362,7 @@ MigrationBackup/
 # Fody - auto-generated XML schema
 FodyWeavers.xsd
 *.db
+/openPER/Data/Release18/ModelImagesF
+/openPER/Data/Release18/ModelImagesL
+/openPER/Data/Release18/ModelImagesR
+/openPER/Data/Release18/ModelImagesT
