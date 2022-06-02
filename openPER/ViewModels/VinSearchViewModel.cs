@@ -1,6 +1,5 @@
 ﻿using openPER.Models;
 using System.Collections.Generic;
-using VinSearcher;
 
 namespace openPER.ViewModels
 {

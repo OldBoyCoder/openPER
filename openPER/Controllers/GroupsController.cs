@@ -9,8 +9,8 @@ namespace openPER.Controllers
 {
     public class GroupsController : Controller
     {
-        IVersionedRepository _rep;
-        IMapper _mapper;
+        readonly IVersionedRepository _rep;
+        readonly IMapper _mapper;
         public GroupsController(IVersionedRepository rep, IMapper mapper)
         {
             _rep = rep;
@@ -25,10 +25,10 @@ namespace openPER.Controllers
 
             var model = new GroupsViewModel
             {
-                Groups = _mapper.Map<List<GroupModel>, List<GroupViewModel>>(_rep.GetGroupsForCatalogue(releaseCode, catalogueCode, language))
+                Groups = _mapper.Map<List<GroupModel>, List<GroupViewModel>>(_rep.GetGroupsForCatalogue(releaseCode, catalogueCode, language)),
+                ReleaseCode = releaseCode,
+                CatalogueCode = catalogueCode
             };
-            model.ReleaseCode = releaseCode;
-            model.CatalogueCode = catalogueCode; 
             return View(model);
         }
     }

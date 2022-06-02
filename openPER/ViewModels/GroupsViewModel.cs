@@ -1,5 +1,5 @@
 ﻿using System.Collections.Generic;
-using openPER.Models;
+
 namespace openPER.ViewModels
 {
     public class GroupsViewModel:VersionedViewModel

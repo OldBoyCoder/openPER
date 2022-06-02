@@ -1,6 +1,4 @@
-﻿using System.Collections.Generic;
-
-namespace openPER.Models
+﻿namespace openPER.Models
 {
     public class CatalogueModel
     {

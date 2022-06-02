@@ -169,9 +169,11 @@ namespace VinSearcher.KtdReader
                 var key = fin.ReadBytes(_header.PrimaryKeyLength);
                 long blockStart = fin.ReadUInt32();
                 long blockEnd = fin.ReadUInt32();
-                var indexBlock = new IndexBlock();
-                indexBlock.Block = new BlockSize(blockStart, blockEnd);
-                indexBlock.Key = Encoding.ASCII.GetString(key);
+                var indexBlock = new IndexBlock
+                {
+                    Block = new BlockSize(blockStart, blockEnd),
+                    Key = Encoding.ASCII.GetString(key)
+                };
 
                 rc.Add(indexBlock);
             }

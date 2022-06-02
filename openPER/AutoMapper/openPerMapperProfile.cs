@@ -4,9 +4,9 @@ using openPER.ViewModels;
 
 namespace openPER.AutoMapper
 {
-    public class openPerMapperProfile:Profile
+    public class OpenPerMapperProfile:Profile
     {
-        public openPerMapperProfile()
+        public OpenPerMapperProfile()
         {
             CreateMap<MakeModel, MakeViewModel>();
             CreateMap<ModelModel, ModelViewModel>();

@@ -7,7 +7,7 @@ namespace openPER.Helpers
 {
     public static class LanguageSupport
     {
-        static List<(string ePerCode, string culture)> cultures = new List<(string ePerCode, string culture)>
+        static readonly List<(string ePerCode, string culture)> Cultures = new()
         {
             ("0", "it"),
             ("1", "fr"),
@@ -28,14 +28,14 @@ namespace openPER.Helpers
         public static CultureInfo ConvertLanguageCodeToCulture(string languageCode)
         {
             var culture = CultureInfo.GetCultureInfo("en");
-            if (cultures.Exists(x => x.ePerCode == languageCode))
-                return CultureInfo.GetCultureInfo(cultures.Find(x => x.ePerCode == languageCode).culture);
+            if (Cultures.Exists(x => x.ePerCode == languageCode))
+                return CultureInfo.GetCultureInfo(Cultures.Find(x => x.ePerCode == languageCode).culture);
             return culture;
         }
         public static string ConvertCultureToLanguageCode(CultureInfo culture)
         {
-            if (cultures.Exists(x => x.culture == culture.TwoLetterISOLanguageName))
-                return cultures.Find(x => x.culture == culture.TwoLetterISOLanguageName).ePerCode;
+            if (Cultures.Exists(x => x.culture == culture.TwoLetterISOLanguageName))
+                return Cultures.Find(x => x.culture == culture.TwoLetterISOLanguageName).ePerCode;
             return "3";
         }
         public static string SetCultureBasedOnCookie(HttpContext context)

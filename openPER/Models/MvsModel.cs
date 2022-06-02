@@ -17,13 +17,7 @@
         public string CatalogueDescription { get; internal set; }
         public string ColourCode { get; internal set; }
         public string ColourDescription { get; internal set; }
-        public string FullMvsCode
-        {
-            get
-            {
-                return $"{MvsCode}.{MvsVersion}.{MvsSeries}";
-            }
-        }
+        public string FullMvsCode => $"{MvsCode}.{MvsVersion}.{MvsSeries}";
 
         public string ModelDescription { get; internal set; }
     }

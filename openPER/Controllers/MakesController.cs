@@ -9,8 +9,8 @@ namespace openPER.Controllers
 {
     public class MakesController : Controller
     {
-        IVersionedRepository _rep;
-        IMapper _mapper;
+        readonly IVersionedRepository _rep;
+        readonly IMapper _mapper;
         public MakesController(IVersionedRepository repository, IMapper mapper)
         {
             _rep = repository;
@@ -24,9 +24,9 @@ namespace openPER.Controllers
 
             var model = new MakesViewModel
             {
-                Makes = _mapper.Map<List<MakeModel>, List<MakeViewModel>>(_rep.GetAllMakes(releaseCode))
+                Makes = _mapper.Map<List<MakeModel>, List<MakeViewModel>>(_rep.GetAllMakes(releaseCode)),
+                ReleaseCode = releaseCode
             };
-            model.ReleaseCode = releaseCode;
             return View(model);
         }
     }

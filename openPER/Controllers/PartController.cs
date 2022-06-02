@@ -6,10 +6,10 @@ namespace openPER.Controllers
 {
     public class PartController : Controller
     {
-        IRepository rep;
-        public PartController(IRepository _rep)
+        readonly IRepository _rep;
+        public PartController(IRepository rep)
         {
-            rep = _rep;
+            _rep = rep;
         }
         public IActionResult Index()
         {
@@ -18,14 +18,14 @@ namespace openPER.Controllers
         }
 
         [HttpGet]
-        public ActionResult SearchResults(string PartNumber)
+        public ActionResult SearchResults(string partNumber)
         {
             var p = new PartViewModel();
             var language = Helpers.LanguageSupport.SetCultureBasedOnCookie(HttpContext);
-            if (PartNumber == null) return View("Index", null);
-            p.PartNumberSearch = PartNumber;
+            if (partNumber == null) return View("Index", null);
+            p.PartNumberSearch = partNumber;
 
-            p.Result = rep.GetPartDetails(p.PartNumberSearch, language);
+            p.Result = _rep.GetPartDetails(p.PartNumberSearch, language);
             return View("Index", p);
         }
     }
