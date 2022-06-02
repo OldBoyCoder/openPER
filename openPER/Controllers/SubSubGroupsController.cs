@@ -7,28 +7,29 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace openPER.Controllers
 {
-    public class SubGroupsController : Controller
+    public class SubSubGroupsController : Controller
     {
         IVersionedRepository _rep;
         IMapper _mapper;
-        public SubGroupsController(IVersionedRepository rep, IMapper mapper)
+        public SubSubGroupsController(IVersionedRepository rep, IMapper mapper)
         {
             _rep = rep;
             _mapper = mapper;
         }
-        [Route("SubGroups/{ReleaseCode}/{CatalogueCode}/{GroupCode}")]
-        public IActionResult Index(int releaseCode, string catalogueCode, int groupCode)
+        [Route("SubSubGroups/{ReleaseCode}/{CatalogueCode}/{GroupCode}/{SubGroupCode}")]
+        public IActionResult Index(int releaseCode, string catalogueCode, int groupCode, int subGroupCode)
         {
             // Standard prologue
             var language = Helpers.LanguageSupport.SetCultureBasedOnCookie(HttpContext);
             ControllerHelpers.ResetReleaseCookie(HttpContext, releaseCode);
 
-            var model = new SubGroupsViewModel();
-            model.SubGroups = _mapper.Map<List<SubGroupModel>, List<SubGroupViewModel>>(_rep.GetSubGroupsForCatalogueGroup(releaseCode,catalogueCode, groupCode, language));
+            var model = new SubSubGroupsViewModel();
+            model.SubSubGroups = _mapper.Map<List<SubSubGroupModel>, List<SubSubGroupViewModel>>(_rep.GetSubSubGroupsForCatalogueGroupSubGroup(releaseCode, catalogueCode, groupCode,subGroupCode, language));
             model.CatalogueCode = catalogueCode;
             model.GroupCode = groupCode;
-            model.ReleaseCode = releaseCode;
+            model.SubGroupCode = subGroupCode;
             return View(model);
         }
+
     }
 }
