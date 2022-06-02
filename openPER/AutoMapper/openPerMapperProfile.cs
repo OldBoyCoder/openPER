@@ -9,6 +9,7 @@ namespace openPER.AutoMapper
         public openPerMapperProfile()
         {
             CreateMap<MakeModel, MakeViewModel>();
+            CreateMap<ModelModel, ModelViewModel>();
             CreateMap<CatalogueModel, CatalogueViewModel>();
         }
     }
