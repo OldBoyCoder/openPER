@@ -12,7 +12,14 @@
     <table class="table table-sm">
     @foreach (var group in Model.SubSubGroups)
     {
-        <tr><td>@group.Code</td><td>@group.Narrative</td></tr>
+        <tr><td>@group.Code</td><td>
+            <ul class="list-group">
+            @foreach (var item in group.Narrative)
+                    {
+<li class="list-group-item">@item</li>                        
+                    }
+                    </ul>
+</td></tr>
     }
     </table>
 </div>
