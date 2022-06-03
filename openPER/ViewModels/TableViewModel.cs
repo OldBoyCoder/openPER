@@ -1,8 +1,8 @@
 ﻿using System.Collections.Generic;
 
-namespace openPER.Models
+namespace openPER.ViewModels
 {
-    public class TableModel
+    public class TableViewModel
     {
         public string MakeCode { get; set; }    
         public string ModelCode { get; set; }
@@ -17,9 +17,7 @@ namespace openPER.Models
         public string SubGroupDesc { get; set; }
         public string SgsDesc { get; set; }
         public List<int> DrawingNumbers { get; set; }
-        public List<TablePartModel> Parts { get; set; }
-        public List<TablePartModel> Cliches { get; set; }
-        public List<TablePartModel> Kits { get; set; }
+        public List<TablePartViewModel> Parts { get; set; }
         public int CurrentDrawing { get; set; }
         public List<string> Narratives { get; set; }
 

@@ -22,7 +22,7 @@
     <br />
     <div class="flex-container">
         <div>
-            <img src="@Url.Action("Drawing", "Image", new { Make=Model.MakeCode, Model=Model.ModelCode, Catalogue=Model.CatalogueCode, Group = Model.GroupCode, SubGroup = Model.SubGroupCode, SubSubGroup=Model.SgsCode, Drawing=Model.CurrentDrawing})">
+            <img src="@Url.Action("Drawing", "Image", new { Make=Model.MakeCode, Model=Model.ModelCode, Catalogue=Model.CatalogueCode, Group = Model.GroupCode, SubGroup = Model.SubGroupCode, SubSubGroup=Model.SubSubGroupCode, Drawing=Model.CurrentDrawing})">
         </div>
         <div>
             <table class="table table-sm">
@@ -61,8 +61,8 @@
     @foreach (var drawing in Model.DrawingNumbers)
     {
         <p>
-            <a href="@Url.Action("Details", "Table",  new {Make=Model.MakeCode, Model=Model.ModelCode, Catalogue=Model.CatalogueCode, Group = Model.GroupCode, SubGroup = Model.SubGroupCode, Model.SgsCode, Drawing=drawing})">
-                <img src="@Url.Action("Thumbnail", "Image", new {Make=Model.MakeCode, Model=Model.ModelCode, Catalogue=Model.CatalogueCode, Group = Model.GroupCode, SubGroup = Model.SubGroupCode, SubSubGroup=Model.SgsCode, Drawing=drawing})">
+            <a href="@Url.Action("Details", "Table",  new {Make=Model.MakeCode, Model=Model.ModelCode, Catalogue=Model.CatalogueCode, Group = Model.GroupCode, SubGroup = Model.SubGroupCode, SgsCode = Model.SubSubGroupCode, Drawing=drawing})">
+                <img src="@Url.Action("Thumbnail", "Image", new {Make=Model.MakeCode, Model=Model.ModelCode, Catalogue=Model.CatalogueCode, Group = Model.GroupCode, SubGroup = Model.SubGroupCode, SubSubGroup=Model.SubSubGroupCode, Drawing=drawing})">
             </a>
         </p>
 

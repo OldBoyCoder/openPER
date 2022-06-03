@@ -17,6 +17,32 @@ namespace openPER.Controllers
             _mapper = mapper;
         }
         // The most specific route, only the drawings for the lowest level are returned
+        [Route("Detail/{ReleaseCode}/{MakeCode}/{ModelCode}/{CatalogueCode}/{GroupCode}/{SubGroupCode}/{SubSubGroupCode}/{DrawingNumber}")]
+        public IActionResult Detail(int releaseCode, string makeCode, string modelCode, string catalogueCode, int groupCode, int subGroupCode, int subSubGroupCode, int drawingNumber)
+        {
+            // Standard prologue
+            var language = Helpers.LanguageSupport.SetCultureBasedOnCookie(HttpContext);
+            ControllerHelpers.ResetReleaseCookie(HttpContext, releaseCode);
+
+            var model = new DrawingsViewModel();
+            model.ReleaseCode = releaseCode;
+            // We need to get all of the drawing keys for this sub sub group
+            List<DrawingKeyModel> drawings = _rep.GetDrawingKeysForSubSubGroup(releaseCode, makeCode, modelCode,
+                catalogueCode, groupCode, subGroupCode, subSubGroupCode);
+            model.Drawings = _mapper.Map<List<DrawingKeyModel>, List<DrawingKeyViewModel>>(drawings);
+            model.Drawings.ForEach(x => x.ReleaseCode = releaseCode);
+            // Now we get the rest of the details for the drawing we're interested in
+            var drawing = model.Drawings[drawingNumber - 1];
+            // Get the table for this drawing
+            model.TableData = _mapper.Map<TableModel, TableViewModel>(
+                _rep.GetTable(drawing.ReleaseCode, drawing.CatalogueCode, drawing.GroupCode, drawing.SubGroupCode,
+               drawing.SubSubGroupCode, drawing.DrawingNumber, language));
+            model.TableData.MakeCode = makeCode;
+            model.TableData.ModelCode = modelCode;
+
+            return View(model);
+        }
+        // The most specific route, only the drawings for the lowest level are returned
         [Route("Drawings/{ReleaseCode}/{MakeCode}/{ModelCode}/{CatalogueCode}/{GroupCode}/{SubGroupCode}/{SubSubGroupCode}/{DrawingNumber}")]
         public IActionResult Index(int releaseCode, string makeCode, string modelCode, string catalogueCode, int groupCode, int subGroupCode, int subSubGroupCode, int drawingNumber)
         {
@@ -30,7 +56,7 @@ namespace openPER.Controllers
             List<DrawingKeyModel> drawings = _rep.GetDrawingKeysForSubSubGroup(releaseCode, makeCode, modelCode,
                 catalogueCode, groupCode, subGroupCode, subSubGroupCode);
             model.Drawings = _mapper.Map<List<DrawingKeyModel>, List<DrawingKeyViewModel>>(drawings);
-            model.Drawings.ForEach(x=>x.ReleaseCode = releaseCode);
+            model.Drawings.ForEach(x => x.ReleaseCode = releaseCode);
             return View(model);
         }
         // A very vague route to a large set of drawings!
@@ -80,5 +106,6 @@ namespace openPER.Controllers
             model.Drawings.ForEach(x => x.ReleaseCode = releaseCode);
             return View(model);
         }
+
     }
 }

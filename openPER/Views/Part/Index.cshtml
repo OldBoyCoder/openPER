@@ -23,9 +23,9 @@
                 <tr>
                     <td>@drawing.CatalogueCode @drawing.CatalogueDescription</td>
                     <td>
-                        <a href="@Url.Action("Details", "Table",  new {drawing.Make,drawing.Model, Catalogue=drawing.CatalogueCode, Group = drawing.GroupCode, SubGroup = drawing.SubGroupCode, drawing.SgsCode, Drawing=drawing.DrawingNumber})">
+                        <a href="@Url.Action("Details", "Table",  new {drawing.Make,drawing.Model, Catalogue=drawing.CatalogueCode, Group = drawing.GroupCode, SubGroup = drawing.SubGroupCode, SgsCode = drawing.SubSubGroupCode, Drawing=drawing.DrawingNumber})">
 
-                            @drawing.GroupCode.ToString("000")@drawing.SubGroupCode.ToString("00")/@drawing.SgsCode.ToString("00") - @drawing.SubGroupDescription
+                            @drawing.GroupCode.ToString("000")@drawing.SubGroupCode.ToString("00")/@drawing.SubSubGroupCode.ToString("00") - @drawing.SubGroupDescription
                         </a>
                     </td>
                 </tr>
