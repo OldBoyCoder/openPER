@@ -2,22 +2,21 @@
 using Microsoft.Data.Sqlite;
 using openPER.Interfaces;
 using openPER.Models;
-using System;
 using System.Collections.Generic;
 using System.Linq;
 // ReSharper disable StringLiteralTypo
 
 namespace openPER.Repositories
 {
-    public class Release84Repository : IRepository
+    public class Release18Repository : IRepository
     {
         IConfiguration _config;
         private readonly string _pathToDb;
-        public Release84Repository(IConfiguration config)
+        public Release18Repository(IConfiguration config)
         {
             _config = config;
             var s = config.GetSection("Releases").Get<ReleaseModel[]>();
-            var release = s.FirstOrDefault(x => x.Release == 84);
+            var release = s.FirstOrDefault(x => x.Release == 18);
             if (release != null)
             {
                 _pathToDb = System.IO.Path.Combine(release.FolderName, release.DbName);
@@ -30,11 +29,11 @@ namespace openPER.Repositories
         {
             var t = new TableModel();
             using var connection = new SqliteConnection($"Data Source={_pathToDb}");
-//            t.MakeDesc = GetMakeDescription(makeCode, connection);
-  //          t.ModelDesc = GetModelDescription(makeCode, modelCode, connection);
-    //        t.CatalogueDesc = GetCatalogueDescription(makeCode, modelCode, catalogueCode, connection);
-      //      t.GroupDesc = GetGroupDescription(groupCode, languageCode, connection);
-        //    t.SubGroupDesc = GetSubGroupDescription(groupCode, subGroupCode, languageCode, connection);
+            //            t.MakeDesc = GetMakeDescription(makeCode, connection);
+            //          t.ModelDesc = GetModelDescription(makeCode, modelCode, connection);
+            //        t.CatalogueDesc = GetCatalogueDescription(makeCode, modelCode, catalogueCode, connection);
+            t.GroupDesc = GetGroupDescription(groupCode, languageCode, connection);
+            t.SubGroupDesc = GetSubGroupDescription(groupCode, subGroupCode, languageCode, connection);
             // TODO Add variant information to sgs description
             t.SgsDesc = GetSubGroupDescription(groupCode, subGroupCode, languageCode, connection);
             t.Parts = GetTableParts(catalogueCode, groupCode, subGroupCode, sgsCode, drawingNumber, languageCode, connection);
@@ -69,9 +68,9 @@ namespace openPER.Repositories
                             FROM TBDATA  
                             WHERE SGS_COD = $p1 AND SGRP_COD = $p2 AND GRP_COD = $p3 AND CAT_COD = $p4 ";
             connection.RunSqlAllRows(sql, (reader) =>
-                {
-                    rc.Add(reader.GetInt32(0));
-                }, sgsCode, subGroupCode, groupCode, catalogueCode);
+            {
+                rc.Add(reader.GetInt32(0));
+            }, sgsCode, subGroupCode, groupCode, catalogueCode);
             return rc;
         }
 
@@ -86,24 +85,24 @@ namespace openPER.Repositories
                                         WHERE DRW_NUM = $p2 AND SGS_COD = $p3 AND SGRP_COD = $p4 AND GRP_COD = $p5 AND CAT_COD = $p6 
                                         ORDER BY TBD_RIF,TBD_SEQ";
             connection.RunSqlAllRows(sql, (reader) =>
+            {
+                var part = new TablePartModel
                 {
-                    var part = new TablePartModel
-                    {
-                        PartNumber = reader.GetDouble(1),
-                        TableOrder = reader.GetInt32(0),
-                        Quantity = reader.GetString(2),
-                        Description = reader.GetString(3),
-                        Notes1 = reader.IsDBNull(4) ? "" : reader.GetString(4),
-                        Notes2 = reader.IsDBNull(5) ? "" : reader.GetString(5),
-                        Notes3 = reader.IsDBNull(6) ? "" : reader.GetString(6),
-                        Sequence = reader.GetString(7),
-                        Notes = reader.IsDBNull(8) ? "" : reader.GetString(8),
-                        Compatibility = reader.IsDBNull(9) ? "" : reader.GetString(9),
-                        FurtherDescription = reader.IsDBNull(10) ? "" : reader.GetString(10)
-                    };
-                    parts.Add(part);
+                    PartNumber = reader.GetDouble(1),
+                    TableOrder = reader.GetInt32(0),
+                    Quantity = reader.GetString(2),
+                    Description = reader.GetString(3),
+                    Notes1 = reader.IsDBNull(4) ? "" : reader.GetString(4),
+                    Notes2 = reader.IsDBNull(5) ? "" : reader.GetString(5),
+                    Notes3 = reader.IsDBNull(6) ? "" : reader.GetString(6),
+                    Sequence = reader.GetString(7),
+                    Notes = reader.IsDBNull(8) ? "" : reader.GetString(8),
+                    Compatibility = reader.IsDBNull(9) ? "" : reader.GetString(9),
+                    FurtherDescription = reader.IsDBNull(10) ? "" : reader.GetString(10)
+                };
+                parts.Add(part);
 
-                }, languageCode, drawingNumber, sgsCode, subGroupCode, groupCode, catalogueCode);
+            }, languageCode, drawingNumber, sgsCode, subGroupCode, groupCode, catalogueCode);
 
             foreach (var part in parts)
             {
@@ -122,17 +121,17 @@ namespace openPER.Repositories
                                             AND TBD_RIF = $p7 AND TBD_SEQ = $p8
                                         ORDER BY TBDM_PROG";
             connection.RunSqlAllRows(sql, (reader) =>
+            {
+                var mod = new ModificationModel
                 {
-                    var mod = new ModificationModel
-                    {
-                        Type = reader.GetString(0),
-                        Code = reader.GetInt32(1),
-                        Progression = reader.GetInt32(2),
-                        Description = reader.GetString(3)
-                    };
-                    modifications.Add(mod);
+                    Type = reader.GetString(0),
+                    Code = reader.GetInt32(1),
+                    Progression = reader.GetInt32(2),
+                    Description = reader.GetString(3)
+                };
+                modifications.Add(mod);
 
-                }, languageCode, drawingNumber, sgsCode, subGroupCode, groupCode, catalogueCode, part.TableOrder, part.Sequence);
+            }, languageCode, drawingNumber, sgsCode, subGroupCode, groupCode, catalogueCode, part.TableOrder, part.Sequence);
             // Get activations for modifications
             foreach (var mod in modifications)
             {
@@ -151,21 +150,21 @@ namespace openPER.Repositories
                     LEFT OUTER JOIN OPTKEYS_DSC O ON O.OPTK_TYPE = M.OPTK_TYPE AND O.OPTK_COD = M.OPTK_COD AND O.LNG_COD = $p2
                     WHERE M.CAT_COD = $p3 AND M.MDF_COD = $p1";
             connection.RunSqlAllRows(sql, (reader) =>
+            {
+                var mod = new ActivationModel
                 {
-                    var mod = new ActivationModel
-                    {
-                        ActivationDescription = reader.GetString(0) + " " + reader.GetString(1),
-                        ActivationCode = reader.GetString(2),
-                        OptionType = reader.GetString(3),
-                        OptionCode = reader.GetString(4),
-                        OptionDescription = reader.GetString(5),
-                        VariationType = reader.GetString(6),
-                        VariationCode = reader.GetString(7),
-                        VariationDescription = reader.GetString(8)
-                    };
-                    modifications.Add(mod);
+                    ActivationDescription = reader.GetString(0) + " " + reader.GetString(1),
+                    ActivationCode = reader.GetString(2),
+                    OptionType = reader.GetString(3),
+                    OptionCode = reader.GetString(4),
+                    OptionDescription = reader.GetString(5),
+                    VariationType = reader.GetString(6),
+                    VariationCode = reader.GetString(7),
+                    VariationDescription = reader.GetString(8)
+                };
+                modifications.Add(mod);
 
-                }, modCode, languageCode, catalogueCode);
+            }, modCode, languageCode, catalogueCode);
             return modifications;
         }
         private string GetCatalogueDescription(string makeCode, string modelCode, string catalogueCode, SqliteConnection connection)
@@ -198,9 +197,9 @@ namespace openPER.Repositories
             var rc = "";
             var sql = @"SELECT SGRP_DSC FROM SUBGROUPS_DSC WHERE SGRP_COD = $p2 AND GRP_COD = $p1 AND LNG_COD = $p3 ";
             connection.RunSqlFirstRowOnly(sql, (reader) =>
-                {
-                    rc = reader.GetString(0);
-                }, groupCode, subGroupCode, languageCode);
+            {
+                rc = reader.GetString(0);
+            }, groupCode, subGroupCode, languageCode);
             return rc;
         }
 
@@ -210,9 +209,9 @@ namespace openPER.Repositories
             var rc = "";
             var sql = @"SELECT MK_DSC FROM MAKES WHERE MK_COD = $p1";
             connection.RunSqlFirstRowOnly(sql, (reader) =>
-                {
-                    rc = reader.GetString(0);
-                }, makeCode);
+            {
+                rc = reader.GetString(0);
+            }, makeCode);
             return rc;
         }
         private string GetModelDescription(string makeCode, string modelCode, SqliteConnection connection)
@@ -220,9 +219,9 @@ namespace openPER.Repositories
             var rc = "";
             var sql = @"SELECT MOD_DSC FROM MODELS WHERE MK_COD = $p1 AND MOD_COD = $p2";
             connection.RunSqlFirstRowOnly(sql, (reader) =>
-                {
-                    rc = reader.GetString(0);
-                }, makeCode, modelCode);
+            {
+                rc = reader.GetString(0);
+            }, makeCode, modelCode);
             return rc;
         }
         public List<ModelModel> GetAllModels()
@@ -265,25 +264,19 @@ namespace openPER.Repositories
         public List<CatalogueModel> GetAllCatalogues(string makeCode, string modelCode, string languageCode)
         {
             var rc = new List<CatalogueModel>();
-            using (var connection = new SqliteConnection($"Data Source={_pathToDb}"))
+            using var connection = new SqliteConnection($"Data Source={_pathToDb}");
+            var sql = @"SELECT CAT_COD, CAT_DSC FROM CATALOGUES WHERE MK2_COD = $p1 AND CMG_COD = $p2  ORDER BY CAT_SORT_KEY ";
+            connection.RunSqlAllRows(sql, (reader) =>
             {
-                var sql = @"SELECT CAT_COD, CAT_DSC FROM CATALOGUES WHERE MK2_COD = $p1 AND CMG_COD = $p2  ORDER BY CAT_SORT_KEY ";
-                connection.RunSqlAllRows(sql, (reader) =>
+                var m = new CatalogueModel
                 {
-                    var m = new CatalogueModel
-                    {
-                        Code = reader.GetString(0),
-                        Description = reader.GetString(1),
-                        MakeCode = makeCode,
-                        ModelCode = modelCode
-                    };
-                    rc.Add(m);
-                }, makeCode, modelCode);
-            }
-            foreach (var item in rc)
-            {
-                //      item.Groups = GetGroupsForCatalogue(item.Code, languageCode);
-            }
+                    Code = reader.GetString(0),
+                    Description = reader.GetString(1),
+                    MakeCode = makeCode,
+                    ModelCode = modelCode
+                };
+                rc.Add(m);
+            }, makeCode, modelCode);
             return rc;
         }
 
@@ -435,6 +428,32 @@ namespace openPER.Repositories
             return languages;
         }
 
+        public List<DrawingKeyModel> GetDrawingKeysForSubSubGroup(string makeCode, string modelCode, string catalogueCode, int groupCode,
+            int subGroupCode, int subSubGroupCode)
+        {
+            var drawings = new List<DrawingKeyModel>();
+            using var connection = new SqliteConnection($"Data Source={_pathToDb}");
+            var sql = @"SELECT DISTINCT CAT_COD, GRP_COD, SGRP_COD, SGS_COD, DRW_NUM 
+                            FROM TBDATA
+                            WHERE CAT_COD = $p1 AND GRP_COD = $p2 AND SGRP_COD = $p3 AND SGS_COD = $p4";
+            connection.RunSqlAllRows(sql, (reader) =>
+            {
+                var language = new DrawingKeyModel()
+                {
+                    MakeCode = makeCode,
+                    ModelCode = modelCode,
+                    CatalogueCode = reader.GetString(0),
+                    GroupCode = reader.GetInt32(1),
+                    SubGroupCode = reader.GetInt32(2),
+                    SubSubGroupCode = reader.GetInt32(3),
+                    DrawingNumber = reader.GetInt32(4)
+                };
+                drawings.Add(language);
+            }, catalogueCode, groupCode, subGroupCode, subSubGroupCode);
+
+            return drawings;
+        }
+
         public PartModel GetPartDetails(string partNumberSearch, string languageCode)
         {
             PartModel p = null;
@@ -447,17 +466,17 @@ namespace openPER.Repositories
                                 LEFT OUTER JOIN RPLNT R ON R.RPL_COD = P.PRT_COD
                                 where P.PRT_COD = $p1";
                 connection.RunSqlFirstRowOnly(sql, (reader) =>
-                                    {
-                                        p = new PartModel
-                                        {
-                                            PartNumber = reader.GetDouble(0),
-                                            Description = reader.GetString(2),
-                                            FamilyCode = reader.GetString(3),
-                                            FamilyDescription = reader.GetString(4),
-                                            UnitOfSale = reader.GetString(5),
-                                            Weight = reader.GetInt32(6)
-                                        };
-                                    }, partNumberSearch, languageCode);
+                {
+                    p = new PartModel
+                    {
+                        PartNumber = reader.GetDouble(0),
+                        Description = reader.GetString(2),
+                        FamilyCode = reader.GetString(3),
+                        FamilyDescription = reader.GetString(4),
+                        UnitOfSale = reader.GetString(5),
+                        Weight = reader.GetInt32(6)
+                    };
+                }, partNumberSearch, languageCode);
 
             }
             if (p != null)
@@ -498,9 +517,5 @@ namespace openPER.Repositories
             return drawings;
         }
 
-        public List<SubSubGroupModel> GetSgsGroupsForCatalogueGroupSubGroup(string catalogueCode, int groupCode, int subGroupCode, string languageCode)
-        {
-            throw new NotImplementedException();
-        }
     }
 }

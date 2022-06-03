@@ -40,6 +40,19 @@ namespace openPER.Repositories
             return rc;
         }
 
+        public List<DrawingKeyModel> GetDrawingKeysForSubSubGroup(string makeCode, string modelCode, string catalogueCode, int groupCode,
+            int subGroupCode, int subSubGroupCode)
+        {
+            var cacheKeys = new { type = "GetDrawingKeysForSubSubGroup", k1 = makeCode, k2=modelCode, k3=catalogueCode, k4=groupCode, k5=subGroupCode, k6=subSubGroupCode};
+            if (!_cache.TryGetValue(cacheKeys, out List<DrawingKeyModel> rc))
+            {
+                rc = _rep.GetDrawingKeysForSubSubGroup(makeCode, modelCode, catalogueCode, groupCode, subGroupCode, subSubGroupCode);
+                var cacheEntryOptions = new MemoryCacheEntryOptions().SetSlidingExpiration(TimeSpan.FromHours(24));
+                _cache.Set(cacheKeys, rc, cacheEntryOptions);
+            }
+            return rc;
+        }
+
         public List<MakeModel> GetAllMakes()
         {
             var cacheKeys = new { type = "GetAllMakes" };

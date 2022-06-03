@@ -115,5 +115,15 @@ namespace openPER.Repositories
                 _ => throw new System.NotImplementedException()
             };
         }
+
+        public List<DrawingKeyModel> GetDrawingKeysForSubSubGroup(int releaseCode, string makeCode, string modelCode, string catalogueCode,
+            int groupCode, int subGroupCode, int subSubGroupCode)
+        {
+            return releaseCode switch
+            {
+                18 => _repository18.GetDrawingKeysForSubSubGroup(makeCode,modelCode, catalogueCode, groupCode, subGroupCode, subSubGroupCode),
+                _ => throw new System.NotImplementedException()
+            };
+        }
     }
 }

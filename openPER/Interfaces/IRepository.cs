@@ -16,6 +16,8 @@ namespace openPER.Interfaces
         PartModel GetPartDetails(string partNumberSearch, string languageCode);
         MvsModel GetMvsDetails(string mvsCode, string mvsVersion, string mvsSeries, string colourCode, string languageCode);
         List<LanguageModel> GetAllLanguages();
+        List<DrawingKeyModel> GetDrawingKeysForSubSubGroup( string makeCode, string modelCode, string catalogueCode, int groupCode, int subGroupCode, int subSubGroupCode);
+
     }
 
 }
