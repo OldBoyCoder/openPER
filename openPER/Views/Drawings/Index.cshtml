@@ -1,4 +1,5 @@
-﻿@model openPER.ViewModels.DrawingsViewModel
+﻿@using openPER.ViewModels
+@model openPER.ViewModels.DrawingsViewModel
 
 @{
     ViewData["Title"] = "Index";
@@ -10,23 +11,34 @@
     {
         <tr>
             <td>@drawing.FullKey</td>
-            <td>                <img src="@Url.Action("Drawing", "Image", new {Make=drawing.MakeCode, Model=drawing.ModelCode, Catalogue=drawing.CatalogueCode, Group = drawing.GroupCode, SubGroup = drawing.SubGroupCode, SubSubGroup=drawing.SubSubGroupCode, Drawing=drawing.DrawingNumber})">
+            <td>
+                <img src="@Url.Action("Drawing", "Image", new {Make=drawing.MakeCode, Model=drawing.ModelCode, Catalogue=drawing.CatalogueCode, Group = drawing.GroupCode, SubGroup = drawing.SubGroupCode, SubSubGroup=drawing.SubSubGroupCode, Drawing=drawing.DrawingNumber})">
             </td>
         </tr>
     }
 </table>
 <div class="container horizontal-scrollable">
     <div class="row text-center">
-    @{
-        int ix = 1;
-        @foreach (var drawing in Model.Drawings)
-        {
-            <div class="col-xs-4">
-                <img src="@Url.Action("Thumbnail", "Image", new { Make = drawing.MakeCode, Model = drawing.ModelCode, Catalogue = drawing.CatalogueCode, Group = drawing.GroupCode, SubGroup = drawing.SubGroupCode, SubSubGroup = drawing.SubSubGroupCode, Drawing = drawing.DrawingNumber })"><br/>
-                @Html.ActionLink($"{drawing.CatalogueCode}/{drawing.GroupCode}/{drawing.SubGroupCode}/{drawing.SubSubGroupCode}/{ix}", "Detail", "Drawings", new { Model.ReleaseCode, drawing.MakeCode, drawing.ModelCode, drawing.CatalogueCode, drawing.GroupCode, drawing.SubGroupCode, SubSubGroupCode = drawing.SubSubGroupCode, DrawingNumber = ix++ })
-            </div>
+        @{
+            int ix = 1;
+            @foreach (var drawing in Model.Drawings)
+            {
+                <div class="col-xs-4">
+                    <img src="@Url.Action("Thumbnail", "Image", new { Make = drawing.MakeCode, Model = drawing.ModelCode, Catalogue = drawing.CatalogueCode, Group = drawing.GroupCode, SubGroup = drawing.SubGroupCode, SubSubGroup = drawing.SubSubGroupCode, Drawing = drawing.DrawingNumber })"><br />
+                    @{
+                        switch (Model.RequestType)
+                        {
 
+                            case DrawingsRequestType.Catalogue:
+                                @Html.ActionLink($"{drawing.CatalogueCode}/{drawing.GroupCode}/{drawing.SubGroupCode}/{drawing.SubSubGroupCode}/{ix}", "Detail", "Drawings", new { Model.ReleaseCode, drawing.MakeCode, drawing.ModelCode, drawing.CatalogueCode, DrawingNumber = ix++ })
+                                break;
+                            default:
+                                break;
+                        }
+                    }
+                </div>
+
+            }
         }
-    }
     </div>
 </div>

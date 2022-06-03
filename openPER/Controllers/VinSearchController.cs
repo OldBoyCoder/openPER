@@ -49,7 +49,7 @@ namespace openPER.Controllers
                 if (searchResult != null)
                 {
                     vinSearch = new VinSearchViewModel();
-
+                    vinSearch.ReleaseCode = releaseCode;
                     var mvsCode = searchResult.MVS.Substring(0, 3);
                     var mvsVersion = searchResult.MVS.Substring(3, 3);
                     var mvsSeries = searchResult.MVS.Substring(6, 1);

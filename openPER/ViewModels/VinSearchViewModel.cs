@@ -3,7 +3,7 @@ using System.Collections.Generic;
 
 namespace openPER.ViewModels
 {
-    public class VinSearchViewModel
+    public class VinSearchViewModel:VersionedViewModel
     {
         public List<ModelModel> Models { get; set; }
         public MvsModel MvsData { get; set; }
