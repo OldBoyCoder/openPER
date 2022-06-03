@@ -49,11 +49,7 @@ namespace openPER.Repositories
             var sql = @"SELECT MK_COD, MK_DSC FROM MAKES ORDER BY MK_DSC ";
             connection.RunSqlAllRows(sql, (reader) =>
             {
-                var m = new MakeModel
-                {
-                    Code = reader.GetString(0),
-                    Description = reader.GetString(1)
-                };
+                var m = new MakeModel(code: reader.GetString(0), description: reader.GetString(1));
                 rc.Add(m);
 
             }, null);
