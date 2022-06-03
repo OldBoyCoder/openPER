@@ -10,7 +10,7 @@
     {
         <tr>
             <td>@drawing.FullKey</td>
-            <td>                <img src="@Url.Action("Thumbnail", "Image", new {Make=drawing.MakeCode, Model=drawing.ModelCode, Catalogue=drawing.CatalogueCode, Group = drawing.GroupCode, SubGroup = drawing.SubGroupCode, SubSubGroup=drawing.SubSubGroupCode, Drawing=drawing.DrawingNumber})">
+            <td>                <img src="@Url.Action("Drawing", "Image", new {Make=drawing.MakeCode, Model=drawing.ModelCode, Catalogue=drawing.CatalogueCode, Group = drawing.GroupCode, SubGroup = drawing.SubGroupCode, SubSubGroup=drawing.SubSubGroupCode, Drawing=drawing.DrawingNumber})">
             </td>
         </tr>
     }
