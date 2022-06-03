@@ -2,7 +2,7 @@
 using openPER.Interfaces;
 namespace openPER.Repositories
 {
-    public class VersionedImageRepository : IVersionedImageRespository
+    public class VersionedImageRepository : IVersionedImageRepository
     {
         readonly IImageRepository _repository18;
         IImageRepository _repository84;
@@ -12,12 +12,31 @@ namespace openPER.Repositories
         }
         public byte[] GetImageForCatalogue(int releaseCode, string makeCode, string cmgCode)
         {
-            switch (releaseCode)
+            return releaseCode switch
             {
-                case 18:
-                    return _repository18.GetImageForCatalogue(makeCode, cmgCode);
-            }
-            return null;
+                18 => _repository18.GetImageForCatalogue(makeCode, cmgCode),
+                _ => null
+            };
+        }
+
+        public byte[] GetImageForDrawing(int releaseCode, string makeCode, string modelCode, string catalogueCode, int groupCode,
+            int subGroupCode, int subSubGroupCode, int drawingNumber)
+        {
+            return releaseCode switch
+            {
+                18 => _repository18.GetImageForDrawing(makeCode, modelCode, catalogueCode, groupCode, subGroupCode, subSubGroupCode, drawingNumber),
+                _ => null
+            };
+        }
+
+        public byte[] GetThumbnailForDrawing(int releaseCode, string makeCode, string modelCode, string catalogueCode, int groupCode,
+            int subGroupCode, int subSubGroupCode, int drawingNumber)
+        {
+            return releaseCode switch
+            {
+                18 => _repository18.GetThumbnailForDrawing(makeCode, modelCode, catalogueCode, groupCode, subGroupCode, subSubGroupCode, drawingNumber),
+                _ => null
+            };
         }
     }
 }

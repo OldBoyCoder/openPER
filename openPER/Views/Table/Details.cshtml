@@ -12,74 +12,6 @@
 <div>
     <h4>TableViewModel - @Html.DisplayFor(model=>model.Path)</h4>
     <hr />
-    <dl class="row">
-        <dt class="col-sm-2">
-            @Html.DisplayNameFor(model => model.MakeCode)
-        </dt>
-        <dd class="col-sm-10">
-            @Html.DisplayFor(model => model.MakeDesc)
-        </dd>
-        <dt class="col-sm-2">
-            @Html.DisplayNameFor(model => model.ModelCode)
-        </dt>
-        <dd class="col-sm-10">
-            @Html.DisplayFor(model => model.ModelCode)
-        </dd>
-        <dt class="col-sm-2">
-            @Html.DisplayNameFor(model => model.CatalogueCode)
-        </dt>
-        <dd class="col-sm-10">
-            @Html.DisplayFor(model => model.CatalogueCode)
-        </dd>
-        <dt class="col-sm-2">
-            @Html.DisplayNameFor(model => model.GroupCode)
-        </dt>
-        <dd class="col-sm-10">
-            @Html.DisplayFor(model => model.GroupCode)
-        </dd>
-        <dt class="col-sm-2">
-            @Html.DisplayNameFor(model => model.SubGroupCode)
-        </dt>
-        <dd class="col-sm-10">
-            @Html.DisplayFor(model => model.SubGroupCode)
-        </dd>
-        <dt class="col-sm-2">
-            @Html.DisplayNameFor(model => model.SgsCode)
-        </dt>
-        <dd class="col-sm-10">
-            @Html.DisplayFor(model => model.SgsCode)
-        </dd>
-        <dt class="col-sm-2">
-            @Html.DisplayNameFor(model => model.ModelDesc)
-        </dt>
-        <dd class="col-sm-10">
-            @Html.DisplayFor(model => model.ModelDesc)
-        </dd>
-        <dt class="col-sm-2">
-            @Html.DisplayNameFor(model => model.CatalogueDesc)
-        </dt>
-        <dd class="col-sm-10">
-            @Html.DisplayFor(model => model.CatalogueDesc)
-        </dd>
-        <dt class="col-sm-2">
-            @Html.DisplayNameFor(model => model.GroupDesc)
-        </dt>
-        <dd class="col-sm-10">
-            @Html.DisplayFor(model => model.GroupDesc)
-        </dd>
-        <dt class="col-sm-2">
-            @Html.DisplayNameFor(model => model.SubGroupDesc)
-        </dt>
-        <dd class="col-sm-10">
-            @Html.DisplayFor(model => model.SubGroupDesc)
-        </dd>
-        <dt class="col-sm-2">
-            @Html.DisplayNameFor(model => model.SgsDesc)
-        </dt>
-        <dd class="col-sm-10">
-            @Html.DisplayFor(model => model.SgsDesc)
-        </dd>
-    </dl>
     @foreach (var item in Model.Narratives)
     {
         <p>
@@ -90,7 +22,7 @@
     <br />
     <div class="flex-container">
         <div>
-            <img src="@Url.Action("Image", "Table", new {Make=Model.MakeCode, Model=Model.ModelCode, Catalogue=Model.CatalogueCode, Group = Model.GroupCode, SubGroup = Model.SubGroupCode, Model.SgsCode, Drawing=Model.CurrentDrawing})">
+            <img src="@Url.Action("Drawing", "Image", new { Make=Model.MakeCode, Model=Model.ModelCode, Catalogue=Model.CatalogueCode, Group = Model.GroupCode, SubGroup = Model.SubGroupCode, SubSubGroup=Model.SgsCode, Drawing=Model.CurrentDrawing})">
         </div>
         <div>
             <table class="table table-sm">
@@ -130,7 +62,7 @@
     {
         <p>
             <a href="@Url.Action("Details", "Table",  new {Make=Model.MakeCode, Model=Model.ModelCode, Catalogue=Model.CatalogueCode, Group = Model.GroupCode, SubGroup = Model.SubGroupCode, Model.SgsCode, Drawing=drawing})">
-                <img src="@Url.Action("Thumbnail", "Table", new {Make=Model.MakeCode, Model=Model.ModelCode, Catalogue=Model.CatalogueCode, Group = Model.GroupCode, SubGroup = Model.SubGroupCode, Model.SgsCode, Drawing=drawing})">
+                <img src="@Url.Action("Thumbnail", "Image", new {Make=Model.MakeCode, Model=Model.ModelCode, Catalogue=Model.CatalogueCode, Group = Model.GroupCode, SubGroup = Model.SubGroupCode, SubSubGroup=Model.SgsCode, Drawing=drawing})">
             </a>
         </p>
 

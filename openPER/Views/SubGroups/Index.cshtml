@@ -12,7 +12,7 @@
     <table class="table table-sm">
     @foreach (var group in Model.SubGroups)
     {
-        <tr><td>@group.FullDisplayCode</td><td>@Html.ActionLink(group.Description, "Index", "SubSubGroups", new {Model.ReleaseCode, Model.CatalogueCode, group.GroupCode, SubGroupCode = group.Code})            
+        <tr><td>@group.FullDisplayCode</td><td>@Html.ActionLink(group.Description, "Index", "SubSubGroups", new {Model.ReleaseCode,Model.MakeCode, Model.ModelCode, Model.CatalogueCode, group.GroupCode, SubGroupCode = group.Code})            
 </td></tr>
     }
     </table>

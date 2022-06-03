@@ -6,6 +6,5 @@
         public string Description { get; set; }
         public string MakeCode { get; set; }
         public string ModelCode { get; set; }
-//        public List<GroupViewModel> Groups { get; set; }
     }
 }

@@ -16,8 +16,8 @@ namespace openPER.Controllers
             _rep = rep;
             _mapper = mapper;
         }
-        [Route("Groups/{ReleaseCode}/{CatalogueCode}")]
-        public IActionResult Index(int releaseCode, string catalogueCode)
+        [Route("Groups/{ReleaseCode}/{MakeCode}/{ModelCode}/{CatalogueCode}")]
+        public IActionResult Index(int releaseCode,string makeCode, string modelCode, string catalogueCode)
         {
             // Standard prologue
             var language = Helpers.LanguageSupport.SetCultureBasedOnCookie(HttpContext);
@@ -27,6 +27,8 @@ namespace openPER.Controllers
             {
                 Groups = _mapper.Map<List<GroupModel>, List<GroupViewModel>>(_rep.GetGroupsForCatalogue(releaseCode, catalogueCode, language)),
                 ReleaseCode = releaseCode,
+                MakeCode = makeCode,
+                ModelCode = modelCode,  
                 CatalogueCode = catalogueCode
             };
             return View(model);

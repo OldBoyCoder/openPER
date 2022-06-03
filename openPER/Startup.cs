@@ -3,7 +3,6 @@ using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
-using openPER.Models;
 using openPER.Interfaces;
 using openPER.Repositories;
 using System.Reflection;
@@ -23,7 +22,7 @@ namespace openPER
         public void ConfigureServices(IServiceCollection services)
         {
             services.AddScoped<IVersionedRepository, VersionedRepository>();
-            services.AddScoped<IVersionedImageRespository, VersionedImageRepository>();
+            services.AddScoped<IVersionedImageRepository, VersionedImageRepository>();
             services.AddControllersWithViews();
             services.AddAutoMapper(Assembly.GetExecutingAssembly());
         }
