@@ -15,3 +15,11 @@
         </tr>
     }
 </table>
+<div class="container horizontal-scrollable">
+    <div class="row text-center">
+        @foreach (var drawing in Model.Drawings)
+        {
+            <div class="col-xs-4"><img src="@Url.Action("Thumbnail", "Image", new {Make=drawing.MakeCode, Model=drawing.ModelCode, Catalogue=drawing.CatalogueCode, Group = drawing.GroupCode, SubGroup = drawing.SubGroupCode, SubSubGroup=drawing.SubSubGroupCode, Drawing=drawing.DrawingNumber})"><br/>100/1223/43/34</div>
+        }
+    </div>
+</div>

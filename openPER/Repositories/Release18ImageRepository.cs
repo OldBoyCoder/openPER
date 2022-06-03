@@ -39,6 +39,7 @@ namespace openPER.Repositories
         public byte[] GetImageForDrawing(string makeCode, string modelCode, string catalogueCode, int groupCode, int subGroupCode,
             int subSubGroupCode, int drawingNumber)
         {
+            if (makeCode == "T") makeCode = "F";
             var fileName = System.IO.Path.Combine(_pathToImages,  "DrawingImages", $"{makeCode}{catalogueCode}.na");
             var imageName = $"{groupCode}{subGroupCode:00}{subSubGroupCode:00}{drawingNumber:000}";
 

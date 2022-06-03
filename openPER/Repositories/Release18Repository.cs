@@ -44,19 +44,25 @@ namespace openPER.Repositories
         }
         public List<MakeModel> GetAllMakes()
         {
-            var rc = new List<MakeModel>();
-            using var connection = new SqliteConnection($"Data Source={_pathToDb}");
-            var sql = @"SELECT MK_COD, MK_DSC FROM MAKES ORDER BY MK_DSC ";
-            connection.RunSqlAllRows(sql, (reader) =>
+            var rc = new List<MakeModel>
             {
-                var m = new MakeModel
-                {
-                    Code = reader.GetString(0),
-                    Description = reader.GetString(1)
-                };
-                rc.Add(m);
+                new ("F", "Fiat"),
+                new ("T", "Fiat commercial"),
+                new ("L", "Lancia"),
+                new ("R", "Alfa Romeo")
+            };
+            //using var connection = new SqliteConnection($"Data Source={_pathToDb}");
+            //var sql = @"SELECT MK_COD, MK_DSC FROM MAKES ORDER BY MK_DSC ";
+            //connection.RunSqlAllRows(sql, (reader) =>
+            //{
+            //    var m = new MakeModel
+            //    {
+            //        Code = reader.GetString(0),
+            //        Description = reader.GetString(1)
+            //    };
+            //    rc.Add(m);
 
-            }, null);
+            //}, null);
             return rc;
 
         }
@@ -436,7 +442,7 @@ namespace openPER.Repositories
             var sql = @"SELECT DISTINCT CAT_COD, GRP_COD, SGRP_COD, SGS_COD, DRW_NUM 
                             FROM TBDATA
                             WHERE CAT_COD = $p1 AND GRP_COD = $p2 AND SGRP_COD = $p3 AND SGS_COD = $p4
-                            ORDER BY GRP_COD, SGRP_COD, SGS_COD, DRW_NUM"; 
+                            ORDER BY GRP_COD, SGRP_COD, SGS_COD, DRW_NUM";
             connection.RunSqlAllRows(sql, (reader) =>
             {
                 var language = new DrawingKeyModel()
