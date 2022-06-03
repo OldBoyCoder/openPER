@@ -435,7 +435,8 @@ namespace openPER.Repositories
             using var connection = new SqliteConnection($"Data Source={_pathToDb}");
             var sql = @"SELECT DISTINCT CAT_COD, GRP_COD, SGRP_COD, SGS_COD, DRW_NUM 
                             FROM TBDATA
-                            WHERE CAT_COD = $p1 AND GRP_COD = $p2 AND SGRP_COD = $p3 AND SGS_COD = $p4";
+                            WHERE CAT_COD = $p1 AND GRP_COD = $p2 AND SGRP_COD = $p3 AND SGS_COD = $p4
+                            ORDER BY GRP_COD, SGRP_COD, SGS_COD, DRW_NUM"; 
             connection.RunSqlAllRows(sql, (reader) =>
             {
                 var language = new DrawingKeyModel()
@@ -451,6 +452,31 @@ namespace openPER.Repositories
                 drawings.Add(language);
             }, catalogueCode, groupCode, subGroupCode, subSubGroupCode);
 
+            return drawings;
+        }
+
+        public List<DrawingKeyModel> GetDrawingKeysForCatalogue(string makeCode, string modelCode, string catalogueCode)
+        {
+            var drawings = new List<DrawingKeyModel>();
+            using var connection = new SqliteConnection($"Data Source={_pathToDb}");
+            var sql = @"SELECT DISTINCT CAT_COD, GRP_COD, SGRP_COD, SGS_COD, DRW_NUM 
+                            FROM TBDATA
+                            WHERE CAT_COD = $p1
+                            ORDER BY GRP_COD, SGRP_COD, SGS_COD, DRW_NUM";
+            connection.RunSqlAllRows(sql, (reader) =>
+            {
+                var language = new DrawingKeyModel()
+                {
+                    MakeCode = makeCode,
+                    ModelCode = modelCode,
+                    CatalogueCode = reader.GetString(0),
+                    GroupCode = reader.GetInt32(1),
+                    SubGroupCode = reader.GetInt32(2),
+                    SubSubGroupCode = reader.GetInt32(3),
+                    DrawingNumber = reader.GetInt32(4)
+                };
+                drawings.Add(language);
+            }, catalogueCode);
             return drawings;
         }
 

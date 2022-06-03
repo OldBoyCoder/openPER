@@ -18,6 +18,7 @@ namespace openPER.Interfaces
         List<LanguageModel> GetAllLanguages();
         List<DrawingKeyModel> GetDrawingKeysForSubSubGroup( string makeCode, string modelCode, string catalogueCode, int groupCode, int subGroupCode, int subSubGroupCode);
 
+        List<DrawingKeyModel> GetDrawingKeysForCatalogue(string makeCode, string modelCode, string catalogueCode);
     }
 
 }

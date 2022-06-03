@@ -452,6 +452,11 @@ namespace openPER.Repositories
             return drawings;
         }
 
+        public List<DrawingKeyModel> GetDrawingKeysForCatalogue(string makeCode, string modelCode, string catalogueCode)
+        {
+            throw new System.NotImplementedException();
+        }
+
         public PartModel GetPartDetails(string partNumberSearch, string languageCode)
         {
             PartModel p = null; 

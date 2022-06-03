@@ -125,5 +125,14 @@ namespace openPER.Repositories
                 _ => throw new System.NotImplementedException()
             };
         }
+
+        public List<DrawingKeyModel> GetDrawingKeysForCatalogue(int releaseCode, string makeCode, string modelCode, string catalogueCode)
+        {
+            return releaseCode switch
+            {
+                18 => _repository18.GetDrawingKeysForCatalogue(makeCode, modelCode, catalogueCode),
+                _ => throw new System.NotImplementedException()
+            };
+        }
     }
 }
