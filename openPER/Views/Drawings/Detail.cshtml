@@ -6,45 +6,47 @@
 }
 
 <h1>Drawings view</h1>
+<div class="container">
+    <div class="row">
+        <div class="col-sm">
+            <img src="@Url.Action("Drawing", "Image", new { Make = Model.TableData.MakeCode, Model = Model.TableData.ModelCode, Catalogue = Model.TableData.CatalogueCode, Group = Model.TableData.GroupCode, SubGroup = Model.TableData.SubGroupCode, SubSubGroup = Model.TableData.SubSubGroupCode, Drawing = Model.TableData.CurrentDrawing })">
+        </div>
+        <div class="col-sm">
+            <table class="table table-sm">
+                <tr><th>&nbsp;</th><th>Prod. code</th><th>Fur. Descr.</th><th>Comp.</th><th>Modif.</th><th>Qty</th><th>Notes</th><th>Components</th></tr>
+                @{
 
-<div>
-    <img src="@Url.Action("Drawing", "Image", new { Make=Model.TableData.MakeCode, Model=Model.TableData.ModelCode, Catalogue=Model.TableData.CatalogueCode, Group = Model.TableData.GroupCode, SubGroup = Model.TableData.SubGroupCode, SubSubGroup=Model.TableData.SubSubGroupCode, Drawing=Model.TableData.CurrentDrawing})">
-</div>
-<div>
-    <table class="table table-sm">
-        <tr><th>&nbsp;</th><th>Prod. code</th><th>Fur. Descr.</th><th>Comp.</th><th>Modif.</th><th>Qty</th><th>Notes</th><th>Components</th></tr>
-        @{
+                    int lastOrder = 999;
+                    @foreach (var item in Model.TableData.Parts)
+                    {
+                        if (item.TableOrder != lastOrder)
+                        {
+                            <tr class="partrowheader"><td>@Html.DisplayFor(model => item.TableOrder)</td><td colspan="7">@Html.DisplayFor(model => item.Description)</td></tr>
+                            lastOrder = item.TableOrder;
+                        }
+                        <tr class="partrow">
+                            <td>&nbsp;</td>
+                            <td class="partrowproductcode"><a href="@Url.Action("SearchResults", "Part", new { item.PartNumber })">@Html.DisplayFor(model => item.PartNumber)</a></td>
+                            <td>@Html.DisplayFor(model => item.FurtherDescription)</td>
+                            <td>@Html.DisplayFor(model => item.Compatibility)</td>
+                            <td>
+                                <ul>
+                                    @foreach (var mod in item.Modifications)
+                                    {
+                                        <li title="@mod.FullDescription">@Html.DisplayFor(model => mod.Type)@Html.DisplayFor(model => mod.Code)</li>
+                                    }
+                                </ul>
+                            </td>
+                            <td>@Html.DisplayFor(model => item.Quantity)</td>
+                            <td>@Html.DisplayFor(model => item.Notes)</td>
 
-            int lastOrder = 999;
-            @foreach (var item in Model.TableData.Parts)
-            {
-                if (item.TableOrder != lastOrder)
-                {
-                    <tr class="partrowheader"><td>@Html.DisplayFor(model => item.TableOrder)</td><td colspan="7">@Html.DisplayFor(model => item.Description)</td></tr>
-                    lastOrder = item.TableOrder;
+                        </tr>
+                    }
                 }
-                <tr class="partrow">
-                    <td>&nbsp;</td>
-                    <td class="partrowproductcode"><a href="@Url.Action("SearchResults", "Part", new { item.PartNumber })">@Html.DisplayFor(model => item.PartNumber)</a></td>
-                    <td>@Html.DisplayFor(model => item.FurtherDescription)</td>
-                    <td>@Html.DisplayFor(model => item.Compatibility)</td>
-                    <td>
-                        <ul>
-                            @foreach (var mod in item.Modifications)
-                            {
-                                <li title="@mod.FullDescription">@Html.DisplayFor(model => mod.Type)@Html.DisplayFor(model => mod.Code)</li>
-                            }
-                        </ul>
-                    </td>
-                    <td>@Html.DisplayFor(model => item.Quantity)</td>
-                    <td>@Html.DisplayFor(model => item.Notes)</td>
-
-                </tr>
-            }
-        }
-    </table>
+            </table>
+        </div>
+    </div>
 </div>
-
 
 
 <div class="container horizontal-scrollable">
