@@ -30,6 +30,7 @@ namespace openPER.Controllers
             List<DrawingKeyModel> drawings = _rep.GetDrawingKeysForSubSubGroup(releaseCode, makeCode, modelCode,
                 catalogueCode, groupCode, subGroupCode, subSubGroupCode);
             model.Drawings = _mapper.Map<List<DrawingKeyModel>, List<DrawingKeyViewModel>>(drawings);
+            model.Drawings.ForEach(x=>x.ReleaseCode = releaseCode);
             return View(model);
         }
         // A very vague route to a large set of drawings!
@@ -46,6 +47,7 @@ namespace openPER.Controllers
             List<DrawingKeyModel> drawings = _rep.GetDrawingKeysForCatalogue(releaseCode, makeCode, modelCode,
                 catalogueCode);
             model.Drawings = _mapper.Map<List<DrawingKeyModel>, List<DrawingKeyViewModel>>(drawings);
+            model.Drawings.ForEach(x => x.ReleaseCode = releaseCode);
             return View(model);
         }
         [Route("Drawings/{ReleaseCode}/{MakeCode}/{ModelCode}/{CatalogueCode}/{GroupCode}/{DrawingNumber}")]
@@ -60,6 +62,7 @@ namespace openPER.Controllers
             // We need to get all of the drawing keys for this sub sub group
             List<DrawingKeyModel> drawings = _rep.GetDrawingKeysForGroup(releaseCode, makeCode, modelCode, catalogueCode, groupCode);
             model.Drawings = _mapper.Map<List<DrawingKeyModel>, List<DrawingKeyViewModel>>(drawings);
+            model.Drawings.ForEach(x => x.ReleaseCode = releaseCode);
             return View(model);
         }
         [Route("Drawings/{ReleaseCode}/{MakeCode}/{ModelCode}/{CatalogueCode}/{GroupCode}/{SubGroupCode}/{DrawingNumber}")]
@@ -74,6 +77,7 @@ namespace openPER.Controllers
             // We need to get all of the drawing keys for this sub sub group
             List<DrawingKeyModel> drawings = _rep.GetDrawingKeysForSubGroup(releaseCode, makeCode, modelCode, catalogueCode, groupCode, subGroupCode);
             model.Drawings = _mapper.Map<List<DrawingKeyModel>, List<DrawingKeyViewModel>>(drawings);
+            model.Drawings.ForEach(x => x.ReleaseCode = releaseCode);
             return View(model);
         }
     }
