@@ -456,6 +456,16 @@ namespace openPER.Repositories
         {
             throw new System.NotImplementedException();
         }
+        public List<DrawingKeyModel> GetDrawingKeysForGroup(string makeCode, string modelCode, string catalogueCode, int groupCode)
+        {
+            throw new System.NotImplementedException();
+        }
+
+        public List<DrawingKeyModel> GetDrawingKeysForSubGroup(string makeCode, string modelCode, string catalogueCode, int groupCode,
+            int subGroupCode)
+        {
+            throw new System.NotImplementedException();
+        }
 
         public PartModel GetPartDetails(string partNumberSearch, string languageCode)
         {

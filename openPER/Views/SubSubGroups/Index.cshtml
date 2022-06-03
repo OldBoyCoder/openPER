@@ -23,16 +23,18 @@
                 </td>
                 <td>
                     <ul class="list-group">
-                    @foreach (var item in group.Narrative)
-                    {
+                        @foreach (var item in group.Narrative)
+                        {
                             <li class="list-group-item">
 
-                            @item
+                                @item
                             </li>
-                    }
+                        }
                     </ul>
                 </td>
             </tr>
         }
     </table>
+    @Html.ActionLink("All drawings", "Index", "Drawings", new {Model.ReleaseCode,Model.MakeCode, Model.ModelCode, Model.CatalogueCode,Model.GroupCode,Model.SubGroupCode, DrawingNumber=1})
+
 </div>

@@ -10,9 +10,11 @@
     <h4>Groups</h4>
     <hr />
     <table class="table table-sm">
-    @foreach (var group in Model.Groups)
-    {
-        <tr><td>@group.DisplayCode</td><td>@Html.ActionLink(group.Description, "Index", "SubGroups", new {Model.ReleaseCode,Model.MakeCode, Model.ModelCode, Model.CatalogueCode, GroupCode=group.Code})</td></tr>
-    }
+        @foreach (var group in Model.Groups)
+        {
+            <tr><td>@group.DisplayCode</td><td>@Html.ActionLink(group.Description, "Index", "SubGroups", new {Model.ReleaseCode,Model.MakeCode, Model.ModelCode, Model.CatalogueCode, GroupCode=group.Code})</td></tr>
+        }
     </table>
+    @Html.ActionLink("All drawings", "Index", "Drawings", new {Model.ReleaseCode,Model.MakeCode, Model.ModelCode, Model.CatalogueCode, DrawingNumber=1})
+
 </div>
