@@ -16,6 +16,6 @@ namespace openPER.Interfaces
         MvsModel GetMvsDetails(int release, string mvsCode, string mvsVersion, string mvsSeries, string colourCode, string languageCode);
         PartModel GetPartDetails(int release, string partNumberSearch, string languageCode);
         List<SubGroupModel> GetSubGroupsForCatalogueGroup(int release, string catalogueCode, int groupCode, string languageCode);
-        TableModel GetTable(int release, string makeCode, string modelCode, string catalogueCode, int groupCode, int subGroupCode, int sgsCode, int drawingNumber, string languageCode);
+        TableModel GetTable(int release, string catalogueCode, int groupCode, int subGroupCode, int sgsCode, int drawingNumber, string languageCode);
     }
 }

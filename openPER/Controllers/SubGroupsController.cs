@@ -16,8 +16,8 @@ namespace openPER.Controllers
             _rep = rep;
             _mapper = mapper;
         }
-        [Route("SubGroups/{ReleaseCode}/{CatalogueCode}/{GroupCode}")]
-        public IActionResult Index(int releaseCode, string catalogueCode, int groupCode)
+        [Route("SubGroups/{ReleaseCode}/{MakeCode}/{ModelCode}/{CatalogueCode}/{GroupCode}")]
+        public IActionResult Index(int releaseCode,string makeCode, string modelCode, string catalogueCode, int groupCode)
         {
             // Standard prologue
             var language = Helpers.LanguageSupport.SetCultureBasedOnCookie(HttpContext);
@@ -26,9 +26,12 @@ namespace openPER.Controllers
             var model = new SubGroupsViewModel
             {
                 SubGroups = _mapper.Map<List<SubGroupModel>, List<SubGroupViewModel>>(_rep.GetSubGroupsForCatalogueGroup(releaseCode,catalogueCode, groupCode, language)),
+                MakeCode = makeCode,
+                ModelCode = modelCode,
                 CatalogueCode = catalogueCode,
                 GroupCode = groupCode,
                 ReleaseCode = releaseCode
+
             };
             return View(model);
         }

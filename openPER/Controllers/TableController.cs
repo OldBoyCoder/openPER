@@ -5,39 +5,40 @@ namespace openPER.Controllers
 {
     public class TableController : Controller
     {
-        private readonly IRepository _rep;
-        public TableController(IRepository repository)
+        private readonly IVersionedRepository _rep;
+        public TableController(IVersionedRepository repository)
         {
             _rep = repository;
         }
 
         // GET: TableController/Details/5
-        [Route("Table/Details/{Make}/{Model}/{Catalogue}/{Group}/{Subgroup}/{SgsCode}/{Drawing}")]
-        public ActionResult Details(string make, string model, string catalogue, int group, int subgroup, int sgsCode, int drawing)
+        [Route("Table/Details/{ReleaseCode}/{MakeCode}/{ModelCode}/{CatalogueCode}/{GroupCode}/{SubGroupCode}/{SubSubGroupCode}/{Drawing}")]
+        public ActionResult Details(int releaseCode,string makeCode, string modelCode, string catalogueCode, int groupCode, int subGroupCode, int subSubGroupCode, int drawing)
         {
             var language = Helpers.LanguageSupport.SetCultureBasedOnCookie(HttpContext);
-            var x = _rep.GetTable(make, model, catalogue, group, subgroup, sgsCode, drawing, language);
-            x.MakeCode = make;
-            x.ModelCode = model;
-            x.CatalogueCode = catalogue;
-            x.GroupCode = group;
-            x.SubGroupCode = subgroup;
-            x.SgsCode = sgsCode;
+            var x = _rep.GetTable(releaseCode, catalogueCode, groupCode, subGroupCode, subSubGroupCode, drawing, language);
+            x.CatalogueCode = catalogueCode;
+            x.GroupCode = groupCode;
+            x.SubGroupCode = subGroupCode;
+            x.SgsCode = subSubGroupCode;
+            // Get Make code properly
+            x.MakeCode = makeCode;
+            x.ModelCode = modelCode;
             return View(x);
         }
-        [Route("Table/Catalogues/{Make}/{Model}")]
-        public ActionResult Catalogues(string make, string model)
-        {
-            var language = Helpers.LanguageSupport.SetCultureBasedOnCookie(HttpContext);
-            return View(_rep.GetAllCatalogues(make, model, language));
-        }
-        [Route("Table/Groups/{Make}/{Model}/{Catalogue}")]
-        public ActionResult Groups(string make, string model, string catalogue)
-        {
-            var language = Helpers.LanguageSupport.SetCultureBasedOnCookie(HttpContext);
+        //[Route("Table/Catalogues/{Make}/{Model}")]
+        //public ActionResult Catalogues(string make, string model)
+        //{
+        //    var language = Helpers.LanguageSupport.SetCultureBasedOnCookie(HttpContext);
+        //    return View(_rep.GetAllCatalogues(make, model, language));
+        //}
+        //[Route("Table/Groups/{Make}/{Model}/{Catalogue}")]
+        //public ActionResult Groups(string make, string model, string catalogue)
+        //{
+        //    var language = Helpers.LanguageSupport.SetCultureBasedOnCookie(HttpContext);
 
-            return View(_rep.GetGroupsForCatalogue(catalogue, language));
-        }
+        //    return View(_rep.GetGroupsForCatalogue(catalogue, language));
+        //}
         //[Route("Table/Image/{Make}/{Model}/{Catalogue}/{Group}/{Subgroup}/{SgsCode}/{Drawing}")]
         //public ActionResult Image(string make, string model, string catalogue, int group, int subgroup, int sgsCode, int drawing)
         //{

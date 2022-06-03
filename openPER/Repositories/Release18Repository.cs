@@ -26,15 +26,15 @@ namespace openPER.Repositories
 
         }
 
-        public TableModel GetTable(string makeCode, string modelCode, string catalogueCode, int groupCode, int subGroupCode, int sgsCode, int drawingNumber, string languageCode)
+        public TableModel GetTable(string catalogueCode, int groupCode, int subGroupCode, int sgsCode, int drawingNumber, string languageCode)
         {
             var t = new TableModel();
             using var connection = new SqliteConnection($"Data Source={_pathToDb}");
-            t.MakeDesc = GetMakeDescription(makeCode, connection);
-            t.ModelDesc = GetModelDescription(makeCode, modelCode, connection);
-            t.CatalogueDesc = GetCatalogueDescription(makeCode, modelCode, catalogueCode, connection);
-            t.GroupDesc = GetGroupDescription(groupCode, languageCode, connection);
-            t.SubGroupDesc = GetSubGroupDescription(groupCode, subGroupCode, languageCode, connection);
+//            t.MakeDesc = GetMakeDescription(makeCode, connection);
+  //          t.ModelDesc = GetModelDescription(makeCode, modelCode, connection);
+    //        t.CatalogueDesc = GetCatalogueDescription(makeCode, modelCode, catalogueCode, connection);
+      //      t.GroupDesc = GetGroupDescription(groupCode, languageCode, connection);
+        //    t.SubGroupDesc = GetSubGroupDescription(groupCode, subGroupCode, languageCode, connection);
             // TODO Add variant information to sgs description
             t.SgsDesc = GetSubGroupDescription(groupCode, subGroupCode, languageCode, connection);
             t.Parts = GetTableParts(catalogueCode, groupCode, subGroupCode, sgsCode, drawingNumber, languageCode, connection);

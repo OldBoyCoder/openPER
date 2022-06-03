@@ -25,7 +25,7 @@ namespace openPER.Repositories
         {
             // Generate file name
             var lines = System.IO.File.ReadAllLines(System.IO.Path.Combine(_pathToImages, $"ModelImages{makeCode}", "img.conf"));
-            var matches = lines.Where(x => x.Contains($",{cmgCode},"));
+            var matches = lines.Where(x => x.Contains($",{cmgCode},")).ToList();
             var line = matches.FirstOrDefault(x => x.Contains("s2"));
             if (line == null)
             {
@@ -35,6 +35,25 @@ namespace openPER.Repositories
             var fileName = line.Split(new[] { ',' })[3];
             return System.IO.File.ReadAllBytes(System.IO.Path.Combine(_pathToImages, $"ModelImages{makeCode}", fileName));
         }
+
+        public byte[] GetImageForDrawing(string makeCode, string modelCode, string catalogueCode, int groupCode, int subGroupCode,
+            int subSubGroupCode, int drawingNumber)
+        {
+            var fileName = System.IO.Path.Combine(_pathToImages,  "DrawingImages", $"{makeCode}{catalogueCode}.na");
+            var imageName = $"{groupCode}{subGroupCode:00}{subSubGroupCode:00}{drawingNumber:000}";
+
+            return GetImageFromNaFile(fileName, imageName, false);
+        }
+
+        public byte[] GetThumbnailForDrawing(string makeCode, string modelCode, string catalogueCode, int groupCode, int subGroupCode,
+            int subSubGroupCode, int drawingNumber)
+        {
+            var fileName = System.IO.Path.Combine(_pathToImages, "DrawingImages", $"{makeCode}{catalogueCode}.na");
+            var imageName = $"{groupCode}{subGroupCode:00}{subSubGroupCode:00}{drawingNumber:000}";
+
+            return GetImageFromNaFile(fileName, imageName, true);
+        }
+
         private byte[] GetImageForGroup(string mapName)
         {
             var _basePath = @"C:\ePer installs\Release 18";

@@ -10,16 +10,25 @@
     <h4>SubSubGroups</h4>
     <hr />
     <table class="table table-sm">
-    @foreach (var group in Model.SubSubGroups)
-    {
-        <tr><td>@group.Code</td><td>
-            <ul class="list-group">
-            @foreach (var item in group.Narrative)
+        @foreach (var group in Model.SubSubGroups)
+        {
+            <tr>
+                <td>
+
+                    @Html.ActionLink(group.Code.ToString(), "Details", "Table", new {Model.ReleaseCode,Model.MakeCode, Model.ModelCode, Model.CatalogueCode, Model.GroupCode, Model.SubGroupCode, SubSubGroupCode=group.Code, Drawing=1})
+                    </td>
+                <td>
+                    <ul class="list-group">
+                    @foreach (var item in group.Narrative)
                     {
-<li class="list-group-item">@item</li>                        
+                            <li class="list-group-item">
+
+                            @item
+                            </li>
                     }
                     </ul>
-</td></tr>
-    }
+                </td>
+            </tr>
+        }
     </table>
 </div>

@@ -6,8 +6,8 @@ namespace openPER.Controllers
 {
     public class PartController : Controller
     {
-        readonly IRepository _rep;
-        public PartController(IRepository rep)
+        readonly IVersionedRepository _rep;
+        public PartController(IVersionedRepository rep)
         {
             _rep = rep;
         }
@@ -22,10 +22,16 @@ namespace openPER.Controllers
         {
             var p = new PartViewModel();
             var language = Helpers.LanguageSupport.SetCultureBasedOnCookie(HttpContext);
+            var releaseCode = 0;
+            if (HttpContext.Request.Cookies.ContainsKey("Release"))
+            {
+                releaseCode = int.Parse(HttpContext.Request.Cookies["Release"] ?? string.Empty);
+            }
+
             if (partNumber == null) return View("Index", null);
             p.PartNumberSearch = partNumber;
 
-            p.Result = _rep.GetPartDetails(p.PartNumberSearch, language);
+            p.Result = _rep.GetPartDetails(releaseCode, p.PartNumberSearch, language);
             return View("Index", p);
         }
     }
