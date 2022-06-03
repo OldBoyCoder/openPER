@@ -9,7 +9,7 @@
         public int GroupCode { get; set; }
         public int SubGroupCode { get; set; }
         public string SubGroupDescription { get; set; }
-        public int SgsCode { get; set; }
+        public int SubSubGroupCode { get; set; }
         public int DrawingNumber { get; set; }
     }
 }

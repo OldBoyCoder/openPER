@@ -24,7 +24,7 @@ namespace openPER.Controllers
         {
             return File(_imageRep.GetImageForCatalogue(releaseCode, make, model), "image/png");
         }
-        //            <img src="@Url.Action("Drawing", "Image", new {Make=Model.MakeCode, Model=Model.ModelCode, Catalogue=Model.CatalogueCode, Group = Model.GroupCode, SubGroup = Model.SubGroupCode, Model.SgsCode, Drawing=Model.CurrentDrawing})">
+        //            <img src="@Url.Action("Drawing", "Image", new {Make=Model.MakeCode, Model=Model.ModelCode, Catalogue=Model.CatalogueCode, Group = Model.GroupCode, SubGroup = Model.SubGroupCode, Model.SubSubGroupCode, Drawing=Model.CurrentDrawing})">
 
         // TODO add release code to this route - need to create table view model first though
         [Route("Image/Drawing/{Make}/{Model}/{Catalogue}/{Group}/{Subgroup}/{SubSubGroup}/{Drawing}")]

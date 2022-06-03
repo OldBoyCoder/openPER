@@ -516,7 +516,7 @@ namespace openPER.Repositories
                     CatalogueDescription = reader.GetString(1),
                     GroupCode = reader.GetInt32(2),
                     SubGroupCode = reader.GetInt32(3),
-                    SgsCode = reader.GetInt32(4),
+                    SubSubGroupCode = reader.GetInt32(4),
                     DrawingNumber = reader.GetInt32(5),
                     SubGroupDescription = reader.GetString(6)
                 };

@@ -29,6 +29,10 @@ namespace openPER.Repositories
         {
             var t = new TableModel();
             using var connection = new SqliteConnection($"Data Source={_pathToDb}");
+            t.CatalogueCode = catalogueCode;
+            t.GroupCode = groupCode;    
+            t.SubGroupCode= subGroupCode;
+            t.SubSubGroupCode = sgsCode;
             //            t.MakeDesc = GetMakeDescription(makeCode, connection);
             //          t.ModelDesc = GetModelDescription(makeCode, modelCode, connection);
             //        t.CatalogueDesc = GetCatalogueDescription(makeCode, modelCode, catalogueCode, connection);
@@ -589,7 +593,7 @@ namespace openPER.Repositories
                     CatalogueDescription = reader.GetString(1),
                     GroupCode = reader.GetInt32(2),
                     SubGroupCode = reader.GetInt32(3),
-                    SgsCode = reader.GetInt32(4),
+                    SubSubGroupCode = reader.GetInt32(4),
                     DrawingNumber = reader.GetInt32(5),
                     SubGroupDescription = reader.GetString(6)
                 };

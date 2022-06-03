@@ -15,7 +15,7 @@
             <tr>
                 <td>
 
-                    @Html.ActionLink(group.Code.ToString(), "Details", "Table", new {Model.ReleaseCode,Model.MakeCode, Model.ModelCode, Model.CatalogueCode, Model.GroupCode, Model.SubGroupCode, SubSubGroupCode=group.Code, Drawing=1})
+                    @Html.ActionLink(group.Code.ToString(), "Detail", "Drawings", new {Model.ReleaseCode,Model.MakeCode, Model.ModelCode, Model.CatalogueCode, Model.GroupCode, Model.SubGroupCode, SubSubGroupCode=group.Code, DrawingNumber=1})
                 </td>
                 <td>
 

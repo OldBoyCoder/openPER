@@ -20,7 +20,7 @@ namespace openPER.Controllers
             x.CatalogueCode = catalogueCode;
             x.GroupCode = groupCode;
             x.SubGroupCode = subGroupCode;
-            x.SgsCode = subSubGroupCode;
+            x.SubSubGroupCode = subSubGroupCode;
             // Get Make code properly
             x.MakeCode = makeCode;
             x.ModelCode = modelCode;
@@ -39,7 +39,7 @@ namespace openPER.Controllers
 
         //    return View(_rep.GetGroupsForCatalogue(catalogue, language));
         //}
-        //[Route("Table/Image/{Make}/{Model}/{Catalogue}/{Group}/{Subgroup}/{SgsCode}/{Drawing}")]
+        //[Route("Table/Image/{Make}/{Model}/{Catalogue}/{Group}/{Subgroup}/{SubSubGroupCode}/{Drawing}")]
         //public ActionResult Image(string make, string model, string catalogue, int group, int subgroup, int sgsCode, int drawing)
         //{
         //    // TODO get rid of hard coded file name
@@ -48,7 +48,7 @@ namespace openPER.Controllers
 
         //    return File(GetImageFromNaFile(fileName, imageName, false), "image/png");
         //}
-        //[Route("Table/Thumbnail/{Make}/{Model}/{Catalogue}/{Group}/{Subgroup}/{SgsCode}/{Drawing}")]
+        //[Route("Table/Thumbnail/{Make}/{Model}/{Catalogue}/{Group}/{Subgroup}/{SubSubGroupCode}/{Drawing}")]
         //public ActionResult Thumbnail(string make, string model, string catalogue, int group, int subgroup, int sgsCode, int drawing)
         //{
         //    // TODO get rid of hard coded file name
