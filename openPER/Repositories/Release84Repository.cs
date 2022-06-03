@@ -8,15 +8,15 @@ using System.Linq;
 
 namespace openPER.Repositories
 {
-    public class Release18Repository : IRepository
+    public class Release84Repository : IRepository
     {
         IConfiguration _config;
         private readonly string _pathToDb;
-        public Release18Repository(IConfiguration config)
+        public Release84Repository(IConfiguration config)
         {
             _config = config;
             var s = config.GetSection("Releases").Get<ReleaseModel[]>();
-            var release = s.FirstOrDefault(x => x.Release == 18);
+            var release = s.FirstOrDefault(x => x.Release == 84);
             if (release != null)
             {
                 _pathToDb = System.IO.Path.Combine(release.FolderName, release.DbName);
@@ -426,6 +426,30 @@ namespace openPER.Repositories
                 languages.Add(language);
             });
             return languages;
+        }
+
+        public List<DrawingKeyModel> GetDrawingKeysForSubSubGroup(string makeCode, string modelCode, string catalogueCode, int groupCode,
+            int subGroupCode, int subSubGroupCode)
+        {
+            var drawings = new List<DrawingKeyModel>();
+            using var connection = new SqliteConnection($"Data Source={_pathToDb}");
+            var sql = @"SELECT DISTINCT CAT_COD, GRP_COD, SGRP_COD, SGS_COD, DRW_NUM 
+                            FROM TBDATA
+                            WHERE CAT_COD = $p1 AND GRP_COD = $p2 AND SGRP_COD = $p3 AND SGS_COD = $p4";
+            connection.RunSqlAllRows(sql, (reader) =>
+            {
+                var language = new DrawingKeyModel()
+                {
+                    CatalogueCode = reader.GetString(0),
+                    GroupCode = reader.GetInt32(1),
+                    SubGroupCode = reader.GetInt32(2),
+                    SubSubGroupCode = reader.GetInt32(3),
+                    DrawingNumber = reader.GetInt32(4)
+                };
+                drawings.Add(language);
+            });
+
+            return drawings;
         }
 
         public PartModel GetPartDetails(string partNumberSearch, string languageCode)

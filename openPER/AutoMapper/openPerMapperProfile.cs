@@ -14,6 +14,7 @@ namespace openPER.AutoMapper
             CreateMap<GroupModel, GroupViewModel>();
             CreateMap<SubGroupModel, SubGroupViewModel>();
             CreateMap<SubSubGroupModel, SubSubGroupViewModel>();
+            CreateMap<DrawingKeyModel, DrawingKeyViewModel>();
         }
     }
 }

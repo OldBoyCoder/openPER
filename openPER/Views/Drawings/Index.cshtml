@@ -1,0 +1,17 @@
+﻿@model openPER.ViewModels.DrawingsViewModel
+
+@{
+    ViewData["Title"] = "Index";
+}
+
+<h1>Drawings view</h1>
+<table class="table table-sm">
+    @foreach (var drawing in Model.Drawings)
+    {
+        <tr>
+            <td>@drawing.FullKey</td>
+            <td>                <img src="@Url.Action("Thumbnail", "Image", new {Make=drawing.MakeCode, Model=drawing.ModelCode, Catalogue=drawing.CatalogueCode, Group = drawing.GroupCode, SubGroup = drawing.SubGroupCode, SubSubGroup=drawing.SubSubGroupCode, Drawing=drawing.DrawingNumber})">
+            </td>
+        </tr>
+    }
+</table>
