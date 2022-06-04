@@ -30,7 +30,7 @@ namespace openPER.Repositories
 
         public List<LanguageModel> GetAllLanguages()
         {
-            var cacheKeys = new { type = "GetAllLanguages"};
+            var cacheKeys = new { type = "GetAllLanguages" };
             if (!_cache.TryGetValue(cacheKeys, out List<LanguageModel> rc))
             {
                 rc = _rep.GetAllLanguages();
@@ -43,7 +43,7 @@ namespace openPER.Repositories
         public List<DrawingKeyModel> GetDrawingKeysForSubSubGroup(string makeCode, string modelCode, string catalogueCode, int groupCode,
             int subGroupCode, int subSubGroupCode)
         {
-            var cacheKeys = new { type = "GetDrawingKeysForSubSubGroup", k1 = makeCode, k2=modelCode, k3=catalogueCode, k4=groupCode, k5=subGroupCode, k6=subSubGroupCode};
+            var cacheKeys = new { type = "GetDrawingKeysForSubSubGroup", k1 = makeCode, k2 = modelCode, k3 = catalogueCode, k4 = groupCode, k5 = subGroupCode, k6 = subSubGroupCode };
             if (!_cache.TryGetValue(cacheKeys, out List<DrawingKeyModel> rc))
             {
                 rc = _rep.GetDrawingKeysForSubSubGroup(makeCode, modelCode, catalogueCode, groupCode, subGroupCode, subSubGroupCode);
@@ -67,7 +67,7 @@ namespace openPER.Repositories
 
         public List<DrawingKeyModel> GetDrawingKeysForGroup(string makeCode, string modelCode, string catalogueCode, int groupCode)
         {
-            var cacheKeys = new { type = "GetDrawingKeysForGroup", k1 = makeCode, k2 = modelCode, k3 = catalogueCode, k4=groupCode };
+            var cacheKeys = new { type = "GetDrawingKeysForGroup", k1 = makeCode, k2 = modelCode, k3 = catalogueCode, k4 = groupCode };
             if (!_cache.TryGetValue(cacheKeys, out List<DrawingKeyModel> rc))
             {
                 rc = _rep.GetDrawingKeysForGroup(makeCode, modelCode, catalogueCode, groupCode);
@@ -80,7 +80,7 @@ namespace openPER.Repositories
         public List<DrawingKeyModel> GetDrawingKeysForSubGroup(string makeCode, string modelCode, string catalogueCode, int groupCode,
             int subGroupCode)
         {
-            var cacheKeys = new { type = "GetDrawingKeysForSubGroup", k1 = makeCode, k2 = modelCode, k3 = catalogueCode, k4 = groupCode, k5=subGroupCode };
+            var cacheKeys = new { type = "GetDrawingKeysForSubGroup", k1 = makeCode, k2 = modelCode, k3 = catalogueCode, k4 = groupCode, k5 = subGroupCode };
             if (!_cache.TryGetValue(cacheKeys, out List<DrawingKeyModel> rc))
             {
                 rc = _rep.GetDrawingKeysForSubGroup(makeCode, modelCode, catalogueCode, groupCode, subGroupCode);
@@ -102,12 +102,12 @@ namespace openPER.Repositories
             return rc;
         }
 
-        public List<ModelModel> GetAllModelsForMake(string make)
+        public List<ModelModel> GetAllModelsForMake(string make, string subMake)
         {
             var cacheKeys = new { type = "GetAllModels", k1 = make };
             if (!_cache.TryGetValue(cacheKeys, out List<ModelModel> rc))
             {
-                rc = _rep.GetAllModelsForMake(make);
+                rc = _rep.GetAllModelsForMake(make, subMake);
                 var cacheEntryOptions = new MemoryCacheEntryOptions().SetSlidingExpiration(TimeSpan.FromHours(24));
                 _cache.Set(cacheKeys, rc, cacheEntryOptions);
             }
@@ -116,7 +116,7 @@ namespace openPER.Repositories
 
         public List<ModelModel> GetAllModels()
         {
-            var cacheKeys = new { type = "GetAllModels"};
+            var cacheKeys = new { type = "GetAllModels" };
             if (!_cache.TryGetValue(cacheKeys, out List<ModelModel> rc))
             {
                 rc = _rep.GetAllModels();
@@ -128,7 +128,7 @@ namespace openPER.Repositories
 
         public List<GroupModel> GetGroupsForCatalogue(string catalogueCode, string languageCode)
         {
-            var cacheKeys = new { type = "GetGroupsForCatalogue", k1 = catalogueCode, k2=languageCode };
+            var cacheKeys = new { type = "GetGroupsForCatalogue", k1 = catalogueCode, k2 = languageCode };
             if (!_cache.TryGetValue(cacheKeys, out List<GroupModel> rc))
             {
                 rc = _rep.GetGroupsForCatalogue(catalogueCode, languageCode);
@@ -139,10 +139,10 @@ namespace openPER.Repositories
         }
         public List<SubGroupModel> GetSubGroupsForCatalogueGroup(string catalogueCode, int groupCode, string languageCode)
         {
-            var cacheKeys = new { type = "GetSubGroupsForCatalogueGroup", k1 = catalogueCode,k2=groupCode, k3 = languageCode };
+            var cacheKeys = new { type = "GetSubGroupsForCatalogueGroup", k1 = catalogueCode, k2 = groupCode, k3 = languageCode };
             if (!_cache.TryGetValue(cacheKeys, out List<SubGroupModel> rc))
             {
-                rc = _rep.GetSubGroupsForCatalogueGroup(catalogueCode,groupCode, languageCode);
+                rc = _rep.GetSubGroupsForCatalogueGroup(catalogueCode, groupCode, languageCode);
                 var cacheEntryOptions = new MemoryCacheEntryOptions().SetSlidingExpiration(TimeSpan.FromHours(24));
                 _cache.Set(cacheKeys, rc, cacheEntryOptions);
             }
@@ -151,7 +151,7 @@ namespace openPER.Repositories
 
         public MvsModel GetMvsDetails(string mvsCode, string mvsVersion, string mvsSeries, string colourCode, string languageCode)
         {
-            var cacheKeys = new { type = "GetMvsDetails", k1 = mvsCode, k2 = mvsVersion, k3 = mvsSeries, k4 = colourCode, k5=languageCode };
+            var cacheKeys = new { type = "GetMvsDetails", k1 = mvsCode, k2 = mvsVersion, k3 = mvsSeries, k4 = colourCode, k5 = languageCode };
             if (!_cache.TryGetValue(cacheKeys, out MvsModel rc))
             {
                 rc = _rep.GetMvsDetails(mvsCode, mvsVersion, mvsSeries, colourCode, languageCode);
@@ -163,7 +163,7 @@ namespace openPER.Repositories
 
         public PartModel GetPartDetails(string partNumberSearch, string languageCode)
         {
-            var cacheKeys = new { type = "GetPartDetails", k1 = partNumberSearch, k2 = languageCode};
+            var cacheKeys = new { type = "GetPartDetails", k1 = partNumberSearch, k2 = languageCode };
             if (!_cache.TryGetValue(cacheKeys, out PartModel rc))
             {
                 rc = _rep.GetPartDetails(partNumberSearch, languageCode);
@@ -175,10 +175,10 @@ namespace openPER.Repositories
 
         public TableModel GetTable(string catalogueCode, int groupCode, int subGroupCode, int sgsCode, int drawingNumber, string languageCode)
         {
-            var cacheKeys = new { type = "GetTable", k1=catalogueCode, k2=groupCode, k3=subGroupCode, k4=sgsCode, k5=drawingNumber, k6=languageCode };
+            var cacheKeys = new { type = "GetTable", k1 = catalogueCode, k2 = groupCode, k3 = subGroupCode, k4 = sgsCode, k5 = drawingNumber, k6 = languageCode };
             if (!_cache.TryGetValue(cacheKeys, out TableModel rc))
             {
-                rc = _rep.GetTable( catalogueCode, groupCode, subGroupCode, sgsCode, drawingNumber, languageCode);
+                rc = _rep.GetTable(catalogueCode, groupCode, subGroupCode, sgsCode, drawingNumber, languageCode);
                 var cacheEntryOptions = new MemoryCacheEntryOptions().SetSlidingExpiration(TimeSpan.FromHours(24));
                 _cache.Set(cacheKeys, rc, cacheEntryOptions);
             }
@@ -190,7 +190,7 @@ namespace openPER.Repositories
             var cacheKeys = new { type = "GetSubSubGroupsForCatalogueGroupSubGroup", k1 = catalogueCode, k2 = groupCode, k3 = languageCode };
             if (!_cache.TryGetValue(cacheKeys, out List<SubSubGroupModel> rc))
             {
-                rc = _rep.GetSubSubGroupsForCatalogueGroupSubGroup(catalogueCode, groupCode,subGroupCode, languageCode);
+                rc = _rep.GetSubSubGroupsForCatalogueGroupSubGroup(catalogueCode, groupCode, subGroupCode, languageCode);
                 var cacheEntryOptions = new MemoryCacheEntryOptions().SetSlidingExpiration(TimeSpan.FromHours(24));
                 _cache.Set(cacheKeys, rc, cacheEntryOptions);
             }

@@ -21,10 +21,10 @@ namespace openPER.Repositories
             }
         }
 
-        public byte[] GetImageForCatalogue(string makeCode, string cmgCode)
+        public byte[] GetImageForCatalogue(string makeCode,string subMakeCode, string cmgCode)
         {
             // Generate file name
-            var lines = System.IO.File.ReadAllLines(System.IO.Path.Combine(_pathToImages, $"ModelImages{makeCode}", "img.conf"));
+            var lines = System.IO.File.ReadAllLines(System.IO.Path.Combine(_pathToImages, $"ModelImages{subMakeCode}", "img.conf"));
             var matches = lines.Where(x => x.Contains($",{cmgCode},")).ToList();
             var line = matches.FirstOrDefault(x => x.Contains("s2"));
             if (line == null)
@@ -33,7 +33,7 @@ namespace openPER.Repositories
                 if (line == null) return null;
             }
             var fileName = line.Split(new[] { ',' })[3];
-            return System.IO.File.ReadAllBytes(System.IO.Path.Combine(_pathToImages, $"ModelImages{makeCode}", fileName));
+            return System.IO.File.ReadAllBytes(System.IO.Path.Combine(_pathToImages, $"ModelImages{subMakeCode}", fileName));
         }
 
         public byte[] GetImageForDrawing(string makeCode, string modelCode, string catalogueCode, int groupCode, int subGroupCode,

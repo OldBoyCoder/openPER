@@ -7,7 +7,7 @@ namespace openPER.Interfaces
     {
         TableModel GetTable(string catalogueCode, int groupCode, int subGroupCode, int sgsCode, int drawingNumber, string languageCode);
         List<MakeModel> GetAllMakes();
-        List<ModelModel> GetAllModelsForMake(string make);
+        List<ModelModel> GetAllModelsForMake(string make, string subMake);
         List<ModelModel> GetAllModels();
         List<CatalogueModel> GetAllCatalogues(string make, string model, string languageCode);
         List<GroupModel> GetGroupsForCatalogue(string catalogueCode, string languageCode);

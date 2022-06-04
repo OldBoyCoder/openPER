@@ -3,7 +3,7 @@
 @{
     ViewData["Title"] = "Index";
 }
-
+@await Html.PartialAsync("_Breadcrumb", Model.Breadcrumb)
 <h1>Index</h1>
 
 <div>

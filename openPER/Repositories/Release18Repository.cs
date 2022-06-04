@@ -50,10 +50,10 @@ namespace openPER.Repositories
         {
             var rc = new List<MakeModel>
             {
-                new ("F", "Fiat"),
-                new ("T", "Fiat commercial"),
-                new ("L", "Lancia"),
-                new ("R", "Alfa Romeo")
+                new ("F","F", "Fiat"),
+                new ("F","T", "Fiat commercial"),
+                new ("L","L", "Lancia"),
+                new ("R","R", "Alfa Romeo")
             };
             //using var connection = new SqliteConnection($"Data Source={_pathToDb}");
             //var sql = @"SELECT MK_COD, MK_DSC FROM MAKES ORDER BY MK_DSC ";
@@ -252,7 +252,7 @@ namespace openPER.Repositories
             return rc;
 
         }
-        public List<ModelModel> GetAllModelsForMake(string makeCode)
+        public List<ModelModel> GetAllModelsForMake(string makeCode, string subMake)
         {
             var rc = new List<ModelModel>();
             using var connection = new SqliteConnection($"Data Source={_pathToDb}");
@@ -267,7 +267,7 @@ namespace openPER.Repositories
                     MakeCode = makeCode
                 };
                 rc.Add(m);
-            }, makeCode);
+            }, subMake);
             return rc;
         }
 
