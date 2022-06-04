@@ -38,6 +38,8 @@ namespace openPER.Controllers
                 SubMakeCode = subMakeCode,
                 CatalogueCode = catalogueCode
             };
+            model.Breadcrumb.ReleaseCode = releaseCode;
+
             return View(model);
         }
     }

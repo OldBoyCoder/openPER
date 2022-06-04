@@ -22,6 +22,7 @@ namespace openPER.Controllers
             var language = Helpers.LanguageSupport.SetCultureBasedOnCookie(HttpContext);
             ControllerHelpers.ResetReleaseCookie(HttpContext, releaseCode);
 
+
             var model = new MakesViewModel
             {
                 Makes = _mapper.Map<List<MakeModel>, List<MakeViewModel>>(_rep.GetAllMakes(releaseCode)),

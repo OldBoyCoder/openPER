@@ -25,11 +25,14 @@ namespace openPER.Controllers
             ControllerHelpers.ResetReleaseCookie(HttpContext, releaseCode);
 
             var model = new DrawingsViewModel();
-            model.Breadcrumb = new BreadcrumbViewModel
+            var breadcrumb = new BreadcrumbModel
             {
                 MakeCode = makeCode, SubMakeCode = subMakeCode, ModelCode = modelCode, CatalogueCode = catalogueCode,
                 GroupCode = groupCode, SubGroupCode = subGroupCode,SubSubGroupCode =subSubGroupCode, DrawingNumber = drawingNumber
             };
+            _rep.PopulateBreadcrumbDescriptions(releaseCode, breadcrumb, language);
+            model.Breadcrumb = _mapper.Map<BreadcrumbModel, BreadcrumbViewModel>(breadcrumb);
+            model.Breadcrumb.ReleaseCode = releaseCode;
 
             model.ReleaseCode = releaseCode;
             // We need to get all of the drawing keys for this sub sub group

@@ -1,5 +1,39 @@
 ﻿@using openPER.ViewModels;
 @model BreadcrumbViewModel
 <div>
-    @Model.MakeDescription/@Model.SubMakeDescription/@Model.ModelDescription/@Model.CatalogueDescription/@Model.GroupDescription/@Model.SubGroupDescription/@Model.SubSubGroupCode/@Model.DrawingNumber
+    @{
+        @Html.ActionLink(Model.SubMakeDescription, "Index", "Models", new { ReleaseCode = Model.ReleaseCode, Model.MakeCode, Model.SubMakeCode })
+        ;
+        if (Model.ModelCode != null)
+        {
+            <text> / </text>
+            @Html.ActionLink(Model.ModelDescription, "Index", "Catalogues", new { ReleaseCode = Model.ReleaseCode, Model.MakeCode, Model.SubMakeCode, Model.ModelCode })
+            if (Model.CatalogueDescription != null)
+            {
+                <text> / </text>
+                @Html.ActionLink($"{Model.CatalogueCode} {Model.CatalogueDescription}", "Index", "Groups", new { ReleaseCode = Model.ReleaseCode, Model.MakeCode, Model.SubMakeCode, Model.ModelCode, Model.CatalogueCode })
+                if (Model.GroupCode != null & Model.GroupDescription != null)
+                {
+                    <text> / </text>
+                    @Html.ActionLink($"{Model.GroupCode.Value:000} {Model.GroupDescription}", "Index", "SubGroups", new { ReleaseCode = Model.ReleaseCode, Model.MakeCode, Model.SubMakeCode, Model.ModelCode, Model.CatalogueCode, Model.GroupCode })
+                    if (Model.SubGroupCode != null && Model.SubGroupDescription != null)
+                    {
+                        <text> / </text>
+                        @Html.ActionLink($"{Model.GroupCode.Value:000}{Model.SubGroupCode.Value:00} {Model.SubGroupDescription}", "Index", "SubSubGroups", new { ReleaseCode = Model.ReleaseCode, Model.MakeCode, Model.SubMakeCode, Model.ModelCode, Model.CatalogueCode, Model.GroupCode, Model.SubGroupCode })
+                        if (Model.SubSubGroupCode != null)
+                        {
+                            <text> / </text>
+                            @Html.ActionLink($"{Model.GroupCode.Value:000}{Model.SubGroupCode.Value:00}/{Model.SubSubGroupCode:00}", "Detail", "Drawings", new { ReleaseCode = Model.ReleaseCode, Model.MakeCode, Model.SubMakeCode, Model.ModelCode, Model.CatalogueCode, Model.GroupCode, Model.SubGroupCode, Model.SubSubGroupCode, DrawingNumber=1 })
+                            if (Model.DrawingNumber != null)
+                            {
+                                <text> / </text>
+                                @Html.ActionLink(Model.DrawingNumber.ToString(), "Detail", "Drawings", new { ReleaseCode = Model.ReleaseCode, Model.MakeCode, Model.SubMakeCode, Model.ModelCode, Model.CatalogueCode, Model.GroupCode, Model.SubGroupCode, Model.SubSubGroupCode, DrawingNumber=Model.DrawingNumber })
+                            }
+                        }
+                    }
+                }
+
+            }
+        }
+    }
 </div>
