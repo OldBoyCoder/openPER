@@ -5,7 +5,7 @@ namespace openPER.Interfaces
 {
     public interface IVersionedRepository
     {
-        List<CatalogueModel> GetAllCatalogues(int release, string make, string model, string languageCode);
+        List<CatalogueModel> GetAllCatalogues(int release, string make,string subMake, string model, string languageCode);
         List<LanguageModel> GetAllLanguages(int release);
         List<MakeModel> GetAllMakes(int release);
         List<ModelModel> GetAllModels(int release);

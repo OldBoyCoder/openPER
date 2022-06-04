@@ -4,6 +4,7 @@
 @{
     ViewData["Title"] = "Index";
 }
+@await Html.PartialAsync("_Breadcrumb", Model.Breadcrumb)
 
 <h1>Drawings view</h1>
 <div class="container">
@@ -57,7 +58,7 @@
             {
                 <div class="col-xs-4">
                     <img src="@Url.Action("Thumbnail", "Image", new { Make = drawing.MakeCode, Model = drawing.ModelCode, Catalogue = drawing.CatalogueCode, Group = drawing.GroupCode, SubGroup = drawing.SubGroupCode, SubSubGroup = drawing.SubSubGroupCode, Drawing = drawing.DrawingNumber })"><br />
-                    @Html.ActionLink($"{drawing.CatalogueCode}/{drawing.GroupCode}/{drawing.SubGroupCode}/{drawing.SubSubGroupCode}/{ix}", "Detail", "Drawings", new { Model.ReleaseCode, drawing.MakeCode, drawing.ModelCode, drawing.CatalogueCode, drawing.GroupCode, drawing.SubGroupCode, SubSubGroupCode = drawing.SubSubGroupCode, DrawingNumber = ix++ })
+                    @Html.ActionLink($"{drawing.CatalogueCode}/{drawing.GroupCode}/{drawing.SubGroupCode}/{drawing.SubSubGroupCode}/{ix}", "Detail", "Drawings", new { Model.ReleaseCode, drawing.MakeCode,drawing.SubMakeCode, drawing.ModelCode, drawing.CatalogueCode, drawing.GroupCode, drawing.SubGroupCode, SubSubGroupCode = drawing.SubSubGroupCode, DrawingNumber = ix++ })
                 </div>
             }
         }

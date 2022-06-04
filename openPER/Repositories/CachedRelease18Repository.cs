@@ -16,12 +16,12 @@ namespace openPER.Repositories
             _rep = new Release18Repository(config);
         }
 
-        public List<CatalogueModel> GetAllCatalogues(string make, string model, string languageCode)
+        public List<CatalogueModel> GetAllCatalogues(string make, string subMake, string model, string languageCode)
         {
-            var cacheKeys = new { type = "GetAllCatalogues", k1 = make, k2 = model, k3 = languageCode };
+            var cacheKeys = new { type = "GetAllCatalogues", k1 = make, k2 = subMake, k3 = model, k4 = languageCode };
             if (!_cache.TryGetValue(cacheKeys, out List<CatalogueModel> rc))
             {
-                rc = _rep.GetAllCatalogues(make, model, languageCode);
+                rc = _rep.GetAllCatalogues(make, subMake, model, languageCode);
                 var cacheEntryOptions = new MemoryCacheEntryOptions().SetSlidingExpiration(TimeSpan.FromHours(24));
                 _cache.Set(cacheKeys, rc, cacheEntryOptions);
             }
@@ -104,7 +104,7 @@ namespace openPER.Repositories
 
         public List<ModelModel> GetAllModelsForMake(string make, string subMake)
         {
-            var cacheKeys = new { type = "GetAllModels", k1 = make };
+            var cacheKeys = new { type = "GetAllModels", k1 = make, k2 = subMake };
             if (!_cache.TryGetValue(cacheKeys, out List<ModelModel> rc))
             {
                 rc = _rep.GetAllModelsForMake(make, subMake);
