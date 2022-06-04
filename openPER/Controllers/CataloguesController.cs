@@ -26,8 +26,8 @@ namespace openPER.Controllers
 
             var model = new CataloguesViewModel
             {
-                Breadcrumb = { MakeCode = makeCode, SubMakeCode = subMakeCode, ModelCode = modelCode },
-                Catalogues = _mapper.Map<List<CatalogueModel>, List<CatalogueViewModel>>(_rep.GetAllCatalogues(releaseCode, makeCode, modelCode, language)),
+                Breadcrumb = new BreadcrumbViewModel{ MakeCode = makeCode, SubMakeCode = subMakeCode, ModelCode = modelCode },
+                Catalogues = _mapper.Map<List<CatalogueModel>, List<CatalogueViewModel>>(_rep.GetAllCatalogues(releaseCode, makeCode,subMakeCode, modelCode, language)),
                 ReleaseCode = releaseCode
             };
 

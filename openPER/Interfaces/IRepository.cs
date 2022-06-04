@@ -9,7 +9,7 @@ namespace openPER.Interfaces
         List<MakeModel> GetAllMakes();
         List<ModelModel> GetAllModelsForMake(string make, string subMake);
         List<ModelModel> GetAllModels();
-        List<CatalogueModel> GetAllCatalogues(string make, string model, string languageCode);
+        List<CatalogueModel> GetAllCatalogues(string make,string subMake, string model, string languageCode);
         List<GroupModel> GetGroupsForCatalogue(string catalogueCode, string languageCode);
         List<SubGroupModel> GetSubGroupsForCatalogueGroup(string catalogueCode, int groupCode, string languageCode);
         List<SubSubGroupModel> GetSubSubGroupsForCatalogueGroupSubGroup(string catalogueCode, int groupCode, int subGroupCode, string languageCode);

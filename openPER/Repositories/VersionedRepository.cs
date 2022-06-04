@@ -15,12 +15,12 @@ namespace openPER.Repositories
             _repository18 = new CachedRelease18Repository(cache, config);
             _repository84 = new Release84Repository(config);
         }
-        public List<CatalogueModel> GetAllCatalogues(int release, string make, string model, string languageCode)
+        public List<CatalogueModel> GetAllCatalogues(int release, string make, string subMake, string model, string languageCode)
         {
             return release switch
             {
-                18 => _repository18.GetAllCatalogues(make, model, languageCode),
-                84 => _repository84.GetAllCatalogues(make, model, languageCode),
+                18 => _repository18.GetAllCatalogues(make,subMake, model, languageCode),
+                84 => _repository84.GetAllCatalogues(make,subMake, model, languageCode),
                 _ => throw new System.NotImplementedException()
             };
         }

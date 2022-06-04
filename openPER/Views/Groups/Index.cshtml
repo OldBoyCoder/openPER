@@ -3,6 +3,7 @@
 @{
     ViewData["Title"] = "Index";
 }
+@await Html.PartialAsync("_Breadcrumb", Model.Breadcrumb)
 
 <h1>GroupsView</h1>
 
@@ -12,7 +13,7 @@
     <table class="table table-sm">
         @foreach (var group in Model.Groups)
         {
-            <tr><td>@group.DisplayCode</td><td>@Html.ActionLink(group.Description, "Index", "SubGroups", new {Model.ReleaseCode,Model.MakeCode, Model.ModelCode, Model.CatalogueCode, GroupCode=group.Code})</td></tr>
+            <tr><td>@group.DisplayCode</td><td>@Html.ActionLink(group.Description, "Index", "SubGroups", new {Model.ReleaseCode,Model.MakeCode,Model.SubMakeCode, Model.ModelCode, Model.CatalogueCode, GroupCode=group.Code})</td></tr>
         }
     </table>
     @Html.ActionLink("All drawings", "Index", "Drawings", new {Model.ReleaseCode,Model.MakeCode, Model.ModelCode, Model.CatalogueCode, DrawingNumber=1})

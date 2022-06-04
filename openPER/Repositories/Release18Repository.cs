@@ -264,18 +264,19 @@ namespace openPER.Repositories
                 {
                     Code = reader.GetString(0),
                     Description = reader.GetString(1),
-                    MakeCode = makeCode
+                    MakeCode = makeCode,
+                    SubMakeCode = subMake
                 };
                 rc.Add(m);
             }, subMake);
             return rc;
         }
 
-        public List<CatalogueModel> GetAllCatalogues(string makeCode, string modelCode, string languageCode)
+        public List<CatalogueModel> GetAllCatalogues(string makeCode,string subMakeCode, string modelCode, string languageCode)
         {
             var rc = new List<CatalogueModel>();
             using var connection = new SqliteConnection($"Data Source={_pathToDb}");
-            var sql = @"SELECT CAT_COD, CAT_DSC FROM CATALOGUES WHERE MK2_COD = $p1 AND CMG_COD = $p2  ORDER BY CAT_SORT_KEY ";
+            var sql = @"SELECT CAT_COD, CAT_DSC FROM CATALOGUES WHERE MK2_COD = $p2 AND MK_COD =$p1 AND CMG_COD = $p3  ORDER BY CAT_SORT_KEY ";
             connection.RunSqlAllRows(sql, (reader) =>
             {
                 var m = new CatalogueModel
@@ -283,10 +284,11 @@ namespace openPER.Repositories
                     Code = reader.GetString(0),
                     Description = reader.GetString(1),
                     MakeCode = makeCode,
+                    SubMakeCode = subMakeCode,
                     ModelCode = modelCode
                 };
                 rc.Add(m);
-            }, makeCode, modelCode);
+            }, makeCode,subMakeCode, modelCode);
             return rc;
         }
 
