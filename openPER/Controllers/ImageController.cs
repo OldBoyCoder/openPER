@@ -15,14 +15,24 @@ namespace openPER.Controllers
         }
 
         [Route("Image/ModelImage/{ReleaseCode}/{Make}/{SubMake}/{Model}")]
-        public ActionResult ModelImage(int releaseCode, string make,string subMake, string model)
+        public ActionResult ModelImage(int releaseCode, string make, string subMake, string model)
         {
-            return File(_imageRep.GetImageForCatalogue(releaseCode,make, subMake, model), "image/png");
+            return File(_imageRep.GetImageForModel(releaseCode, make, subMake, model), "image/png");
+        }
+        [Route("Image/CatalogueImage/{ReleaseCode}/{Make}/{SubMake}/{Model}/{Catalogue}")]
+        public ActionResult CatalogueImage(int releaseCode, string make, string subMake, string model, string catalogue)
+        {
+            // For the catalogue image we need the map name which comes from the DB.
+            // Not sure whether to pass a DB repository into the image repository or get it here
+            // decided I didn't want a DB dependency in the image repository so get the map name here
+            // Might find out I'm wrong when I did other versions
+            var mapName = _repository.GetMapForCatalogue(releaseCode, make, subMake, model, catalogue);
+            return File(_imageRep.GetImageForCatalogue(releaseCode, make, subMake, model, catalogue, mapName), "image/png");
         }
         [Route("Image/{ReleaseCode}/{Make}/{Model}")]
         public ActionResult Drawing(int releaseCode, string make,string subMakeCode, string model)
         {
-            return File(_imageRep.GetImageForCatalogue(releaseCode, make,subMakeCode, model), "image/png");
+            return File(_imageRep.GetImageForModel(releaseCode, make,subMakeCode, model), "image/png");
         }
         //            <img src="@Url.Action("Drawing", "Image", new {Make=Model.MakeCode, Model=Model.ModelCode, Catalogue=Model.CatalogueCode, Group = Model.GroupCode, SubGroup = Model.SubGroupCode, Model.SubSubGroupCode, Drawing=Model.CurrentDrawing})">
 

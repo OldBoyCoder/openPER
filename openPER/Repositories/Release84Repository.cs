@@ -103,5 +103,10 @@ namespace openPER.Repositories
         {
             throw new System.NotImplementedException();
         }
+
+        public string GetMapForCatalogue(string makeCode, string modelCode, string catalogueCode, string mapName)
+        {
+            throw new System.NotImplementedException();
+        }
     }
 }
