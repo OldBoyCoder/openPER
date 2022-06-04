@@ -52,11 +52,11 @@ namespace openPER.Repositories
             };
         }
 
-        public List<ModelModel> GetAllModelsForMake(int release, string make)
+        public List<ModelModel> GetAllModelsForMake(int release, string make, string subMake)
         {
             return release switch
             {
-                18 => _repository18.GetAllModelsForMake(make),
+                18 => _repository18.GetAllModelsForMake(make, subMake),
                 _ => throw new System.NotImplementedException()
             };
         }

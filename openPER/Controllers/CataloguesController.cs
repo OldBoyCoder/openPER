@@ -17,8 +17,8 @@ namespace openPER.Controllers
             _rep = rep;
             _mapper = mapper;
         }
-        [Route("Catalogues/{ReleaseCode}/{MakeCode}/{ModelCode}")]
-        public IActionResult Index(int releaseCode, string makeCode, string modelCode)
+        [Route("Catalogues/{ReleaseCode}/{MakeCode}/{SubMakeCode}/{ModelCode}")]
+        public IActionResult Index(int releaseCode, string makeCode, string subMakeCode, string modelCode)
         {
             // Standard prologue
             var language = Helpers.LanguageSupport.SetCultureBasedOnCookie(HttpContext);
@@ -26,6 +26,7 @@ namespace openPER.Controllers
 
             var model = new CataloguesViewModel
             {
+                Breadcrumb = { MakeCode = makeCode, SubMakeCode = subMakeCode, ModelCode = modelCode },
                 Catalogues = _mapper.Map<List<CatalogueModel>, List<CatalogueViewModel>>(_rep.GetAllCatalogues(releaseCode, makeCode, modelCode, language)),
                 ReleaseCode = releaseCode
             };

@@ -16,15 +16,17 @@ namespace openPER.Controllers
             _rep = rep;
             _mapper = mapper;
         }
-        [Route("Models/{ReleaseCode}/{MakeCode}")]
-        public IActionResult Index(int releaseCode, string makeCode)
+        [Route("Models/{ReleaseCode}/{MakeCode}/{SubMakeCode}")]
+        public IActionResult Index(int releaseCode, string makeCode, string subMakeCode)
         {
             // Standard prologue
             ControllerHelpers.ResetReleaseCookie(HttpContext, releaseCode);
 
+
             var model = new ModelsViewModel
             {
-                Models = _mapper.Map<List<ModelModel>, List<ModelViewModel>>(_rep.GetAllModelsForMake(releaseCode, makeCode)),
+                Breadcrumb = new BreadcrumbViewModel{MakeCode = makeCode, SubMakeCode = subMakeCode},
+                Models = _mapper.Map<List<ModelModel>, List<ModelViewModel>>(_rep.GetAllModelsForMake(releaseCode,makeCode, subMakeCode)),
                 ReleaseCode = releaseCode,
                 MakeCode = makeCode
             };

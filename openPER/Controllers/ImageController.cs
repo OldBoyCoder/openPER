@@ -14,15 +14,15 @@ namespace openPER.Controllers
             _imageRep = imageRep;
         }
 
-        [Route("Image/ModelImage/{ReleaseCode}/{Make}/{Model}")]
-        public ActionResult ModelImage(int releaseCode, string make, string model)
+        [Route("Image/ModelImage/{ReleaseCode}/{Make}/{SubMake}/{Model}")]
+        public ActionResult ModelImage(int releaseCode, string make,string subMake, string model)
         {
-            return File(_imageRep.GetImageForCatalogue(releaseCode, make, model), "image/png");
+            return File(_imageRep.GetImageForCatalogue(releaseCode,make, subMake, model), "image/png");
         }
         [Route("Image/{ReleaseCode}/{Make}/{Model}")]
-        public ActionResult Drawing(int releaseCode, string make, string model)
+        public ActionResult Drawing(int releaseCode, string make,string subMakeCode, string model)
         {
-            return File(_imageRep.GetImageForCatalogue(releaseCode, make, model), "image/png");
+            return File(_imageRep.GetImageForCatalogue(releaseCode, make,subMakeCode, model), "image/png");
         }
         //            <img src="@Url.Action("Drawing", "Image", new {Make=Model.MakeCode, Model=Model.ModelCode, Catalogue=Model.CatalogueCode, Group = Model.GroupCode, SubGroup = Model.SubGroupCode, Model.SubSubGroupCode, Drawing=Model.CurrentDrawing})">
 

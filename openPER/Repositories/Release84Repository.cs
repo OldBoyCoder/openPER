@@ -49,7 +49,7 @@ namespace openPER.Repositories
             var sql = @"SELECT MK_COD, MK_DSC FROM MAKES ORDER BY MK_DSC ";
             connection.RunSqlAllRows(sql, (reader) =>
             {
-                var m = new MakeModel(code: reader.GetString(0), description: reader.GetString(1));
+                var m = new MakeModel(code: reader.GetString(0), "F", description: reader.GetString(1));
                 rc.Add(m);
 
             }, null);
@@ -238,7 +238,7 @@ namespace openPER.Repositories
             return rc;
 
         }
-        public List<ModelModel> GetAllModelsForMake(string makeCode)
+        public List<ModelModel> GetAllModelsForMake(string makeCode, string subMake)
         {
             var rc = new List<ModelModel>();
             using var connection = new SqliteConnection($"Data Source={_pathToDb}");
