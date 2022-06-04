@@ -21,5 +21,6 @@ namespace openPER.Interfaces
         List<DrawingKeyModel> GetDrawingKeysForCatalogue(int releaseCode, string makeCode, string modelCode, string catalogueCode);
         List<DrawingKeyModel> GetDrawingKeysForGroup(int releaseCode, string makeCode, string modelCode, string catalogueCode, int groupCode);
         List<DrawingKeyModel> GetDrawingKeysForSubGroup(int releaseCode, string makeCode, string modelCode, string catalogueCode, int groupCode, int subGroupCode);
+        string GetMapForCatalogue(int releaseCode, string make, string subMake, string model, string catalogue);
     }
 }

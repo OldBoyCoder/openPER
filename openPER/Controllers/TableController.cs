@@ -60,7 +60,7 @@ namespace openPER.Controllers
         //[Route("Table/{Model}")]
         //public ActionResult ModelImage(string model)
         //{
-        //    return File(GetImageForCatalogue(model), "image/png");
+        //    return File(GetImageForModel(model), "image/png");
         //}
 
     }

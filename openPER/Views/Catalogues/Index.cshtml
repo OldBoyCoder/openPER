@@ -11,7 +11,9 @@
     <table class="table table-sm">
         @foreach (var item in Model.Catalogues)
         {
-            <tr><td>@item.Code</td><td>@Html.ActionLink(item.Description, "Index", "Groups", new { Model.ReleaseCode,item.MakeCode,item.SubMakeCode, item.ModelCode, CatalogueCode=item.Code})</td></tr>
+            <tr><td>@item.Code</td><td>@Html.ActionLink(item.Description, "Index", "Groups", new { Model.ReleaseCode,item.MakeCode,item.SubMakeCode, item.ModelCode, CatalogueCode=item.Code})</td>
+                <td>                    <img src="@Url.Action("CatalogueImage", "Image", new {Model.ReleaseCode,Make=item.MakeCode,SubMake=item.SubMakeCode, Model=item.ModelCode,Catalogue=item.Code})">
+                </td></tr>
         }
     </table>
 </div>
