@@ -1,6 +1,8 @@
-﻿namespace openPER.ViewModels
+﻿using System.Security.AccessControl;
+
+namespace openPER.Models
 {
-    public class BreadcrumbViewModel
+    public class BreadcrumbModel
     {
         public string MakeCode { get; set; }
         public string SubMakeCode { get; set; }
@@ -10,6 +12,7 @@
         public int? SubGroupCode { get; set; }
         public int? SubSubGroupCode { get; set; }
         public int? DrawingNumber { get; set; }
+
         public string MakeDescription { get; set; }
         public string SubMakeDescription { get; set; }
         public string ModelDescription { get; set; }

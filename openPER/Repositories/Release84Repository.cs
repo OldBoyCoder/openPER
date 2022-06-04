@@ -108,5 +108,10 @@ namespace openPER.Repositories
         {
             throw new System.NotImplementedException();
         }
+
+        public void PopulateBreadcrumbDescriptions(BreadcrumbModel breadcrumb, string languageCode)
+        {
+            throw new System.NotImplementedException();
+        }
     }
 }

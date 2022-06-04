@@ -21,11 +21,15 @@ namespace openPER.Controllers
         {
             // Standard prologue
             ControllerHelpers.ResetReleaseCookie(HttpContext, releaseCode);
+            var language = Helpers.LanguageSupport.SetCultureBasedOnCookie(HttpContext);
 
+
+            var breadcrumb = new BreadcrumbModel { MakeCode = makeCode, SubMakeCode = subMakeCode };
+            _rep.PopulateBreadcrumbDescriptions(releaseCode, breadcrumb, language);
 
             var model = new ModelsViewModel
             {
-                Breadcrumb = new BreadcrumbViewModel{MakeCode = makeCode, SubMakeCode = subMakeCode},
+                Breadcrumb = _mapper.Map<BreadcrumbModel, BreadcrumbViewModel>(breadcrumb),
                 Models = _mapper.Map<List<ModelModel>, List<ModelViewModel>>(_rep.GetAllModelsForMake(releaseCode,makeCode, subMakeCode)),
                 ReleaseCode = releaseCode,
                 MakeCode = makeCode

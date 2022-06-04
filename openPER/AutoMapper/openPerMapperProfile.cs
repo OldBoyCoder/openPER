@@ -17,6 +17,7 @@ namespace openPER.AutoMapper
             CreateMap<DrawingKeyModel, DrawingKeyViewModel>();
             CreateMap<TablePartModel, TablePartViewModel>();
             CreateMap<TableModel, TableViewModel>();
+            CreateMap<BreadcrumbModel, BreadcrumbViewModel>();
         }
     }
 }

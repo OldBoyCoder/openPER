@@ -1,4 +1,5 @@
-﻿using Microsoft.Extensions.Caching.Memory;
+﻿using System.Collections;
+using Microsoft.Extensions.Caching.Memory;
 using openPER.Interfaces;
 using openPER.Models;
 using System.Collections.Generic;
@@ -159,6 +160,16 @@ namespace openPER.Repositories
             {
                 18 => _repository18.GetMapForCatalogue(make,subMake, model, catalogue),
                 _ => throw new System.NotImplementedException()
+            };
+        }
+
+        public void PopulateBreadcrumbDescriptions(int releaseCode, BreadcrumbModel breadcrumb, string languageCode)
+        {
+            switch (releaseCode)
+            {
+                case 18:
+                    _repository18.PopulateBreadcrumbDescriptions(breadcrumb, languageCode);
+                    break;
             };
         }
     }
