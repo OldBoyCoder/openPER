@@ -37,6 +37,8 @@ namespace openPER.Controllers
                 ReleaseCode = releaseCode
 
             };
+            model.Breadcrumb.ReleaseCode = releaseCode;
+
             return View(model);
         }
     }

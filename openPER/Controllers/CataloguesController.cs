@@ -32,6 +32,7 @@ namespace openPER.Controllers
                 Catalogues = _mapper.Map<List<CatalogueModel>, List<CatalogueViewModel>>(_rep.GetAllCatalogues(releaseCode, makeCode,subMakeCode, modelCode, language)),
                 ReleaseCode = releaseCode
             };
+            model.Breadcrumb.ReleaseCode = releaseCode;
 
             return View(model);
         }

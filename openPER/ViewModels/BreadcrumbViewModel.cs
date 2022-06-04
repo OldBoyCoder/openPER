@@ -1,6 +1,6 @@
 ﻿namespace openPER.ViewModels
 {
-    public class BreadcrumbViewModel
+    public class BreadcrumbViewModel:VersionedViewModel
     {
         public string MakeCode { get; set; }
         public string SubMakeCode { get; set; }

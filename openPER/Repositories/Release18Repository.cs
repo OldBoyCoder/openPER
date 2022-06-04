@@ -32,8 +32,8 @@ namespace openPER.Repositories
             var t = new TableModel();
             using var connection = new SqliteConnection($"Data Source={_pathToDb}");
             t.CatalogueCode = catalogueCode;
-            t.GroupCode = groupCode;    
-            t.SubGroupCode= subGroupCode;
+            t.GroupCode = groupCode;
+            t.SubGroupCode = subGroupCode;
             t.SubSubGroupCode = sgsCode;
             //            t.MakeDesc = GetMakeDescription(makeCode, connection);
             //          t.ModelDesc = GetModelDescription(makeCode, modelCode, connection);
@@ -179,7 +179,7 @@ namespace openPER.Repositories
             }, modCode, languageCode, catalogueCode);
             return modifications;
         }
-        private string GetCatalogueDescription(string makeCode,string subMakeCode, string catalogueCode, SqliteConnection connection)
+        private string GetCatalogueDescription(string makeCode, string subMakeCode, string catalogueCode, SqliteConnection connection)
         {
             string rc = "";
 
@@ -274,7 +274,7 @@ namespace openPER.Repositories
             return rc;
         }
 
-        public List<CatalogueModel> GetAllCatalogues(string makeCode,string subMakeCode, string modelCode, string languageCode)
+        public List<CatalogueModel> GetAllCatalogues(string makeCode, string subMakeCode, string modelCode, string languageCode)
         {
             var rc = new List<CatalogueModel>();
             using var connection = new SqliteConnection($"Data Source={_pathToDb}");
@@ -290,7 +290,7 @@ namespace openPER.Repositories
                     ModelCode = modelCode
                 };
                 rc.Add(m);
-            }, makeCode,subMakeCode, modelCode);
+            }, makeCode, subMakeCode, modelCode);
             return rc;
         }
 
@@ -544,7 +544,7 @@ namespace openPER.Repositories
             return drawings;
         }
 
-        public string GetMapForCatalogue(string makeCode,string subMakeCode, string modelCode, string catalogueCode)
+        public string GetMapForCatalogue(string makeCode, string subMakeCode, string modelCode, string catalogueCode)
         {
             var map = "";
             using var connection = new SqliteConnection($"Data Source={_pathToDb}");
@@ -563,12 +563,12 @@ namespace openPER.Repositories
             using var connection = new SqliteConnection($"Data Source={_pathToDb}");
             if (breadcrumb.MakeCode != null) breadcrumb.MakeDescription = GetMakeDescription(breadcrumb.MakeCode, connection);
             if (breadcrumb.SubMakeCode != null) breadcrumb.SubMakeDescription = GetSubMakeDescription(breadcrumb.MakeCode, breadcrumb.SubMakeCode, connection);
-            if (breadcrumb.ModelCode != null) breadcrumb.ModelDescription = GetModelDescription(breadcrumb.MakeCode, breadcrumb.SubMakeCode,breadcrumb.ModelCode, connection);
+            if (breadcrumb.ModelCode != null) breadcrumb.ModelDescription = GetModelDescription(breadcrumb.MakeCode, breadcrumb.SubMakeCode, breadcrumb.ModelCode, connection);
 
             if (breadcrumb.CatalogueCode != null) breadcrumb.CatalogueDescription = GetCatalogueDescription(breadcrumb.MakeCode, breadcrumb.SubMakeCode,
                 breadcrumb.CatalogueCode, connection);
-            if (breadcrumb.GroupCode != null) GetGroupDescription(breadcrumb.GroupCode.Value, languageCode, connection);
-            if (breadcrumb.GroupCode != null && breadcrumb.SubGroupCode != null) GetSubGroupDescription(breadcrumb.GroupCode.Value,breadcrumb.SubGroupCode.Value, languageCode, connection);
+            if (breadcrumb.GroupCode != null) breadcrumb.GroupDescription = GetGroupDescription(breadcrumb.GroupCode.Value, languageCode, connection);
+            if (breadcrumb.GroupCode != null && breadcrumb.SubGroupCode != null) breadcrumb.SubGroupDescription = GetSubGroupDescription(breadcrumb.GroupCode.Value, breadcrumb.SubGroupCode.Value, languageCode, connection);
         }
 
         private string GetSubMakeDescription(string makeCode, string subMakeCode, SqliteConnection connection)
