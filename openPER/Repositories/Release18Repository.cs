@@ -4,6 +4,8 @@ using openPER.Interfaces;
 using openPER.Models;
 using System.Collections.Generic;
 using System.Linq;
+using System.Security.Policy;
+
 // ReSharper disable StringLiteralTypo
 
 namespace openPER.Repositories
@@ -177,15 +179,15 @@ namespace openPER.Repositories
             }, modCode, languageCode, catalogueCode);
             return modifications;
         }
-        private string GetCatalogueDescription(string makeCode, string modelCode, string catalogueCode, SqliteConnection connection)
+        private string GetCatalogueDescription(string makeCode,string subMakeCode, string catalogueCode, SqliteConnection connection)
         {
             string rc = "";
 
-            var sql = @"SELECT CMD_DSC FROM COMM_MODELS WHERE MOD_COD = $p1 AND CAT_COD = $p2 ";
+            var sql = @"SELECT CAT_DSC FROM CATALOGUES WHERE MK_COD = $p1 AND MK2_COD = $p2 AND CAT_COD = $p3";
             connection.RunSqlFirstRowOnly(sql, (reader) =>
             {
                 rc = reader.GetString(0);
-            }, modelCode, catalogueCode);
+            }, makeCode, subMakeCode, catalogueCode);
 
             return rc;
         }
@@ -224,14 +226,14 @@ namespace openPER.Repositories
             }, makeCode);
             return rc;
         }
-        private string GetModelDescription(string makeCode, string modelCode, SqliteConnection connection)
+        private string GetModelDescription(string makeCode, string subMakeCode, string modelCode, SqliteConnection connection)
         {
             var rc = "";
-            var sql = @"SELECT MOD_DSC FROM MODELS WHERE MK_COD = $p1 AND MOD_COD = $p2";
+            var sql = @"SELECT CMG_DSC FROM COMM_MODGRP WHERE MK2_COD = $p1 AND CMG_COD = $p2";
             connection.RunSqlFirstRowOnly(sql, (reader) =>
             {
                 rc = reader.GetString(0);
-            }, makeCode, modelCode);
+            }, subMakeCode, modelCode);
             return rc;
         }
         public List<ModelModel> GetAllModels()
@@ -554,6 +556,31 @@ namespace openPER.Repositories
                 map = reader.GetString(0);
             }, makeCode, subMakeCode, catalogueCode);
             return map;
+        }
+
+        public void PopulateBreadcrumbDescriptions(BreadcrumbModel breadcrumb, string languageCode)
+        {
+            using var connection = new SqliteConnection($"Data Source={_pathToDb}");
+            if (breadcrumb.MakeCode != null) breadcrumb.MakeDescription = GetMakeDescription(breadcrumb.MakeCode, connection);
+            if (breadcrumb.SubMakeCode != null) breadcrumb.SubMakeDescription = GetSubMakeDescription(breadcrumb.MakeCode, breadcrumb.SubMakeCode, connection);
+            if (breadcrumb.ModelCode != null) breadcrumb.ModelDescription = GetModelDescription(breadcrumb.MakeCode, breadcrumb.SubMakeCode,breadcrumb.ModelCode, connection);
+
+            if (breadcrumb.CatalogueCode != null) breadcrumb.CatalogueDescription = GetCatalogueDescription(breadcrumb.MakeCode, breadcrumb.SubMakeCode,
+                breadcrumb.CatalogueCode, connection);
+            if (breadcrumb.GroupCode != null) GetGroupDescription(breadcrumb.GroupCode.Value, languageCode, connection);
+            if (breadcrumb.GroupCode != null && breadcrumb.SubGroupCode != null) GetSubGroupDescription(breadcrumb.GroupCode.Value,breadcrumb.SubGroupCode.Value, languageCode, connection);
+        }
+
+        private string GetSubMakeDescription(string makeCode, string subMakeCode, SqliteConnection connection)
+        {
+            return subMakeCode switch
+            {
+                "F" => "Fiat",
+                "T" => "Fiat commercial",
+                "R" => "Alfa Romeo",
+                "L" => "Lancia",
+                _ => ""
+            };
         }
 
         public PartModel GetPartDetails(string partNumberSearch, string languageCode)

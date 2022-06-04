@@ -102,6 +102,18 @@ namespace openPER.Repositories
             return rc;
         }
 
+        public void PopulateBreadcrumbDescriptions(BreadcrumbModel breadcrumb, string languageCode)
+        {
+            var cacheKeys = new { type = "PopulateBreadcrumbDescriptions", k1 = breadcrumb };
+            if (!_cache.TryGetValue(cacheKeys, out string rc))
+            {
+                _rep.PopulateBreadcrumbDescriptions(breadcrumb, languageCode);
+                var cacheEntryOptions = new MemoryCacheEntryOptions().SetSlidingExpiration(TimeSpan.FromHours(24));
+                _cache.Set(cacheKeys, rc, cacheEntryOptions);
+            }
+
+        }
+
         public List<MakeModel> GetAllMakes()
         {
             var cacheKeys = new { type = "GetAllMakes" };
