@@ -579,6 +579,7 @@ namespace openPER.Repositories
                         JOIN MAP_GRP M ON M.MAP_NAME = C.MAP_NAME
                         JOIN MAP_INFO MI ON MI.MAP_NAME = C.MAP_NAME
                         WHERE C.CAT_COD = $p1
+                            AND M.GRP_COD IN (SELECT DISTINCT GRP_COD FROM TBDATA WHERE CAT_COD = $p1)
                         ORDER BY MPG_TY, MPG_TX, MPG_INDEX";
             connection.RunSqlAllRows(sql, (reader) =>
             {
