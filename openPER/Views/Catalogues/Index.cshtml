@@ -4,17 +4,51 @@
     ViewData["Title"] = "Index";
 }
 @await Html.PartialAsync("_Breadcrumb", Model.Breadcrumb)
-<h1>Index</h1>
+<div class="container">
+    <div class="row">
+        <div class="col-4">
+            <table class="table table-sm table-hover">
+                <thead>
+                    <tr>
+                        <th>Model</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var item in Model.Models)
+                    {
+                        <tr>
+                            <td>
+                                @Html.ActionLink(item.Description, "Index", "Catalogues", new { Model.ReleaseCode, item.MakeCode, item.SubMakeCode, ModelCode = item.Code })
+                            </td>
 
-<div>
-    <h4>CataloguesViewModel</h4>
-    <table class="table table-sm">
-        @foreach (var item in Model.Catalogues)
-        {
-            <tr><td>@item.Code</td><td>@Html.ActionLink(item.Description, "Index", "Groups", new { Model.ReleaseCode,item.MakeCode,item.SubMakeCode, item.ModelCode, CatalogueCode=item.Code})</td>
-                <td>                    <img src="@Url.Action("CatalogueImage", "Image", new {Model.ReleaseCode,Make=item.MakeCode,SubMake=item.SubMakeCode, Model=item.ModelCode,Catalogue=item.Code})">
-                </td></tr>
-        }
-    </table>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+        <div class="col-3">
+            <img src="@Url.Action("ModelImage", "Image", new { Model.ReleaseCode, Make = Model.Breadcrumb.MakeCode, SubMake = Model.Breadcrumb.SubMakeCode, Model = Model.Breadcrumb.ModelCode })">
+        </div>
+        <div class="col-5">
+            <table class="table table-sm">
+                <thead>
+                    <tr>
+                        <th>Version</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var item in Model.Catalogues)
+                    {
+                        <tr>
+                            <td>@Html.ActionLink(item.Description, "Index", "Groups", new { Model.ReleaseCode, item.MakeCode, item.SubMakeCode, item.ModelCode, CatalogueCode = item.Code })</td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+    </div>
 </div>
+
+
+
 

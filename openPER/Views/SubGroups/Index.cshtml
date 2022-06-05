@@ -1,21 +1,45 @@
 ﻿@model openPER.ViewModels.SubGroupsViewModel
-
 @{
     ViewData["Title"] = "Index";
 }
 @await Html.PartialAsync("_Breadcrumb", Model.Breadcrumb)
+<div class="container">
+    <div class="row">
+        <div class="col-4">
+            <table class="table table-sm table-hover">
+                <thead>
+                <tr>
+                    <th>Models - Versions</th>
+                </tr>
+                <tr>
+                    <th>Category</th>
+                </tr>
+                <tr>
+                    <th>Subcategory</th>
+                </tr>
+                </thead>
+                <tbody>
+                @foreach (var group in Model.SubGroups)
+                {
+                    <tr>
+                        <td>
+                            @Html.ActionLink($"{group.FullDisplayCode} {group.Description}", "Index", "SubSubGroups", new {Model.ReleaseCode,Model.MakeCode, Model.SubMakeCode, Model.ModelCode, Model.CatalogueCode, group.GroupCode, SubGroupCode = group.Code})
+                        </td>
+                    </tr>
+                }
+                <tr>
+                    <td>
+                        @Html.ActionLink("All drawings", "Index", "Drawings", new {Model.ReleaseCode,Model.MakeCode, Model.ModelCode, Model.CatalogueCode, Model.GroupCode, DrawingNumber=1})
+                    </td>
+                </tr>
+                </tbody>
+            </table>
+        </div>
+        <div class="col-8">
+            <strong>Subcategory selection</strong>
+            <p>Select a subcategory from the side menu or directly from the map.</p>
+            <img src="@Url.Action("CatalogueImage", "Image", new { Model.ReleaseCode, Make = Model.MakeCode, SubMake = Model.SubMakeCode, Model = Model.ModelCode, Catalogue = Model.CatalogueCode })">
+        </div>
 
-<h1>SubGroupsView</h1>
-
-<div>
-    <h4>SubGroups</h4>
-    <hr />
-    <table class="table table-sm">
-    @foreach (var group in Model.SubGroups)
-    {
-        <tr><td>@group.FullDisplayCode</td><td>@Html.ActionLink(group.Description, "Index", "SubSubGroups", new {Model.ReleaseCode,Model.MakeCode, Model.SubMakeCode, Model.ModelCode, Model.CatalogueCode, group.GroupCode, SubGroupCode = group.Code})            
-</td></tr>
-    }
-    </table>
-    @Html.ActionLink("All drawings", "Index", "Drawings", new {Model.ReleaseCode,Model.MakeCode, Model.ModelCode, Model.CatalogueCode, Model.GroupCode, DrawingNumber=1})
+    </div>
 </div>
