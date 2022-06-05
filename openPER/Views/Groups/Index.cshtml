@@ -4,9 +4,9 @@
     ViewData["Title"] = "Index";
 }
 @await Html.PartialAsync("_Breadcrumb", Model.Breadcrumb)
-<div class="d-flex p-2">
-    <div class="d-flex flex-row">
-        <div class="col-4">
+<div class="container-fluid">
+    <div class="row">
+        <div class="col-lg-4 col-md-4 col-sm-12 col-xs-12">
             <table class="table table-sm table-hover">
                 <thead>
                     <tr>
@@ -27,7 +27,7 @@
                 </tbody>
             </table>
         </div>
-        <div class="col-8">
+        <div class="col-lg-8 col-md-8 col-sm-12 col-xs-12">
             <strong>Main category selection</strong>
             <p>Select the main category from the side menu or directly from the car map.</p>
             <div style="position: relative; left: 0px; right: 0px;">
