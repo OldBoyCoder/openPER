@@ -38,7 +38,7 @@
         <div class="col-8">
             <strong>Subcategory selection</strong>
             <p>Select a subcategory from the side menu or directly from the map.</p>
-            <img src="@Url.Action("CatalogueImage", "Image", new { Model.ReleaseCode, Make = Model.MakeCode, SubMake = Model.SubMakeCode, Model = Model.ModelCode, Catalogue = Model.CatalogueCode })">
+            <img src="@Url.Action("CatalogueGroupImage", "Image", new { Model.ReleaseCode, Make = Model.MakeCode, SubMake = Model.SubMakeCode, Model = Model.ModelCode, Catalogue = Model.CatalogueCode, Group=Model.GroupCode })">
         </div>
 
     </div>

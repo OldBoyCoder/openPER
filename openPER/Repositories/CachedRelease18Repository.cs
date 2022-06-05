@@ -127,6 +127,18 @@ namespace openPER.Repositories
             return rc;
         }
 
+        public string GetMapForCatalogueGroup(string make, string subMake, string model, string catalogue, string group)
+        {
+            var cacheKeys = new { type = "GetMapForCatalogueGroup", k1 = make, k2 = subMake, k3 = model, k4 = catalogue, k5=group };
+            if (!_cache.TryGetValue(cacheKeys, out string rc))
+            {
+                rc = _rep.GetMapForCatalogueGroup(make, subMake, model, catalogue, group);
+                var cacheEntryOptions = new MemoryCacheEntryOptions().SetSlidingExpiration(TimeSpan.FromHours(24));
+                _cache.Set(cacheKeys, rc, cacheEntryOptions);
+            }
+            return rc;
+        }
+
         public List<MakeModel> GetAllMakes()
         {
             var cacheKeys = new { type = "GetAllMakes" };
