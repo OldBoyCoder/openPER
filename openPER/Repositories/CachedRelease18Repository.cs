@@ -114,6 +114,19 @@ namespace openPER.Repositories
 
         }
 
+        public List<GroupImageMapEntryModel> GetGroupMapEntriesForCatalogue(string catalogueCode)
+        {
+            var cacheKeys = new { type = "GetGroupMapEntriesForCatalogue", k1 = catalogueCode };
+            if (!_cache.TryGetValue(cacheKeys, out List<GroupImageMapEntryModel> rc))
+            {
+                rc = _rep.GetGroupMapEntriesForCatalogue(catalogueCode);
+                var cacheEntryOptions = new MemoryCacheEntryOptions().SetSlidingExpiration(TimeSpan.FromHours(24));
+                _cache.Set(cacheKeys, rc, cacheEntryOptions);
+            }
+
+            return rc;
+        }
+
         public List<MakeModel> GetAllMakes()
         {
             var cacheKeys = new { type = "GetAllMakes" };

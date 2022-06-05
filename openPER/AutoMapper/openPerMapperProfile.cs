@@ -18,6 +18,7 @@ namespace openPER.AutoMapper
             CreateMap<TablePartModel, TablePartViewModel>();
             CreateMap<TableModel, TableViewModel>();
             CreateMap<BreadcrumbModel, BreadcrumbViewModel>();
+            CreateMap<GroupImageMapEntryModel, GroupImageMapEntryViewModel>();
         }
     }
 }

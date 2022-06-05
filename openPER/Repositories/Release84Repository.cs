@@ -113,5 +113,10 @@ namespace openPER.Repositories
         {
             throw new System.NotImplementedException();
         }
+
+        public List<GroupImageMapEntryModel> GetGroupMapEntriesForCatalogue(string catalogueCode)
+        {
+            throw new System.NotImplementedException();
+        }
     }
 }
