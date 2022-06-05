@@ -127,7 +127,7 @@ namespace openPER.Repositories
             return rc;
         }
 
-        public string GetMapForCatalogueGroup(string make, string subMake, string model, string catalogue, string group)
+        public string GetMapForCatalogueGroup(string make, string subMake, string model, string catalogue, int group)
         {
             var cacheKeys = new { type = "GetMapForCatalogueGroup", k1 = make, k2 = subMake, k3 = model, k4 = catalogue, k5=group };
             if (!_cache.TryGetValue(cacheKeys, out string rc))
@@ -136,6 +136,19 @@ namespace openPER.Repositories
                 var cacheEntryOptions = new MemoryCacheEntryOptions().SetSlidingExpiration(TimeSpan.FromHours(24));
                 _cache.Set(cacheKeys, rc, cacheEntryOptions);
             }
+            return rc;
+        }
+
+        public List<SubGroupImageMapEntryModel> GetSubGroupMapEntriesForCatalogueGroup(string catalogueCode, int groupCode)
+        {
+            var cacheKeys = new { type = "GetSubGroupMapEntriesForCatalogueGroup", k1 = catalogueCode, k2=groupCode };
+            if (!_cache.TryGetValue(cacheKeys, out List<SubGroupImageMapEntryModel> rc))
+            {
+                rc = _rep.GetSubGroupMapEntriesForCatalogueGroup(catalogueCode, groupCode);
+                var cacheEntryOptions = new MemoryCacheEntryOptions().SetSlidingExpiration(TimeSpan.FromHours(24));
+                _cache.Set(cacheKeys, rc, cacheEntryOptions);
+            }
+
             return rc;
         }
 

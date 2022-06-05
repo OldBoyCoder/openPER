@@ -11,5 +11,6 @@ namespace openPER.ViewModels
         public string ModelCode { get; set; }
         public string CatalogueCode { get; set; }
         public int GroupCode { get; internal set; }
+        public List<SubGroupImageMapEntryViewModel> MapEntries { get; set; }
     }
 }

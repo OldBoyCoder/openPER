@@ -29,6 +29,8 @@ namespace openPER.Controllers
             {
                 Breadcrumb = _mapper.Map<BreadcrumbModel, BreadcrumbViewModel>(breadcrumb),
                 SubGroups = _mapper.Map<List<SubGroupModel>, List<SubGroupViewModel>>(_rep.GetSubGroupsForCatalogueGroup(releaseCode,catalogueCode, groupCode, language)),
+                MapEntries = _mapper.Map<List<SubGroupImageMapEntryModel>, List<SubGroupImageMapEntryViewModel>>(_rep.GetSubGroupMapEntriesForCatalogueGroup(releaseCode, catalogueCode, groupCode)),
+
                 MakeCode = makeCode,
                 ModelCode = modelCode,
                 SubMakeCode = subMakeCode,

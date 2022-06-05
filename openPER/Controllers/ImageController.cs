@@ -30,7 +30,7 @@ namespace openPER.Controllers
             return File(_imageRep.GetImageForCatalogue(releaseCode, make, subMake, model, catalogue, mapName), "image/png");
         }
         [Route("Image/GroupImage/{ReleaseCode}/{Make}/{SubMake}/{Model}/{Catalogue}/{Group}")]
-        public ActionResult CatalogueGroupImage(int releaseCode, string make, string subMake, string model, string catalogue, string group)
+        public ActionResult CatalogueGroupImage(int releaseCode, string make, string subMake, string model, string catalogue, int group)
         {
             var mapName = _repository.GetMapForCatalogueGroup(releaseCode, make, subMake, model, catalogue, group);
             return File(_imageRep.GetImageForCatalogue(releaseCode, make, subMake, model, catalogue, mapName), "image/png");
