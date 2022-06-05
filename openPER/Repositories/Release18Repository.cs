@@ -625,7 +625,10 @@ namespace openPER.Repositories
             // sloppy should pass this down
             var mapName = GetMapForCatalogueGroup(null, null, null, catalogueCode, groupCode);
             var sql = @"select POINT_X-LABEL_X, POINT_Y-LABEL_Y, SGRP_COD from MAP_SGRP M
-                        WHERE M.GRP_COD = $p1 AND MAP_NAME = $p2";
+                        WHERE M.GRP_COD = $p1 AND MAP_NAME = $p2 AND SGRP_COD IN (
+                            select distinct T.SGRP_COD FROM TBDATA T
+                            WHERE CAT_COD = $p3 AND T.GRP_COD = $p1)
+";
             connection.RunSqlAllRows(sql, (reader) =>
             {
                 var m = new SubGroupImageMapEntryModel
@@ -636,7 +639,7 @@ namespace openPER.Repositories
                     SubGroupCode = reader.GetInt32(2)
                 };
                 map.Add(m);
-            },groupCode, mapName);
+            },groupCode, mapName, catalogueCode);
             return map;
         }
 
