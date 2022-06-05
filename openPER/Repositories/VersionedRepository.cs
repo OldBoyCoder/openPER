@@ -181,5 +181,15 @@ namespace openPER.Repositories
                 _ => throw new System.NotImplementedException()
             };
         }
+
+        public string GetMapForCatalogueGroup(int releaseCode, string make, string subMake, string model, string catalogue,
+            string group)
+        {
+            return releaseCode switch
+            {
+                18 => _repository18.GetMapForCatalogueGroup(make, subMake, model, catalogue, group),
+                _ => throw new System.NotImplementedException()
+            };
+        }
     }
 }

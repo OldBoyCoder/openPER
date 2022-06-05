@@ -596,6 +596,28 @@ namespace openPER.Repositories
 
         }
 
+        public string GetMapForCatalogueGroup(string make, string subMake, string model, string catalogue, string group)
+        {
+            var map = "";
+            using var connection = new SqliteConnection($"Data Source={_pathToDb}");
+            var sql = @"SELECT DISTINCT MAP_SGRP
+                            FROM MAP_VET
+                            WHERE CAT_COD = $p1 AND GRP_COD = $p2";
+            connection.RunSqlAllRows(sql, (reader) =>
+            {
+                map = reader.GetString(0);
+            }, catalogue, group);
+            if (map != "") return map;
+            sql = @"SELECT DISTINCT MAP_NAME
+                        FROM MAP_SGRP
+                        WHERE GRP_COD = $p1";
+            connection.RunSqlAllRows(sql, (reader) =>
+            {
+                map = reader.GetString(0);
+            }, group);
+            return map;
+        }
+
         private string GetSubMakeDescription(string makeCode, string subMakeCode, SqliteConnection connection)
         {
             return subMakeCode switch

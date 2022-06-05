@@ -118,5 +118,10 @@ namespace openPER.Repositories
         {
             throw new System.NotImplementedException();
         }
+
+        public string GetMapForCatalogueGroup(string make, string subMake, string model, string catalogue, string group)
+        {
+            throw new System.NotImplementedException();
+        }
     }
 }
