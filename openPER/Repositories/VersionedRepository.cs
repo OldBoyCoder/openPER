@@ -172,5 +172,14 @@ namespace openPER.Repositories
                     break;
             };
         }
+
+        public List<GroupImageMapEntryModel> GetGroupMapEntriesForCatalogue(int releaseCode, string catalogueCode)
+        {
+            return releaseCode switch
+            {
+                18 => _repository18.GetGroupMapEntriesForCatalogue(catalogueCode),
+                _ => throw new System.NotImplementedException()
+            };
+        }
     }
 }

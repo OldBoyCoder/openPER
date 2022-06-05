@@ -23,6 +23,7 @@ namespace openPER.Interfaces
         List<DrawingKeyModel> GetDrawingKeysForSubGroup(string makeCode, string modelCode, string catalogueCode, int groupCode, int subGroupCode);
         string GetMapForCatalogue(string makeCode,string subMakeCode, string modelCode, string catalogueCode);
         void PopulateBreadcrumbDescriptions(BreadcrumbModel breadcrumb, string languageCode);
+        List<GroupImageMapEntryModel> GetGroupMapEntriesForCatalogue(string catalogueCode);
     }
 
 }
