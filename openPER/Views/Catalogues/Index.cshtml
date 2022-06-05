@@ -6,7 +6,7 @@
 @await Html.PartialAsync("_Breadcrumb", Model.Breadcrumb)
 <div class="container">
     <div class="row">
-        <div class="col-4">
+        <div class="col-lg-4 col-md-4 col-sm-12 col-xs-12">
             <table class="table table-sm table-hover">
                 <thead>
                     <tr>
@@ -26,10 +26,10 @@
                 </tbody>
             </table>
         </div>
-        <div class="col-3">
+        <div class="col-lg-3 col-md-4 col-sm-12 col-xs-12">
             <img src="@Url.Action("ModelImage", "Image", new { Model.ReleaseCode, Make = Model.Breadcrumb.MakeCode, SubMake = Model.Breadcrumb.SubMakeCode, Model = Model.Breadcrumb.ModelCode })">
         </div>
-        <div class="col-5">
+        <div class="col-lg-5 col-md-4 col-sm-12 col-xs-12">
             <table class="table table-sm">
                 <thead>
                     <tr>
