@@ -1,27 +1,30 @@
 ﻿@using openPER.ViewModels
 @model ModelsViewModel
-
 @{
     ViewData["Title"] = "Index";
 }
 @await Html.PartialAsync("_Breadcrumb", Model.Breadcrumb)
+<div class="container">
+    <div class="row">
+        <div class="col-4">
+            <table class="table table-sm table-hover">
+                <thead>
+                    <tr>
+                        <th>Model</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var item in Model.Models)
+                    {
+                        <tr>
+                            <td>
+                                @Html.ActionLink(item.Description, "Index", "Catalogues", new { Model.ReleaseCode, item.MakeCode, item.SubMakeCode, ModelCode = item.Code })
+                            </td>
 
-<h1>Index</h1>
-
-<table class="table table-sm">
-
-    <tbody>
-        @foreach (var item in Model.Models)
-        {
-            <tr>
-                <td>
-                    @Html.ActionLink(item.Description, "Index", "Catalogues", new { Model.ReleaseCode, item.MakeCode,item.SubMakeCode, ModelCode=item.Code})
-                </td>
-                <td>
-                    <img src="@Url.Action("ModelImage", "Image", new {Model.ReleaseCode,Make=item.MakeCode,SubMake=item.SubMakeCode, Model=item.Code})">
-                </td>
-
-            </tr>
-        }
-    </tbody>
-</table>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>

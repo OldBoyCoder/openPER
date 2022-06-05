@@ -33,6 +33,10 @@ namespace openPER.Controllers
                 ReleaseCode = releaseCode
             };
             model.Breadcrumb.ReleaseCode = releaseCode;
+            model.Models =
+                _mapper.Map<List<ModelModel>, List<ModelViewModel>>(_rep.GetAllModelsForMake(releaseCode, makeCode,
+                    subMakeCode));
+
 
             return View(model);
         }
