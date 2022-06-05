@@ -5,6 +5,7 @@ namespace openPER.ViewModels
     public class SubSubGroupsViewModel : VersionedViewModel
     {
         public BreadcrumbViewModel Breadcrumb { get; set; }
+        public List<SubGroupViewModel> SubGroups { get; set; }
         public List<SubSubGroupViewModel> SubSubGroups { get; set; }
         public string MakeCode { get; set; }
         public string SubMakeCode { get; set; }

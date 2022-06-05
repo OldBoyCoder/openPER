@@ -29,6 +29,7 @@ namespace openPER.Controllers
             var model = new SubSubGroupsViewModel
             {
                 Breadcrumb = _mapper.Map<BreadcrumbModel, BreadcrumbViewModel>(breadcrumb),
+                SubGroups = _mapper.Map<List<SubGroupModel>, List<SubGroupViewModel>>(_rep.GetSubGroupsForCatalogueGroup(releaseCode, catalogueCode, groupCode, language)),
                 SubSubGroups = _mapper.Map<List<SubSubGroupModel>, List<SubSubGroupViewModel>>(_rep.GetSubSubGroupsForCatalogueGroupSubGroup(releaseCode, catalogueCode, groupCode,subGroupCode, language)),
                 MakeCode = makeCode,
                 SubMakeCode = subMakeCode,  
