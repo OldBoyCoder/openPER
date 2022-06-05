@@ -596,7 +596,7 @@ namespace openPER.Repositories
 
         }
 
-        public string GetMapForCatalogueGroup(string make, string subMake, string model, string catalogue, string group)
+        public string GetMapForCatalogueGroup(string make, string subMake, string model, string catalogue, int group)
         {
             var map = "";
             using var connection = new SqliteConnection($"Data Source={_pathToDb}");
@@ -615,6 +615,28 @@ namespace openPER.Repositories
             {
                 map = reader.GetString(0);
             }, group);
+            return map;
+        }
+
+        public List<SubGroupImageMapEntryModel> GetSubGroupMapEntriesForCatalogueGroup(string catalogueCode, int groupCode)
+        {
+            var map = new List<SubGroupImageMapEntryModel>();
+            using var connection = new SqliteConnection($"Data Source={_pathToDb}");
+            // sloppy should pass this down
+            var mapName = GetMapForCatalogueGroup(null, null, null, catalogueCode, groupCode);
+            var sql = @"select POINT_X-LABEL_X, POINT_Y-LABEL_Y, SGRP_COD from MAP_SGRP M
+                        WHERE M.GRP_COD = $p1 AND MAP_NAME = $p2";
+            connection.RunSqlAllRows(sql, (reader) =>
+            {
+                var m = new SubGroupImageMapEntryModel
+                {
+                    X = reader.GetInt32(0),
+                    Y = reader.GetInt32(1),
+                    GroupCode = groupCode,
+                    SubGroupCode = reader.GetInt32(2)
+                };
+                map.Add(m);
+            },groupCode, mapName);
             return map;
         }
 
