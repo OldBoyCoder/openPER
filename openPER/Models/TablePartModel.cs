@@ -16,5 +16,6 @@ namespace openPER.Models
         public string Sequence { get; set; }
         public List<ModificationModel> Modifications { get; set; }
         public string Compatibility { get; internal set; }
+        public bool IsAComponent { get; set; }
     }
 }
