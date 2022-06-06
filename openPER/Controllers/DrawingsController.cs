@@ -48,12 +48,13 @@ namespace openPER.Controllers
                 _rep.GetTable(drawing.ReleaseCode, drawing.CatalogueCode, drawing.GroupCode, drawing.SubGroupCode,
                     drawing.SubSubGroupCode, drawing.DrawingNumber, language));
             model.TableData.MakeCode = makeCode;
+            model.TableData.SubMakeCode = subMakeCode;
             model.TableData.ModelCode = modelCode;
 
             return View(model);
         }
-        [Route("Detail/{ReleaseCode}/{MakeCode}/{ModelCode}/{CatalogueCode}/{DrawingNumber}")]
-        public IActionResult Detail(int releaseCode, string makeCode, string modelCode, string catalogueCode, int drawingNumber)
+        [Route("Detail/{ReleaseCode}/{MakeCode}/{SubMakeCode}/{ModelCode}/{CatalogueCode}/{DrawingNumber}")]
+        public IActionResult Detail(int releaseCode, string makeCode,string subMakeCode, string modelCode, string catalogueCode, int drawingNumber)
         {
             // Standard prologue
             var language = Helpers.LanguageSupport.SetCultureBasedOnCookie(HttpContext);
@@ -73,6 +74,7 @@ namespace openPER.Controllers
                 _rep.GetTable(drawing.ReleaseCode, drawing.CatalogueCode, drawing.GroupCode, drawing.SubGroupCode,
                     drawing.SubSubGroupCode, drawing.DrawingNumber, language));
             model.TableData.MakeCode = makeCode;
+            model.TableData.SubMakeCode = subMakeCode;
             model.TableData.ModelCode = modelCode;
 
             return View(model);

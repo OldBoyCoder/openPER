@@ -40,27 +40,79 @@
             <strong>Subcategory selection</strong>
             <p>Select a subcategory from the side menu or directly from the map.</p>
             <table class="table table-sm">
+                <thead><tr><th>Subcategory</th><th>Compatibility</th><th>Code</th><th>Description</th></tr></thead>
                 @foreach (var group in Model.SubSubGroups)
                 {
-                    <tr>
-                        <td>
-                            @Html.ActionLink(group.Code.ToString(), "Detail", "Drawings", new {Model.ReleaseCode,Model.MakeCode,Model.SubMakeCode, Model.ModelCode, Model.CatalogueCode, Model.GroupCode, Model.SubGroupCode, SubSubGroupCode=group.Code, DrawingNumber=1})
-                        </td>
-                        <td>
-                            <ul class="list-group">
-                                @foreach (var item in group.Narrative)
-                                {
-                                    <li class="list-group-item">
-                                        @item
-                                    </li>
-                                }
-                            </ul>
-                        </td>
-                    </tr>
+                    @:<tr>
+                <td>
+                    @Html.ActionLink($"{Model.GroupCode:000}{Model.SubGroupCode:00}/{group.Code:00}", "Detail", "Drawings", new {Model.ReleaseCode,Model.MakeCode,Model.SubMakeCode, Model.ModelCode, Model.CatalogueCode, Model.GroupCode, Model.SubGroupCode, SubSubGroupCode=group.Code, DrawingNumber=1})
+                </td>
+                <td>
+                    @string.Join('+', group.Variations.Select(x=>x.VariationType+x.VariationCode).Concat(group.Options.Select(x=>x.OptionType+x.OptionCode)))
+                </td>
+                    var first = true;
+                    @foreach (var x in group.Variations)
+                    {
+                        if (!first)
+                        {
+                            @:<tr>
+                            @:<td>&nbsp;</td>
+                            @:<td>&nbsp;</td>
+                            @:<td>@x.VariationType @x.VariationCode</td>
+                            @:<td>@x.VariationDescription</td>
+                        }
+                        else
+                        {
+                            @:<td>@x.VariationType @x.VariationCode</td>
+                            @:<td>@x.VariationDescription</td>
+                            first = false;
+                        }
+                        @:</tr>
+                    }
+                    @foreach (var x in group.Options)
+                    {
+                        if (!first)
+                        {
+                            @:<tr>
+                            @:<td>&nbsp;</td>
+                            @:<td>&nbsp;</td>
+                            @:<td>@x.OptionType @x.OptionCode</td>
+                            @:<td>@x.OptionDescription</td>
+                        }
+                        else
+                        {
+                            @:<td>@x.OptionType @x.OptionCode</td>
+                            @:<td>@x.OptionDescription</td>
+                            first = false;
+                        }
+                        @:</tr>
+                    }
+                    @foreach (var x in group.Modifications)
+                    {
+                        if (!first)
+                        {
+                            @:<tr>
+                            @:<td>&nbsp;</td>
+                            @:<td>&nbsp;</td>
+                            @:<td>@x.Type @x.Code</td>
+                            @:<td>@x.Description</td>
+                        }
+                        else
+                        {
+                            @:<td>@x.Type @x.Code</td>
+                            @:<td>@x.Description</td>
+                            first = false;
+                        }
+                        @:</tr>
+                    }
+                    if (first)
+                    {
+                        @:</tr>
+                    }
                 }
                 <tr><td>@Html.ActionLink("All drawings", "Index", "Drawings", new {Model.ReleaseCode,Model.MakeCode, Model.ModelCode, Model.CatalogueCode,Model.GroupCode,Model.SubGroupCode, DrawingNumber=1})</td></tr>
             </table>
-            
+
         </div>
     </div>
 </div>
