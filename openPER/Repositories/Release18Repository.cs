@@ -119,10 +119,24 @@ namespace openPER.Repositories
             foreach (var part in parts)
             {
                 part.Modifications = GetPartModifications(part, catalogueCode, groupCode, subGroupCode, sgsCode, drawingNumber, languageCode, connection);
+                part.IsAComponent = IsPartAComponent(part, connection);
             }
             return parts;
 
         }
+
+        private bool IsPartAComponent(TablePartModel part, SqliteConnection connection)
+        {
+            var rc = false;
+            var sql = @"SELECT DISTINCT CPLX_PRT_COD FROM CPXDATA WHERE CPLX_PRT_COD = $p1";
+            connection.RunSqlFirstRowOnly(sql, (reader) =>
+            {
+                rc= true;
+
+            }, part.PartNumber);
+            return rc;
+        }
+
         private List<ModificationModel> GetPartModifications(TablePartModel part, string catalogueCode, int groupCode, int subGroupCode, int sgsCode, int drawingNumber, string languageCode, SqliteConnection connection)
         {
             var modifications = new List<ModificationModel>();
