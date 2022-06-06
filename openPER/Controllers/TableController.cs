@@ -1,14 +1,19 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using AutoMapper;
+using Microsoft.AspNetCore.Mvc;
 using openPER.Interfaces;
+using openPER.Models;
+using openPER.ViewModels;
 
 namespace openPER.Controllers
 {
     public class TableController : Controller
     {
         private readonly IVersionedRepository _rep;
-        public TableController(IVersionedRepository repository)
+        private readonly IMapper _mapper;
+        public TableController(IVersionedRepository repository, IMapper mapper)
         {
             _rep = repository;
+            _mapper = mapper;   
         }
 
         // GET: TableController/Details/5
@@ -16,6 +21,8 @@ namespace openPER.Controllers
         public ActionResult Details(int releaseCode,string makeCode, string modelCode, string catalogueCode, int groupCode, int subGroupCode, int subSubGroupCode, int drawing)
         {
             var language = Helpers.LanguageSupport.SetCultureBasedOnCookie(HttpContext);
+            ControllerHelpers.ResetReleaseCookie(HttpContext, releaseCode);
+
             var x = _rep.GetTable(releaseCode, catalogueCode, groupCode, subGroupCode, subSubGroupCode, drawing, language);
             x.CatalogueCode = catalogueCode;
             x.GroupCode = groupCode;
@@ -24,6 +31,7 @@ namespace openPER.Controllers
             // Get Make code properly
             x.MakeCode = makeCode;
             x.ModelCode = modelCode;
+            var vm = _mapper.Map<TableModel, TableViewModel>(x);    
             return View(x);
         }
         //[Route("Table/Catalogues/{Make}/{Model}")]
