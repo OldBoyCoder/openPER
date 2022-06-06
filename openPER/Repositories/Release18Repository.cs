@@ -44,7 +44,7 @@ namespace openPER.Repositories
             t.SgsDesc = GetSubGroupDescription(groupCode, subGroupCode, languageCode, connection);
             t.Parts = GetTableParts(catalogueCode, groupCode, subGroupCode, sgsCode, drawingNumber, languageCode, connection);
             t.DrawingNumbers = GetDrawingNumbers(catalogueCode, groupCode, subGroupCode, sgsCode, connection);
-            t.Narratives = GetSgsNarrative(catalogueCode, groupCode, subGroupCode, sgsCode, languageCode);
+           // t.Narratives = GetSgsNarrative(catalogueCode, groupCode, subGroupCode, sgsCode, languageCode);
             t.CurrentDrawing = drawingNumber;
             return t;
         }
@@ -370,7 +370,9 @@ namespace openPER.Repositories
                     Code = reader.GetInt32(0),
 
                 };
-                m.Narrative = GetSgsNarrative(catalogueCode, groupCode, subGroupCode, m.Code, languageCode);
+                m.Modifications = AddSgsModifications(catalogueCode, groupCode, subGroupCode, m.Code, languageCode, connection);
+                m.Options = AddSgsOptions(catalogueCode, groupCode, subGroupCode, m.Code, languageCode, connection);
+                m.Variations = AddSgsVariations(catalogueCode, groupCode, subGroupCode, m.Code, languageCode, connection);
                 rc.Add(m);
             }, catalogueCode, groupCode, subGroupCode);
             return rc;
@@ -403,6 +405,63 @@ namespace openPER.Repositories
             {
                 narratives.Add(reader.GetString(0) + reader.GetString(1) + " " + reader.GetString(2));
             }, catalogueCode, groupCode, subGroupCode, sgsCode, languageCode);
+        }
+        private List<ModificationModel> AddSgsModifications(string catalogueCode, int groupCode, int subGroupCode, int sgsCode, string languageCode, SqliteConnection connection)
+        {
+            var sql = @"select SGSMOD_CD,S.MDF_COD,MDF_DSC from SGS_MOD S
+                        JOIN MODIF_DSC M ON M.MDF_COD = S.MDF_COD 
+                        where S.CAT_COD = $p1 AND GRP_COD = $p2 AND SGRP_COD = $p3 AND SGS_COD = $p4 AND LNG_COD = $p5
+                        ";
+            var rc = new List<ModificationModel>();
+            connection.RunSqlAllRows(sql, (reader) =>
+            {
+                var mod = new ModificationModel
+                {
+                    Type = reader.GetString(0),
+                    Code = reader.GetInt32(1),
+                    Description = reader.GetString(2)
+                };
+                rc.Add(mod);
+            }, catalogueCode, groupCode, subGroupCode, sgsCode, languageCode);
+            return rc;
+        }
+        private List<OptionModel> AddSgsOptions(string catalogueCode, int groupCode, int subGroupCode, int sgsCode, string languageCode, SqliteConnection connection)
+        {
+            var sql = @"select O.OPTK_TYPE,O.OPTK_COD,OPTK_DSC from SGS_OPT S
+                        JOIN OPTKEYS_DSC O ON O.OPTK_TYPE = S.OPTK_TYPE AND O.OPTK_COD = S.OPTK_COD 
+                        where S.CAT_COD = $p1 AND GRP_COD = $p2 AND SGRP_COD = $p3 AND SGS_COD = $p4 AND LNG_COD = $p5
+                        ";
+            var rc = new List<OptionModel>();
+            connection.RunSqlAllRows(sql, (reader) =>
+            {
+                var mod = new OptionModel()
+                {
+                    OptionType = reader.GetString(0),
+                    OptionCode = reader.GetString(1),
+                    OptionDescription = reader.GetString(2)
+                };
+                rc.Add(mod);
+            }, catalogueCode, groupCode, subGroupCode, sgsCode, languageCode);
+            return rc;
+        }
+        private List<VariationModel> AddSgsVariations(string catalogueCode, int groupCode, int subGroupCode, int sgsCode, string languageCode, SqliteConnection connection)
+        {
+            var sql = @"select V.VMK_TYPE,V.VMK_COD,VMK_DSC from SGS_VAL S
+                        JOIN VMK_DSC V ON S.VMK_TYPE = V.VMK_TYPE AND S.VMK_COD = V.VMK_COD AND S.CAT_COD = V.CAT_COD
+                        where S.CAT_COD = $p1 AND GRP_COD = $p2 AND SGRP_COD = $p3 AND SGS_COD = $p4 AND LNG_COD = $p5
+                        ";
+            var rc = new List<VariationModel>();
+            connection.RunSqlAllRows(sql, (reader) =>
+            {
+                var mod = new VariationModel()
+                {
+                    VariationType = reader.GetString(0),
+                    VariationCode = reader.GetString(1),
+                    VariationDescription = reader.GetString(2)
+                };
+                rc.Add(mod);
+            }, catalogueCode, groupCode, subGroupCode, sgsCode, languageCode);
+            return rc;
         }
 
         public MvsModel GetMvsDetails(string mvsCode, string mvsVersion, string mvsSeries, string colourCode, string languageCode)

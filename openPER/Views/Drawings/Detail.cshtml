@@ -40,7 +40,12 @@
                             </td>
                             <td>@Html.DisplayFor(model => item.Quantity)</td>
                             <td>@Html.DisplayFor(model => item.Notes)</td>
-                            <td>@item.IsAComponent</td>
+                            <td>
+                                @if (item.IsAComponent)
+                                {
+                                    @Html.ActionLink($"Go", "Detail", "Cliche", new { Model.ReleaseCode, Model.TableData.MakeCode, Model.TableData.SubMakeCode, Model.TableData.ModelCode, Model.TableData.CatalogueCode, Model.TableData.GroupCode, Model.TableData.SubGroupCode, SubSubGroupCode = Model.TableData.SubSubGroupCode, DrawingNumber = Model.TableData.CurrentDrawing, ClichePartNumber=item.PartNumber})
+                                }
+                            </td>
 
                         </tr>
                     }
