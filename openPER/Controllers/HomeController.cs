@@ -7,6 +7,7 @@ using openPER.ViewModels;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Threading;
+using Microsoft.AspNetCore.Http;
 
 namespace openPER.Controllers
 {
@@ -60,6 +61,18 @@ namespace openPER.Controllers
         {
             return View(new ErrorViewModel { RequestId = Activity.Current?.Id ?? HttpContext.TraceIdentifier });
         }
+        [HttpPost]
+        public IActionResult SetLanguage(SessionOptionsViewModel model)
+        {
+            HttpContext.Response.Cookies.Append("PreferredLanguage", model.CurrentLanguage);
+            //HttpContext.Response.Cookies.Append("Release", model.CurrentVersion.ToString());
+            var newCulture = Helpers.LanguageSupport.ConvertLanguageCodeToCulture(model.CurrentLanguage);
+            Thread.CurrentThread.CurrentCulture = newCulture;
+            Thread.CurrentThread.CurrentUICulture = newCulture;
+
+            return Redirect(Request.GetTypedHeaders().Referer.ToString());
+        }
+
         [HttpPost]
         public IActionResult Index(SessionOptionsViewModel model)
         {

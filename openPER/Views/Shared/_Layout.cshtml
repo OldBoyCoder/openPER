@@ -21,14 +21,20 @@
                 <div class="navbar-collapse collapse d-sm-inline-flex justify-content-between">
                     <ul class="navbar-nav flex-grow-1">
                         <li class="nav-item">
-                            <a class="nav-link text-dark" asp-area="" asp-controller="Home" asp-action="Index">Home</a>
+                            <!-- TODO don't hardcode release -->'
+                            @Html.ActionLink("Makes", "Index", "Makes", new { ReleaseCode = 18 }, new { @class = "nav-link side-menu-item" })
                         </li>
                         <li class="nav-item">
-                            <a class="nav-link text-dark" asp-area="" asp-controller="Home" asp-action="Privacy">Privacy</a>
+                            <vc:language-choice-widget></vc:language-choice-widget>
+                        </li>
+                        <li class="nav-item">
+                            <div class="dropdown">
+                                <button class="btn-sm btn-secondary dropdown-toggle" type="button" id="searchMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Search</button>
+                                <vc:search-widget></vc:search-widget>
+                            </div>
                         </li>
                     </ul>
                 </div>
-                <vc:search-widget></vc:search-widget>
             </div>
         </nav>
     </header>
