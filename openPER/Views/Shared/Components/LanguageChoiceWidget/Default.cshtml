@@ -1,8 +1,8 @@
 ﻿@using openPER.ViewModels
 @model SessionOptionsViewModel
-@using(Html.BeginForm("Index", "Home", FormMethod.Post))
+@using(Html.BeginForm("SetLanguage", "Home", FormMethod.Post))
 {
 @Html.DropDownListFor(m=>m.CurrentLanguage, new SelectList(Model.Languages, "Code", "Description"))
-<button type="submit" class="btn btn-info">Search</button>
+<button type="submit" class="btn-sm btn-secondary">Go</button>
 
 }

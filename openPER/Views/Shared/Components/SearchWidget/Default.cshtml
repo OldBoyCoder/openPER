@@ -1,40 +1,43 @@
 ﻿@using openPER.ViewModels
 @using System.Linq
 @model SearchViewModel
-<div>
-    <div class="input-group">
-        @using (Html.BeginForm("SearchByChassisAndVin", "VinSearch", FormMethod.Get))
-        {
-            <div class="input-group mb-3">
-                @Html.DropDownListFor(m=>m.SelectedModel, new SelectList(Model.VinSearch.Models.OrderBy(x=>x.Description), "Code", "Description"), new {@class="form-select"})
-                @Html.TextBoxFor(m=>m.ChassisNumber, new {@class="form-control", type="search", placeholder="Chassis No."})
-                <span class="input-group-append">
-                    <button type="submit" class="btn btn-outline-primary"><i class="fa fa-search"></i></button>
-                </span>
-            </div>
-        }
-    </div>
-    <div class="input-group">
-        @using (Html.BeginForm("SearchByFullVin", "VinSearch", FormMethod.Get, new { @class = "form-horizontal", role = "form" }))
-        {
-            <div class="input-group mb-3">
-                @Html.TextBoxFor(m=>m.FullVin, new {@class="form-control", type="search", placeholder="Full VIN"})
-                <span class="input-group-append">
-                    <button type="submit" class="btn btn-outline-primary"><i class="fa fa-search"></i></button>
-                </span>
-            </div>
+<div class="dropdown-menu">
+        <div class="form-group">
+            @using (Html.BeginForm("SearchByChassisAndVin", "VinSearch", FormMethod.Get))
+            {
+                <div class="input-group m-1">
+                    <label for="searchByModel">Search by Model and chassis</label>
+                    @Html.DropDownListFor(m => m.SelectedModel, new SelectList(Model.VinSearch.Models.OrderBy(x => x.Description), "Code", "Description"), new { @class = "form-select-sm", @id="searchByModel" })
+                    @Html.TextBoxFor(m => m.ChassisNumber, new { @class = "form-control-sm", type = "search", placeholder = "Chassis No." })
+                    <span class="input-group-append">
+                        <button type="submit" class="btn-sm btn-outline-primary"><i class="fa fa-search"></i></button>
+                    </span>
+                </div>
+            }
+        </div>
+        <div class="form-group">
+            @using (Html.BeginForm("SearchByFullVin", "VinSearch", FormMethod.Get, new { @class = "form-horizontal", role = "form" }))
+            {
+                <div class="input-group m-1">
+                    <label for="searchByVIN">Search by full VIN</label>
+                    @Html.TextBoxFor(m=>m.FullVin, new {@class="form-control-sm", type="search", placeholder="Full VIN", @id="searchByVIN"})
+                    <span class="input-group-append">
+                        <button type="submit" class="btn-sm btn-outline-primary"><i class="fa fa-search"></i></button>
+                    </span>
+                </div>
 
-        }
-    </div>
-    <div class="input-group">
-        @using (Html.BeginForm("SearchResults", "Part", FormMethod.Get))
-        {
-            <div class="input-group mb-3">
-                @Html.TextBoxFor(m=>m.PartNumber, new {@class="form-control", type="search", placeholder="Part number"})
-                <span class="input-group-append">
-                    <button type="submit" class="btn btn-outline-primary"><i class="fa fa-search"></i></button>
-                </span>
-            </div>
-        }
-    </div>
+            }
+        </div>
+        <div class="form-group">
+            @using (Html.BeginForm("SearchResults", "Part", FormMethod.Get))
+            {
+                <div class="input-group m-1">
+                    <label for="searchByPart">Search for part number</label>
+                    @Html.TextBoxFor(m=>m.PartNumber, new {@class="form-control-sm", type="search", placeholder="Part number", @id="searchByPart"})
+                    <span class="input-group-append">
+                        <button type="submit" class="btn-sm btn-outline-primary"><i class="fa fa-search"></i></button>
+                    </span>
+                </div>
+            }
+        </div>
 </div>

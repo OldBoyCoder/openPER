@@ -7,16 +7,17 @@ namespace openPER.Views.Shared.Components.LanguageChoiceWidget
 
     public class LanguageChoiceWidgetViewComponent:ViewComponent
     {
-        readonly IRepository _rep;
-        public LanguageChoiceWidgetViewComponent(IRepository rep)
+        readonly IVersionedRepository _rep;
+        public LanguageChoiceWidgetViewComponent(IVersionedRepository rep)
         {
             _rep = rep;
         }
         public IViewComponentResult Invoke()
         {
+            // TODO work out what to do about repositor release number
             var model = new SessionOptionsViewModel
             {
-                Languages = _rep.GetAllLanguages()
+                Languages = _rep.GetAllLanguages(18)
             };
             if (HttpContext.Request.Cookies.ContainsKey("PreferredLanguage"))
             {
