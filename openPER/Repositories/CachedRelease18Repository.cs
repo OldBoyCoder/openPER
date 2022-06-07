@@ -250,6 +250,7 @@ namespace openPER.Repositories
         public List<SubSubGroupModel> GetSubSubGroupsForCatalogueGroupSubGroup(string catalogueCode, int groupCode, int subGroupCode, string languageCode)
         {
             var cacheKeys = new { type = "GetSubSubGroupsForCatalogueGroupSubGroup", k1 = catalogueCode, k2 = groupCode, k3 = languageCode };
+            // TODO fix caching for this method
 //            if (!_cache.TryGetValue(cacheKeys, out List<SubSubGroupModel> rc))
 //            {
                 var rc = _rep.GetSubSubGroupsForCatalogueGroupSubGroup(catalogueCode, groupCode, subGroupCode, languageCode);
