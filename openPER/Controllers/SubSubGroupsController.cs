@@ -1,5 +1,6 @@
 ﻿using AutoMapper;
 using System.Collections.Generic;
+using System.ComponentModel;
 using openPER.Interfaces;
 using openPER.ViewModels;
 using openPER.Models;
@@ -37,7 +38,11 @@ namespace openPER.Controllers
                 CatalogueCode = catalogueCode,
                 GroupCode = groupCode,
                 SubGroupCode = subGroupCode,
-                ReleaseCode = releaseCode
+                ReleaseCode = releaseCode,
+                AllModels = _mapper.Map<List<ModelModel>, List<ModelViewModel>>(_rep.GetAllModelsForMake(releaseCode, makeCode, subMakeCode)),
+                AllCatalogues = _mapper.Map<List<CatalogueModel>, List<CatalogueViewModel>>(_rep.GetAllCatalogues(releaseCode, makeCode, subMakeCode, modelCode, language)),
+                AllGroups = _mapper.Map<List<GroupModel>, List<GroupViewModel>>(_rep.GetGroupsForCatalogue(releaseCode, catalogueCode, language)),
+                AllSubGroups = _mapper.Map<List<SubGroupModel>, List<SubGroupViewModel>>(_rep.GetSubGroupsForCatalogueGroup(releaseCode, catalogueCode,groupCode, language))
 
             };
             model.Breadcrumb.ReleaseCode = releaseCode;
