@@ -56,14 +56,5 @@ namespace openPER.Controllers
             var x = _imageRep.GetThumbnailForDrawing(18, make, model, catalogue, group, subgroup, subSubGroup, drawing);
             return File(x, "image/png");
         }
-        //{
-        //    // TODO get rid of hard coded file name
-        //    var fileName = System.IO.Path.Combine(@"C:\ePer installs\Release 18\SP.NA.00900.FCTLR", $"{make}{catalogue}.na");
-        //    var imageName = $"{group}{subgroup.ToString("00")}{sgsCode.ToString("00")}{drawing.ToString("000")}";
-
-        //    return File(GetImageFromNaFile(fileName, imageName, false), "image/png");
-        //}
-
-
     }
 }
