@@ -29,7 +29,6 @@ namespace openPER.Controllers
 
             var model = new SubSubGroupsViewModel
             {
-                Breadcrumb = _mapper.Map<BreadcrumbModel, BreadcrumbViewModel>(breadcrumb),
                 SubGroups = _mapper.Map<List<SubGroupModel>, List<SubGroupViewModel>>(_rep.GetSubGroupsForCatalogueGroup(releaseCode, catalogueCode, groupCode, language)),
                 SubSubGroups = _mapper.Map<List<SubSubGroupModel>, List<SubSubGroupViewModel>>(_rep.GetSubSubGroupsForCatalogueGroupSubGroup(releaseCode, catalogueCode, groupCode,subGroupCode, language)),
                 MakeCode = makeCode,
@@ -39,13 +38,27 @@ namespace openPER.Controllers
                 GroupCode = groupCode,
                 SubGroupCode = subGroupCode,
                 ReleaseCode = releaseCode,
-                AllModels = _mapper.Map<List<ModelModel>, List<ModelViewModel>>(_rep.GetAllModelsForMake(releaseCode, makeCode, subMakeCode)),
-                AllCatalogues = _mapper.Map<List<CatalogueModel>, List<CatalogueViewModel>>(_rep.GetAllCatalogues(releaseCode, makeCode, subMakeCode, modelCode, language)),
-                AllGroups = _mapper.Map<List<GroupModel>, List<GroupViewModel>>(_rep.GetGroupsForCatalogue(releaseCode, catalogueCode, language)),
-                AllSubGroups = _mapper.Map<List<SubGroupModel>, List<SubGroupViewModel>>(_rep.GetSubGroupsForCatalogueGroup(releaseCode, catalogueCode,groupCode, language))
-
+                Navigation = new NavigationViewModel
+                {
+                    Breadcrumb = _mapper.Map<BreadcrumbModel, BreadcrumbViewModel>(breadcrumb),
+                    SideMenuItems = new SideMenuItemsViewModel
+                    {
+                        AllMakes = _mapper.Map<List<MakeModel>, List<MakeViewModel>>(_rep.GetAllMakes(releaseCode)),
+                        AllModels = _mapper.Map<List<ModelModel>, List<ModelViewModel>>(_rep.GetAllModelsForMake(releaseCode, makeCode,
+                            subMakeCode)),
+                        AllCatalogues = _mapper.Map<List<CatalogueModel>, List<CatalogueViewModel>>(
+                            _rep.GetAllCatalogues(releaseCode, makeCode, subMakeCode, modelCode, language)),
+                        AllGroups = _mapper.Map<List<GroupModel>, List<GroupViewModel>>(
+                            _rep.GetGroupsForCatalogue(releaseCode, catalogueCode, language)),
+                        AllSubGroups = _mapper.Map<List<SubGroupModel>, List<SubGroupViewModel>>(
+                            _rep.GetSubGroupsForCatalogueGroup(releaseCode, catalogueCode, groupCode, language)),
+                        AllSubSubGroups = _mapper.Map<List<SubSubGroupModel>, List<SubSubGroupViewModel>>(
+                            _rep.GetSubSubGroupsForCatalogueGroupSubGroup(releaseCode, catalogueCode, groupCode,subGroupCode, language))
+                    }
+                }
             };
-            model.Breadcrumb.ReleaseCode = releaseCode;
+
+            model.Navigation.Breadcrumb.ReleaseCode = releaseCode;
 
             return View(model);
         }

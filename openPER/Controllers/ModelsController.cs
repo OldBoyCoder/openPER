@@ -29,12 +29,22 @@ namespace openPER.Controllers
 
             var model = new ModelsViewModel
             {
-                Breadcrumb = _mapper.Map<BreadcrumbModel, BreadcrumbViewModel>(breadcrumb),
                 Models = _mapper.Map<List<ModelModel>, List<ModelViewModel>>(_rep.GetAllModelsForMake(releaseCode,makeCode, subMakeCode)),
                 ReleaseCode = releaseCode,
-                MakeCode = makeCode
+                MakeCode = makeCode,
+                Navigation = new NavigationViewModel
+                {
+                    Breadcrumb = _mapper.Map<BreadcrumbModel, BreadcrumbViewModel>(breadcrumb),
+                    SideMenuItems = new SideMenuItemsViewModel
+                    {
+                        AllMakes = _mapper.Map<List<MakeModel>, List<MakeViewModel>>(_rep.GetAllMakes(releaseCode)),
+                        AllModels = _mapper.Map<List<ModelModel>, List<ModelViewModel>>(_rep.GetAllModelsForMake(releaseCode, makeCode,
+                            subMakeCode))
+                    }
+                }
+
             };
-            model.Breadcrumb.ReleaseCode = releaseCode;
+            model.Navigation.Breadcrumb.ReleaseCode = releaseCode;
 
             return View(model);
 

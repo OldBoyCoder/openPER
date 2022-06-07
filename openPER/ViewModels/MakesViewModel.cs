@@ -4,5 +4,7 @@ namespace openPER.ViewModels
     public class MakesViewModel : VersionedViewModel
     {
         public List<MakeViewModel> Makes { get; set; }
+        public NavigationViewModel Navigation { get; set; }
+
     }
 }

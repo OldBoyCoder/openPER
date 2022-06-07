@@ -1,21 +1,25 @@
 ﻿@using openPER.ViewModels
 @model MakesViewModel
-
 @{
     ViewData["Title"] = "Index";
 }
-
-<h1>Makes</h1>
-
-<div>
-    <h4>MakesViewModel</h4>
-    <table class="table">
-    @foreach (var make in Model.Makes)
-    {
-        <tr><td>@make.Code</td><td>
-@Html.ActionLink(make.Description, "Index", "Models", new { Model.ReleaseCode, MakeCode=make.Code, SubMakeCode=make.SubCode})</td></tr>
-    }
-    </table>
-</div>
-<div>
+@await Html.PartialAsync("_Breadcrumb", Model.Navigation.Breadcrumb)
+<div class="container">
+    <div class="row">
+        <div class="col-lg-4 col-md-4 col-sm-12 col-xs-12">
+            @await Html.PartialAsync("_SidebarMenu", Model.Navigation)
+        </div>
+        <div class="col-lg-8 col-md-8 col-sm-12 col-xs-12">
+            <table class="table table-sm">
+                @foreach (var make in Model.Makes)
+                {
+                    <tr>
+                        <td>
+                            @Html.ActionLink(make.Description, "Index", "Models", new { Model.ReleaseCode, MakeCode=make.Code, SubMakeCode=make.SubCode})
+                        </td>
+                    </tr>
+                }
+            </table>
+        </div>
+    </div>
 </div>
