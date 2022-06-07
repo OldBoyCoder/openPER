@@ -52,10 +52,10 @@ namespace openPER.Repositories
         {
             var rc = new List<MakeModel>
             {
-                new ("F","F", "Fiat"),
-                new ("F","T", "Fiat commercial"),
-                new ("L","L", "Lancia"),
-                new ("R","R", "Alfa Romeo")
+                new ("F","F", "FIAT"),
+                new ("F","T", "FIAT COMMERCIAL"),
+                new ("L","L", "LANCIA"),
+                new ("R","R", "ALFA ROMEO")
             };
             //using var connection = new SqliteConnection($"Data Source={_pathToDb}");
             //var sql = @"SELECT MK_COD, MK_DSC FROM MAKES ORDER BY MK_DSC ";
@@ -720,10 +720,10 @@ namespace openPER.Repositories
         {
             return subMakeCode switch
             {
-                "F" => "Fiat",
-                "T" => "Fiat commercial",
-                "R" => "Alfa Romeo",
-                "L" => "Lancia",
+                "F" => "FIAT",
+                "T" => "FIAT COMMERCIAL",
+                "R" => "ALFA ROMEO",
+                "L" => "LANCIA",
                 _ => ""
             };
         }

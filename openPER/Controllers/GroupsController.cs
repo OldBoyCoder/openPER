@@ -30,16 +30,30 @@ namespace openPER.Controllers
 
             var model = new GroupsViewModel
             {
-                Breadcrumb = _mapper.Map<BreadcrumbModel, BreadcrumbViewModel>(breadcrumb),
                 Groups = _mapper.Map<List<GroupModel>, List<GroupViewModel>>(_rep.GetGroupsForCatalogue(releaseCode, catalogueCode, language)),
                 MapEntries = _mapper.Map<List<GroupImageMapEntryModel>, List<GroupImageMapEntryViewModel>>(_rep.GetGroupMapEntriesForCatalogue(releaseCode, catalogueCode)),
                 ReleaseCode = releaseCode,
                 MakeCode = makeCode,
                 ModelCode = modelCode,  
                 SubMakeCode = subMakeCode,
-                CatalogueCode = catalogueCode
+                CatalogueCode = catalogueCode,
+                Navigation = new NavigationViewModel
+                {
+                    Breadcrumb = _mapper.Map<BreadcrumbModel, BreadcrumbViewModel>(breadcrumb),
+                    SideMenuItems = new SideMenuItemsViewModel
+                    {
+                        AllMakes = _mapper.Map<List<MakeModel>, List<MakeViewModel>>(_rep.GetAllMakes(releaseCode)),
+                        AllModels = _mapper.Map<List<ModelModel>, List<ModelViewModel>>(_rep.GetAllModelsForMake(releaseCode, makeCode,
+                            subMakeCode)),
+                        AllCatalogues = _mapper.Map<List<CatalogueModel>, List<CatalogueViewModel>>(
+                            _rep.GetAllCatalogues(releaseCode, makeCode, subMakeCode, modelCode, language)),
+                        AllGroups = _mapper.Map<List<GroupModel>, List<GroupViewModel>>(
+                            _rep.GetGroupsForCatalogue(releaseCode, catalogueCode, language))
+                    }
+                }
+
             };
-            model.Breadcrumb.ReleaseCode = releaseCode;
+            model.Navigation.Breadcrumb.ReleaseCode = releaseCode;
 
             return View(model);
         }

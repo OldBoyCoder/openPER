@@ -23,16 +23,28 @@ namespace openPER.Controllers
             // Standard prologue
             var language = Helpers.LanguageSupport.SetCultureBasedOnCookie(HttpContext);
             ControllerHelpers.ResetReleaseCookie(HttpContext, releaseCode);
-            var breadcrumb = new BreadcrumbModel { MakeCode = makeCode, SubMakeCode = subMakeCode, ModelCode = modelCode};
+            var breadcrumb = new BreadcrumbModel { MakeCode = makeCode, SubMakeCode = subMakeCode, ModelCode = modelCode };
             _rep.PopulateBreadcrumbDescriptions(releaseCode, breadcrumb, language);
 
             var model = new CataloguesViewModel
             {
-                Breadcrumb = _mapper.Map<BreadcrumbModel, BreadcrumbViewModel>(breadcrumb),
-                Catalogues = _mapper.Map<List<CatalogueModel>, List<CatalogueViewModel>>(_rep.GetAllCatalogues(releaseCode, makeCode,subMakeCode, modelCode, language)),
-                ReleaseCode = releaseCode
+                Catalogues = _mapper.Map<List<CatalogueModel>, List<CatalogueViewModel>>(_rep.GetAllCatalogues(releaseCode, makeCode, subMakeCode, modelCode, language)),
+                ReleaseCode = releaseCode,
+                Navigation = new NavigationViewModel
+                {
+                    Breadcrumb = _mapper.Map<BreadcrumbModel, BreadcrumbViewModel>(breadcrumb),
+                    SideMenuItems = new SideMenuItemsViewModel
+                    {
+                        AllMakes = _mapper.Map<List<MakeModel>, List<MakeViewModel>>(_rep.GetAllMakes(releaseCode)),
+                        AllModels = _mapper.Map<List<ModelModel>, List<ModelViewModel>>(_rep.GetAllModelsForMake(releaseCode, makeCode,
+                            subMakeCode)),
+                        AllCatalogues = _mapper.Map<List<CatalogueModel>, List<CatalogueViewModel>>(
+                            _rep.GetAllCatalogues(releaseCode, makeCode, subMakeCode, modelCode, language))
+                    }
+                }
+
             };
-            model.Breadcrumb.ReleaseCode = releaseCode;
+            model.Navigation.Breadcrumb.ReleaseCode = releaseCode;
             model.Models =
                 _mapper.Map<List<ModelModel>, List<ModelViewModel>>(_rep.GetAllModelsForMake(releaseCode, makeCode,
                     subMakeCode));

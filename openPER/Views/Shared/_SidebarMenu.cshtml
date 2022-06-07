@@ -1,0 +1,147 @@
+﻿@using openPER.ViewModels;
+@model NavigationViewModel
+<div class="accordion" id="sideMenu">
+    <div class="card">
+        <div class="card-header side-menu-header" id="navMakeHeader">
+            <h5 class="mb-0">
+                <button class="btn btn-link" type="button" data-toggle="collapse" data-target="#navCollapseMake" aria-expanded="True" aria-controls="navCollapseMake">
+                    Makes
+                </button>
+            </h5>
+        </div>
+        <div id="navCollapseMake" class="collapse @(Model.SideMenuItems.AllModels == null ? "show" : "")" aria-labelledby="navMakeHeader" data-parent="#sideMenu">
+            <div class="card-body side-menu">
+                <ul class="nav flex-column">
+                    @foreach (var m in Model.SideMenuItems.AllMakes)
+                    {
+                        <li class="nav-item">
+                            @Html.ActionLink(m.Description, "Index", "Models", new { Model.Breadcrumb.ReleaseCode, MakeCode = m.Code, SubMakeCode = m.SubCode }, new { @class = "nav-link side-menu-item" })
+                        </li>
+                    }
+                </ul>
+            </div>
+        </div>
+    </div>
+    @if (Model.SideMenuItems.AllModels != null)
+    {
+        <div class="card">
+            <div class="card-header side-menu-header" id="navModelHeader">
+                <h5 class="mb-0">
+                    <button class="btn btn-link" type="button" data-toggle="collapse" data-target="#navCollapseModel" aria-expanded="True" aria-controls="navCollapseModel">
+                        Models
+                    </button>
+                </h5>
+            </div>
+            <div id="navCollapseModel" class="collapse @(Model.SideMenuItems.AllCatalogues == null ? "show" : "") aria-labelledby="navModelHeader" data-parent="#sideMenu">
+                <div class="card-body side-menu">
+                    <ul class="nav flex-column">
+                        @foreach (var m in Model.SideMenuItems.AllModels)
+                        {
+                            <li class="nav-item">
+                                @Html.ActionLink(m.Description, "Index", "Catalogues", new { Model.Breadcrumb.ReleaseCode, MakeCode = Model.Breadcrumb.MakeCode, SubMakeCode = Model.Breadcrumb.SubMakeCode, ModelCode = m.Code }, new { @class = "nav-link side-menu-item" })
+                            </li>
+                        }
+                    </ul>
+                </div>
+            </div>
+        </div>
+    }
+    @if (Model.SideMenuItems.AllCatalogues != null)
+    {
+        <div class="card">
+            <div class="card-header side-menu-header" id="navCatalogueHeader">
+                <h5 class="mb-0">
+                    <button class="btn btn-link" type="button" data-toggle="collapse" data-target="#navCollapseCatalogue" aria-expanded="True" aria-controls="navCollapseCatalogue">
+                        Catalogues
+                    </button>
+                </h5>
+            </div>
+            <div id="navCollapseCatalogue" class="collapse @(Model.SideMenuItems.AllGroups == null?"show":"") " aria-labelledby="navCatalogueHeader" data-parent="#sideMenu">
+                <div class="card-body side-menu">
+                    <ul class="nav flex-column">
+                        @foreach (var m in Model.SideMenuItems.AllCatalogues)
+                        {
+                            <li class="nav-item">
+                                @Html.ActionLink($"{m.Code} {m.Description}", "Index", "Groups", new { Model.Breadcrumb.ReleaseCode, MakeCode = Model.Breadcrumb.MakeCode, SubMakeCode = Model.Breadcrumb.SubMakeCode, ModelCode = m.ModelCode, CatalogueCode = m.Code }, new { @class = "nav-link side-menu-item" })
+                            </li>
+                        }
+                    </ul>
+                </div>
+            </div>
+        </div>
+    }
+    @if (Model.SideMenuItems.AllGroups != null)
+    {
+        <div class="card">
+            <div class="card-header side-menu-header" id="navGroupHeader">
+                <h5 class="mb-0">
+                    <button class="btn btn-link" type="button" data-toggle="collapse" data-target="#navCollapseGroup" aria-expanded="True" aria-controls="navCollapseGroup">
+                        Groups
+                    </button>
+                </h5>
+            </div>
+            <div id="navCollapseGroup" class="collapse @(Model.SideMenuItems.AllSubGroups == null?"show":"") " aria-labelledby="navGroupHeader" data-parent="#sideMenu">
+                <div class="card-body side-menu">
+                    <ul class="nav flex-column">
+                        @foreach (var m in Model.SideMenuItems.AllGroups)
+                        {
+                            <li class="nav-item">
+                                @Html.ActionLink($"{m.Code:000} {m.Description}", "Index", "SubGroups", new { Model.Breadcrumb.ReleaseCode, MakeCode = Model.Breadcrumb.MakeCode, SubMakeCode = Model.Breadcrumb.SubMakeCode, ModelCode = Model.Breadcrumb.ModelCode, CatalogueCode = Model.Breadcrumb.CatalogueCode, GroupCode = m.Code }, new { @class = "nav-link side-menu-item" })
+                            </li>
+                        }
+                    </ul>
+                </div>
+            </div>
+        </div>
+    }
+    @if (Model.SideMenuItems.AllSubGroups != null)
+    {
+
+        <div class="card">
+            <div class="card-header side-menu-header" id="navSubGroupHeader">
+                <h5 class="mb-0">
+                    <button class="btn btn-link" type="button" data-toggle="collapse" data-target="#navCollapseSubGroup" aria-expanded="True" aria-controls="navCollapseSubGroup">
+                        Categories
+                    </button>
+                </h5>
+            </div>
+            <div id="navCollapseSubGroup" class="collapse @(Model.SideMenuItems.AllSubSubGroups == null?"show":"") " aria-labelledby="navSubGroupHeader" data-parent="#sideMenu">
+                <div class="card-body side-menu">
+                    <ul class="nav flex-column">
+                        @foreach (var m in Model.SideMenuItems.AllSubGroups)
+                        {
+                            <li class="nav-item">
+                                @Html.ActionLink($"{m.FullDisplayCode} {m.Description}", "Index", "SubSubGroups", new { Model.Breadcrumb.ReleaseCode, MakeCode = Model.Breadcrumb.MakeCode, SubMakeCode = Model.Breadcrumb.SubMakeCode, ModelCode = Model.Breadcrumb.ModelCode, CatalogueCode = Model.Breadcrumb.CatalogueCode, GroupCode = Model.Breadcrumb.GroupCode, SubGroupCode = m.Code }, new { @class = "nav-link side-menu-item" })
+                            </li>
+                        }
+                    </ul>
+                </div>
+            </div>
+        </div>
+    }
+    @if (Model.SideMenuItems.AllSubSubGroups != null)
+    {
+
+        <div class="card">
+            <div class="card-header side-menu-header" id="navSubSubGroupHeader">
+                <h5 class="mb-0">
+                    <button class="btn btn-link" type="button" data-toggle="collapse" data-target="#navCollapseSubSubGroup" aria-expanded="True" aria-controls="navCollapseSubSubGroup">
+                        Subcategories
+                    </button>
+                </h5>
+            </div>
+            <div id="navCollapseSubSubGroup" class="collapse show" aria-labelledby="navSubSubGroupHeader" data-parent="#sideMenu">
+                <div class="card-body side-menu">
+                    <ul class="nav flex-column">
+                        @foreach (var m in Model.SideMenuItems.AllSubSubGroups)
+                        {
+                            <li class="nav-item">
+                                @Html.ActionLink($"{Model.Breadcrumb.GroupCode:000}{Model.Breadcrumb.SubGroupCode:00}/{m.Code}", "Detail", "Drawings", new { Model.Breadcrumb.ReleaseCode, MakeCode = Model.Breadcrumb.MakeCode, SubMakeCode = Model.Breadcrumb.SubMakeCode, ModelCode = Model.Breadcrumb.ModelCode, CatalogueCode = Model.Breadcrumb.CatalogueCode, GroupCode = Model.Breadcrumb.GroupCode, SubGroupCode = Model.Breadcrumb.SubGroupCode, SubSubGroupCode=m.Code, DrawingNumber=1 }, new { @class = "nav-link side-menu-item" })
+                            </li>
+                        }
+                    </ul>
+                </div>
+            </div>
+        </div>
+    }
+</div>

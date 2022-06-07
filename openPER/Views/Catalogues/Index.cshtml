@@ -3,31 +3,14 @@
 @{
     ViewData["Title"] = "Index";
 }
-@await Html.PartialAsync("_Breadcrumb", Model.Breadcrumb)
+@await Html.PartialAsync("_Breadcrumb", Model.Navigation.Breadcrumb)
 <div class="container">
     <div class="row">
         <div class="col-lg-4 col-md-4 col-sm-12 col-xs-12">
-            <table class="table table-sm table-hover">
-                <thead>
-                    <tr>
-                        <th>Model</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    @foreach (var item in Model.Models)
-                    {
-                        <tr>
-                            <td>
-                                @Html.ActionLink(item.Description, "Index", "Catalogues", new { Model.ReleaseCode, item.MakeCode, item.SubMakeCode, ModelCode = item.Code })
-                            </td>
-
-                        </tr>
-                    }
-                </tbody>
-            </table>
+            @await Html.PartialAsync("_SidebarMenu", Model.Navigation)
         </div>
         <div class="col-lg-3 col-md-4 col-sm-12 col-xs-12">
-            <img src="@Url.Action("ModelImage", "Image", new { Model.ReleaseCode, Make = Model.Breadcrumb.MakeCode, SubMake = Model.Breadcrumb.SubMakeCode, Model = Model.Breadcrumb.ModelCode })">
+            <img src="@Url.Action("ModelImage", "Image", new { Model.ReleaseCode, Make = Model.Navigation.Breadcrumb.MakeCode, SubMake = Model.Navigation.Breadcrumb.SubMakeCode, Model = Model.Navigation.Breadcrumb.ModelCode })">
         </div>
         <div class="col-lg-5 col-md-4 col-sm-12 col-xs-12">
             <table class="table table-sm">

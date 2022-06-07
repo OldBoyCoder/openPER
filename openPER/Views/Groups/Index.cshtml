@@ -3,29 +3,11 @@
 @{
     ViewData["Title"] = "Index";
 }
-@await Html.PartialAsync("_Breadcrumb", Model.Breadcrumb)
+@await Html.PartialAsync("_Breadcrumb", Model.Navigation.Breadcrumb)
 <div class="container-fluid">
     <div class="row">
         <div class="col-lg-4 col-md-4 col-sm-12 col-xs-12">
-            <table class="table table-sm table-hover">
-                <thead>
-                    <tr>
-                        <th>Models - Versions</th>
-                    </tr>
-                    <tr>
-                        <th>Category</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    @foreach (var group in Model.Groups)
-                    {
-                        <tr><td>@Html.ActionLink($"{group.DisplayCode} {group.Description}", "Index", "SubGroups", new {Model.ReleaseCode,Model.MakeCode,Model.SubMakeCode, Model.ModelCode, Model.CatalogueCode, GroupCode=group.Code})</td></tr>
-                    }
-                    <tr>
-                        <td>@Html.ActionLink("All drawings", "Index", "Drawings", new {Model.ReleaseCode,Model.MakeCode, Model.ModelCode, Model.CatalogueCode, DrawingNumber=1})</td>
-                    </tr>
-                </tbody>
-            </table>
+            @await Html.PartialAsync("_SidebarMenu", Model.Navigation)
         </div>
         <div class="col-lg-8 col-md-8 col-sm-12 col-xs-12">
             <strong>Main category selection</strong>

@@ -4,7 +4,6 @@ namespace openPER.ViewModels
 {
     public class SubGroupsViewModel:VersionedViewModel
     {
-        public BreadcrumbViewModel Breadcrumb { get; set; }
         public List<SubGroupViewModel> SubGroups { get; set; }
         public string MakeCode { get; set; }
         public string SubMakeCode { get; set; }
@@ -12,5 +11,6 @@ namespace openPER.ViewModels
         public string CatalogueCode { get; set; }
         public int GroupCode { get; internal set; }
         public List<SubGroupImageMapEntryViewModel> MapEntries { get; set; }
+        public NavigationViewModel Navigation { get; set; }
     }
 }

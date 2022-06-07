@@ -81,18 +81,6 @@ body {
     align-items: flex-start;
 }
 
-tr.partrow {
-    background-color: white;
-}
-
-td.partrowproductcode {
-    background-color: lightgray;
-}
-
-tr.partrowheader {
-    background-color: aliceblue;
-}
-
 ul {
     list-style-type: none;
     margin-bottom: 0;
@@ -100,15 +88,6 @@ ul {
 
 td {
     vertical-align: text-top;
-}
-
-th {
-    font-weight: 400;
-    background-color: dodgerblue;
-}
-
-th, td, table {
-    border: 1px solid lightgrey
 }
 
 .horizontal-scrollable > .row {
