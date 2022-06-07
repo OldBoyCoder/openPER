@@ -7,35 +7,127 @@
 <div class="container">
     <div class="row">
         <div class="col-lg-4 col-md-4 col-sm-12 col-xs-12">
+            <div class="accordion" id="sideMenu">
+                <div class="card">
+                    <div class="card-header side-menu-header" id="navModelHeader">
+                        <h5 class="mb-0">
+                            <button class="btn btn-link" type="button" data-toggle="collapse" data-target="#navCollapseModel" aria-expanded="True" aria-controls="navCollapseModel">
+                                Models
+                            </button>
+                        </h5>
+                    </div>
+                    <div id="navCollapseModel" class="collapse show" aria-labelledby="navModelHeader" data-parent="#sideMenu">
+                        <div class="card-body side-menu">
+                            <ul class="nav flex-column">
+                                @foreach (var m in Model.AllModels)
+                                {
+                                    <li class="nav-item">
+                                    @Html.ActionLink(m.Description, "Index", "Catalogues", new { Model.ReleaseCode, MakeCode=m.MakeCode, SubMakeCode=m.SubMakeCode, ModelCode=m.Code}, new {@class="nav-link side-menu-item"})
+                                    </li>
+                                }
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+                <div class="card">
+                    <div class="card-header side-menu-header" id="navCatalogueHeader">
+                        <h5 class="mb-0">
+                            <button class="btn btn-link" type="button" data-toggle="collapse" data-target="#navCollapseCatalogue" aria-expanded="True" aria-controls="navCollapseCatalogue">
+                                Catalogues
+                            </button>
+                        </h5>
+                    </div>
+                    <div id="navCollapseCatalogue" class="collapse" aria-labelledby="navCatalogueHeader" data-parent="#sideMenu">
+                        <div class="card-body side-menu">
+                            <ul class="nav flex-column">
+                                @foreach (var m in Model.AllCatalogues)
+                                {
+                                    <li class="nav-item">
+                                        @Html.ActionLink(m.Description, "Index", "Groups", new { Model.ReleaseCode, MakeCode=m.MakeCode, SubMakeCode=m.SubMakeCode, ModelCode=m.ModelCode, CatalogueCode=m.Code}, new {@class="nav-link side-menu-item"})
+                                    </li>
+                                }
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="card">
+                    <div class="card-header side-menu-header" id="navGroupHeader">
+                        <h5 class="mb-0">
+                            <button class="btn btn-link" type="button" data-toggle="collapse" data-target="#navCollapseGroup" aria-expanded="True" aria-controls="navCollapseGroup">
+                                Groups
+                            </button>
+                        </h5>
+                    </div>
+                    <div id="navCollapseGroup" class="collapse" aria-labelledby="navGroupHeader" data-parent="#sideMenu">
+                        <div class="card-body side-menu">
+                            <ul class="nav flex-column">
+                                @foreach (var m in Model.AllGroups)
+                                {
+                                    <li class="nav-item">
+                                        @Html.ActionLink(m.Description, "Index", "SubGroups", new { Model.ReleaseCode, MakeCode=Model.MakeCode, SubMakeCode=Model.SubMakeCode, ModelCode=Model.ModelCode, CatalogueCode=Model.CatalogueCode, GroupCode=m.Code}, new {@class="nav-link side-menu-item"})
+                                    </li>
+                                }
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+                <div class="card">
+                    <div class="card-header side-menu-header" id="navSubGroupHeader">
+                        <h5 class="mb-0">
+                            <button class="btn btn-link" type="button" data-toggle="collapse" data-target="#navCollapseSubGroup" aria-expanded="True" aria-controls="navCollapseSubGroup">
+                                Categories
+                            </button>
+                        </h5>
+                    </div>
+                    <div id="navCollapseSubGroup" class="collapse" aria-labelledby="navSubGroupHeader" data-parent="#sideMenu">
+                        <div class="card-body side-menu">
+                            <ul class="nav flex-column">
+                                @foreach (var m in Model.AllSubGroups)
+                                {
+                                    <li class="nav-item">
+                                        @Html.ActionLink(m.Description, "Index", "SubSubGroups", new { Model.ReleaseCode, MakeCode=Model.MakeCode, SubMakeCode=Model.SubMakeCode, ModelCode=Model.ModelCode, CatalogueCode=Model.CatalogueCode, GroupCode=m.GroupCode, SubGroupCode=m.Code}, new {@class="nav-link side-menu-item"})
+                                    </li>
+                                }
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+        @*
+
             <table class="table table-sm table-hover">
                 <thead>
-                    <tr>
-                        <th>Models - Versions</th>
-                    </tr>
-                    <tr>
-                        <th>Category</th>
-                    </tr>
-                    <tr>
-                        <th>Subcategory</th>
-                    </tr>
+                <tr>
+                    <th>Models - Versions</th>
+                </tr>
+                <tr>
+                    <th>Category</th>
+                </tr>
+                <tr>
+                    <th>Subcategory</th>
+                </tr>
                 </thead>
                 <tbody>
-                    @foreach (var group in Model.SubGroups)
-                    {
-                        <tr>
-                            <td>
-                                @Html.ActionLink($"{group.FullDisplayCode} {group.Description}", "Index", "SubSubGroups", new {Model.ReleaseCode,Model.MakeCode, Model.SubMakeCode, Model.ModelCode, Model.CatalogueCode, group.GroupCode, SubGroupCode = group.Code})
-                            </td>
-                        </tr>
-                    }
+                @foreach (var group in Model.SubGroups)
+                {
                     <tr>
                         <td>
-                            @Html.ActionLink("All drawings", "Index", "Drawings", new {Model.ReleaseCode,Model.MakeCode, Model.ModelCode, Model.CatalogueCode, Model.GroupCode, DrawingNumber=1})
+                            @Html.ActionLink($"{group.FullDisplayCode} {group.Description}", "Index", "SubSubGroups", new { Model.ReleaseCode, Model.MakeCode, Model.SubMakeCode, Model.ModelCode, Model.CatalogueCode, group.GroupCode, SubGroupCode = group.Code })
                         </td>
                     </tr>
+                }
+                <tr>
+                    <td>
+                        @Html.ActionLink("All drawings", "Index", "Drawings", new { Model.ReleaseCode, Model.MakeCode, Model.ModelCode, Model.CatalogueCode, Model.GroupCode, DrawingNumber = 1 })
+                    </td>
+                </tr>
                 </tbody>
             </table>
         </div>
+*@
         <div class="col-lg-8 col-md-8 col-sm-12 col-xs-12">
             <strong>Subcategory selection</strong>
             <p>Select a subcategory from the side menu or directly from the map.</p>

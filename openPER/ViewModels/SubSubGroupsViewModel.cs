@@ -14,5 +14,9 @@ namespace openPER.ViewModels
         public int GroupCode { get; internal set; }
         public int SubGroupCode { get; internal set; }
 
+        public List<ModelViewModel> AllModels { get; set; }
+        public List<CatalogueViewModel> AllCatalogues { get; set; }
+        public List<GroupViewModel> AllGroups { get; set; }
+        public List<SubGroupViewModel> AllSubGroups { get; set; }
     }
 }

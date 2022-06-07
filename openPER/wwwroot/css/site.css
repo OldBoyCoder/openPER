@@ -122,3 +122,12 @@ th, td, table {
         flex-wrap: nowrap;
     }
 
+.side-menu-header {
+    padding: 0.1rem;
+}
+.side-menu-item {
+    padding: 0.1rem;
+}
+.side-menu {
+    padding: 0.1rem;
+}
