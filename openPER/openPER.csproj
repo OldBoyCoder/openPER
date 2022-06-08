@@ -1,16 +1,18 @@
 <Project Sdk="Microsoft.NET.Sdk.Web">
 
   <PropertyGroup>
-    <TargetFramework>net5.0</TargetFramework>
+    <TargetFramework>net5.0-windows</TargetFramework>
   </PropertyGroup>
 
   <ItemGroup>
     <PackageReference Include="AutoMapper.Extensions.Microsoft.DependencyInjection" Version="11.0.0" />
-    <PackageReference Include="Microsoft.Data.Sqlite" Version="6.0.5" />
     <PackageReference Include="Microsoft.VisualStudio.Web.CodeGeneration.Design" Version="5.0.2" />
+    <PackageReference Include="Microsoft.Web.Deployment" Version="4.0.5" />
   </ItemGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\openPERModels\openPERModels.csproj" />
+    <ProjectReference Include="..\openRepositories\openPERRepositories.csproj" />
     <ProjectReference Include="..\VinSearcher\VinSearcher.csproj" />
   </ItemGroup>
 
@@ -67,6 +69,7 @@
   </ItemGroup>
 
   <ItemGroup>
+    <Folder Include="Interfaces\" />
     <Folder Include="wwwroot\SiteImages\" />
   </ItemGroup>
 

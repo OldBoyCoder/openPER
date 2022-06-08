@@ -1,9 +1,9 @@
 ﻿using AutoMapper;
 using System.Collections.Generic;
 using Microsoft.AspNetCore.Mvc;
-using openPER.Interfaces;
 using openPER.ViewModels;
-using openPER.Models;
+using openPERModels;
+using openPERRepositories.Interfaces;
 
 namespace openPER.Controllers
 {

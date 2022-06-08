@@ -1,6 +1,7 @@
 ﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
+using VinSearcher;
 
-namespace VinSearcher.Tests
+namespace VinSearcherTests
 {
     [TestClass()]
     public class VinSearchTests

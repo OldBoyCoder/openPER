@@ -1,5 +1,4 @@
-﻿using openPER.Models;
-using openPER.ViewModels;
+﻿using openPER.ViewModels;
 
 namespace openPER.Controllers
 {

@@ -1,5 +1,5 @@
-﻿using openPER.Models;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
+using openPERModels;
 
 namespace openPER.ViewModels
 {

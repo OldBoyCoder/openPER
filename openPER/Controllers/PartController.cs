@@ -1,6 +1,6 @@
 ﻿using Microsoft.AspNetCore.Mvc;
-using openPER.Interfaces;
 using openPER.ViewModels;
+using openPERRepositories.Interfaces;
 
 namespace openPER.Controllers
 {
