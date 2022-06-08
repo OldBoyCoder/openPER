@@ -1,6 +1,6 @@
 ﻿using Microsoft.AspNetCore.Mvc;
-using openPER.Models;
 using System.Collections.Generic;
+using openPERModels;
 
 namespace openPER.Views.Shared.Components.ModelsWidget
 {

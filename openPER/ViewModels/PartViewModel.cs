@@ -1,4 +1,4 @@
-﻿using openPER.Models;
+﻿using openPERModels;
 
 namespace openPER.ViewModels
 {

@@ -1,6 +1,6 @@
 ﻿using AutoMapper;
-using openPER.Models;
 using openPER.ViewModels;
+using openPERModels;
 
 namespace openPER.AutoMapper
 {

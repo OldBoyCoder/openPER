@@ -1,8 +1,8 @@
 ﻿using AutoMapper;
 using Microsoft.AspNetCore.Mvc;
-using openPER.Interfaces;
-using openPER.Models;
 using openPER.ViewModels;
+using openPERModels;
+using openPERRepositories.Interfaces;
 
 namespace openPER.Controllers
 {

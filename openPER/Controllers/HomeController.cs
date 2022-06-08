@@ -1,13 +1,13 @@
 ﻿using Microsoft.Extensions.Configuration;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
-using openPER.Interfaces;
-using openPER.Models;
 using openPER.ViewModels;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Threading;
 using Microsoft.AspNetCore.Http;
+using openPERModels;
+using openPERRepositories.Interfaces;
 
 namespace openPER.Controllers
 {
