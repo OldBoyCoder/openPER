@@ -90,20 +90,20 @@ namespace openPERRepositories.Repositories
             return rc;
         }
 
-        public string GetMapAndImageForCatalogue(string makeCode, string subMakeCode, string modelCode,
-            string catalogueCode, out string imageName)
+        public MapImageModel GetMapAndImageForCatalogue(string makeCode, string subMakeCode, string modelCode,
+            string catalogueCode)
         {
             // TODO Fix caching
-            imageName = "";
+            var model = new MapImageModel();
             string rc;
             var cacheKeys = new { type = "GetMapAndImageForCatalogue", k1 = makeCode,k2=subMakeCode,  k3= modelCode, k4 = catalogueCode};
 //            if (!_cache.TryGetValue(cacheKeys, out string rc))
             {
-                rc = _rep.GetMapAndImageForCatalogue(makeCode,subMakeCode, modelCode, catalogueCode, out imageName);
+                model = _rep.GetMapAndImageForCatalogue(makeCode,subMakeCode, modelCode, catalogueCode);
                 var cacheEntryOptions = new MemoryCacheEntryOptions().SetSlidingExpiration(TimeSpan.FromHours(24));
   //              _cache.Set(cacheKeys, rc, cacheEntryOptions);
             }
-            return rc;
+            return model;
         }
 
         public void PopulateBreadcrumbDescriptions(BreadcrumbModel breadcrumb, string languageCode)
@@ -131,10 +131,10 @@ namespace openPERRepositories.Repositories
             return rc;
         }
 
-        public string GetMapForCatalogueGroup(string make, string subMake, string model, string catalogue, int group)
+        public MapImageModel GetMapForCatalogueGroup(string make, string subMake, string model, string catalogue, int group)
         {
             var cacheKeys = new { type = "GetMapForCatalogueGroup", k1 = make, k2 = subMake, k3 = model, k4 = catalogue, k5=group };
-            if (!_cache.TryGetValue(cacheKeys, out string rc))
+            if (!_cache.TryGetValue(cacheKeys, out MapImageModel rc))
             {
                 rc = _rep.GetMapForCatalogueGroup(make, subMake, model, catalogue, group);
                 var cacheEntryOptions = new MemoryCacheEntryOptions().SetSlidingExpiration(TimeSpan.FromHours(24));

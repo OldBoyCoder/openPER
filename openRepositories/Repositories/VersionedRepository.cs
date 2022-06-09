@@ -169,12 +169,13 @@ namespace openPERRepositories.Repositories
             };
         }
 
-        public string GetMapAndImageForCatalogue(int releaseCode, string make, string subMake, string model, string catalogue, out string imageName)
+        public MapImageModel GetMapAndImageForCatalogue(int releaseCode, string make, string subMake, string model,
+            string catalogue)
         {
             return releaseCode switch
             {
-                18 => _repository18.GetMapAndImageForCatalogue(make, subMake, model, catalogue, out imageName),
-                84 => _repository84.GetMapAndImageForCatalogue(make, subMake, model, catalogue, out imageName),
+                18 => _repository18.GetMapAndImageForCatalogue(make, subMake, model, catalogue),
+                84 => _repository84.GetMapAndImageForCatalogue(make, subMake, model, catalogue),
                 _ => throw new System.NotImplementedException()
             };
         }
@@ -202,7 +203,8 @@ namespace openPERRepositories.Repositories
             };
         }
 
-        public string GetMapForCatalogueGroup(int releaseCode, string make, string subMake, string model, string catalogue,
+        public MapImageModel GetMapForCatalogueGroup(int releaseCode, string make, string subMake, string model,
+            string catalogue,
             int group)
         {
             return releaseCode switch

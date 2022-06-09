@@ -1,4 +1,5 @@
 ﻿using Microsoft.Extensions.Configuration;
+using openPERModels;
 using openPERRepositories.Interfaces;
 
 namespace openPERRepositories.Repositories
@@ -23,12 +24,12 @@ namespace openPERRepositories.Repositories
         }
 
         public byte[] GetImageForCatalogue(int releaseCode, string makeCode, string subMakeCode, string modelCode,
-            string catalogueCode, string mapName, string imageName)
+            string catalogueCode, MapImageModel mapDetails)
         {
             return releaseCode switch
             {
-                18 => _repository18.GetImageForCatalogue(makeCode, subMakeCode, modelCode, catalogueCode, mapName, imageName),
-                84 => _repository84.GetImageForCatalogue(makeCode, subMakeCode, modelCode, catalogueCode, mapName, imageName),
+                18 => _repository18.GetImageForCatalogue(makeCode, subMakeCode, modelCode, catalogueCode, mapDetails),
+                84 => _repository84.GetImageForCatalogue(makeCode, subMakeCode, modelCode, catalogueCode, mapDetails),
                 _ => null
             };
         }
