@@ -605,8 +605,8 @@ namespace openPERRepositories.Repositories
             return drawings;
         }
 
-        public abstract string GetMapAndImageForCatalogue(string makeCode, string subMakeCode, string modelCode, string catalogueCode,
-            out string imageName);
+        public abstract MapImageModel GetMapAndImageForCatalogue(string makeCode, string subMakeCode, string modelCode,
+            string catalogueCode);
 
         public void PopulateBreadcrumbDescriptions(BreadcrumbModel breadcrumb, string languageCode)
         {
@@ -623,52 +623,11 @@ namespace openPERRepositories.Repositories
 
         public abstract List<GroupImageMapEntryModel> GetGroupMapEntriesForCatalogue(string catalogueCode);
 
-        public string GetMapForCatalogueGroup(string make, string subMake, string model, string catalogue, int group)
-        {
-            var map = "";
-            using var connection = new SqliteConnection($"Data Source={_pathToDb}");
-            var sql = @"SELECT DISTINCT MAP_SGRP
-                            FROM MAP_VET
-                            WHERE CAT_COD = $p1 AND GRP_COD = $p2";
-            connection.RunSqlAllRows(sql, (reader) =>
-            {
-                map = reader.GetString(0);
-            }, catalogue, group);
-            if (map != "") return map;
-            sql = @"SELECT DISTINCT MAP_NAME
-                        FROM MAP_SGRP
-                        WHERE GRP_COD = $p1";
-            connection.RunSqlAllRows(sql, (reader) =>
-            {
-                map = reader.GetString(0);
-            }, group);
-            return map;
-        }
+        public abstract MapImageModel GetMapForCatalogueGroup(string make, string subMake, string model,
+            string catalogue, int group);
 
-        public List<SubGroupImageMapEntryModel> GetSubGroupMapEntriesForCatalogueGroup(string catalogueCode, int groupCode)
-        {
-            var map = new List<SubGroupImageMapEntryModel>();
-            using var connection = new SqliteConnection($"Data Source={_pathToDb}");
-            // sloppy should pass this down
-            var mapName = GetMapForCatalogueGroup(null, null, null, catalogueCode, groupCode);
-            var sql = @"select POINT_X-LABEL_X, POINT_Y-LABEL_Y, SGRP_COD from MAP_SGRP M
-                        WHERE M.GRP_COD = $p1 AND MAP_NAME = $p2 AND SGRP_COD IN (
-                            select distinct T.SGRP_COD FROM TBDATA T
-                            WHERE CAT_COD = $p3 AND T.GRP_COD = $p1)
-";
-            connection.RunSqlAllRows(sql, (reader) =>
-            {
-                var m = new SubGroupImageMapEntryModel
-                {
-                    X = reader.GetInt32(0),
-                    Y = reader.GetInt32(1),
-                    GroupCode = groupCode,
-                    SubGroupCode = reader.GetInt32(2)
-                };
-                map.Add(m);
-            }, groupCode, mapName, catalogueCode);
-            return map;
-        }
+        public abstract List<SubGroupImageMapEntryModel> GetSubGroupMapEntriesForCatalogueGroup(string catalogueCode,
+            int groupCode);
 
         private string GetSubMakeDescription(string makeCode, string subMakeCode, SqliteConnection connection)
         {

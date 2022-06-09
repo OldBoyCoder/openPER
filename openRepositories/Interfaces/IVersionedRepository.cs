@@ -21,10 +21,12 @@ namespace openPERRepositories.Interfaces
         List<DrawingKeyModel> GetDrawingKeysForCatalogue(int releaseCode, string makeCode, string modelCode, string catalogueCode);
         List<DrawingKeyModel> GetDrawingKeysForGroup(int releaseCode, string makeCode, string modelCode, string catalogueCode, int groupCode);
         List<DrawingKeyModel> GetDrawingKeysForSubGroup(int releaseCode, string makeCode, string modelCode, string catalogueCode, int groupCode, int subGroupCode);
-        string GetMapAndImageForCatalogue(int releaseCode, string make, string subMake, string model, string catalogue, out string imageName);
+        MapImageModel GetMapAndImageForCatalogue(int releaseCode, string make, string subMake, string model,
+            string catalogue);
         void PopulateBreadcrumbDescriptions(int releaseCode, BreadcrumbModel breadcrumb, string languageCode);
         List<GroupImageMapEntryModel> GetGroupMapEntriesForCatalogue(int releaseCode, string catalogueCode);
-        string GetMapForCatalogueGroup(int releaseCode, string make, string subMake, string model, string catalogue, int group);
+        MapImageModel GetMapForCatalogueGroup(int releaseCode, string make, string subMake, string model,
+            string catalogue, int group);
         List<SubGroupImageMapEntryModel> GetSubGroupMapEntriesForCatalogueGroup(int releaseCode, string catalogueCode, int groupCode);
     }
 }

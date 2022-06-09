@@ -31,10 +31,10 @@ namespace openPERRepositories.Repositories
         }
 
         public byte[] GetImageForCatalogue(string makeCode, string subMakeCode, string modelCode, string catalogueCode,
-            string mapName, string imageName)
+            MapImageModel mapDetails)
         {
             // These are in a zip file
-            var fileParts = imageName.Split('/');
+            var fileParts = mapDetails.ImageName.Split('/');
             var zipFileName = System.IO.Path.Combine(_pathToImages, "ResFiles", $"{fileParts[0]}.res");
             using var zip = ZipFile.Open(zipFileName, ZipArchiveMode.Read);
             foreach (var entry in zip.Entries)
@@ -42,7 +42,7 @@ namespace openPERRepositories.Repositories
                 var e = zip.GetEntry(fileParts[1]);
                 if (e == null)
                 {
-                    return GetImageFromEperFig(imageName);
+                    return GetImageFromEperFig(mapDetails.ImageName);
                 }
 
                 using var stream = e.Open();
