@@ -17,7 +17,7 @@
                 
                 @foreach (var mapEntry in Model.MapEntries)
                 {
-                    <a href="@Url.Action("Index", "SubGroups", new {Model.ReleaseCode,Model.MakeCode,Model.SubMakeCode, Model.ModelCode, Model.CatalogueCode, GroupCode=mapEntry.GroupCode})">
+                    <a title="@($"{mapEntry.GroupCode:000} {mapEntry.Description}")"  href="@Url.Action("Index", "SubGroups", new {Model.ReleaseCode,Model.MakeCode,Model.SubMakeCode, Model.ModelCode, Model.CatalogueCode, GroupCode=mapEntry.GroupCode})">
                         <div style="position: absolute; top: @(mapEntry.Y+"px"); left: @(mapEntry.X+"px"); width: 24px;height:24px">
                             <img src="~/SiteImages/SelectCircle.png"/></div></a>
 

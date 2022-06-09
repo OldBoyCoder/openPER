@@ -31,7 +31,7 @@ namespace openPER.Controllers
             var model = new GroupsViewModel
             {
                 Groups = _mapper.Map<List<GroupModel>, List<GroupViewModel>>(_rep.GetGroupsForCatalogue(releaseCode, catalogueCode, language)),
-                MapEntries = _mapper.Map<List<GroupImageMapEntryModel>, List<GroupImageMapEntryViewModel>>(_rep.GetGroupMapEntriesForCatalogue(releaseCode, catalogueCode)),
+                MapEntries = _mapper.Map<List<GroupImageMapEntryModel>, List<GroupImageMapEntryViewModel>>(_rep.GetGroupMapEntriesForCatalogue(releaseCode, catalogueCode, language)),
                 ReleaseCode = releaseCode,
                 MakeCode = makeCode,
                 ModelCode = modelCode,  

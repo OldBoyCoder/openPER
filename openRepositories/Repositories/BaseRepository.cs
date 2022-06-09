@@ -621,7 +621,7 @@ namespace openPERRepositories.Repositories
             if (breadcrumb.GroupCode != null && breadcrumb.SubGroupCode != null) breadcrumb.SubGroupDescription = GetSubGroupDescription(breadcrumb.GroupCode.Value, breadcrumb.SubGroupCode.Value, languageCode, connection);
         }
 
-        public abstract List<GroupImageMapEntryModel> GetGroupMapEntriesForCatalogue(string catalogueCode);
+        public abstract List<GroupImageMapEntryModel> GetGroupMapEntriesForCatalogue(string catalogueCode, string languageCode);
 
         public abstract MapImageModel GetMapForCatalogueGroup(string make, string subMake, string model,
             string catalogue, int group);
@@ -703,5 +703,6 @@ namespace openPERRepositories.Repositories
 
             return drawings;
         }
+
     }
 }

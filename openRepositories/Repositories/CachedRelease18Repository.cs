@@ -93,15 +93,12 @@ namespace openPERRepositories.Repositories
         public MapImageModel GetMapAndImageForCatalogue(string makeCode, string subMakeCode, string modelCode,
             string catalogueCode)
         {
-            // TODO Fix caching
-            var model = new MapImageModel();
-            string rc;
             var cacheKeys = new { type = "GetMapAndImageForCatalogue", k1 = makeCode,k2=subMakeCode,  k3= modelCode, k4 = catalogueCode};
-//            if (!_cache.TryGetValue(cacheKeys, out string rc))
+            if (!_cache.TryGetValue(cacheKeys, out MapImageModel model))
             {
                 model = _rep.GetMapAndImageForCatalogue(makeCode,subMakeCode, modelCode, catalogueCode);
                 var cacheEntryOptions = new MemoryCacheEntryOptions().SetSlidingExpiration(TimeSpan.FromHours(24));
-  //              _cache.Set(cacheKeys, rc, cacheEntryOptions);
+                _cache.Set(cacheKeys, model, cacheEntryOptions);
             }
             return model;
         }
@@ -118,12 +115,12 @@ namespace openPERRepositories.Repositories
 
         }
 
-        public List<GroupImageMapEntryModel> GetGroupMapEntriesForCatalogue(string catalogueCode)
+        public List<GroupImageMapEntryModel> GetGroupMapEntriesForCatalogue(string catalogueCode, string languageCode)
         {
-            var cacheKeys = new { type = "GetGroupMapEntriesForCatalogue", k1 = catalogueCode };
+            var cacheKeys = new { type = "GetGroupMapEntriesForCatalogue", k1 = catalogueCode, k2=languageCode };
             if (!_cache.TryGetValue(cacheKeys, out List<GroupImageMapEntryModel> rc))
             {
-                rc = _rep.GetGroupMapEntriesForCatalogue(catalogueCode);
+                rc = _rep.GetGroupMapEntriesForCatalogue(catalogueCode, languageCode);
                 var cacheEntryOptions = new MemoryCacheEntryOptions().SetSlidingExpiration(TimeSpan.FromHours(24));
                 _cache.Set(cacheKeys, rc, cacheEntryOptions);
             }
