@@ -36,7 +36,8 @@ namespace openPERRepositories.Repositories
             return System.IO.File.ReadAllBytes(System.IO.Path.Combine(_pathToImages, $"ModelImages{subMakeCode}", fileName));
         }
 
-        public byte[] GetImageForCatalogue(string makeCode, string subMakeCode, string modelCode, string catalogueCode, string mapName)
+        public byte[] GetImageForCatalogue(string makeCode, string subMakeCode, string modelCode, string catalogueCode,
+            string mapName, string imageName)
         {
             var fileName = System.IO.Path.Combine(_pathToImages, "CatalogueImages", $"{mapName}.jpg");
 

@@ -169,12 +169,12 @@ namespace openPERRepositories.Repositories
             };
         }
 
-        public string GetMapForCatalogue(int releaseCode, string make, string subMake, string model, string catalogue)
+        public string GetMapAndImageForCatalogue(int releaseCode, string make, string subMake, string model, string catalogue, out string imageName)
         {
             return releaseCode switch
             {
-                18 => _repository18.GetMapForCatalogue(make, subMake, model, catalogue),
-                84 => _repository84.GetMapForCatalogue(make, subMake, model, catalogue),
+                18 => _repository18.GetMapAndImageForCatalogue(make, subMake, model, catalogue, out imageName),
+                84 => _repository84.GetMapAndImageForCatalogue(make, subMake, model, catalogue, out imageName),
                 _ => throw new System.NotImplementedException()
             };
         }

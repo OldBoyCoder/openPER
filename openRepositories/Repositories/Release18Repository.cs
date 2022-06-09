@@ -24,5 +24,20 @@ namespace openPERRepositories.Repositories
 
         }
 
+        public override string GetMapAndImageForCatalogue(string makeCode, string subMakeCode, string modelCode,
+            string catalogueCode, out string imageName)
+        {
+            var map = "";
+            using var connection = new SqliteConnection($"Data Source={_pathToDb}");
+            var sql = @"SELECT DISTINCT MAP_NAME
+                            FROM CATALOGUES
+                            WHERE MK_COD = $p1 AND MK2_COD = $p2 AND CAT_COD = $p3";
+            connection.RunSqlAllRows(sql, (reader) =>
+            {
+                map = reader.GetString(0);
+            }, makeCode, subMakeCode, catalogueCode);
+            imageName = "";
+            return map;
+        }
     }
 }

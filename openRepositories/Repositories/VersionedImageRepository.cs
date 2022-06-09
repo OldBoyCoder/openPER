@@ -10,21 +10,25 @@ namespace openPERRepositories.Repositories
         public VersionedImageRepository(IConfiguration config)
         {
             _repository18 = new Release18ImageRepository(config);
+            _repository84 = new Release84ImageRepository(config);
         }
         public byte[] GetImageForModel(int releaseCode, string makeCode,string subMake, string cmgCode)
         {
             return releaseCode switch
             {
-                18 => _repository18.GetImageForModel(makeCode,subMake, cmgCode),
+                18 => _repository18.GetImageForModel(makeCode, subMake, cmgCode),
+                84 => _repository84.GetImageForModel(makeCode, subMake, cmgCode),
                 _ => null
             };
         }
 
-        public byte[] GetImageForCatalogue(int releaseCode, string makeCode, string subMakeCode, string modelCode, string catalogueCode, string mapName)
+        public byte[] GetImageForCatalogue(int releaseCode, string makeCode, string subMakeCode, string modelCode,
+            string catalogueCode, string mapName, string imageName)
         {
             return releaseCode switch
             {
-                18 => _repository18.GetImageForCatalogue(makeCode, subMakeCode, modelCode, catalogueCode, mapName),
+                18 => _repository18.GetImageForCatalogue(makeCode, subMakeCode, modelCode, catalogueCode, mapName, imageName),
+                84 => _repository84.GetImageForCatalogue(makeCode, subMakeCode, modelCode, catalogueCode, mapName, imageName),
                 _ => null
             };
         }

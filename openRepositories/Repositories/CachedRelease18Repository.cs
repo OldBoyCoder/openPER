@@ -90,14 +90,18 @@ namespace openPERRepositories.Repositories
             return rc;
         }
 
-        public string GetMapForCatalogue(string makeCode,string subMakeCode, string modelCode, string catalogueCode)
+        public string GetMapAndImageForCatalogue(string makeCode, string subMakeCode, string modelCode,
+            string catalogueCode, out string imageName)
         {
-            var cacheKeys = new { type = "GetMapForCatalogue", k1 = makeCode,k2=subMakeCode,  k3= modelCode, k4 = catalogueCode};
-            if (!_cache.TryGetValue(cacheKeys, out string rc))
+            // TODO Fix caching
+            imageName = "";
+            string rc;
+            var cacheKeys = new { type = "GetMapAndImageForCatalogue", k1 = makeCode,k2=subMakeCode,  k3= modelCode, k4 = catalogueCode};
+//            if (!_cache.TryGetValue(cacheKeys, out string rc))
             {
-                rc = _rep.GetMapForCatalogue(makeCode,subMakeCode, modelCode, catalogueCode);
+                rc = _rep.GetMapAndImageForCatalogue(makeCode,subMakeCode, modelCode, catalogueCode, out imageName);
                 var cacheEntryOptions = new MemoryCacheEntryOptions().SetSlidingExpiration(TimeSpan.FromHours(24));
-                _cache.Set(cacheKeys, rc, cacheEntryOptions);
+  //              _cache.Set(cacheKeys, rc, cacheEntryOptions);
             }
             return rc;
         }
