@@ -13,12 +13,21 @@ namespace openPERRepositories.Repositories
             _repository18 = new Release18ImageRepository(config);
             _repository84 = new Release84ImageRepository(config);
         }
-        public byte[] GetImageForModel(int releaseCode, string makeCode,string subMake, string cmgCode)
+        public byte[] GetImageForModel(int releaseCode, string makeCode, string subMake, string cmgCode)
         {
             return releaseCode switch
             {
                 18 => _repository18.GetImageForModel(makeCode, subMake, cmgCode),
                 84 => _repository84.GetImageForModel(makeCode, subMake, cmgCode),
+                _ => null
+            };
+        }
+        public byte[] GetSmallImageForModel(int releaseCode, string makeCode, string subMake, string cmgCode)
+        {
+            return releaseCode switch
+            {
+                18 => _repository18.GetSmallImageForModel(makeCode, subMake, cmgCode),
+                84 => _repository84.GetSmallImageForModel(makeCode, subMake, cmgCode),
                 _ => null
             };
         }

@@ -29,6 +29,10 @@ namespace openPERRepositories.Repositories
         {
             return System.IO.File.ReadAllBytes(System.IO.Path.Combine(_pathToImages, $"ModelImages{subMakeCode}", $"{cmgCode}"));
         }
+        public byte[] GetSmallImageForModel(string makeCode, string subMakeCode, string cmgCode)
+        {
+            return System.IO.File.ReadAllBytes(System.IO.Path.Combine(_pathToImages, $"SmallModelImages{subMakeCode}", $"{cmgCode}"));
+        }
 
         public byte[] GetImageForCatalogue(string makeCode, string subMakeCode, string modelCode, string catalogueCode,
             MapImageModel mapDetails)

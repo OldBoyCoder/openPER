@@ -21,7 +21,7 @@ namespace openPERRepositories.Repositories
             }
         }
 
-        public byte[] GetImageForModel(string makeCode,string subMakeCode, string modelCode)
+        public byte[] GetImageForModel(string makeCode, string subMakeCode, string modelCode)
         {
             // Generate file name
             var lines = System.IO.File.ReadAllLines(System.IO.Path.Combine(_pathToImages, $"ModelImages{subMakeCode}", "img.conf"));
@@ -34,6 +34,10 @@ namespace openPERRepositories.Repositories
             }
             var fileName = line.Split(new[] { ',' })[3];
             return System.IO.File.ReadAllBytes(System.IO.Path.Combine(_pathToImages, $"ModelImages{subMakeCode}", fileName));
+        }
+        public byte[] GetSmallImageForModel(string makeCode, string subMakeCode, string modelCode)
+        {
+            return GetImageForModel(makeCode, subMakeCode, modelCode);
         }
 
         public byte[] GetImageForCatalogue(string makeCode, string subMakeCode, string modelCode, string catalogueCode,

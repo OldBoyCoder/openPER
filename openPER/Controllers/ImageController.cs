@@ -19,6 +19,11 @@ namespace openPER.Controllers
         {
             return File(_imageRep.GetImageForModel(releaseCode, make, subMake, model), "image/png");
         }
+        [Route("Image/SmallModelImage/{ReleaseCode}/{Make}/{SubMake}/{Model}")]
+        public ActionResult SmallModelImage(int releaseCode, string make, string subMake, string model)
+        {
+            return File(_imageRep.GetSmallImageForModel(releaseCode, make, subMake, model), "image/png");
+        }
         [Route("Image/CatalogueImage/{ReleaseCode}/{Make}/{SubMake}/{Model}/{Catalogue}")]
         public ActionResult CatalogueImage(int releaseCode, string make, string subMake, string model, string catalogue)
         {

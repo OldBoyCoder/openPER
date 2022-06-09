@@ -9,25 +9,8 @@
         <div class="col-lg-4 col-md-4 col-sm-12 col-xs-12">
             @await Html.PartialAsync("_SidebarMenu", Model.Navigation)
         </div>
-        <div class="col-lg-3 col-md-4 col-sm-12 col-xs-12">
+        <div class="col-lg-8 col-md-8 col-sm-12 col-xs-12">
             <img src="@Url.Action("ModelImage", "Image", new { Model.ReleaseCode, Make = Model.Navigation.Breadcrumb.MakeCode, SubMake = Model.Navigation.Breadcrumb.SubMakeCode, Model = Model.Navigation.Breadcrumb.ModelCode })">
-        </div>
-        <div class="col-lg-5 col-md-4 col-sm-12 col-xs-12">
-            <table class="table table-sm">
-                <thead>
-                    <tr>
-                        <th>Version</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    @foreach (var item in Model.Catalogues)
-                    {
-                        <tr>
-                            <td>@Html.ActionLink(item.Description, "Index", "Groups", new { Model.ReleaseCode, item.MakeCode, item.SubMakeCode, item.ModelCode, CatalogueCode = item.Code })</td>
-                        </tr>
-                    }
-                </tbody>
-            </table>
         </div>
     </div>
 </div>
