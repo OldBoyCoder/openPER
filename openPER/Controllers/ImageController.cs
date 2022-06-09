@@ -26,14 +26,15 @@ namespace openPER.Controllers
             // Not sure whether to pass a DB repository into the image repository or get it here
             // decided I didn't want a DB dependency in the image repository so get the map name here
             // Might find out I'm wrong when I did other versions
-            var mapName = _repository.GetMapForCatalogue(releaseCode, make, subMake, model, catalogue);
-            return File(_imageRep.GetImageForCatalogue(releaseCode, make, subMake, model, catalogue, mapName), "image/png");
+            var mapName = _repository.GetMapAndImageForCatalogue(releaseCode, make, subMake, model, catalogue, out string imageName);
+            return File(_imageRep.GetImageForCatalogue(releaseCode, make, subMake, model, catalogue, mapName, imageName), "image/png");
         }
         [Route("Image/GroupImage/{ReleaseCode}/{Make}/{SubMake}/{Model}/{Catalogue}/{Group}")]
         public ActionResult CatalogueGroupImage(int releaseCode, string make, string subMake, string model, string catalogue, int group)
         {
             var mapName = _repository.GetMapForCatalogueGroup(releaseCode, make, subMake, model, catalogue, group);
-            return File(_imageRep.GetImageForCatalogue(releaseCode, make, subMake, model, catalogue, mapName), "image/png");
+            // TODO sort out imageName
+            return File(_imageRep.GetImageForCatalogue(releaseCode, make, subMake, model, catalogue, mapName, ""), "image/png");
         }
         [Route("Image/{ReleaseCode}/{Make}/{Model}")]
         public ActionResult Drawing(int releaseCode, string make,string subMakeCode, string model)
