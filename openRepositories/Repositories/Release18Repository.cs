@@ -38,13 +38,14 @@ namespace openPERRepositories.Repositories
             }, makeCode, subMakeCode, catalogueCode);
             return rc;
         }
-        public override List<GroupImageMapEntryModel> GetGroupMapEntriesForCatalogue(string catalogueCode)
+        public override List<GroupImageMapEntryModel> GetGroupMapEntriesForCatalogue(string catalogueCode, string languageCode)
         {
             var map = new List<GroupImageMapEntryModel>();
             using var connection = new SqliteConnection($"Data Source={_pathToDb}");
-            var sql = @"select MPG_TX-MPI_OFFX, MPG_TY-MPI_OFFY, MPG_INDEX, GRP_COD from CATALOGUES C
+            var sql = @"select MPG_TX-MPI_OFFX, MPG_TY-MPI_OFFY, MPG_INDEX, M.GRP_COD, GRP_DSC from CATALOGUES C
                         JOIN MAP_GRP M ON M.MAP_NAME = C.MAP_NAME
                         JOIN MAP_INFO MI ON MI.MAP_NAME = C.MAP_NAME
+                        JOIN GROUPS_DSC GD ON GD.GRP_COD = M.GRP_COD AND LNG_COD = $p2
                         WHERE C.CAT_COD = $p1
                             AND M.GRP_COD IN (SELECT DISTINCT GRP_COD FROM TBDATA WHERE CAT_COD = $p1)
                         ORDER BY MPG_TY, MPG_TX, MPG_INDEX";
@@ -55,10 +56,11 @@ namespace openPERRepositories.Repositories
                     X = reader.GetInt32(0),
                     Y = reader.GetInt32(1),
                     Index = reader.GetInt32(2),
-                    GroupCode = reader.GetInt32(3)
+                    GroupCode = reader.GetInt32(3),
+                    Description = reader.GetString(4)
                 };
                 map.Add(m);
-            }, catalogueCode);
+            }, catalogueCode, languageCode);
             return map;
 
         }

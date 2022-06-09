@@ -24,7 +24,7 @@ namespace openPERRepositories.Interfaces
         MapImageModel GetMapAndImageForCatalogue(int releaseCode, string make, string subMake, string model,
             string catalogue);
         void PopulateBreadcrumbDescriptions(int releaseCode, BreadcrumbModel breadcrumb, string languageCode);
-        List<GroupImageMapEntryModel> GetGroupMapEntriesForCatalogue(int releaseCode, string catalogueCode);
+        List<GroupImageMapEntryModel> GetGroupMapEntriesForCatalogue(int releaseCode, string catalogueCode, string languageCode);
         MapImageModel GetMapForCatalogueGroup(int releaseCode, string make, string subMake, string model,
             string catalogue, int group);
         List<SubGroupImageMapEntryModel> GetSubGroupMapEntriesForCatalogueGroup(int releaseCode, string catalogueCode, int groupCode);

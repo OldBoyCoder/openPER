@@ -17,7 +17,7 @@
                     {
                         <div class="col-lg-4 col-md-4 col-sm-12 col-xs-12">
                             <a href="@Url.Action("Index", "Catalogues", new { Model.Navigation.Breadcrumb.ReleaseCode, MakeCode = Model.Navigation.Breadcrumb.MakeCode, SubMakeCode = Model.Navigation.Breadcrumb.SubMakeCode, ModelCode = model.Code })">
-                            <img src="@Url.Action("SmallModelImage", "Image", new { Model.ReleaseCode, Make = Model.Navigation.Breadcrumb.MakeCode, SubMake = Model.Navigation.Breadcrumb.SubMakeCode, Model = model.Code })">
+                                <img title="@(model.Description)" src="@Url.Action("SmallModelImage", "Image", new { Model.ReleaseCode, Make = Model.Navigation.Breadcrumb.MakeCode, SubMake = Model.Navigation.Breadcrumb.SubMakeCode, Model = model.Code })" alt="@(model.Description)">
                             </a>
                         </div>
                     }
