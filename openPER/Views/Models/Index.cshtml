@@ -10,24 +10,21 @@
             @await Html.PartialAsync("_SidebarMenu", Model.Navigation)
         </div>
         <div class="col-lg-8 col-md-8 col-sm-12 col-xs-12">
-            <table class="table table-sm table-hover">
-                <thead>
-                    <tr>
-                        <th>Model</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    @foreach (var item in Model.Models)
+            <div class="container">
+                <div class="row">
+                @{
+                    foreach (var model in Model.Models)
                     {
-                        <tr>
-                            <td>
-                                @Html.ActionLink(item.Description, "Index", "Catalogues", new { Model.ReleaseCode, item.MakeCode, item.SubMakeCode, ModelCode = item.Code })
-                            </td>
-
-                        </tr>
+                        <div class="col-lg-4 col-md-4 col-sm-12 col-xs-12">
+                            <a href="@Url.Action("Index", "Catalogues", new { Model.Navigation.Breadcrumb.ReleaseCode, MakeCode = Model.Navigation.Breadcrumb.MakeCode, SubMakeCode = Model.Navigation.Breadcrumb.SubMakeCode, ModelCode = model.Code })">
+                            <img src="@Url.Action("SmallModelImage", "Image", new { Model.ReleaseCode, Make = Model.Navigation.Breadcrumb.MakeCode, SubMake = Model.Navigation.Breadcrumb.SubMakeCode, Model = model.Code })">
+                            </a>
+                        </div>
                     }
-                </tbody>
-            </table>
+
+                }
+                </div>
+            </div>
         </div>
     </div>
 </div>
