@@ -621,30 +621,7 @@ namespace openPERRepositories.Repositories
             if (breadcrumb.GroupCode != null && breadcrumb.SubGroupCode != null) breadcrumb.SubGroupDescription = GetSubGroupDescription(breadcrumb.GroupCode.Value, breadcrumb.SubGroupCode.Value, languageCode, connection);
         }
 
-        public List<GroupImageMapEntryModel> GetGroupMapEntriesForCatalogue(string catalogueCode)
-        {
-            var map = new List<GroupImageMapEntryModel>();
-            using var connection = new SqliteConnection($"Data Source={_pathToDb}");
-            var sql = @"select MPG_TX-MPI_OFFX, MPG_TY-MPI_OFFY, MPG_INDEX, GRP_COD from CATALOGUES C
-                        JOIN MAP_GRP M ON M.MAP_NAME = C.MAP_NAME
-                        JOIN MAP_INFO MI ON MI.MAP_NAME = C.MAP_NAME
-                        WHERE C.CAT_COD = $p1
-                            AND M.GRP_COD IN (SELECT DISTINCT GRP_COD FROM TBDATA WHERE CAT_COD = $p1)
-                        ORDER BY MPG_TY, MPG_TX, MPG_INDEX";
-            connection.RunSqlAllRows(sql, (reader) =>
-            {
-                var m = new GroupImageMapEntryModel
-                {
-                    X = reader.GetInt32(0),
-                    Y = reader.GetInt32(1),
-                    Index = reader.GetInt32(2),
-                    GroupCode = reader.GetInt32(3)
-                };
-                map.Add(m);
-            }, catalogueCode);
-            return map;
-
-        }
+        public abstract List<GroupImageMapEntryModel> GetGroupMapEntriesForCatalogue(string catalogueCode);
 
         public string GetMapForCatalogueGroup(string make, string subMake, string model, string catalogue, int group)
         {
