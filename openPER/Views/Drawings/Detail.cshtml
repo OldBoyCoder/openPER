@@ -7,10 +7,34 @@
 @await Html.PartialAsync("_Breadcrumb", Model.Breadcrumb)
 <div class="container">
     <div class="row">
-        <div class="col-sm">
-            <img src="@Url.Action("Drawing", "Image", new { Make = Model.TableData.MakeCode, Model = Model.TableData.ModelCode, Catalogue = Model.TableData.CatalogueCode, Group = Model.TableData.GroupCode, SubGroup = Model.TableData.SubGroupCode, SubSubGroup = Model.TableData.SubSubGroupCode, Drawing = Model.TableData.CurrentDrawing })">
+        <div class="col-lg-6 col-md-12 col-sm-12 col-xs-12">
+            <div class="container">
+                <div class="row">
+                    <div class="col-12">
+                        <img src="@Url.Action("Drawing", "Image", new { Make = Model.TableData.MakeCode, Model = Model.TableData.ModelCode, Catalogue = Model.TableData.CatalogueCode, Group = Model.TableData.GroupCode, SubGroup = Model.TableData.SubGroupCode, SubSubGroup = Model.TableData.SubSubGroupCode, Drawing = Model.TableData.CurrentDrawing })">
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-12">
+                        <div class="container horizontal-scrollable">
+                            <div class="row text-center">
+                                @{
+                                    int ix = 1;
+                                    @foreach (var drawing in Model.Drawings)
+                                    {
+                                        <div class="col-xs-4">
+                                            <img src="@Url.Action("Thumbnail", "Image", new { Make = drawing.MakeCode, Model = drawing.ModelCode, Catalogue = drawing.CatalogueCode, Group = drawing.GroupCode, SubGroup = drawing.SubGroupCode, SubSubGroup = drawing.SubSubGroupCode, Drawing = drawing.DrawingNumber })"><br />
+                                            @Html.ActionLink($"{drawing.CatalogueCode}/{drawing.GroupCode:000}{drawing.SubGroupCode:00}/{drawing.SubSubGroupCode:00}/{ix}", "Detail", "Drawings", new { Model.ReleaseCode, drawing.MakeCode,drawing.SubMakeCode, drawing.ModelCode, drawing.CatalogueCode, drawing.GroupCode, drawing.SubGroupCode, SubSubGroupCode = drawing.SubSubGroupCode, DrawingNumber = ix++ })
+                                        </div>
+                                    }
+                                }
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
         </div>
-        <div class="col-sm">
+        <div class="col-lg-6 col-md-12 col-sm-12 col-xs-12">
             <table class="table table-sm">
                 <tr><th>&nbsp;</th><th>Prod. code</th><th>Fur. Descr.</th><th>Comp.</th><th>Modif.</th><th>Qty</th><th>Notes</th><th>Components</th></tr>
                 @{
@@ -41,7 +65,7 @@
                             <td>
                                 @if (item.IsAComponent)
                                 {
-                                    @Html.ActionLink($"Go", "Detail", "Cliche", new { Model.ReleaseCode, Model.TableData.MakeCode, Model.TableData.SubMakeCode, Model.TableData.ModelCode, Model.TableData.CatalogueCode, Model.TableData.GroupCode, Model.TableData.SubGroupCode, SubSubGroupCode = Model.TableData.SubSubGroupCode, DrawingNumber = Model.TableData.CurrentDrawing, ClichePartNumber=item.PartNumber})
+                                    @Html.ActionLink($"Go", "Detail", "Cliche", new { Model.ReleaseCode, Model.TableData.MakeCode, Model.TableData.SubMakeCode, Model.TableData.ModelCode, Model.TableData.CatalogueCode, Model.TableData.GroupCode, Model.TableData.SubGroupCode, SubSubGroupCode = Model.TableData.SubSubGroupCode, DrawingNumber = Model.TableData.CurrentDrawing, ClichePartNumber = item.PartNumber })
                                 }
                             </td>
 
@@ -54,17 +78,3 @@
 </div>
 
 
-<div class="container horizontal-scrollable">
-    <div class="row text-center">
-        @{
-            int ix = 1;
-            @foreach (var drawing in Model.Drawings)
-            {
-                <div class="col-xs-4">
-                    <img src="@Url.Action("Thumbnail", "Image", new { Make = drawing.MakeCode, Model = drawing.ModelCode, Catalogue = drawing.CatalogueCode, Group = drawing.GroupCode, SubGroup = drawing.SubGroupCode, SubSubGroup = drawing.SubSubGroupCode, Drawing = drawing.DrawingNumber })"><br />
-                    @Html.ActionLink($"{drawing.CatalogueCode}/{drawing.GroupCode}/{drawing.SubGroupCode}/{drawing.SubSubGroupCode}/{ix}", "Detail", "Drawings", new { Model.ReleaseCode, drawing.MakeCode,drawing.SubMakeCode, drawing.ModelCode, drawing.CatalogueCode, drawing.GroupCode, drawing.SubGroupCode, SubSubGroupCode = drawing.SubSubGroupCode, DrawingNumber = ix++ })
-                </div>
-            }
-        }
-    </div>
-</div>

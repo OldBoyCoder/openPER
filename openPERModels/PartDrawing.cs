@@ -3,6 +3,7 @@
     public class PartDrawing
     {
         public string Make { get; set; }
+        public string SubMake { get; set; }
         public string Model { get; set; }
         public string CatalogueCode { get; set; }
         public string CatalogueDescription { get; set; }

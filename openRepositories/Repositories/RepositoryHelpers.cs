@@ -19,6 +19,7 @@ namespace openPERRepositories.Repositories
                 }
             }
 
+            
             using var reader = command.ExecuteReader();
             while (reader.Read())
             {
