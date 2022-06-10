@@ -1,8 +1,17 @@
 ﻿@using openPER.ViewModels
 @model SessionOptionsViewModel
-@using(Html.BeginForm("SetLanguage", "Home", FormMethod.Post))
-{
-@Html.DropDownListFor(m=>m.CurrentLanguage, new SelectList(Model.Languages, "Code", "Description"))
-<button type="submit" class="btn-sm btn-secondary">Go</button>
 
+@foreach (var lang in Model.Languages)
+{
+    <li>
+        @if (lang.Code == Model.CurrentLanguage)
+        {
+            @Html.ActionLink(lang.Description, "SetLanguage", "Home", new { LanguageCode = lang.Code }, new { @class = "dropdown-item active" })
+        }
+        else
+        {
+            @Html.ActionLink(lang.Description, "SetLanguage", "Home", new { LanguageCode = lang.Code }, new { @class = "dropdown-item" })
+        }
+
+    </li>
 }
