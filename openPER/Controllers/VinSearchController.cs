@@ -91,6 +91,7 @@ namespace openPER.Controllers
                 vinSearch.EngineNumber = searchResult.Motor;
                 vinSearch.Models = _rep.GetAllModels(releaseCode);
             }
+            vinSearch.ReleaseCode = releaseCode;
             return View("Index", vinSearch);
         }
     }

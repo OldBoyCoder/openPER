@@ -12,7 +12,8 @@
         <caption>List of vehicle details</caption>
         <tr><td>Model</td><td>@Html.DisplayTextFor(m=>m.MvsData.MvsCode) | @Html.DisplayTextFor(m=>m.MvsData.ModelDescription)</td></tr>
         <tr><td>Chassis No.</td><td>@Html.DisplayTextFor(m=>m.ChassisNumber)</td></tr>
-        <tr><td>Catalogue</td><td>@Html.ActionLink(Model.MvsData.CatalogueCode +" | "+Model.MvsData.CatalogueDescription, "Index", "Catalogues", new { ReleaseCode=Model.ReleaseCode, MakeCode="F", ModelCode="BAR"})
+        <!-- TODO this shouldn't be hardcoded as a BArchetta' -->
+        <tr><td>Catalogue</td><td>@Html.ActionLink(Model.MvsData.CatalogueCode +" | "+Model.MvsData.CatalogueDescription, "Index", "Catalogues", new { ReleaseCode=Model.ReleaseCode, MakeCode="F",SubMakeCode="F", ModelCode="BAR"})
         </td></tr>
         <tr><td>MVS</td><td>@Html.DisplayTextFor(m=>m.MvsData.FullMvsCode) | @Html.DisplayTextFor(m=>m.MvsData.Description)</td></tr>
         <tr><td>Engine stamp</td><td>@Html.DisplayTextFor(m=>m.MvsData.EngineType)</td></tr>
