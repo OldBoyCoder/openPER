@@ -24,8 +24,12 @@
                             <!-- TODO don't hardcode release -->'
                             @Html.ActionLink("Makes", "Index", "Makes", new { ReleaseCode = 18 }, new { @class = "nav-link side-menu-item" })
                         </li>
-                        <li class="nav-item">
+                        <li class="nav-item dropdown">
+                            <a class="nav-link dropdown-toggle" href="#" id="languageDropdownMenuLink" role="button" data-toggle="dropdown" aria-expanded="false">
+                                Language</a>
+                            <ul class="dropdown-menu" aria-labelledby="languageDropdownMenuLink">
                             <vc:language-choice-widget></vc:language-choice-widget>
+                            </ul>
                         </li>
                         <li class="nav-item">
                             <div class="dropdown">

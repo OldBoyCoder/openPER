@@ -72,6 +72,17 @@ namespace openPER.Controllers
 
             return Redirect(Request.GetTypedHeaders().Referer.ToString());
         }
+        [Route("Home/SetLanguage/{LanguageCode}")]
+        public IActionResult SetLanguage(string languageCode)
+        {
+            HttpContext.Response.Cookies.Append("PreferredLanguage", languageCode);
+            //HttpContext.Response.Cookies.Append("Release", model.CurrentVersion.ToString());
+            var newCulture = Helpers.LanguageSupport.ConvertLanguageCodeToCulture(languageCode);
+            Thread.CurrentThread.CurrentCulture = newCulture;
+            Thread.CurrentThread.CurrentUICulture = newCulture;
+
+            return Redirect(Request.GetTypedHeaders().Referer.ToString());
+        }
 
         [HttpPost]
         public IActionResult Index(SessionOptionsViewModel model)
