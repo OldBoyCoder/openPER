@@ -4,6 +4,7 @@ using Microsoft.Extensions.Logging;
 using openPER.ViewModels;
 using System.Collections.Generic;
 using System.Diagnostics;
+using System.Linq;
 using System.Threading;
 using Microsoft.AspNetCore.Http;
 using openPERModels;
@@ -26,29 +27,29 @@ namespace openPER.Controllers
 
         public IActionResult Index()
         {
-            var model = new SessionOptionsViewModel
-            {
-                Languages = _rep.GetAllLanguages(18)
-            };
-            if (HttpContext.Request.Cookies.ContainsKey("PreferredLanguage"))
-            {
-                model.CurrentLanguage = HttpContext.Request.Cookies["PreferredLanguage"];
-            }
-            var s = _config.GetSection("Releases").Get<ReleaseModel[]>();
-            model.Versions = new List<VersionModel>();
-            foreach (var release in s)
-            {
-                var v = new VersionModel
-                {
-                    Release = release.Release,
-                    Description = release.Description
-                };
-                model.Versions.Add(v);
+            //var model = new SessionOptionsViewModel
+            //{
+            //    Languages = _rep.GetAllLanguages(18)
+            //};
+            //if (HttpContext.Request.Cookies.ContainsKey("PreferredLanguage"))
+            //{
+            //    model.CurrentLanguage = HttpContext.Request.Cookies["PreferredLanguage"];
+            //}
+            //var s = _config.GetSection("Releases").Get<ReleaseModel[]>();
+            //model.Versions = new List<VersionModel>();
+            //foreach (var release in s)
+            //{
+            //    var v = new VersionModel
+            //    {
+            //        Release = release.Release,
+            //        Description = release.Description
+            //    };
+            //    model.Versions.Add(v);
 
-            }
+            //}
 
-            model.CurrentVersion = model.Versions[0].Release;
-            return View( model);
+            //model.CurrentVersion = model.Versions[0].Release;
+            return View( );
         }
 
         public IActionResult Privacy()
@@ -82,6 +83,24 @@ namespace openPER.Controllers
             Thread.CurrentThread.CurrentUICulture = newCulture;
 
             return Redirect(Request.GetTypedHeaders().Referer.ToString());
+        }
+        [Route("Home/SetRelease/{ReleaseCode}")]
+        public IActionResult SetRelease(int releaseCode)
+        {
+//            Request.GetTypedHeaders().Referer.ToString()
+            HttpContext.Response.Cookies.Append("Release", releaseCode.ToString());
+            //HttpContext.Response.Cookies.Append("Release", model.CurrentVersion.ToString());
+            var pathParts = Request.GetTypedHeaders().Referer.ToString().Split('/').ToArray();
+            for (int i = 0; i < pathParts.Length; i++)
+            {
+                if (int.TryParse(pathParts[i], out int oldRelease))
+                {
+                    pathParts[i] = releaseCode.ToString();
+                    break;
+                }
+            }
+
+            return Redirect(string.Join('/', pathParts));
         }
 
         [HttpPost]

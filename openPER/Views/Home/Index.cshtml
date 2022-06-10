@@ -1,43 +1,4 @@
 ﻿@using openPER.ViewModels
-@using openPER.Resources
-@model SessionOptionsViewModel
 @{
-    ViewData["Title"] = "Home Page";
-    Layout = "~/Views/Shared/_LandingLayout.cshtml";
+    ViewData["Title"] = "Index";
 }
-
-<div class="row">
-    <div class="col-sm">
-        @using (Html.BeginForm("Index", "Home", FormMethod.Post))
-        {
-            @Html.DropDownListFor(m=>m.CurrentLanguage, new SelectList(Model.Languages, "Code", "Description"))
-            @Html.DropDownListFor(m=>m.CurrentVersion, new SelectList(Model.Versions, "Release", "Description"))
-            <button type="submit" class="btn btn-info">Search</button>
-
-        }
-    </div>
-</div>
-<p>
-    @FrontEnd.IntroParagraph
-</p>
-@*<table class="table">
-    <thead>
-        <tr>
-            <th>
-                @Html.DisplayNameFor(model => model.Description)
-            </th>
-        </tr>
-    </thead>
-    <tbody>
-@foreach (var item in Model) {
-        <tr>
-            <td>
-                @Html.ActionLink(item.Description, "Models", "Table", new {Make=item.Code})
-            </td>
-
-        </tr>
-}
-    </tbody>
-</table>*@
-
-

@@ -32,6 +32,7 @@ namespace openPER.Controllers
             p.PartNumberSearch = partNumber;
 
             p.Result = _rep.GetPartDetails(releaseCode, p.PartNumberSearch, language);
+            p.ReleaseCode = releaseCode;
             return View("Index", p);
         }
     }

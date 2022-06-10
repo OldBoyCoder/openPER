@@ -678,7 +678,7 @@ namespace openPERRepositories.Repositories
             var drawings = new List<PartDrawing>();
             using var connection = new SqliteConnection($"Data Source={_pathToDb}");
             var sql = @"SELECT DISTINCT T.CAT_COD,CAT_DSC, T.GRP_COD, T.SGRP_COD, SGS_COD, DRW_NUM, SGRP_DSC,
-                                        MK_COD, CMG_COD
+                                        MK_COD, CMG_COD, MK2_COD
                                 FROM APPLICABILITY A
                                 JOIN TBDATA T ON T.PRT_COD = A.PRT_COD AND T.GRP_COD = A.GRP_COD AND T.SGRP_COD = A.SGRP_COD
                                 JOIN SUBGROUPS_DSC SD ON SD.SGRP_COD = T.SGRP_COD AND SD.GRP_COD = T.GRP_COD AND SD.LNG_COD = $p2
@@ -689,6 +689,7 @@ namespace openPERRepositories.Repositories
                 var p = new PartDrawing
                 {
                     Make = reader.GetString(7),
+                    SubMake = reader.GetString(9),
                     Model = reader.GetString(8),
                     CatalogueCode = reader.GetString(0),
                     CatalogueDescription = reader.GetString(1),
