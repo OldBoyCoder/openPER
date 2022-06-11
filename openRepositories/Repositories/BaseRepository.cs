@@ -36,30 +36,10 @@ namespace openPERRepositories.Repositories
             t.CurrentDrawing = drawingNumber;
             return t;
         }
-        public List<MakeModel> GetAllMakes()
-        {
-            var rc = new List<MakeModel>
-            {
-                new ("F","F", "FIAT"),
-                new ("F","T", "FIAT COMMERCIAL"),
-                new ("L","L", "LANCIA"),
-                new ("R","R", "ALFA ROMEO")
-            };
-            //using var connection = new SqliteConnection($"Data Source={_pathToDb}");
-            //var sql = @"SELECT MK_COD, MK_DSC FROM MAKES ORDER BY MK_DSC ";
-            //connection.RunSqlAllRows(sql, (reader) =>
-            //{
-            //    var m = new MakeModel
-            //    {
-            //        Code = reader.GetString(0),
-            //        Description = reader.GetString(1)
-            //    };
-            //    rc.Add(m);
 
-            //}, null);
-            return rc;
+        public abstract List<MakeModel> GetAllMakes();
+        public abstract string GetMakeDescription(string makeCode, SqliteConnection connection);
 
-        }
 
         private List<int> GetDrawingNumbers(string catalogueCode, int groupCode, int subGroupCode, int sgsCode, SqliteConnection connection)
         {
@@ -218,16 +198,6 @@ namespace openPERRepositories.Repositories
         }
 
 
-        private string GetMakeDescription(string makeCode, SqliteConnection connection)
-        {
-            var rc = "";
-            var sql = @"SELECT MK_DSC FROM MAKES WHERE MK_COD = $p1";
-            connection.RunSqlFirstRowOnly(sql, (reader) =>
-            {
-                rc = reader.GetString(0);
-            }, makeCode);
-            return rc;
-        }
         private string GetModelDescription(string makeCode, string subMakeCode, string modelCode, SqliteConnection connection)
         {
             var rc = "";
@@ -631,14 +601,8 @@ namespace openPERRepositories.Repositories
 
         private string GetSubMakeDescription(string makeCode, string subMakeCode, SqliteConnection connection)
         {
-            return subMakeCode switch
-            {
-                "F" => "FIAT",
-                "T" => "FIAT COMMERCIAL",
-                "R" => "ALFA ROMEO",
-                "L" => "LANCIA",
-                _ => ""
-            };
+            var allMakes = GetAllMakes();
+            return allMakes.FirstOrDefault(x => x.SubCode == subMakeCode)?.Description;
         }
 
         public PartModel GetPartDetails(string partNumberSearch, string languageCode)

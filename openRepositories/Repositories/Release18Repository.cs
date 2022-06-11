@@ -111,5 +111,41 @@ namespace openPERRepositories.Repositories
             }, groupCode, mapDetails.MapName, catalogueCode);
             return map;
         }
+
+        public override List<MakeModel> GetAllMakes()
+        {
+            var rc = new List<MakeModel>
+            {
+                new ("F","F", "FIAT"),
+                new ("F","T", "FIAT COMMERCIAL"),
+                new ("L","L", "LANCIA"),
+                new ("R","R", "ALFA ROMEO")
+            };
+            //using var connection = new SqliteConnection($"Data Source={_pathToDb}");
+            //var sql = @"SELECT MK_COD, MK_DSC FROM MAKES ORDER BY MK_DSC ";
+            //connection.RunSqlAllRows(sql, (reader) =>
+            //{
+            //    var m = new MakeModel
+            //    {
+            //        Code = reader.GetString(0),
+            //        Description = reader.GetString(1)
+            //    };
+            //    rc.Add(m);
+
+            //}, null);
+            return rc;
+
+        }
+
+        public override string GetMakeDescription(string makeCode, SqliteConnection connection)
+        {
+            var rc = "";
+            var sql = @"SELECT MK_DSC FROM MAKES WHERE MK_COD = $p1";
+            connection.RunSqlFirstRowOnly(sql, (reader) =>
+            {
+                rc = reader.GetString(0);
+            }, makeCode);
+            return rc;
+        }
     }
 }
