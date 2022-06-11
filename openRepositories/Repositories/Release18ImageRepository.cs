@@ -49,20 +49,18 @@ namespace openPERRepositories.Repositories
         }
 
         public byte[] GetImageForDrawing(string makeCode, string modelCode, string catalogueCode, int groupCode, int subGroupCode,
-            int subSubGroupCode, int drawingNumber)
+            int subSubGroupCode, int drawingNumber, string imageName)
         {
             if (makeCode == "T") makeCode = "F";
             var fileName = System.IO.Path.Combine(_pathToImages,  "DrawingImages", $"{makeCode}{catalogueCode}.na");
-            var imageName = $"{groupCode}{subGroupCode:00}{subSubGroupCode:00}{drawingNumber:000}";
 
             return GetImageFromNaFile(fileName, imageName, false);
         }
 
         public byte[] GetThumbnailForDrawing(string makeCode, string modelCode, string catalogueCode, int groupCode, int subGroupCode,
-            int subSubGroupCode, int drawingNumber)
+            int subSubGroupCode, int drawingNumber, string imageName)
         {
             var fileName = System.IO.Path.Combine(_pathToImages, "DrawingImages", $"{makeCode}{catalogueCode}.na");
-            var imageName = $"{groupCode}{subGroupCode:00}{subSubGroupCode:00}{drawingNumber:000}";
 
             return GetImageFromNaFile(fileName, imageName, true);
         }

@@ -44,21 +44,24 @@ namespace openPERRepositories.Repositories
         }
 
         public byte[] GetImageForDrawing(int releaseCode, string makeCode, string modelCode, string catalogueCode, int groupCode,
-            int subGroupCode, int subSubGroupCode, int drawingNumber)
+            int subGroupCode, int subSubGroupCode, int drawingNumber, string imageName)
         {
             return releaseCode switch
             {
-                18 => _repository18.GetImageForDrawing(makeCode, modelCode, catalogueCode, groupCode, subGroupCode, subSubGroupCode, drawingNumber),
+                18 => _repository18.GetImageForDrawing(makeCode, modelCode, catalogueCode, groupCode, subGroupCode, subSubGroupCode, drawingNumber, imageName),
+                84 => _repository84.GetImageForDrawing(makeCode, modelCode, catalogueCode, groupCode, subGroupCode, subSubGroupCode, drawingNumber, imageName),
                 _ => null
             };
         }
 
-        public byte[] GetThumbnailForDrawing(int releaseCode, string makeCode, string modelCode, string catalogueCode, int groupCode,
-            int subGroupCode, int subSubGroupCode, int drawingNumber)
+        public byte[] GetThumbnailForDrawing(int releaseCode, string makeCode, string modelCode, string catalogueCode,
+            int groupCode,
+            int subGroupCode, int subSubGroupCode, int drawingNumber, string imageName)
         {
             return releaseCode switch
             {
-                18 => _repository18.GetThumbnailForDrawing(makeCode, modelCode, catalogueCode, groupCode, subGroupCode, subSubGroupCode, drawingNumber),
+                18 => _repository18.GetThumbnailForDrawing(makeCode, modelCode, catalogueCode, groupCode, subGroupCode, subSubGroupCode, drawingNumber, imageName),
+                84 => _repository84.GetThumbnailForDrawing(makeCode, modelCode, catalogueCode, groupCode, subGroupCode, subSubGroupCode, drawingNumber, imageName),
                 _ => null
             };
         }

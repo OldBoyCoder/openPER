@@ -49,9 +49,7 @@ namespace openPERRepositories.Repositories
             return release switch
             {
                 18 => _repository18.GetAllModels(),
-                84 => _repository18.GetAllModels(),
-                // TODO go to the right repository
-//                84 => _repository84.GetAllModels(),
+                84 => _repository84.GetAllModels(),
                 _ => throw new System.NotImplementedException()
             };
         }
@@ -221,6 +219,17 @@ namespace openPERRepositories.Repositories
             {
                 18 => _repository18.GetSubGroupMapEntriesForCatalogueGroup(catalogueCode, groupCode),
                 84 => _repository84.GetSubGroupMapEntriesForCatalogueGroup(catalogueCode, groupCode),
+                _ => throw new System.NotImplementedException()
+            };
+        }
+
+        public string GetImageNameForDrawing(int releaseCode, string make, string model, string catalogue, int group, int subgroup,
+            int subSubGroup, int drawing)
+        {
+            return releaseCode switch
+            {
+                18 => _repository18.GetImageNameForDrawing(make, model, catalogue, group, subgroup, subSubGroup, drawing),
+                84 => _repository84.GetImageNameForDrawing(make, model, catalogue, group, subgroup, subSubGroup, drawing),
                 _ => throw new System.NotImplementedException()
             };
         }

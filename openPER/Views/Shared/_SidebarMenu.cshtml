@@ -32,7 +32,7 @@
                     </button>
                 </h5>
             </div>
-            <div id="navCollapseModel" class="collapse @(Model.SideMenuItems.AllCatalogues == null ? "show" : "") aria-labelledby="navModelHeader" data-parent="#sideMenu">
+            <div id="navCollapseModel" class="collapse @(Model.SideMenuItems.AllCatalogues == null ? "show" : "")" aria-labelledby="navModelHeader" data-parent="#sideMenu">
                 <div class="card-body side-menu">
                     <ul class="nav flex-column">
                         @foreach (var m in Model.SideMenuItems.AllModels)

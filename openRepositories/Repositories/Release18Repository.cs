@@ -112,6 +112,12 @@ namespace openPERRepositories.Repositories
             return map;
         }
 
+        public override string GetImageNameForDrawing(string make, string model, string catalogue, int group, int subgroup, int subSubGroup,
+            int drawing)
+        {
+            return $"{group:000}{subgroup:00}{subSubGroup:00}{drawing:000}";
+        }
+
         public override List<MakeModel> GetAllMakes()
         {
             var rc = new List<MakeModel>
@@ -147,5 +153,54 @@ namespace openPERRepositories.Repositories
             }, makeCode);
             return rc;
         }
+
+        public override List<SubSubGroupModel> GetSubSubGroupsForCatalogueGroupSubGroup(string catalogueCode, int groupCode, int subGroupCode, string languageCode)
+        {
+            var rc = new List<SubSubGroupModel>();
+            using var connection = new SqliteConnection($"Data Source={_pathToDb}");
+            var sql = @"select distinct T.SGS_COD FROM TBDATA T
+                            WHERE CAT_COD = $p1 AND T.GRP_COD = $p2 AND T.SGRP_COD = $p3
+                            order by T.SGS_COD";
+            connection.RunSqlAllRows(sql, (reader) =>
+            {
+                var m = new SubSubGroupModel
+                {
+                    Code = reader.GetInt32(0),
+
+                };
+                m.Modifications = AddSgsModifications(catalogueCode, groupCode, subGroupCode, m.Code, languageCode, connection);
+                m.Options = AddSgsOptions(catalogueCode, groupCode, subGroupCode, m.Code, languageCode, connection);
+                m.Variations = AddSgsVariations(catalogueCode, groupCode, subGroupCode, m.Code, languageCode, connection);
+                rc.Add(m);
+            }, catalogueCode, groupCode, subGroupCode);
+            return rc;
+        }
+        public override List<DrawingKeyModel> GetDrawingKeysForSubSubGroup(string makeCode, string modelCode, string catalogueCode, int groupCode,
+            int subGroupCode, int subSubGroupCode)
+        {
+            var drawings = new List<DrawingKeyModel>();
+            using var connection = new SqliteConnection($"Data Source={_pathToDb}");
+            var sql = @"SELECT DISTINCT CAT_COD, GRP_COD, SGRP_COD, SGS_COD, DRW_NUM 
+                            FROM TBDATA
+                            WHERE CAT_COD = $p1 AND GRP_COD = $p2 AND SGRP_COD = $p3 AND SGS_COD = $p4
+                            ORDER BY GRP_COD, SGRP_COD, SGS_COD, DRW_NUM";
+            connection.RunSqlAllRows(sql, (reader) =>
+            {
+                var language = new DrawingKeyModel()
+                {
+                    MakeCode = makeCode,
+                    ModelCode = modelCode,
+                    CatalogueCode = reader.GetString(0),
+                    GroupCode = reader.GetInt32(1),
+                    SubGroupCode = reader.GetInt32(2),
+                    SubSubGroupCode = reader.GetInt32(3),
+                    DrawingNumber = reader.GetInt32(4)
+                };
+                drawings.Add(language);
+            }, catalogueCode, groupCode, subGroupCode, subSubGroupCode);
+
+            return drawings;
+        }
+
     }
 }
