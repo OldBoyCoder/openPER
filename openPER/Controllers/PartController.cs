@@ -22,11 +22,7 @@ namespace openPER.Controllers
         {
             var p = new PartViewModel();
             var language = Helpers.LanguageSupport.SetCultureBasedOnCookie(HttpContext);
-            var releaseCode = 0;
-            if (HttpContext.Request.Cookies.ContainsKey("Release"))
-            {
-                releaseCode = int.Parse(HttpContext.Request.Cookies["Release"] ?? string.Empty);
-            }
+            var releaseCode = Helpers.ReleaseHelpers.GetCurrentReleaseNumber(HttpContext);
 
             if (partNumber == null) return View("Index", null);
             p.PartNumberSearch = partNumber;
