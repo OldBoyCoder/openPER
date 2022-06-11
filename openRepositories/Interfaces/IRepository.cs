@@ -27,6 +27,7 @@ namespace openPERRepositories.Interfaces
         List<GroupImageMapEntryModel> GetGroupMapEntriesForCatalogue(string catalogueCode, string languageCode);
         MapImageModel GetMapForCatalogueGroup(string make, string subMake, string model, string catalogue, int group);
         List<SubGroupImageMapEntryModel> GetSubGroupMapEntriesForCatalogueGroup(string catalogueCode, int groupCode);
+        string GetImageNameForDrawing(string make, string model, string catalogue, int group, int subgroup, int subSubGroup, int drawing);
     }
 
 }

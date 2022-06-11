@@ -50,6 +50,7 @@ namespace openPER.Controllers
             model.TableData.MakeCode = makeCode;
             model.TableData.SubMakeCode = subMakeCode;
             model.TableData.ModelCode = modelCode;
+            model.TableData.CurrentDrawing = drawingNumber;
 
             return View(model);
         }

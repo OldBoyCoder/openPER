@@ -212,7 +212,8 @@ namespace openPERRepositories.Repositories
         {
             var rc = new List<ModelModel>();
             using var connection = new SqliteConnection($"Data Source={_pathToDb}");
-            var sql = @"SELECT MOD_COD, MOD_DSC, MK_COD FROM MODELS ORDER BY MOD_SORT_KEY ";
+//            var sql = @"SELECT MOD_COD, MOD_DSC, MK_COD FROM MODELS ORDER BY MOD_SORT_KEY ";
+            var sql = @"SELECT CMG_COD, CMG_DSC, MK2_COD FROM COMM_MODGRP ORDER BY CMG_SORT_KEY ";
             connection.RunSqlAllRows(sql, (reader) =>
             {
                 var m = new ModelModel
@@ -314,27 +315,11 @@ namespace openPERRepositories.Repositories
             //}
             return rc;
         }
-        public List<SubSubGroupModel> GetSubSubGroupsForCatalogueGroupSubGroup(string catalogueCode, int groupCode, int subGroupCode, string languageCode)
-        {
-            var rc = new List<SubSubGroupModel>();
-            using var connection = new SqliteConnection($"Data Source={_pathToDb}");
-            var sql = @"select distinct T.SGS_COD FROM TBDATA T
-                            WHERE CAT_COD = $p1 AND T.GRP_COD = $p2 AND T.SGRP_COD = $p3
-                            order by T.SGS_COD";
-            connection.RunSqlAllRows(sql, (reader) =>
-            {
-                var m = new SubSubGroupModel
-                {
-                    Code = reader.GetInt32(0),
 
-                };
-                m.Modifications = AddSgsModifications(catalogueCode, groupCode, subGroupCode, m.Code, languageCode, connection);
-                m.Options = AddSgsOptions(catalogueCode, groupCode, subGroupCode, m.Code, languageCode, connection);
-                m.Variations = AddSgsVariations(catalogueCode, groupCode, subGroupCode, m.Code, languageCode, connection);
-                rc.Add(m);
-            }, catalogueCode, groupCode, subGroupCode);
-            return rc;
-        }
+        public abstract List<SubSubGroupModel> GetSubSubGroupsForCatalogueGroupSubGroup(string catalogueCode,
+            int groupCode, int subGroupCode,
+            string languageCode);
+
         private List<string> GetSgsNarrative(string catalogueCode, int groupCode, int subGroupCode, int sgsCode, string languageCode)
         {
             var rc = new List<string>();
@@ -364,7 +349,8 @@ namespace openPERRepositories.Repositories
                 narratives.Add(reader.GetString(0) + reader.GetString(1) + " " + reader.GetString(2));
             }, catalogueCode, groupCode, subGroupCode, sgsCode, languageCode);
         }
-        private List<ModificationModel> AddSgsModifications(string catalogueCode, int groupCode, int subGroupCode, int sgsCode, string languageCode, SqliteConnection connection)
+
+        protected List<ModificationModel> AddSgsModifications(string catalogueCode, int groupCode, int subGroupCode, int sgsCode, string languageCode, SqliteConnection connection)
         {
             var sql = @"select SGSMOD_CD,S.MDF_COD,MDF_DSC from SGS_MOD S
                         JOIN MODIF_DSC M ON M.MDF_COD = S.MDF_COD 
@@ -383,7 +369,8 @@ namespace openPERRepositories.Repositories
             }, catalogueCode, groupCode, subGroupCode, sgsCode, languageCode);
             return rc;
         }
-        private List<OptionModel> AddSgsOptions(string catalogueCode, int groupCode, int subGroupCode, int sgsCode, string languageCode, SqliteConnection connection)
+
+        protected List<OptionModel> AddSgsOptions(string catalogueCode, int groupCode, int subGroupCode, int sgsCode, string languageCode, SqliteConnection connection)
         {
             var sql = @"select O.OPTK_TYPE,O.OPTK_COD,OPTK_DSC from SGS_OPT S
                         JOIN OPTKEYS_DSC O ON O.OPTK_TYPE = S.OPTK_TYPE AND O.OPTK_COD = S.OPTK_COD 
@@ -402,7 +389,8 @@ namespace openPERRepositories.Repositories
             }, catalogueCode, groupCode, subGroupCode, sgsCode, languageCode);
             return rc;
         }
-        private List<VariationModel> AddSgsVariations(string catalogueCode, int groupCode, int subGroupCode, int sgsCode, string languageCode, SqliteConnection connection)
+
+        protected List<VariationModel> AddSgsVariations(string catalogueCode, int groupCode, int subGroupCode, int sgsCode, string languageCode, SqliteConnection connection)
         {
             var sql = @"select V.VMK_TYPE,V.VMK_COD,VMK_DSC from SGS_VAL S
                         JOIN VMK_DSC V ON S.VMK_TYPE = V.VMK_TYPE AND S.VMK_COD = V.VMK_COD AND S.CAT_COD = V.CAT_COD
@@ -473,32 +461,9 @@ namespace openPERRepositories.Repositories
             return languages;
         }
 
-        public List<DrawingKeyModel> GetDrawingKeysForSubSubGroup(string makeCode, string modelCode, string catalogueCode, int groupCode,
-            int subGroupCode, int subSubGroupCode)
-        {
-            var drawings = new List<DrawingKeyModel>();
-            using var connection = new SqliteConnection($"Data Source={_pathToDb}");
-            var sql = @"SELECT DISTINCT CAT_COD, GRP_COD, SGRP_COD, SGS_COD, DRW_NUM 
-                            FROM TBDATA
-                            WHERE CAT_COD = $p1 AND GRP_COD = $p2 AND SGRP_COD = $p3 AND SGS_COD = $p4
-                            ORDER BY GRP_COD, SGRP_COD, SGS_COD, DRW_NUM";
-            connection.RunSqlAllRows(sql, (reader) =>
-            {
-                var language = new DrawingKeyModel()
-                {
-                    MakeCode = makeCode,
-                    ModelCode = modelCode,
-                    CatalogueCode = reader.GetString(0),
-                    GroupCode = reader.GetInt32(1),
-                    SubGroupCode = reader.GetInt32(2),
-                    SubSubGroupCode = reader.GetInt32(3),
-                    DrawingNumber = reader.GetInt32(4)
-                };
-                drawings.Add(language);
-            }, catalogueCode, groupCode, subGroupCode, subSubGroupCode);
-
-            return drawings;
-        }
+        public abstract List<DrawingKeyModel> GetDrawingKeysForSubSubGroup(string makeCode, string modelCode,
+            string catalogueCode, int groupCode,
+            int subGroupCode, int subSubGroupCode);
 
         public List<DrawingKeyModel> GetDrawingKeysForCatalogue(string makeCode, string modelCode, string catalogueCode)
         {
@@ -598,6 +563,10 @@ namespace openPERRepositories.Repositories
 
         public abstract List<SubGroupImageMapEntryModel> GetSubGroupMapEntriesForCatalogueGroup(string catalogueCode,
             int groupCode);
+
+        public abstract string GetImageNameForDrawing(string make, string model, string catalogue, int group,
+            int subgroup, int subSubGroup,
+            int drawing);
 
         private string GetSubMakeDescription(string makeCode, string subMakeCode, SqliteConnection connection)
         {

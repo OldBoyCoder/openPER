@@ -89,15 +89,37 @@ namespace openPERRepositories.Repositories
 
 
         public byte[] GetImageForDrawing(string makeCode, string modelCode, string catalogueCode, int groupCode, int subgroupCode,
-            int subSubGroupCode, int drawingNumber)
+            int subSubGroupCode, int drawingNumber, string imageName)
         {
-            throw new NotImplementedException();
+            var fileParts = imageName.Split('/');
+            var zipFileName = System.IO.Path.Combine(_pathToImages, "ResFiles", $"{fileParts[0]}.res");
+            using var zip = ZipFile.Open(zipFileName, ZipArchiveMode.Read);
+            foreach (var entry in zip.Entries)
+            {
+                var e = zip.GetEntry(fileParts[1]);
+                if (e == null)
+                {
+                    return GetImageFromEperFig(imageName);
+                }
+
+                using var stream = e.Open();
+                var ms = new MemoryStream();
+                stream.CopyTo(ms);
+                ms.Position = 0;
+                return ms.ToArray();
+            }
+
+            return null;
+
         }
 
         public byte[] GetThumbnailForDrawing(string makeCode, string modelCode, string catalogueCode, int groupCode, int subGroupCode,
-            int subSubGroupCode, int drawingNumber)
+            int subSubGroupCode, int drawingNumber, string imageName)
         {
-            throw new NotImplementedException();
+            var parts = imageName.Split('.');
+            imageName = $"{parts[0]}.th.{parts[1]}";
+            return GetImageForDrawing(makeCode, modelCode, catalogueCode, groupCode, subGroupCode, subSubGroupCode,
+                drawingNumber, imageName);
         }
     }
 }

@@ -153,6 +153,20 @@ namespace openPERRepositories.Repositories
             return rc;
         }
 
+        public string GetImageNameForDrawing(string make, string model, string catalogue, int group, int subgroup, int subSubGroup,
+            int drawing)
+        {
+            var cacheKeys = new { type = "GetImageNameForDrawing", k1 = make, k2 = model, k3=catalogue, k4=group, k5=subgroup, k6=subSubGroup, k7=drawing };
+            if (!_cache.TryGetValue(cacheKeys, out string rc))
+            {
+                rc = _rep.GetImageNameForDrawing(make, model, catalogue, group, subgroup, subSubGroup, drawing); 
+                var cacheEntryOptions = new MemoryCacheEntryOptions().SetSlidingExpiration(TimeSpan.FromHours(24));
+                _cache.Set(cacheKeys, rc, cacheEntryOptions);
+            }
+
+            return rc;
+        }
+
         public List<MakeModel> GetAllMakes()
         {
             var cacheKeys = new { type = "GetAllMakes" };
