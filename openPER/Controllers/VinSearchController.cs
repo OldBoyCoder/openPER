@@ -20,11 +20,8 @@ namespace openPER.Controllers
 
         public IActionResult Index()
         {
-            var releaseCode = 0;
-            if (HttpContext.Request.Cookies.ContainsKey("Release"))
-            {
-                releaseCode = int.Parse(HttpContext.Request.Cookies["Release"] ?? string.Empty);
-            }
+            var releaseCode = Helpers.ReleaseHelpers.GetCurrentReleaseNumber(HttpContext);
+            
             var model = new VinSearchViewModel
             {
                 Models = _rep.GetAllModels(releaseCode)
@@ -35,11 +32,7 @@ namespace openPER.Controllers
         public IActionResult SearchByChassisAndVin(string selectedModel, string chassisNumber)
         {
             VinSearchViewModel vinSearch = null;
-            var releaseCode = 0;
-            if (HttpContext.Request.Cookies.ContainsKey("Release"))
-            {
-                releaseCode = int.Parse(HttpContext.Request.Cookies["Release"] ?? string.Empty);
-            }
+            var releaseCode = Helpers.ReleaseHelpers.GetCurrentReleaseNumber(HttpContext);
 
             var x = new VinSearch();
             var language = Helpers.LanguageSupport.SetCultureBasedOnCookie(HttpContext);
@@ -65,11 +58,7 @@ namespace openPER.Controllers
         [HttpGet]
         public IActionResult SearchByFullVin(string fullVin)
         {
-            var releaseCode = 0;
-            if (HttpContext.Request.Cookies.ContainsKey("Release"))
-            {
-                releaseCode = int.Parse(HttpContext.Request.Cookies["Release"] ?? string.Empty);
-            }
+            var releaseCode = Helpers.ReleaseHelpers.GetCurrentReleaseNumber(HttpContext);
             var x = new VinSearch();
 
             var language = Helpers.LanguageSupport.SetCultureBasedOnCookie(HttpContext);

@@ -27,28 +27,6 @@ namespace openPER.Controllers
 
         public IActionResult Index()
         {
-            //var model = new SessionOptionsViewModel
-            //{
-            //    Languages = _rep.GetAllLanguages(18)
-            //};
-            //if (HttpContext.Request.Cookies.ContainsKey("PreferredLanguage"))
-            //{
-            //    model.CurrentLanguage = HttpContext.Request.Cookies["PreferredLanguage"];
-            //}
-            //var s = _config.GetSection("Releases").Get<ReleaseModel[]>();
-            //model.Versions = new List<VersionModel>();
-            //foreach (var release in s)
-            //{
-            //    var v = new VersionModel
-            //    {
-            //        Release = release.Release,
-            //        Description = release.Description
-            //    };
-            //    model.Versions.Add(v);
-
-            //}
-
-            //model.CurrentVersion = model.Versions[0].Release;
             return View( );
         }
 

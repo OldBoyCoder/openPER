@@ -15,13 +15,8 @@ namespace openPER.Views.Shared.Components.SearchWidget
         public IViewComponentResult Invoke()
         {
             var model = new SearchViewModel();
-            int releaseCode = -1;
-            if (HttpContext.Request.Cookies.ContainsKey("Release"))
-            {
-                releaseCode = int.Parse(HttpContext.Request.Cookies["Release"] ?? string.Empty);
-            }
+            int releaseCode = Helpers.ReleaseHelpers.GetCurrentReleaseNumber(HttpContext);
             model.VinSearch.Models = _rep.GetAllModels(releaseCode);
-
             return View("Default", model);
         }
 
