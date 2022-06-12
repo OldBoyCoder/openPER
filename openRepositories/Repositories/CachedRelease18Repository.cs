@@ -140,12 +140,12 @@ namespace openPERRepositories.Repositories
             return rc;
         }
 
-        public List<SubGroupImageMapEntryModel> GetSubGroupMapEntriesForCatalogueGroup(string catalogueCode, int groupCode)
+        public List<SubGroupImageMapEntryModel> GetSubGroupMapEntriesForCatalogueGroup(string catalogueCode, int groupCode, string languageCode)
         {
-            var cacheKeys = new { type = "GetSubGroupMapEntriesForCatalogueGroup", k1 = catalogueCode, k2=groupCode };
+            var cacheKeys = new { type = "GetSubGroupMapEntriesForCatalogueGroup", k1 = catalogueCode, k2=groupCode, k3=languageCode };
             if (!_cache.TryGetValue(cacheKeys, out List<SubGroupImageMapEntryModel> rc))
             {
-                rc = _rep.GetSubGroupMapEntriesForCatalogueGroup(catalogueCode, groupCode);
+                rc = _rep.GetSubGroupMapEntriesForCatalogueGroup(catalogueCode, groupCode, languageCode);
                 var cacheEntryOptions = new MemoryCacheEntryOptions().SetSlidingExpiration(TimeSpan.FromHours(24));
                 _cache.Set(cacheKeys, rc, cacheEntryOptions);
             }
@@ -264,14 +264,13 @@ namespace openPERRepositories.Repositories
 
         public List<SubSubGroupModel> GetSubSubGroupsForCatalogueGroupSubGroup(string catalogueCode, int groupCode, int subGroupCode, string languageCode)
         {
-            var cacheKeys = new { type = "GetSubSubGroupsForCatalogueGroupSubGroup", k1 = catalogueCode, k2 = groupCode, k3 = languageCode };
-            // TODO fix caching for this method
-//            if (!_cache.TryGetValue(cacheKeys, out List<SubSubGroupModel> rc))
-//            {
-                var rc = _rep.GetSubSubGroupsForCatalogueGroupSubGroup(catalogueCode, groupCode, subGroupCode, languageCode);
+            var cacheKeys = new { type = "GetSubSubGroupsForCatalogueGroupSubGroup", k1 = catalogueCode, k2 = groupCode,k3= subGroupCode, k4 = languageCode };
+            if (!_cache.TryGetValue(cacheKeys, out List<SubSubGroupModel> rc))
+            {
+                rc = _rep.GetSubSubGroupsForCatalogueGroupSubGroup(catalogueCode, groupCode, subGroupCode, languageCode);
                 var cacheEntryOptions = new MemoryCacheEntryOptions().SetSlidingExpiration(TimeSpan.FromHours(24));
                 _cache.Set(cacheKeys, rc, cacheEntryOptions);
-  //          }
+            }
             return rc;
         }
     }

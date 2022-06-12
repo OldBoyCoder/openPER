@@ -213,12 +213,12 @@ namespace openPERRepositories.Repositories
             };
         }
 
-        public List<SubGroupImageMapEntryModel> GetSubGroupMapEntriesForCatalogueGroup(int releaseCode, string catalogueCode, int groupCode)
+        public List<SubGroupImageMapEntryModel> GetSubGroupMapEntriesForCatalogueGroup(int releaseCode, string catalogueCode, int groupCode, string languageCode)
         {
             return releaseCode switch
             {
-                18 => _repository18.GetSubGroupMapEntriesForCatalogueGroup(catalogueCode, groupCode),
-                84 => _repository84.GetSubGroupMapEntriesForCatalogueGroup(catalogueCode, groupCode),
+                18 => _repository18.GetSubGroupMapEntriesForCatalogueGroup(catalogueCode, groupCode, languageCode),
+                84 => _repository84.GetSubGroupMapEntriesForCatalogueGroup(catalogueCode, groupCode, languageCode),
                 _ => throw new System.NotImplementedException()
             };
         }

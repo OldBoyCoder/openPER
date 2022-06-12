@@ -90,17 +90,17 @@ namespace openPERRepositories.Repositories
             return map;
         }
 
-        public override List<SubGroupImageMapEntryModel> GetSubGroupMapEntriesForCatalogueGroup(string catalogueCode, int groupCode)
+        public override List<SubGroupImageMapEntryModel> GetSubGroupMapEntriesForCatalogueGroup(string catalogueCode, int groupCode, string languageCode)
         {
             var map = new List<SubGroupImageMapEntryModel>();
             using var connection = new SqliteConnection($"Data Source={_pathToDb}");
             // sloppy should pass this down
             var mapDetails = GetMapForCatalogueGroup(null, null, null, catalogueCode, groupCode);
-            var sql = @"select POINT_X, POINT_Y, SGRP_COD from MAP_SGRP M
-                        WHERE M.GRP_COD = $p1 AND MAP_NAME = $p2 AND SGRP_COD IN (
+            var sql = @"select POINT_X, POINT_Y, M.SGRP_COD, SGRP_DSC from MAP_SGRP M
+                        JOIN SUBGROUPS_DSC S ON S.GRP_COD = $p1 AND S.SGRP_COD = M.SGRP_COD AND S.LNG_COD = $p4
+                        WHERE M.GRP_COD = $p1 AND MAP_NAME = $p2 AND M.SGRP_COD IN (
                             select distinct T.SGRP_COD FROM TBDATA T
-                            WHERE CAT_COD = $p3 AND T.GRP_COD = $p1)
-";
+                            WHERE CAT_COD = $p3 AND T.GRP_COD = $p1)";
             connection.RunSqlAllRows(sql, (reader) =>
             {
                 var m = new SubGroupImageMapEntryModel
@@ -108,10 +108,11 @@ namespace openPERRepositories.Repositories
                     X = reader.GetInt32(0),
                     Y = reader.GetInt32(1),
                     GroupCode = groupCode,
-                    SubGroupCode = reader.GetInt32(2)
+                    SubGroupCode = reader.GetInt32(2),
+                    Description = reader.GetString(3)
                 };
                 map.Add(m);
-            }, groupCode, mapDetails.MapName, catalogueCode);
+            }, groupCode, mapDetails.MapName, catalogueCode, languageCode);
             return map;
         }
 
