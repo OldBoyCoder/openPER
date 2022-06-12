@@ -1,4 +1,5 @@
 ﻿using System;
+using System.IO;
 using System.Linq;
 using Microsoft.Extensions.Configuration;
 using openPERModels;
@@ -32,8 +33,13 @@ namespace openPERRepositories.Repositories
                 line = matches.FirstOrDefault(x => x.Contains("s1"));
                 if (line == null) return null;
             }
-            var fileName = line.Split(new[] { ',' })[3];
-            return System.IO.File.ReadAllBytes(System.IO.Path.Combine(_pathToImages, $"ModelImages{subMakeCode}", fileName));
+            var folder = System.IO.Path.Combine(_pathToImages, $"ModelImages{subMakeCode}");
+            var file = line.Split(new[] { ',' })[3];
+            var files = Directory.GetFiles(folder, file,
+                new EnumerationOptions { MatchCasing = MatchCasing.CaseInsensitive });
+            var fileName = files[0];
+
+            return System.IO.File.ReadAllBytes( fileName);
         }
         public byte[] GetSmallImageForModel(string makeCode, string subMakeCode, string modelCode)
         {
@@ -43,7 +49,11 @@ namespace openPERRepositories.Repositories
         public byte[] GetImageForCatalogue(string makeCode, string subMakeCode, string modelCode, string catalogueCode,
             MapImageModel mapDetails)
         {
-            var fileName = System.IO.Path.Combine(_pathToImages, "CatalogueImages", $"{mapDetails.MapName}.jpg");
+            var folder = System.IO.Path.Combine(_pathToImages, "CatalogueImages");
+            var file = $"{mapDetails.MapName}.jpg";
+            var files = Directory.GetFiles(folder, file,
+                new EnumerationOptions { MatchCasing = MatchCasing.CaseInsensitive });
+            var fileName = files[0];
 
             return System.IO.File.ReadAllBytes(fileName);
         }
@@ -52,15 +62,23 @@ namespace openPERRepositories.Repositories
             int subSubGroupCode, int drawingNumber, string imageName)
         {
             if (makeCode == "T") makeCode = "F";
-            var fileName = System.IO.Path.Combine(_pathToImages,  "DrawingImages", $"{makeCode}{catalogueCode}.na");
-
+            var folder = System.IO.Path.Combine(_pathToImages, "DrawingImages");
+            var file = $"{makeCode}{catalogueCode}.na";
+            var files = Directory.GetFiles(folder, file,
+                new EnumerationOptions { MatchCasing = MatchCasing.CaseInsensitive });
+            var fileName = files[0];
             return GetImageFromNaFile(fileName, imageName, false);
         }
 
         public byte[] GetThumbnailForDrawing(string makeCode, string modelCode, string catalogueCode, int groupCode, int subGroupCode,
             int subSubGroupCode, int drawingNumber, string imageName)
         {
-            var fileName = System.IO.Path.Combine(_pathToImages, "DrawingImages", $"{makeCode}{catalogueCode}.na");
+            if (makeCode == "T") makeCode = "F";
+            var folder = System.IO.Path.Combine(_pathToImages, "DrawingImages");
+            var file = $"{makeCode}{catalogueCode}.na";
+            var files = Directory.GetFiles(folder, file,
+                new EnumerationOptions { MatchCasing = MatchCasing.CaseInsensitive });
+            var fileName = files[0];
 
             return GetImageFromNaFile(fileName, imageName, true);
         }
