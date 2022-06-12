@@ -6,6 +6,7 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
 using System.Threading;
+using AutoMapper;
 using Microsoft.AspNetCore.Http;
 using openPERModels;
 using openPERRepositories.Interfaces;
@@ -17,17 +18,42 @@ namespace openPER.Controllers
         private readonly ILogger<HomeController> _logger;
         private readonly IVersionedRepository _rep;
         private readonly IConfiguration _config;
+        private readonly IMapper _mapper;
 
-        public HomeController(ILogger<HomeController> logger, IVersionedRepository repository, IConfiguration config)
+        public HomeController(ILogger<HomeController> logger, IVersionedRepository repository, IConfiguration config,
+            IMapper mapper)
         {
             _logger = logger;
             _rep = repository;
             _config = config;
+            _mapper = mapper;
         }
 
         public IActionResult Index()
         {
-            return View( );
+            var language = Helpers.LanguageSupport.SetCultureBasedOnCookie(HttpContext);
+            var releaseCode = Helpers.ReleaseHelpers.GetCurrentReleaseNumber(HttpContext);
+            ControllerHelpers.ResetReleaseCookie(HttpContext, releaseCode);
+
+            var breadcrumb = new BreadcrumbModel();
+            _rep.PopulateBreadcrumbDescriptions(releaseCode, breadcrumb, language);
+
+            var model = new MakesViewModel
+            {
+                Makes = _mapper.Map<List<MakeModel>, List<MakeViewModel>>(_rep.GetAllMakes(releaseCode)),
+                ReleaseCode = releaseCode,
+                Navigation = new NavigationViewModel
+                {
+                    Breadcrumb = _mapper.Map<BreadcrumbModel, BreadcrumbViewModel>(breadcrumb),
+                    SideMenuItems = new SideMenuItemsViewModel
+                    {
+                        AllMakes = _mapper.Map<List<MakeModel>, List<MakeViewModel>>(_rep.GetAllMakes(releaseCode)),
+                    }
+                }
+
+            };
+            model.Navigation.Breadcrumb.ReleaseCode = releaseCode;
+            return View(model);
         }
 
         public IActionResult Privacy()

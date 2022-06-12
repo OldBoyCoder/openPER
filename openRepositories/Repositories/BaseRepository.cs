@@ -89,7 +89,7 @@ namespace openPERRepositories.Repositories
                 part.Modifications = GetPartModifications(part, catalogueCode, groupCode, subGroupCode, sgsCode, drawingNumber, languageCode, connection);
                 part.IsAComponent = IsPartAComponent(part, connection);
             }
-            return parts;
+             return parts;
 
         }
 
@@ -562,7 +562,7 @@ namespace openPERRepositories.Repositories
             string catalogue, int group);
 
         public abstract List<SubGroupImageMapEntryModel> GetSubGroupMapEntriesForCatalogueGroup(string catalogueCode,
-            int groupCode);
+            int groupCode, string languageCode);
 
         public abstract string GetImageNameForDrawing(string make, string model, string catalogue, int group,
             int subgroup, int subSubGroup,

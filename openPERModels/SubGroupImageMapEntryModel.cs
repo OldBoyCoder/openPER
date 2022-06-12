@@ -7,6 +7,7 @@
         public int Index { get; set; }
         public int GroupCode { get; set; }
         public int SubGroupCode { get; set; }
+        public string Description { get; set; }
 
     }
 }

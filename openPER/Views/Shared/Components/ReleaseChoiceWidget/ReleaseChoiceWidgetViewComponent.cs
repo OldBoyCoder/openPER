@@ -36,6 +36,8 @@ namespace openPER.Views.Shared.Components.ReleaseChoiceWidget
                 model.Versions.Add(v);
 
             }
+
+            model.CurrentVersion = Helpers.ReleaseHelpers.GetCurrentReleaseNumber(HttpContext);
             return View("Default", model);
         }
     }
