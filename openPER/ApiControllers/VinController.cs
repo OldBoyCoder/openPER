@@ -12,17 +12,16 @@ namespace openPER.ApiControllers
     {
 
         [Route("api/Vin/FindVehiclesByFullVin/{FullVin}")]
-        public IEnumerable<VinResult> FindVehiclesByFullVin(string fullVin)
+        public ActionResult<IEnumerable<VinResult>> FindVehiclesByFullVin(string fullVin)
         {
             var x = new VinSearch();
 
             var language = Helpers.LanguageSupport.SetCultureBasedOnCookie(HttpContext);
             if (string.IsNullOrEmpty(fullVin) || fullVin.Length != 17)
-                return null;
+                return NotFound();
 
             var searchResult = x.FindVehicleByModelAndChassis(fullVin.Substring(3, 3), fullVin.Substring(9, 8));
-            var c = new List<VinResult>();
-            c.Add(searchResult);
+            var c = new List<VinResult> { searchResult };
             return c;
         }
     }
