@@ -1,7 +1,8 @@
 <Project Sdk="Microsoft.NET.Sdk.Web">
 
   <PropertyGroup>
-    <TargetFramework>net5.0-windows</TargetFramework>
+    <TargetFramework>net5.0</TargetFramework>
+    <StartupObject>openPER.Program</StartupObject>
   </PropertyGroup>
 
   <ItemGroup>
