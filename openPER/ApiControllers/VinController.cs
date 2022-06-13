@@ -1,8 +1,5 @@
-﻿using System.Collections;
-using System.Collections.Generic;
-using Microsoft.AspNetCore.Http;
+﻿using System.Collections.Generic;
 using Microsoft.AspNetCore.Mvc;
-using openPER.ViewModels;
 using VinSearcher;
 
 namespace openPER.ApiControllers

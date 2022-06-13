@@ -1,5 +1,4 @@
-﻿@using System.Xml.XPath
-@model openPER.ViewModels.DrawingsViewModel
+﻿@model openPER.ViewModels.DrawingsViewModel
 
 @{
     ViewData["Title"] = "Index";
@@ -7,11 +6,11 @@
 @await Html.PartialAsync("_Breadcrumb", Model.Breadcrumb)
 <div class="container">
     <div class="row">
-        <div class="col-lg-6 col-md-12 col-sm-12 col-xs-12">
+        <div class="col-lg-6 col-md-12 col-sm-12 col-12">
             <div class="container">
                 <div class="row">
                     <div class="col-12">
-                        <img class="img-fluid" src="@Url.Action("Drawing", "Image", new {ReleaseCode=Model.ReleaseCode,  Make = Model.TableData.MakeCode, Model = Model.TableData.ModelCode, Catalogue = Model.TableData.CatalogueCode, Group = Model.TableData.GroupCode, SubGroup = Model.TableData.SubGroupCode, SubSubGroup = Model.TableData.SubSubGroupCode, Drawing = Model.TableData.CurrentDrawing })">
+                        <img class="img-fluid" src="@Url.Action("Drawing", "Image", new {Model.ReleaseCode,  Make = Model.TableData.MakeCode, Model = Model.TableData.ModelCode, Catalogue = Model.TableData.CatalogueCode, Group = Model.TableData.GroupCode, SubGroup = Model.TableData.SubGroupCode, SubSubGroup = Model.TableData.SubSubGroupCode, Drawing = Model.TableData.CurrentDrawing })">
                     </div>
                 </div>
                 <div class="row">
@@ -23,8 +22,8 @@
                                     @foreach (var drawing in Model.Drawings)
                                     {
                                         <div class="col-xs-4">
-                                            <img class="img-fluid" src="@Url.Action("Thumbnail", "Image", new {ReleaseCode=Model.ReleaseCode,  Make = drawing.MakeCode, Model = drawing.ModelCode, Catalogue = drawing.CatalogueCode, Group = drawing.GroupCode, SubGroup = drawing.SubGroupCode, SubSubGroup = drawing.SubSubGroupCode, Drawing = drawing.DrawingNumber })"><br />
-                                            @Html.ActionLink($"{drawing.CatalogueCode}/{drawing.GroupCode:000}{drawing.SubGroupCode:00}/{drawing.SubSubGroupCode:00}/{ix}", "Detail", "Drawings", new { Model.ReleaseCode, drawing.MakeCode,drawing.SubMakeCode, drawing.ModelCode, drawing.CatalogueCode, drawing.GroupCode, drawing.SubGroupCode, SubSubGroupCode = drawing.SubSubGroupCode, DrawingNumber = ix++ })
+                                            <img class="img-fluid" src="@Url.Action("Thumbnail", "Image", new {Model.ReleaseCode,  Make = drawing.MakeCode, Model = drawing.ModelCode, Catalogue = drawing.CatalogueCode, Group = drawing.GroupCode, SubGroup = drawing.SubGroupCode, SubSubGroup = drawing.SubSubGroupCode, Drawing = drawing.DrawingNumber })"><br />
+                                            @Html.ActionLink($"{drawing.CatalogueCode}/{drawing.GroupCode:000}{drawing.SubGroupCode:00}/{drawing.SubSubGroupCode:00}/{ix}", "Detail", "Drawings", new { Model.ReleaseCode, drawing.MakeCode,drawing.SubMakeCode, drawing.ModelCode, drawing.CatalogueCode, drawing.GroupCode, drawing.SubGroupCode, drawing.SubSubGroupCode, DrawingNumber = ix++ })
                                         </div>
                                     }
                                 }
@@ -34,7 +33,7 @@
                 </div>
             </div>
         </div>
-        <div class="col-lg-6 col-md-12 col-sm-12 col-xs-12">
+        <div class="col-lg-6 col-md-12 col-sm-12 col-12">
             <table class="table table-sm">
                 <tr><th>&nbsp;</th><th>Prod. code</th><th>Fur. Descr.</th><th>Comp.</th><th>Modif.</th><th>Qty</th><th>Notes</th><th>Components</th></tr>
                 @{
@@ -44,12 +43,12 @@
                     {
                         if (item.TableOrder != lastOrder)
                         {
-                            <tr class="partrowheader"><td>@Html.DisplayFor(model => item.TableOrder)</td><td colspan="7">@Html.DisplayFor(model => item.Description)</td></tr>
+                            <tr><td>@Html.DisplayFor(model => item.TableOrder)</td><td colspan="7">@Html.DisplayFor(model => item.Description)</td></tr>
                             lastOrder = item.TableOrder;
                         }
-                        <tr class="partrow">
+                        <tr>
                             <td>&nbsp;</td>
-                            <td class="partrowproductcode"><a href="@Url.Action("SearchResults", "Part", new { item.PartNumber })">@Html.DisplayFor(model => item.PartNumber)</a> <a href="https://www.google.com/search?q=FIAT+@item.PartNumber" target="_blank" class="bi bi-search"></a></td>
+                            <td ><a href="@Url.Action("SearchResults", "Part", new { item.PartNumber })">@Html.DisplayFor(model => item.PartNumber)</a> <a href="https://www.google.com/search?q=FIAT+@item.PartNumber" target="_blank" class="bi bi-search"></a></td>
                             <td>@Html.DisplayFor(model => item.FurtherDescription)</td>
                             <td>@Html.DisplayFor(model => item.Compatibility)</td>
                             <td>
@@ -65,7 +64,7 @@
                             <td>
                                 @if (item.IsAComponent)
                                 {
-                                    @Html.ActionLink($"Go", "Detail", "Cliche", new { Model.ReleaseCode, Model.TableData.MakeCode, Model.TableData.SubMakeCode, Model.TableData.ModelCode, Model.TableData.CatalogueCode, Model.TableData.GroupCode, Model.TableData.SubGroupCode, SubSubGroupCode = Model.TableData.SubSubGroupCode, DrawingNumber = Model.TableData.CurrentDrawing, ClichePartNumber = item.PartNumber })
+                                    @Html.ActionLink("Go", "Detail", "Cliche", new { Model.ReleaseCode, Model.TableData.MakeCode, Model.TableData.SubMakeCode, Model.TableData.ModelCode, Model.TableData.CatalogueCode, Model.TableData.GroupCode, Model.TableData.SubGroupCode, Model.TableData.SubSubGroupCode, DrawingNumber = Model.TableData.CurrentDrawing, ClichePartNumber = item.PartNumber })
                                 }
                             </td>
 

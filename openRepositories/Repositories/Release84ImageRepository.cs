@@ -1,10 +1,7 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.IO;
 using System.IO.Compression;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using Microsoft.Extensions.Configuration;
 using openPERModels;
 using openPERRepositories.Interfaces;
@@ -27,11 +24,11 @@ namespace openPERRepositories.Repositories
         }
         public byte[] GetImageForModel(string makeCode, string subMakeCode, string cmgCode)
         {
-            return System.IO.File.ReadAllBytes(System.IO.Path.Combine(_pathToImages, $"ModelImages{subMakeCode}", $"{cmgCode}"));
+            return File.ReadAllBytes(Path.Combine(_pathToImages, $"ModelImages{subMakeCode}", $"{cmgCode}"));
         }
         public byte[] GetSmallImageForModel(string makeCode, string subMakeCode, string cmgCode)
         {
-            return System.IO.File.ReadAllBytes(System.IO.Path.Combine(_pathToImages, $"SmallModelImages{subMakeCode}", $"{cmgCode}"));
+            return File.ReadAllBytes(Path.Combine(_pathToImages, $"SmallModelImages{subMakeCode}", $"{cmgCode}"));
         }
 
         public byte[] GetImageForCatalogue(string makeCode, string subMakeCode, string modelCode, string catalogueCode,
@@ -39,7 +36,7 @@ namespace openPERRepositories.Repositories
         {
             // These are in a zip file
             var fileParts = mapDetails.ImageName.Split('/');
-            var zipFileName = System.IO.Path.Combine(_pathToImages, "ResFiles", $"{fileParts[0]}.res");
+            var zipFileName = Path.Combine(_pathToImages, "ResFiles", $"{fileParts[0]}.res");
             using var zip = ZipFile.Open(zipFileName, ZipArchiveMode.Read);
             foreach (var entry in zip.Entries)
             {
@@ -64,26 +61,20 @@ namespace openPERRepositories.Repositories
             var parts = imagePath.Split(new[] { '/' }, StringSplitOptions.RemoveEmptyEntries);
             // Work out filename for zip file
             
-            var fileName = System.IO.Path.Combine(_pathToImages, "ResFiles", $"L_EPERFIG.res");
-            using (var file = File.OpenRead(fileName))
+            var fileName = Path.Combine(_pathToImages, "ResFiles", "L_EPERFIG.res");
+            using var file = File.OpenRead(fileName);
+            using var zip = new ZipArchive(file, ZipArchiveMode.Read);
+            var e = zip.GetEntry(imagePath);
+            if (e == null)
             {
-                using (var zip = new ZipArchive(file, ZipArchiveMode.Read))
-                {
-                    var e = zip.GetEntry(imagePath);
-                    if (e == null)
-                    {
-                        Console.WriteLine(imagePath);
-                        return null;
-                    }
-                    using (var stream = e.Open())
-                    {
-                        var ms = new MemoryStream();
-                        stream.CopyTo(ms);
-                        ms.Position = 0;
-                        return ms.ToArray();
-                    }
-                }
+                return null;
             }
+
+            using var stream = e.Open();
+            var ms = new MemoryStream();
+            stream.CopyTo(ms);
+            ms.Position = 0;
+            return ms.ToArray();
         }
 
 
@@ -92,7 +83,7 @@ namespace openPERRepositories.Repositories
             int subSubGroupCode, int drawingNumber, string imageName)
         {
             var fileParts = imageName.Split('/');
-            var zipFileName = System.IO.Path.Combine(_pathToImages, "ResFiles", $"{fileParts[0]}.res");
+            var zipFileName = Path.Combine(_pathToImages, "ResFiles", $"{fileParts[0]}.res");
             using var zip = ZipFile.Open(zipFileName, ZipArchiveMode.Read);
             foreach (var entry in zip.Entries)
             {

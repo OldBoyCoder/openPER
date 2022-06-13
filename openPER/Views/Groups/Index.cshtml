@@ -6,18 +6,18 @@
 @await Html.PartialAsync("_Breadcrumb", Model.Navigation.Breadcrumb)
 <div class="container-fluid">
     <div class="row">
-        <div class="col-lg-4 col-md-4 col-sm-12 col-xs-12">
+        <div class="col-lg-4 col-md-4 col-sm-12 col-12">
             @await Html.PartialAsync("_SidebarMenu", Model.Navigation)
         </div>
-        <div class="col-lg-8 col-md-8 col-sm-12 col-xs-12">
+        <div class="col-lg-8 col-md-8 col-sm-12 col-12">
             <strong>Main category selection</strong>
             <p>Select the main category from the side menu or directly from the car map.</p>
-            <div style="position: relative; left: 0px; right: 0px;">
+            <div style="position: relative; left: 0; right: 0;">
                 <img src="@Url.Action("CatalogueImage", "Image", new { Model.ReleaseCode, Make = Model.MakeCode, SubMake = Model.SubMakeCode, Model = Model.ModelCode, Catalogue = Model.CatalogueCode })">
                 
                 @foreach (var mapEntry in Model.MapEntries)
                 {
-                    <a title="@($"{mapEntry.GroupCode:000} {mapEntry.Description}")"  href="@Url.Action("Index", "SubGroups", new {Model.ReleaseCode,Model.MakeCode,Model.SubMakeCode, Model.ModelCode, Model.CatalogueCode, GroupCode=mapEntry.GroupCode})">
+                    <a title="@($"{mapEntry.GroupCode:000} {mapEntry.Description}")"  href="@Url.Action("Index", "SubGroups", new {Model.ReleaseCode,Model.MakeCode,Model.SubMakeCode, Model.ModelCode, Model.CatalogueCode, mapEntry.GroupCode})">
                         <div style="position: absolute; top: @(mapEntry.Y+"px"); left: @(mapEntry.X+"px"); width: 24px;height:24px">
                             <img src="~/SiteImages/SelectCircle.png"/></div></a>
 

@@ -25,7 +25,7 @@ namespace openPERRepositories.Repositories
         public byte[] GetImageForModel(string makeCode, string subMakeCode, string modelCode)
         {
             // Generate file name
-            var lines = System.IO.File.ReadAllLines(System.IO.Path.Combine(_pathToImages, $"ModelImages{subMakeCode}", "img.conf"));
+            var lines = File.ReadAllLines(Path.Combine(_pathToImages, $"ModelImages{subMakeCode}", "img.conf"));
             var matches = lines.Where(x => x.Contains($",{modelCode},")).ToList();
             var line = matches.FirstOrDefault(x => x.Contains("s2"));
             if (line == null)
@@ -33,13 +33,13 @@ namespace openPERRepositories.Repositories
                 line = matches.FirstOrDefault(x => x.Contains("s1"));
                 if (line == null) return null;
             }
-            var folder = System.IO.Path.Combine(_pathToImages, $"ModelImages{subMakeCode}");
+            var folder = Path.Combine(_pathToImages, $"ModelImages{subMakeCode}");
             var file = line.Split(new[] { ',' })[3];
             var files = Directory.GetFiles(folder, file,
                 new EnumerationOptions { MatchCasing = MatchCasing.CaseInsensitive });
             var fileName = files[0];
 
-            return System.IO.File.ReadAllBytes( fileName);
+            return File.ReadAllBytes( fileName);
         }
         public byte[] GetSmallImageForModel(string makeCode, string subMakeCode, string modelCode)
         {
@@ -49,20 +49,20 @@ namespace openPERRepositories.Repositories
         public byte[] GetImageForCatalogue(string makeCode, string subMakeCode, string modelCode, string catalogueCode,
             MapImageModel mapDetails)
         {
-            var folder = System.IO.Path.Combine(_pathToImages, "CatalogueImages");
+            var folder = Path.Combine(_pathToImages, "CatalogueImages");
             var file = $"{mapDetails.MapName}.jpg";
             var files = Directory.GetFiles(folder, file,
                 new EnumerationOptions { MatchCasing = MatchCasing.CaseInsensitive });
             var fileName = files[0];
 
-            return System.IO.File.ReadAllBytes(fileName);
+            return File.ReadAllBytes(fileName);
         }
 
         public byte[] GetImageForDrawing(string makeCode, string modelCode, string catalogueCode, int groupCode, int subGroupCode,
             int subSubGroupCode, int drawingNumber, string imageName)
         {
             if (makeCode == "T") makeCode = "F";
-            var folder = System.IO.Path.Combine(_pathToImages, "DrawingImages");
+            var folder = Path.Combine(_pathToImages, "DrawingImages");
             var file = $"{makeCode}{catalogueCode}.na";
             var files = Directory.GetFiles(folder, file,
                 new EnumerationOptions { MatchCasing = MatchCasing.CaseInsensitive });
@@ -74,7 +74,7 @@ namespace openPERRepositories.Repositories
             int subSubGroupCode, int drawingNumber, string imageName)
         {
             if (makeCode == "T") makeCode = "F";
-            var folder = System.IO.Path.Combine(_pathToImages, "DrawingImages");
+            var folder = Path.Combine(_pathToImages, "DrawingImages");
             var file = $"{makeCode}{catalogueCode}.na";
             var files = Directory.GetFiles(folder, file,
                 new EnumerationOptions { MatchCasing = MatchCasing.CaseInsensitive });
@@ -87,13 +87,13 @@ namespace openPERRepositories.Repositories
         {
             var _basePath = @"C:\ePer installs\Release 18";
             // Generate file name
-            var fileName = System.IO.Path.Combine(_basePath, "SP.MP.00900.FCTLR", $"{mapName}.jpg");
-            var fileBytes = System.IO.File.ReadAllBytes(fileName);
+            var fileName = Path.Combine(_basePath, "SP.MP.00900.FCTLR", $"{mapName}.jpg");
+            var fileBytes = File.ReadAllBytes(fileName);
             return fileBytes;
         }
         private static byte[] GetImageFromNaFile(string fileName, string imageName, bool wantThumbail)
         {
-            var reader = new System.IO.BinaryReader(System.IO.File.OpenRead(fileName));
+            var reader = new BinaryReader(File.OpenRead(fileName));
             reader.ReadInt16();
             Int32 numberOfEntries = reader.ReadInt16();
             for (int i = 0; i < numberOfEntries; i++)
@@ -109,13 +109,13 @@ namespace openPERRepositories.Repositories
                 {
                     if (wantThumbail)
                     {
-                        reader.BaseStream.Seek(thumbImageStart, System.IO.SeekOrigin.Begin);
+                        reader.BaseStream.Seek(thumbImageStart, SeekOrigin.Begin);
                         return reader.ReadBytes(thumbImageLength);
 
                     }
                     else
                     {
-                        reader.BaseStream.Seek(mainImageStart, System.IO.SeekOrigin.Begin);
+                        reader.BaseStream.Seek(mainImageStart, SeekOrigin.Begin);
                         return reader.ReadBytes(mainImageLength);
 
                     }

@@ -10,11 +10,11 @@ namespace VinSearcher.KtdReader
     {
         private readonly string _dbVersion;
         internal readonly long PrimaryKeyTablePosition;
-        internal readonly List<DbTableItem> ColumnItems = new List<DbTableItem>();
+        internal readonly List<DbTableItem> ColumnItems = new();
         internal readonly int PrimaryKeyLength;
         private int _referenceAddition;
-        internal readonly List<List<byte[]>> ReferenceTables = new List<List<byte[]>>();
-        internal List<List<string>> Indices = new List<List<string>>();
+        internal readonly List<List<byte[]>> ReferenceTables = new();
+        internal List<List<string>> Indices = new();
 
         public string GetDatabaseVersion()
         {

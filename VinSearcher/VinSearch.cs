@@ -20,7 +20,7 @@ namespace VinSearcher
             {
                 var vehicle = new VinResult
                 {
-                    MVS = record[0],
+                    Mvs = record[0],
                     Chassis = record[1],
                     Organization = record[2],
                     Motor = record[3],

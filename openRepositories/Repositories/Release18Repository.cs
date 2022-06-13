@@ -3,7 +3,6 @@ using System.Linq;
 using Microsoft.Data.Sqlite;
 using Microsoft.Extensions.Configuration;
 using openPERModels;
-using openPERRepositories.Interfaces;
 
 // ReSharper disable StringLiteralTypo
 

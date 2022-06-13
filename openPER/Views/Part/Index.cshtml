@@ -23,7 +23,7 @@
                 <tr>
                     <td>@drawing.CatalogueCode @drawing.CatalogueDescription</td>
                     <td>
-                        <a href="@Url.Action("Detail", "Drawings",  new {ReleaseCode=Model.ReleaseCode, MakeCode=drawing.Make, SubMakeCode= drawing.SubMake,   ModelCode= drawing.Model, CatalogueCode=drawing.CatalogueCode, GroupCode = drawing.GroupCode, SubGroupCode = drawing.SubGroupCode, SubSubGroupCode = drawing.SubSubGroupCode, DrawingNumber=drawing.DrawingNumber})">
+                        <a href="@Url.Action("Detail", "Drawings",  new {Model.ReleaseCode, MakeCode=drawing.Make, SubMakeCode= drawing.SubMake,   ModelCode= drawing.Model, drawing.CatalogueCode, drawing.GroupCode, drawing.SubGroupCode, drawing.SubSubGroupCode, drawing.DrawingNumber})">
                             @drawing.GroupCode.ToString("000")@drawing.SubGroupCode.ToString("00")/@drawing.SubSubGroupCode.ToString("00") - @drawing.SubGroupDescription
                         </a>
                     </td>
