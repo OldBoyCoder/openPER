@@ -38,7 +38,7 @@
                         @foreach (var m in Model.SideMenuItems.AllModels)
                         {
                             <li class="nav-item">
-                                @Html.ActionLink(m.Description, "Index", "Catalogues", new { Model.Breadcrumb.ReleaseCode, MakeCode = Model.Breadcrumb.MakeCode, SubMakeCode = Model.Breadcrumb.SubMakeCode, ModelCode = m.Code }, new { @class = "nav-link side-menu-item" })
+                                @Html.ActionLink(m.Description, "Index", "Catalogues", new { Model.Breadcrumb.ReleaseCode, Model.Breadcrumb.MakeCode, Model.Breadcrumb.SubMakeCode, ModelCode = m.Code }, new { @class = "nav-link side-menu-item" })
                             </li>
                         }
                     </ul>
@@ -62,7 +62,7 @@
                         @foreach (var m in Model.SideMenuItems.AllCatalogues)
                         {
                             <li class="nav-item">
-                                @Html.ActionLink($"{m.Code} {m.Description}", "Index", "Groups", new { Model.Breadcrumb.ReleaseCode, MakeCode = Model.Breadcrumb.MakeCode, SubMakeCode = Model.Breadcrumb.SubMakeCode, ModelCode = m.ModelCode, CatalogueCode = m.Code }, new { @class = "nav-link side-menu-item" })
+                                @Html.ActionLink($"{m.Code} {m.Description}", "Index", "Groups", new { Model.Breadcrumb.ReleaseCode, Model.Breadcrumb.MakeCode, Model.Breadcrumb.SubMakeCode, m.ModelCode, CatalogueCode = m.Code }, new { @class = "nav-link side-menu-item" })
                             </li>
                         }
                     </ul>
@@ -86,7 +86,7 @@
                         @foreach (var m in Model.SideMenuItems.AllGroups)
                         {
                             <li class="nav-item">
-                                @Html.ActionLink($"{m.Code:000} {m.Description}", "Index", "SubGroups", new { Model.Breadcrumb.ReleaseCode, MakeCode = Model.Breadcrumb.MakeCode, SubMakeCode = Model.Breadcrumb.SubMakeCode, ModelCode = Model.Breadcrumb.ModelCode, CatalogueCode = Model.Breadcrumb.CatalogueCode, GroupCode = m.Code }, new { @class = "nav-link side-menu-item" })
+                                @Html.ActionLink($"{m.Code:000} {m.Description}", "Index", "SubGroups", new { Model.Breadcrumb.ReleaseCode, Model.Breadcrumb.MakeCode, Model.Breadcrumb.SubMakeCode, Model.Breadcrumb.ModelCode, Model.Breadcrumb.CatalogueCode, GroupCode = m.Code }, new { @class = "nav-link side-menu-item" })
                             </li>
                         }
                     </ul>
@@ -111,7 +111,7 @@
                         @foreach (var m in Model.SideMenuItems.AllSubGroups)
                         {
                             <li class="nav-item">
-                                @Html.ActionLink($"{m.FullDisplayCode} {m.Description}", "Index", "SubSubGroups", new { Model.Breadcrumb.ReleaseCode, MakeCode = Model.Breadcrumb.MakeCode, SubMakeCode = Model.Breadcrumb.SubMakeCode, ModelCode = Model.Breadcrumb.ModelCode, CatalogueCode = Model.Breadcrumb.CatalogueCode, GroupCode = Model.Breadcrumb.GroupCode, SubGroupCode = m.Code }, new { @class = "nav-link side-menu-item" })
+                                @Html.ActionLink($"{m.FullDisplayCode} {m.Description}", "Index", "SubSubGroups", new { Model.Breadcrumb.ReleaseCode, Model.Breadcrumb.MakeCode, Model.Breadcrumb.SubMakeCode, Model.Breadcrumb.ModelCode, Model.Breadcrumb.CatalogueCode, Model.Breadcrumb.GroupCode, SubGroupCode = m.Code }, new { @class = "nav-link side-menu-item" })
                             </li>
                         }
                     </ul>
@@ -136,7 +136,7 @@
                         @foreach (var m in Model.SideMenuItems.AllSubSubGroups)
                         {
                             <li class="nav-item">
-                                @Html.ActionLink($"{Model.Breadcrumb.GroupCode:000}{Model.Breadcrumb.SubGroupCode:00}/{m.Code}", "Detail", "Drawings", new { Model.Breadcrumb.ReleaseCode, MakeCode = Model.Breadcrumb.MakeCode, SubMakeCode = Model.Breadcrumb.SubMakeCode, ModelCode = Model.Breadcrumb.ModelCode, CatalogueCode = Model.Breadcrumb.CatalogueCode, GroupCode = Model.Breadcrumb.GroupCode, SubGroupCode = Model.Breadcrumb.SubGroupCode, SubSubGroupCode=m.Code, DrawingNumber=1 }, new { @class = "nav-link side-menu-item" })
+                                @Html.ActionLink($"{Model.Breadcrumb.GroupCode:000}{Model.Breadcrumb.SubGroupCode:00}/{m.Code}", "Detail", "Drawings", new { Model.Breadcrumb.ReleaseCode, Model.Breadcrumb.MakeCode, Model.Breadcrumb.SubMakeCode, Model.Breadcrumb.ModelCode, Model.Breadcrumb.CatalogueCode, Model.Breadcrumb.GroupCode, Model.Breadcrumb.SubGroupCode, SubSubGroupCode=m.Code, DrawingNumber=1 }, new { @class = "nav-link side-menu-item" })
                             </li>
                         }
                     </ul>

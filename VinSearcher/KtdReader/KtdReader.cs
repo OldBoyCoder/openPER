@@ -15,7 +15,7 @@ namespace VinSearcher.KtdReader
             var indexBlocks = GetIndexBlocks(pathToDataFile, 1);
             foreach (var indexBlock in indexBlocks)
             {
-                if (string.Compare(indexBlock.Key, searchKey) >= 0)
+                if (string.Compare(indexBlock.Key, searchKey, StringComparison.InvariantCultureIgnoreCase) >= 0)
                 {
                     return indexBlock;
                 }
@@ -28,38 +28,31 @@ namespace VinSearcher.KtdReader
             var indexBlock = FindIndexBlockForKey(pathToDataFile, searchKey);
             if (indexBlock == null) return null;
             var ms = new MemoryStream(File.ReadAllBytes(pathToDataFile));
-            using (var fileAccessor = new BinaryReader(ms))
-            {
-                var uc = UnpackBlock(fileAccessor, indexBlock.Block);
-                var record = GetAllRecordsInBlock(searchKey,uc, lineLengthInBytes, dataHandler.ProcessRow);
-                if (record != null) return record;  
-            }
-            return null;
+            using var fileAccessor = new BinaryReader(ms);
+            var uc = UnpackBlock(fileAccessor, indexBlock.Block);
+            var record = GetAllRecordsInBlock(searchKey,uc, lineLengthInBytes, dataHandler.ProcessRow);
+            return record;
         }
         public List<IndexBlock> GetIndexBlocks(string pathToDataFile, int lineLengthInBytes)
         {
-            var indexBlocks = new List<IndexBlock>();
+            List<IndexBlock> indexBlocks;
             try
             {
                 var ms = new MemoryStream(File.ReadAllBytes(pathToDataFile));
-                using (var fileAccessor = new BinaryReader(ms))
+                using var fileAccessor = new BinaryReader(ms);
+                _header = new DbTableHeader(fileAccessor);
+                if (_header.GetDatabaseVersion() != "F3")
                 {
-                    _header = new DbTableHeader(fileAccessor);
-                    if (_header.GetDatabaseVersion() != "F3")
-                    {
-                        throw new Exception("Inadequate version of KTD database.");
-                    }
-                    if (_header.ColumnItems.Count > 30)
-                    {
-                        throw new Exception("Corrupted or improper database file.");
-                    }
-                    var fields = new Dictionary<string, string>();
-                    foreach (var field in _header.ColumnItems)
-                        fields.Add(field.FieldName, "TEXT");
-
-                    indexBlocks = GetAllPrimaryIndexBlocks(fileAccessor);
-                    fileAccessor.Close();
+                    throw new Exception("Inadequate version of KTD database.");
                 }
+                if (_header.ColumnItems.Count > 30)
+                {
+                    throw new Exception("Corrupted or improper database file.");
+                }
+                var fields = _header.ColumnItems.ToDictionary(field => field.FieldName, field => "TEXT");
+
+                indexBlocks = GetAllPrimaryIndexBlocks(fileAccessor);
+                fileAccessor.Close();
             }
             catch (FileNotFoundException)
             {
@@ -76,30 +69,26 @@ namespace VinSearcher.KtdReader
             try
             {
                 var ms = new MemoryStream(File.ReadAllBytes(pathToDataFile));
-                using (var fileAccessor = new BinaryReader(ms))
+                using var fileAccessor = new BinaryReader(ms);
+                _header = new DbTableHeader(fileAccessor);
+                if (_header.GetDatabaseVersion() != "F3")
                 {
-                    _header = new DbTableHeader(fileAccessor);
-                    if (_header.GetDatabaseVersion() != "F3")
-                    {
-                        throw new Exception("Inadequate version of KTD database.");
-                    }
-                    if (_header.ColumnItems.Count > 30)
-                    {
-                        throw new Exception("Corrupted or improper database file.");
-                    }
-                    var fields = new Dictionary<string, string>();
-                    foreach (var field in _header.ColumnItems)
-                        fields.Add(field.FieldName, "TEXT");
- 
-                    var blocks = GetAllPrimaryIndexBlocks(fileAccessor);
-                    for (var i = 0; i < blocks.Count; i++)
-                    {
-                        if (i % 500 == 0) Console.WriteLine($"{i}/{blocks.Count}");
-                        var uc = UnpackBlock(fileAccessor, blocks[i].Block);
-                        GetAllRecordsInBlock(uc, lineLengthInBytes, null);
-                    }
-                    fileAccessor.Close();
+                    throw new Exception("Inadequate version of KTD database.");
                 }
+                if (_header.ColumnItems.Count > 30)
+                {
+                    throw new Exception("Corrupted or improper database file.");
+                }
+                var fields = _header.ColumnItems.ToDictionary(field => field.FieldName, field => "TEXT");
+
+                var blocks = GetAllPrimaryIndexBlocks(fileAccessor);
+                for (var i = 0; i < blocks.Count; i++)
+                {
+                    if (i % 500 == 0) Console.WriteLine($"{i}/{blocks.Count}");
+                    var uc = UnpackBlock(fileAccessor, blocks[i].Block);
+                    GetAllRecordsInBlock(uc, lineLengthInBytes, null);
+                }
+                fileAccessor.Close();
             }
             catch (FileNotFoundException)
             {
@@ -119,7 +108,9 @@ namespace VinSearcher.KtdReader
                 if (length == 2)
                     dataLength += unpackedContent.ReadByte() << 8;
                 var content = new byte[dataLength - length];
-                unpackedContent.Read(content, 0, dataLength - length);
+                var rc = unpackedContent.Read(content, 0, dataLength - length);
+                if (rc != dataLength - length)
+                    throw new IOException($"Insufficient bytes read when processing searching for key{searchKey}");
                 var record = UnpackToList(content, dataLength - length);
                 if (processRow(record, searchKey))
                 {
@@ -134,20 +125,17 @@ namespace VinSearcher.KtdReader
             try
             {
                 var ms = new MemoryStream(File.ReadAllBytes(filename));
-                using (var fileAccessor = new BinaryReader(ms))
+                using var fileAccessor = new BinaryReader(ms);
+                _header = new DbTableHeader(fileAccessor);
+                if (_header.GetDatabaseVersion() != "F3")
                 {
-                    _header = new DbTableHeader(fileAccessor);
-                    if (_header.GetDatabaseVersion() != "F3")
-                    {
-                        throw new Exception("Inadequate version of KTD database.");
-                    }
-                    if (_header.ColumnItems.Count > 30)
-                    {
-                        throw new Exception("Corrupted or improper database file.");
-                    }
-                    return _header.ColumnItems.Select(x => x.FieldName);
-
+                    throw new Exception("Inadequate version of KTD database.");
                 }
+                if (_header.ColumnItems.Count > 30)
+                {
+                    throw new Exception("Corrupted or improper database file.");
+                }
+                return _header.ColumnItems.Select(x => x.FieldName);
             }
             catch (FileNotFoundException)
             {
@@ -200,7 +188,9 @@ namespace VinSearcher.KtdReader
                 if (length == 2)
                     dataLength += unpackedContent.ReadByte() << 8;
                 var content = new byte[dataLength - length];
-                unpackedContent.Read(content, 0, dataLength - length);
+                var rc = unpackedContent.Read(content, 0, dataLength - length);
+                if (rc != dataLength - length)
+                    throw new IOException("Insufficient bytes read when processing K3 file");
                 var record = Unpack(content, dataLength - length);
                 foreach (var value in record.Values)
                 {

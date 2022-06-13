@@ -6,17 +6,17 @@
 @await Html.PartialAsync("_Breadcrumb", Model.Navigation.Breadcrumb)
 <div class="container">
     <div class="row">
-        <div class="col-lg-4 col-md-4 col-sm-12 col-xs-12">
+        <div class="col-lg-4 col-md-4 col-sm-12 col-12">
             @await Html.PartialAsync("_SidebarMenu", Model.Navigation)
         </div>
-        <div class="col-lg-8 col-md-8 col-sm-12 col-xs-12">
+        <div class="col-lg-8 col-md-8 col-sm-12 col-12">
             <div class="container">
                 <div class="row">
                 @{
                     foreach (var model in Model.Models)
                     {
-                        <div class="col-lg-4 col-md-4 col-sm-12 col-xs-12">
-                            <a href="@Url.Action("Index", "Catalogues", new { Model.Navigation.Breadcrumb.ReleaseCode, MakeCode = Model.Navigation.Breadcrumb.MakeCode, SubMakeCode = Model.Navigation.Breadcrumb.SubMakeCode, ModelCode = model.Code })">
+                        <div class="col-lg-4 col-md-4 col-sm-12 col-12">
+                            <a href="@Url.Action("Index", "Catalogues", new { Model.Navigation.Breadcrumb.ReleaseCode, Model.Navigation.Breadcrumb.MakeCode, Model.Navigation.Breadcrumb.SubMakeCode, ModelCode = model.Code })">
                                 <img title="@(model.Description)" src="@Url.Action("SmallModelImage", "Image", new { Model.ReleaseCode, Make = Model.Navigation.Breadcrumb.MakeCode, SubMake = Model.Navigation.Breadcrumb.SubMakeCode, Model = model.Code })" alt="@(model.Description)">
                             </a>
                         </div>

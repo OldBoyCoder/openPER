@@ -41,11 +41,13 @@ namespace openPER.Controllers
                 var searchResult = x.FindVehicleByModelAndChassis(selectedModel.PadLeft(3, '0'), chassisNumber.PadLeft(8, '0'));
                 if (searchResult != null)
                 {
-                    vinSearch = new VinSearchViewModel();
-                    vinSearch.ReleaseCode = releaseCode;
-                    var mvsCode = searchResult.MVS.Substring(0, 3);
-                    var mvsVersion = searchResult.MVS.Substring(3, 3);
-                    var mvsSeries = searchResult.MVS.Substring(6, 1);
+                    vinSearch = new VinSearchViewModel
+                    {
+                        ReleaseCode = releaseCode
+                    };
+                    var mvsCode = searchResult.Mvs.Substring(0, 3);
+                    var mvsVersion = searchResult.Mvs.Substring(3, 3);
+                    var mvsSeries = searchResult.Mvs.Substring(6, 1);
                     vinSearch.MvsData = _rep.GetMvsDetails(releaseCode, mvsCode, mvsVersion, mvsSeries, searchResult.InteriorColour, language);
                     vinSearch.ChassisNumber = searchResult.Chassis;
                     vinSearch.Organization = searchResult.Organization;
@@ -70,17 +72,17 @@ namespace openPER.Controllers
             if (searchResult != null)
             {
                 vinSearch = new VinSearchViewModel();
-                var mvsCode = searchResult.MVS.Substring(0, 3);
-                var mvsVersion = searchResult.MVS.Substring(3, 3);
-                var mvsSeries = searchResult.MVS.Substring(6, 1);
+                var mvsCode = searchResult.Mvs.Substring(0, 3);
+                var mvsVersion = searchResult.Mvs.Substring(3, 3);
+                var mvsSeries = searchResult.Mvs.Substring(6, 1);
                 vinSearch.MvsData = _rep.GetMvsDetails(releaseCode, mvsCode, mvsVersion, mvsSeries, searchResult.InteriorColour, language);
                 vinSearch.ChassisNumber = searchResult.Chassis;
                 vinSearch.Organization = searchResult.Organization;
                 vinSearch.ProductionDate = searchResult.Date;
                 vinSearch.EngineNumber = searchResult.Motor;
                 vinSearch.Models = _rep.GetAllModels(releaseCode);
+                vinSearch.ReleaseCode = releaseCode;
             }
-            vinSearch.ReleaseCode = releaseCode;
             return View("Index", vinSearch);
         }
     }

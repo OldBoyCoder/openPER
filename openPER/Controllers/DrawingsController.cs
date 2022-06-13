@@ -61,8 +61,10 @@ namespace openPER.Controllers
             var language = Helpers.LanguageSupport.SetCultureBasedOnCookie(HttpContext);
             ControllerHelpers.ResetReleaseCookie(HttpContext, releaseCode);
 
-            var model = new DrawingsViewModel();
-            model.ReleaseCode = releaseCode;
+            var model = new DrawingsViewModel
+            {
+                ReleaseCode = releaseCode
+            };
             // We need to get all of the drawing keys for this sub sub group
             List<DrawingKeyModel> drawings = _rep.GetDrawingKeysForCatalogue(releaseCode, makeCode, modelCode,
                 catalogueCode);
@@ -88,8 +90,10 @@ namespace openPER.Controllers
             var language = Helpers.LanguageSupport.SetCultureBasedOnCookie(HttpContext);
             ControllerHelpers.ResetReleaseCookie(HttpContext, releaseCode);
 
-            var model = new DrawingsViewModel();
-            model.ReleaseCode = releaseCode;
+            var model = new DrawingsViewModel
+            {
+                ReleaseCode = releaseCode
+            };
             // We need to get all of the drawing keys for this sub sub group
             List<DrawingKeyModel> drawings = _rep.GetDrawingKeysForSubSubGroup(releaseCode, makeCode, modelCode,
                 catalogueCode, groupCode, subGroupCode, subSubGroupCode);
@@ -106,8 +110,10 @@ namespace openPER.Controllers
             var language = Helpers.LanguageSupport.SetCultureBasedOnCookie(HttpContext);
             ControllerHelpers.ResetReleaseCookie(HttpContext, releaseCode);
 
-            var model = new DrawingsViewModel();
-            model.ReleaseCode = releaseCode;
+            var model = new DrawingsViewModel
+            {
+                ReleaseCode = releaseCode
+            };
             // We need to get all of the drawing keys for this sub sub group
             List<DrawingKeyModel> drawings = _rep.GetDrawingKeysForCatalogue(releaseCode, makeCode, modelCode,
                 catalogueCode);
@@ -123,8 +129,10 @@ namespace openPER.Controllers
             var language = Helpers.LanguageSupport.SetCultureBasedOnCookie(HttpContext);
             ControllerHelpers.ResetReleaseCookie(HttpContext, releaseCode);
 
-            var model = new DrawingsViewModel();
-            model.ReleaseCode = releaseCode;
+            var model = new DrawingsViewModel
+            {
+                ReleaseCode = releaseCode
+            };
             // We need to get all of the drawing keys for this sub sub group
             List<DrawingKeyModel> drawings = _rep.GetDrawingKeysForGroup(releaseCode, makeCode, modelCode, catalogueCode, groupCode);
             model.Drawings = _mapper.Map<List<DrawingKeyModel>, List<DrawingKeyViewModel>>(drawings);
@@ -139,8 +147,10 @@ namespace openPER.Controllers
             var language = Helpers.LanguageSupport.SetCultureBasedOnCookie(HttpContext);
             ControllerHelpers.ResetReleaseCookie(HttpContext, releaseCode);
 
-            var model = new DrawingsViewModel();
-            model.ReleaseCode = releaseCode;
+            var model = new DrawingsViewModel
+            {
+                ReleaseCode = releaseCode
+            };
             // We need to get all of the drawing keys for this sub sub group
             List<DrawingKeyModel> drawings = _rep.GetDrawingKeysForSubGroup(releaseCode, makeCode, modelCode, catalogueCode, groupCode, subGroupCode);
             model.Drawings = _mapper.Map<List<DrawingKeyModel>, List<DrawingKeyViewModel>>(drawings);

@@ -1,6 +1,5 @@
 ﻿using AutoMapper;
 using System.Collections.Generic;
-using System.ComponentModel;
 using openPER.ViewModels;
 using Microsoft.AspNetCore.Mvc;
 using openPERModels;

@@ -1,8 +1,5 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using Microsoft.Data.Sqlite;
 using Microsoft.Extensions.Configuration;
 using openPERModels;
@@ -89,7 +86,7 @@ namespace openPERRepositories.Repositories
                 part.Modifications = GetPartModifications(part, catalogueCode, groupCode, subGroupCode, sgsCode, drawingNumber, languageCode, connection);
                 part.IsAComponent = IsPartAComponent(part, connection);
             }
-             return parts;
+            return parts;
 
         }
 
@@ -212,7 +209,7 @@ namespace openPERRepositories.Repositories
         {
             var rc = new List<ModelModel>();
             using var connection = new SqliteConnection($"Data Source={_pathToDb}");
-//            var sql = @"SELECT MOD_COD, MOD_DSC, MK_COD FROM MODELS ORDER BY MOD_SORT_KEY ";
+            //            var sql = @"SELECT MOD_COD, MOD_DSC, MK_COD FROM MODELS ORDER BY MOD_SORT_KEY ";
             var sql = @"SELECT CMG_COD, CMG_DSC, MK2_COD FROM COMM_MODGRP ORDER BY CMG_SORT_KEY ";
             connection.RunSqlAllRows(sql, (reader) =>
             {
@@ -568,6 +565,8 @@ namespace openPERRepositories.Repositories
             int subgroup, int subSubGroup,
             int drawing);
 
+        // ReSharper disable once UnusedParameter.Local
+        // ReSharper disable once UnusedParameter.Local
         private string GetSubMakeDescription(string makeCode, string subMakeCode, SqliteConnection connection)
         {
             var allMakes = GetAllMakes();

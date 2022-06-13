@@ -2,7 +2,7 @@
 {
     public class VinResult
     {
-        public string MVS { get; set; }
+        public string Mvs { get; set; }
         public string Chassis { get; set; }
         public string Organization { get; set; }
         public string Motor { get; set; }

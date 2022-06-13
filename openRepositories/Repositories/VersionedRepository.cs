@@ -188,7 +188,7 @@ namespace openPERRepositories.Repositories
                 case 84:
                     _repository84.PopulateBreadcrumbDescriptions(breadcrumb, languageCode);
                     break;
-            };
+            }
         }
 
         public List<GroupImageMapEntryModel> GetGroupMapEntriesForCatalogue(int releaseCode, string catalogueCode, string languageCode)

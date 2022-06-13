@@ -44,7 +44,7 @@ namespace openPER.Helpers
             if (context.Request.Cookies.ContainsKey("PreferredLanguage"))
             {
                 language = context.Request.Cookies["PreferredLanguage"];
-                var newCulture = Helpers.LanguageSupport.ConvertLanguageCodeToCulture(language);
+                var newCulture = ConvertLanguageCodeToCulture(language);
                 Thread.CurrentThread.CurrentCulture = newCulture;
                 Thread.CurrentThread.CurrentUICulture = newCulture;
             }

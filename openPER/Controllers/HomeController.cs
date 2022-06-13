@@ -69,7 +69,22 @@ namespace openPER.Controllers
         [HttpPost]
         public IActionResult SetLanguage(SessionOptionsViewModel model)
         {
-            HttpContext.Response.Cookies.Append("PreferredLanguage", model.CurrentLanguage);
+            var cookieOptions = new CookieOptions
+            {
+                // Set the secure flag, which Chrome's changes will require for SameSite none.
+                // Note this will also require you to be running on HTTPS.
+                Secure = true,
+
+                // Set the cookie to HTTP only which is good practice unless you really do need
+                // to access it client side in scripts.
+                HttpOnly = true,
+
+                // Add the SameSite attribute, this will emit the attribute with a value of none.
+                SameSite = SameSiteMode.Strict
+
+                // The client should follow its default cookie policy.
+                // SameSite = SameSiteMode.Unspecified
+            }; HttpContext.Response.Cookies.Append("PreferredLanguage", model.CurrentLanguage, cookieOptions);
             //HttpContext.Response.Cookies.Append("Release", model.CurrentVersion.ToString());
             var newCulture = Helpers.LanguageSupport.ConvertLanguageCodeToCulture(model.CurrentLanguage);
             Thread.CurrentThread.CurrentCulture = newCulture;
@@ -80,7 +95,23 @@ namespace openPER.Controllers
         [Route("Home/SetLanguage/{LanguageCode}")]
         public IActionResult SetLanguage(string languageCode)
         {
-            HttpContext.Response.Cookies.Append("PreferredLanguage", languageCode);
+            var cookieOptions = new CookieOptions
+            {
+                // Set the secure flag, which Chrome's changes will require for SameSite none.
+                // Note this will also require you to be running on HTTPS.
+                Secure = true,
+
+                // Set the cookie to HTTP only which is good practice unless you really do need
+                // to access it client side in scripts.
+                HttpOnly = true,
+
+                // Add the SameSite attribute, this will emit the attribute with a value of none.
+                SameSite = SameSiteMode.Strict
+
+                // The client should follow its default cookie policy.
+                // SameSite = SameSiteMode.Unspecified
+            };
+            HttpContext.Response.Cookies.Append("PreferredLanguage", languageCode, cookieOptions);
             //HttpContext.Response.Cookies.Append("Release", model.CurrentVersion.ToString());
             var newCulture = Helpers.LanguageSupport.ConvertLanguageCodeToCulture(languageCode);
             Thread.CurrentThread.CurrentCulture = newCulture;
@@ -91,8 +122,23 @@ namespace openPER.Controllers
         [Route("Home/SetRelease/{ReleaseCode}")]
         public IActionResult SetRelease(int releaseCode)
         {
-//            Request.GetTypedHeaders().Referer.ToString()
-            HttpContext.Response.Cookies.Append("Release", releaseCode.ToString());
+            //            Request.GetTypedHeaders().Referer.ToString()
+            var cookieOptions = new CookieOptions
+            {
+                // Set the secure flag, which Chrome's changes will require for SameSite none.
+                // Note this will also require you to be running on HTTPS.
+                Secure = true,
+
+                // Set the cookie to HTTP only which is good practice unless you really do need
+                // to access it client side in scripts.
+                HttpOnly = true,
+
+                // Add the SameSite attribute, this will emit the attribute with a value of none.
+                SameSite = SameSiteMode.Strict
+
+                // The client should follow its default cookie policy.
+                // SameSite = SameSiteMode.Unspecified
+            }; HttpContext.Response.Cookies.Append("Release", releaseCode.ToString(), cookieOptions);
             //HttpContext.Response.Cookies.Append("Release", model.CurrentVersion.ToString());
             var pathParts = Request.GetTypedHeaders().Referer.ToString().Split('/').ToArray();
             for (int i = 0; i < pathParts.Length; i++)
@@ -110,13 +156,29 @@ namespace openPER.Controllers
         [HttpPost]
         public IActionResult Index(SessionOptionsViewModel model)
         {
-            HttpContext.Response.Cookies.Append("PreferredLanguage", model.CurrentLanguage);
-            HttpContext.Response.Cookies.Append("Release", model.CurrentVersion.ToString());
+            var cookieOptions = new CookieOptions
+            {
+                // Set the secure flag, which Chrome's changes will require for SameSite none.
+                // Note this will also require you to be running on HTTPS.
+                Secure = true,
+
+                // Set the cookie to HTTP only which is good practice unless you really do need
+                // to access it client side in scripts.
+                HttpOnly = true,
+
+                // Add the SameSite attribute, this will emit the attribute with a value of none.
+                //SameSite = SameSiteMode.None
+
+                // The client should follow its default cookie policy.
+                SameSite = SameSiteMode.Strict
+            };
+            HttpContext.Response.Cookies.Append("PreferredLanguage", model.CurrentLanguage, cookieOptions);
+            HttpContext.Response.Cookies.Append("Release", model.CurrentVersion.ToString(), cookieOptions);
             var newCulture = Helpers.LanguageSupport.ConvertLanguageCodeToCulture(model.CurrentLanguage);
             Thread.CurrentThread.CurrentCulture = newCulture;
             Thread.CurrentThread.CurrentUICulture = newCulture;
 
-            return RedirectToAction("Index", "Makes", new { ReleaseCode =model.CurrentVersion});
+            return RedirectToAction("Index", "Makes", new { ReleaseCode = model.CurrentVersion });
         }
 
     }

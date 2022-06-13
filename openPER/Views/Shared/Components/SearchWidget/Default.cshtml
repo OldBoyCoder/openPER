@@ -7,7 +7,7 @@
         {
             <div class="input-group m-1">
                 <label for="searchByModel">Search by Model and chassis</label>
-                @Html.DropDownListFor(m => m.SelectedModel, new SelectList(Model.VinSearch.Models.OrderBy(x => x.Description), "Code", "Description"), new { @class = "form-select-sm", @id="searchByModel" })
+                @Html.DropDownListFor(m => m.SelectedModel, new SelectList(Model.VinSearch.Models.OrderBy(x => x.Description), "Code", "Description"), new { @class = "form-select-sm", id="searchByModel" })
                 @Html.TextBoxFor(m => m.ChassisNumber, new { @class = "form-control-sm", type = "search", placeholder = "Chassis No." })
                 <span class="input-group-append">
                     <button type="submit" class="btn-sm btn-outline-primary"><i class="fa fa-search"></i></button>
@@ -22,7 +22,7 @@
         {
             <div class="input-group m-1">
                 <label for="searchByVIN">Search by full VIN</label>
-                @Html.TextBoxFor(m=>m.FullVin, new {@class="form-control-sm", type="search", placeholder="Full VIN", @id="searchByVIN"})
+                @Html.TextBoxFor(m=>m.FullVin, new {@class="form-control-sm", type="search", placeholder="Full VIN", id="searchByVIN"})
                 <span class="input-group-append">
                     <button type="submit" class="btn-sm btn-outline-primary"><i class="fa fa-search"></i></button>
                 </span>
@@ -37,7 +37,7 @@
         {
             <div class="input-group m-1">
                 <label for="searchByPart">Search for part number</label>
-                @Html.TextBoxFor(m=>m.PartNumber, new {@class="form-control-sm", type="search", placeholder="Part number", @id="searchByPart"})
+                @Html.TextBoxFor(m=>m.PartNumber, new {@class="form-control-sm", type="search", placeholder="Part number", id="searchByPart"})
                 <span class="input-group-append">
                     <button type="submit" class="btn-sm btn-outline-primary"><i class="fa fa-search"></i></button>
                 </span>

@@ -7,7 +7,7 @@ namespace openPERRepositories.Repositories
     public class VersionedImageRepository : IVersionedImageRepository
     {
         readonly IImageRepository _repository18;
-        IImageRepository _repository84;
+        readonly IImageRepository _repository84;
         public VersionedImageRepository(IConfiguration config)
         {
             _repository18 = new Release18ImageRepository(config);
