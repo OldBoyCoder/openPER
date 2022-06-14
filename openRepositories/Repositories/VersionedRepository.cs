@@ -233,5 +233,26 @@ namespace openPERRepositories.Repositories
                 _ => throw new System.NotImplementedException()
             };
         }
+
+        public List<DrawingKeyModel> GetDrawingKeysForCliche(int releaseCode, string makeCode,string subMakeCode, string modelCode, string catalogueCode, int groupCode,
+            int subGroupCode, int subSubGroupCode, string clichePartNumber)
+        {
+            return releaseCode switch
+            {
+                18 => _repository18.GetDrawingKeysForCliche(makeCode, subMakeCode, modelCode, catalogueCode, groupCode, subGroupCode, subSubGroupCode, clichePartNumber),
+                84 => _repository84.GetDrawingKeysForCliche(makeCode, subMakeCode, modelCode, catalogueCode, groupCode, subGroupCode, subSubGroupCode, clichePartNumber),
+                _ => throw new System.NotImplementedException()
+            };
+        }
+
+        public string GetImageNameForClicheDrawing(int releaseCode, string clichePartNumber, int clichePartDrawingNumber)
+        {
+            return releaseCode switch
+            {
+                18 => _repository18.GetImageNameForClicheDrawing(clichePartNumber, clichePartDrawingNumber),
+                84 => _repository84.GetImageNameForClicheDrawing(clichePartNumber, clichePartDrawingNumber),
+                _ => throw new System.NotImplementedException()
+            };
+        }
     }
 }

@@ -16,5 +16,8 @@ namespace openPERModels
         public int SubGroupCode { get; set; }
         public int SubSubGroupCode { get; set; }
         public int DrawingNumber { get; set; }
+        public string ClichePartNumber { get; set; }
+        public int ClichePartDrawingNumber { get; set; }
+        public int ClichePartCode { get; set; }
     }
 }
