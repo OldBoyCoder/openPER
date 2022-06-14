@@ -117,5 +117,10 @@ namespace openPERRepositories.Repositories
         {
             throw new NotImplementedException();
         }
+
+        public byte[] GetImageForCliche(string clichePartNumber, int clichePartDrawingNumber, string imageName)
+        {
+            throw new NotImplementedException();
+        }
     }
 }
