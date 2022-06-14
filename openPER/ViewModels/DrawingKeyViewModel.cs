@@ -11,6 +11,10 @@
         public int SubGroupCode { get; set; }
         public int SubSubGroupCode { get; set; }
         public int DrawingNumber { get; set; }
-        public string FullKey => $"{ReleaseCode}/{MakeCode}/{ModelCode}/{CatalogueCode}/{GroupCode}/{SubGroupCode}/{SubSubGroupCode}/{DrawingNumber}";
+        public string ClichePartNumber { get; set; }
+        public int ClichePartDrawingNumber { get; set; }
+        public int ClichePartCode { get; set; }
+
+        public string FullKey => $"{ReleaseCode}/{MakeCode}/{ModelCode}/{CatalogueCode}/{GroupCode}/{SubGroupCode}/{SubSubGroupCode}/{DrawingNumber}/{ClichePartNumber}";
     }
 }

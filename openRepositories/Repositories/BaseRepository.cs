@@ -565,6 +565,48 @@ namespace openPERRepositories.Repositories
             int subgroup, int subSubGroup,
             int drawing);
 
+        public List<DrawingKeyModel> GetDrawingKeysForCliche(string makeCode, string subMakeCode, string modelCode, string catalogueCode, int groupCode,
+            int subGroupCode, int subSubGroupCode, string clichePartNumber)
+        {
+            var drawings = new List<DrawingKeyModel>();
+            using var connection = new SqliteConnection($"Data Source={_pathToDb}");
+            var sql = @"SELECT DISTINCT CPD_NUM, CLH_COD
+                            FROM CPXDATA
+                            WHERE CPLX_PRT_COD = $p1
+                            ORDER BY CPD_NUM";
+            connection.RunSqlAllRows(sql, (reader) =>
+            {
+                var language = new DrawingKeyModel()
+                {
+                    MakeCode = makeCode,
+                    ModelCode = modelCode,
+                    CatalogueCode = catalogueCode,
+                    GroupCode = groupCode,
+                    SubGroupCode = subGroupCode,
+                    SubSubGroupCode = subSubGroupCode,
+                    ClichePartNumber = clichePartNumber,
+                    ClichePartDrawingNumber = reader.GetInt32(0),
+                    ClichePartCode = reader.GetInt32(1)
+                };
+                drawings.Add(language);
+            }, clichePartNumber);
+            return drawings;
+        }
+
+        public string GetImageNameForClicheDrawing(string clichePartNumber, int clichePartDrawingNumber)
+        {
+            using var connection = new SqliteConnection($"Data Source={_pathToDb}");
+            var sql = @"select DISTINCT CLH_COD FROM CPXDATA
+                        where CPLX_PRT_COD = $p1 and CPD_NUM = $p2
+                        ";
+            var rc = "";
+            connection.RunSqlFirstRowOnly(sql, (reader) =>
+            {
+                rc = reader.GetInt32(0).ToString();
+            },clichePartNumber,  clichePartDrawingNumber);
+            return rc;
+        }
+
         // ReSharper disable once UnusedParameter.Local
         // ReSharper disable once UnusedParameter.Local
         private string GetSubMakeDescription(string makeCode, string subMakeCode, SqliteConnection connection)

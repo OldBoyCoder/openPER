@@ -112,5 +112,10 @@ namespace openPERRepositories.Repositories
             return GetImageForDrawing(makeCode, modelCode, catalogueCode, groupCode, subGroupCode, subSubGroupCode,
                 drawingNumber, imageName);
         }
+
+        public byte[] GetThumbnailForCliche(string clichePartNumber, int clichePartDrawingNumber, string imageName)
+        {
+            throw new NotImplementedException();
+        }
     }
 }

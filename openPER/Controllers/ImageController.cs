@@ -64,5 +64,22 @@ namespace openPER.Controllers
             var x = _imageRep.GetThumbnailForDrawing(releaseCode, make, model, catalogue, group, subgroup, subSubGroup, drawing, imageName);
             return File(x, "image/png");
         }
+
+        [Route("Image/Thumbnail/{ReleaseCode}/{ClichePartNumber}/{ClichePartDrawingNumber}")]
+        public ActionResult Thumbnail(int releaseCode, string clichePartNumber, int clichePartDrawingNumber)
+        {
+            var imageName =
+                _repository.GetImageNameForClicheDrawing(releaseCode, clichePartNumber, clichePartDrawingNumber);
+            byte[] x = _imageRep.GetThumbnailForCliche(releaseCode, clichePartNumber, clichePartDrawingNumber, imageName);
+            return File(x, "image/png");
+        }
+        [Route("Drawing/Thumbnail/{ReleaseCode}/{ClichePartNumber}/{ClichePartDrawingNumber}")]
+        public ActionResult Drawing(int releaseCode, string clichePartNumber, int clichePartDrawingNumber)
+        {
+            var imageName =
+                _repository.GetImageNameForClicheDrawing(releaseCode, clichePartNumber, clichePartDrawingNumber);
+            byte[] x = _imageRep.GetThumbnailForCliche(releaseCode, clichePartNumber, clichePartDrawingNumber, imageName);
+            return File(x, "image/png");
+        }
     }
 }

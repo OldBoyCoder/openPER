@@ -83,6 +83,18 @@ namespace openPERRepositories.Repositories
             return GetImageFromNaFile(fileName, imageName, true);
         }
 
+        public byte[] GetThumbnailForCliche(string clichePartNumber, int clichePartDrawingNumber, string imageName)
+        {
+            var folder = Path.Combine(_pathToImages, "DrawingImages");
+            var file = "cliche.na";
+            var files = Directory.GetFiles(folder, file,
+                new EnumerationOptions { MatchCasing = MatchCasing.CaseInsensitive });
+            var fileName = files[0];
+            imageName = imageName.PadLeft(10, '0');
+
+            return GetImageFromNaFile(fileName, imageName, true);
+        }
+
         private byte[] GetImageForGroup(string mapName)
         {
             var _basePath = @"C:\ePer installs\Release 18";
