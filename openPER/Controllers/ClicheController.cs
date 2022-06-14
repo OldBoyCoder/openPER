@@ -47,7 +47,7 @@ namespace openPER.Controllers
             model.ClicheDrawings = _mapper.Map<List<DrawingKeyModel>, List<DrawingKeyViewModel>>(drawings);
             model.ClicheDrawings.ForEach(x => x.ReleaseCode = releaseCode);
             model.ClicheDrawings.ForEach(x => x.SubMakeCode = subMakeCode);
-
+            model.CurrentDrawing = clicheDrawingNumber;
             return View(model);
         }
     }

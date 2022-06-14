@@ -15,7 +15,7 @@
             <div class="container">
                 <div class="row">
                     <div class="col-12">
-                     @*   <img class="img-fluid" src="@Url.Action("Drawing", "Cliche", new {Model.ReleaseCode,  Make = Model.TableData.MakeCode, Model = Model.TableData.ModelCode, Catalogue = Model.TableData.CatalogueCode, Group = Model.TableData.GroupCode, SubGroup = Model.TableData.SubGroupCode, SubSubGroup = Model.TableData.SubSubGroupCode, Drawing = Model.TableData.CurrentDrawing})">*@
+                        <img class="img-fluid" src="@Url.Action("Drawing", "Image", new {Model.ReleaseCode, ClichePartNumber = Model.ClicheDrawings.First(x=>x.ClichePartDrawingNumber==Model.CurrentDrawing).ClichePartNumber,  ClichePartDrawingNumber = Model.CurrentDrawing})">
                     </div>
                 </div>
                 <div class="row">
@@ -28,8 +28,7 @@
                                     {
                                         <div class="col-xs-4">
                                             <img class="img-fluid" src="@Url.Action("Thumbnail", "Image", new {Model.ReleaseCode, drawing.ClichePartNumber, drawing.ClichePartDrawingNumber })"><br />
-                                            @Html.ActionLink($"{drawing.CatalogueCode}/{drawing.GroupCode:000}{drawing.SubGroupCode:00}/{drawing.SubSubGroupCode:00}/{ix}", "Detail", "Drawings", new { Model.ReleaseCode, drawing.MakeCode,drawing.SubMakeCode, drawing.ModelCode, drawing.CatalogueCode, drawing.GroupCode, drawing.SubGroupCode, drawing.SubSubGroupCode, DrawingNumber = ix++ })
-                                        </div>
+                                            @Html.ActionLink("Go", "Detail", "Cliche", new { Model.ReleaseCode, Model.Breadcrumb.MakeCode, Model.Breadcrumb.SubMakeCode, Model.Breadcrumb.ModelCode, Model.Breadcrumb.CatalogueCode, Model.Breadcrumb.GroupCode, Model.Breadcrumb.SubGroupCode, Model.Breadcrumb.SubSubGroupCode, DrawingNumber = Model.Breadcrumb.DrawingNumber, ClichePartNumber = drawing.ClichePartNumber, ClicheDrawingNumber=drawing.ClichePartDrawingNumber })</div>
                                     }
                                 }
                             </div>

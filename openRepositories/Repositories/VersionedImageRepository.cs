@@ -75,5 +75,15 @@ namespace openPERRepositories.Repositories
                 _ => null
             };
         }
+
+        public byte[] GetImageForCliche(int releaseCode, string clichePartNumber, int clichePartDrawingNumber, string imageName)
+        {
+            return releaseCode switch
+            {
+                18 => _repository18.GetImageForCliche(clichePartNumber, clichePartDrawingNumber, imageName),
+                84 => _repository84.GetImageForCliche(clichePartNumber, clichePartDrawingNumber, imageName),
+                _ => null
+            };
+        }
     }
 }
