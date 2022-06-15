@@ -12,7 +12,7 @@ namespace openPERRepositories.Interfaces
         byte[] GetThumbnailForDrawing(int releaseCode, string makeCode, string modelCode, string catalogueCode,
             int groupCode, int subGroupCode, int subSubGroupCode, int drawingNumber, string imageName);
 
-        byte[] GetThumbnailForCliche(int releaseCode, double clichePartNumber, int clichePartDrawingNumber, string imageName);
-        byte[] GetImageForCliche(int releaseCode, double clichePartNumber, int clichePartDrawingNumber, string imageName);
+        byte[] GetThumbnailForCliche(int releaseCode, decimal clichePartNumber, int clichePartDrawingNumber, string imageName);
+        byte[] GetImageForCliche(int releaseCode, decimal clichePartNumber, int clichePartDrawingNumber, string imageName);
     }
 }

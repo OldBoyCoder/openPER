@@ -10,7 +10,7 @@ namespace openPERRepositories.Repositories
 {
     internal class Release84ImageRepository :IImageRepository
     {
-        IConfiguration _config;
+        private IConfiguration _config;
         private readonly string _pathToImages;
         public Release84ImageRepository(IConfiguration config)
         {
@@ -58,7 +58,6 @@ namespace openPERRepositories.Repositories
         }
         private byte[] GetImageFromEperFig(string imagePath)
         {
-            var parts = imagePath.Split(new[] { '/' }, StringSplitOptions.RemoveEmptyEntries);
             // Work out filename for zip file
             
             var fileName = Path.Combine(_pathToImages, "ResFiles", "L_EPERFIG.res");
@@ -113,12 +112,12 @@ namespace openPERRepositories.Repositories
                 drawingNumber, imageName);
         }
 
-        public byte[] GetThumbnailForCliche(double clichePartNumber, int clichePartDrawingNumber, string imageName)
+        public byte[] GetThumbnailForCliche(decimal clichePartNumber, int clichePartDrawingNumber, string imageName)
         {
             throw new NotImplementedException();
         }
 
-        public byte[] GetImageForCliche(double clichePartNumber, int clichePartDrawingNumber, string imageName)
+        public byte[] GetImageForCliche(decimal clichePartNumber, int clichePartDrawingNumber, string imageName)
         {
             throw new NotImplementedException();
         }

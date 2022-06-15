@@ -65,7 +65,7 @@ namespace openPERRepositories.Repositories
             {
                 var part = new TablePartModel
                 {
-                    PartNumber = reader.GetDouble(1),
+                    PartNumber = (decimal)reader.GetDouble(1),
                     TableOrder = reader.GetInt32(0),
                     Quantity = reader.GetString(2),
                     Description = reader.GetString(3),
@@ -98,7 +98,7 @@ namespace openPERRepositories.Repositories
             {
                 rc = true;
 
-            }, part.PartNumber);
+            }, (decimal)part.PartNumber);
             return rc;
         }
 
@@ -567,7 +567,7 @@ namespace openPERRepositories.Repositories
 
         public List<DrawingKeyModel> GetDrawingKeysForCliche(string makeCode, string subMakeCode, string modelCode,
             string catalogueCode, int groupCode,
-            int subGroupCode, int subSubGroupCode, double clichePartNumber)
+            int subGroupCode, int subSubGroupCode, decimal clichePartNumber)
         {
             var drawings = new List<DrawingKeyModel>();
             using var connection = new SqliteConnection($"Data Source={_pathToDb}");
@@ -590,11 +590,11 @@ namespace openPERRepositories.Repositories
                     ClichePartCode = reader.GetInt32(1)
                 };
                 drawings.Add(language);
-            }, clichePartNumber);
+            }, (decimal)clichePartNumber);
             return drawings;
         }
 
-        public string GetImageNameForClicheDrawing(double clichePartNumber, int clichePartDrawingNumber)
+        public string GetImageNameForClicheDrawing(decimal  clichePartNumber, int clichePartDrawingNumber)
         {
             using var connection = new SqliteConnection($"Data Source={_pathToDb}");
             var sql = @"select DISTINCT CLH_COD FROM CPXDATA
@@ -604,11 +604,11 @@ namespace openPERRepositories.Repositories
             connection.RunSqlFirstRowOnly(sql, (reader) =>
             {
                 rc = reader.GetInt32(0).ToString();
-            }, clichePartNumber, clichePartDrawingNumber);
+            }, (decimal)clichePartNumber, clichePartDrawingNumber);
             return rc;
         }
 
-        public List<TablePartModel> GetPartsForCliche(double clichePartNumber, string catalogueCode,
+        public List<TablePartModel> GetPartsForCliche(string catalogueCode, decimal clichePartNumber, 
             int clicheDrawingNumber, string languageCode)
         {
             using var connection = new SqliteConnection($"Data Source={_pathToDb}");
@@ -625,13 +625,13 @@ namespace openPERRepositories.Repositories
 
                 rc.Add(new TablePartModel
                 {
-                    PartNumber = reader.GetDouble(0),
+                    PartNumber = (decimal)reader.GetDecimal(0),
                     TableOrder = reader.GetInt32(2),
                     Quantity = reader.GetString(3),
                     FurtherDescription = reader.GetString(4),
                     Description = reader.GetString(5)
                 });
-            }, clichePartNumber, clicheDrawingNumber, languageCode);
+            }, (decimal)clichePartNumber, clicheDrawingNumber, languageCode);
 
             var maxRIF = 1;
             if (rc.Count > 0)
@@ -648,13 +648,13 @@ namespace openPERRepositories.Repositories
 
                 rc.Add(new TablePartModel
                 {
-                    PartNumber = reader.GetDouble(0),
+                    PartNumber = (decimal)reader.GetDouble(0),
                     TableOrder = maxRIF++,
                     Quantity = "01",
                     FurtherDescription = "",
                     Description = reader.GetString(1)
                 });
-            }, clichePartNumber, catalogueCode, languageCode);
+            }, (decimal)clichePartNumber, catalogueCode, languageCode);
 
 
             return rc;
@@ -683,7 +683,7 @@ namespace openPERRepositories.Repositories
                 {
                     p = new PartModel
                     {
-                        PartNumber = reader.GetDouble(0),
+                        PartNumber = (decimal)reader.GetDecimal(0),
                         Description = reader.GetString(2),
                         FamilyCode = reader.GetString(3),
                         FamilyDescription = reader.GetString(4),
@@ -700,7 +700,7 @@ namespace openPERRepositories.Repositories
             return p;
         }
 
-        private List<PartDrawing> GetDrawingsForPartNumber(double partNumber, string languageCode)
+        private List<PartDrawing> GetDrawingsForPartNumber(decimal partNumber, string languageCode)
         {
             var drawings = new List<PartDrawing>();
             using var connection = new SqliteConnection($"Data Source={_pathToDb}");
