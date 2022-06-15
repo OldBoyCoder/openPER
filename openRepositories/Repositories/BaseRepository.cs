@@ -604,11 +604,12 @@ namespace openPERRepositories.Repositories
             connection.RunSqlFirstRowOnly(sql, (reader) =>
             {
                 rc = reader.GetInt32(0).ToString();
-            },clichePartNumber,  clichePartDrawingNumber);
+            }, clichePartNumber, clichePartDrawingNumber);
             return rc;
         }
 
-        public List<TablePartModel> GetPartsForCliche(double clichePartNumber, int clicheDrawingNumber, string languageCode)
+        public List<TablePartModel> GetPartsForCliche(double clichePartNumber, string catalogueCode,
+            int clicheDrawingNumber, string languageCode)
         {
             using var connection = new SqliteConnection($"Data Source={_pathToDb}");
             var rc = new List<TablePartModel>();
@@ -631,6 +632,31 @@ namespace openPERRepositories.Repositories
                     Description = reader.GetString(5)
                 });
             }, clichePartNumber, clicheDrawingNumber, languageCode);
+
+            var maxRIF = 1;
+            if (rc.Count > 0)
+                maxRIF = rc.Max(x => x.TableOrder) + 1;
+            // Now get any kits
+            sql = @"SELECT K.PRT_COD, CDS_DSC
+                        FROM KIT K
+                        JOIN PARTS P ON P.PRT_COD = K.PRT_COD
+                        JOIN CODES_DSC ON P.CDS_COD = CODES_DSC.CDS_COD AND CODES_DSC.LNG_COD = $p3
+                        WHERE K.CPLX_PRT_COD = $p1 AND K.CAT_COD = $p2
+                        ORDER BY TBD_SEQ";
+            connection.RunSqlAllRows(sql, (reader) =>
+            {
+
+                rc.Add(new TablePartModel
+                {
+                    PartNumber = reader.GetDouble(0),
+                    TableOrder = maxRIF++,
+                    Quantity = "01",
+                    FurtherDescription = "",
+                    Description = reader.GetString(1)
+                });
+            }, clichePartNumber, catalogueCode, languageCode);
+
+
             return rc;
         }
 
