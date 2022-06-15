@@ -255,12 +255,13 @@ namespace openPERRepositories.Repositories
             };
         }
 
-        public List<TablePartModel> GetPartsForCliche(int releaseCode, double clichePartNumber, int clicheDrawingNumber, string languageCode)
+        public List<TablePartModel> GetPartsForCliche(int releaseCode, string catalogueCode, double clichePartNumber,
+            int clicheDrawingNumber, string languageCode)
         {
             return releaseCode switch
             {
-                18 => _repository18.GetPartsForCliche(clichePartNumber, clicheDrawingNumber, languageCode),
-                84 => _repository84.GetPartsForCliche(clichePartNumber, clicheDrawingNumber, languageCode),
+                18 => _repository18.GetPartsForCliche(clichePartNumber,catalogueCode, clicheDrawingNumber, languageCode),
+                84 => _repository84.GetPartsForCliche(clichePartNumber, catalogueCode, clicheDrawingNumber, languageCode),
                 _ => throw new System.NotImplementedException()
             };
         }

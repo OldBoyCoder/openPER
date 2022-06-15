@@ -51,7 +51,7 @@ namespace openPER.Controllers
             model.CurrentClicheDrawing = new ClicheDrawingViewModel();
             model.CurrentClicheDrawing.CurrentDrawingNumber = clicheDrawingNumber;
             model.CurrentClicheDrawing.ParentPartNumber = clichePartNumber;
-            List<TablePartModel> parts = _rep.GetPartsForCliche(releaseCode, clichePartNumber, clicheDrawingNumber, language);
+            List<TablePartModel> parts = _rep.GetPartsForCliche(releaseCode,catalogueCode, clichePartNumber, clicheDrawingNumber, language);
             model.CurrentClicheDrawing.Parts = _mapper.Map<List<TablePartModel>, List<PartViewModel>>(parts);
             return View(model);
         }

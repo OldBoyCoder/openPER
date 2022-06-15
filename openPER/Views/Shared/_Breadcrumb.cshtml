@@ -28,6 +28,20 @@
                                         <li class="breadcrumb-item">
                                             @Html.ActionLink(Model.DrawingNumber.ToString(), "Detail", "Drawings", new { Model.ReleaseCode, Model.MakeCode, Model.SubMakeCode, Model.ModelCode, Model.CatalogueCode, Model.GroupCode, Model.SubGroupCode, Model.SubSubGroupCode, Model.DrawingNumber })
                                         </li>
+                                        @if (Model.ClichePartNumber != null)
+                                        {
+                                            <li class="breadcrumb-item">
+                                                @Html.ActionLink(Model.ClichePartNumber.ToString(), "Detail", "Cliche", new { Model.ReleaseCode, Model.MakeCode, Model.SubMakeCode, Model.ModelCode, Model.CatalogueCode, Model.GroupCode, Model.SubGroupCode, Model.SubSubGroupCode, DrawingNumber = Model.DrawingNumber, ClichePartNumber = Model.ClichePartNumber, ClicheDrawingNumber=1})
+                                            </li>
+                                            @if (Model.ClicheDrawingNumber != null)
+                                            {
+                                                <li class="breadcrumb-item">
+                                                    @Html.ActionLink(Model.ClicheDrawingNumber.ToString(), "Detail", "Cliche", new { Model.ReleaseCode, Model.MakeCode, Model.SubMakeCode, Model.ModelCode, Model.CatalogueCode, Model.GroupCode, Model.SubGroupCode, Model.SubSubGroupCode, DrawingNumber = Model.DrawingNumber, ClichePartNumber = Model.ClichePartNumber, ClicheDrawingNumber=Model.ClicheDrawingNumber })
+                                                </li>
+
+                                            }
+
+                                        }
                                     }
 
                                 }

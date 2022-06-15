@@ -31,7 +31,8 @@ namespace openPERRepositories.Interfaces
         List<DrawingKeyModel> GetDrawingKeysForCliche(string makeCode, string subMakeCode, string modelCode,
             string catalogueCode, int groupCode, int subGroupCode, int subSubGroupCode, double clichePartNumber);
         string GetImageNameForClicheDrawing(double clichePartNumber, int clichePartDrawingNumber);
-        List<TablePartModel> GetPartsForCliche(double clichePartNumber, int clicheDrawingNumber, string languageCode);
+        List<TablePartModel> GetPartsForCliche(double clichePartNumber, string catalogueCode, int clicheDrawingNumber,
+            string languageCode);
     }
 
 }

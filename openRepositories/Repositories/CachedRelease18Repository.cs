@@ -179,9 +179,10 @@ namespace openPERRepositories.Repositories
             return _rep.GetImageNameForClicheDrawing(clichePartNumber, clichePartDrawingNumber);
         }
 
-        public List<TablePartModel> GetPartsForCliche(double clichePartNumber, int clicheDrawingNumber, string languageCode)
+        public List<TablePartModel> GetPartsForCliche(double clichePartNumber, string catalogueCode,
+            int clicheDrawingNumber, string languageCode)
         {
-            return _rep.GetPartsForCliche(clichePartNumber, clicheDrawingNumber, languageCode);
+            return _rep.GetPartsForCliche(clichePartNumber,catalogueCode, clicheDrawingNumber, languageCode);
         }
 
         public List<MakeModel> GetAllMakes()
