@@ -10,7 +10,7 @@
         public int? SubGroupCode { get; set; }
         public int? SubSubGroupCode { get; set; }
         public int? DrawingNumber { get; set; }
-        public string ClichePartNumber { get; set; }
+        public double ClichePartNumber { get; set; }
         public int ClicheDrawingNumber { get; set; }
         public string MakeDescription { get; set; }
         public string SubMakeDescription { get; set; }

@@ -66,7 +66,7 @@ namespace openPERRepositories.Repositories
             };
         }
 
-        public byte[] GetThumbnailForCliche(int releaseCode, string clichePartNumber, int clichePartDrawingNumber, string imageName)
+        public byte[] GetThumbnailForCliche(int releaseCode, double clichePartNumber, int clichePartDrawingNumber, string imageName)
         {
             return releaseCode switch
             {
@@ -76,7 +76,7 @@ namespace openPERRepositories.Repositories
             };
         }
 
-        public byte[] GetImageForCliche(int releaseCode, string clichePartNumber, int clichePartDrawingNumber, string imageName)
+        public byte[] GetImageForCliche(int releaseCode, double clichePartNumber, int clichePartDrawingNumber, string imageName)
         {
             return releaseCode switch
             {

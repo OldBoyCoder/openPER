@@ -18,7 +18,7 @@ namespace openPER.ViewModels
         public string SubGroupDesc { get; set; }
         public string SgsDesc { get; set; }
         public List<int> DrawingNumbers { get; set; }
-        public List<TablePartViewModel> Parts { get; set; }
+        public List<PartViewModel> Parts { get; set; }
         public int CurrentDrawing { get; set; }
         public List<string> Narratives { get; set; }
 

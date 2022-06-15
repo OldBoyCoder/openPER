@@ -83,7 +83,7 @@ namespace openPERRepositories.Repositories
             return GetImageFromNaFile(fileName, imageName, true);
         }
 
-        public byte[] GetThumbnailForCliche(string clichePartNumber, int clichePartDrawingNumber, string imageName)
+        public byte[] GetThumbnailForCliche(double clichePartNumber, int clichePartDrawingNumber, string imageName)
         {
             var folder = Path.Combine(_pathToImages, "DrawingImages");
             var file = "cliche.na";
@@ -95,7 +95,7 @@ namespace openPERRepositories.Repositories
             return GetImageFromNaFile(fileName, imageName, true);
         }
 
-        public byte[] GetImageForCliche(string clichePartNumber, int clichePartDrawingNumber, string imageName)
+        public byte[] GetImageForCliche(double clichePartNumber, int clichePartDrawingNumber, string imageName)
         {
             var folder = Path.Combine(_pathToImages, "DrawingImages");
             var file = "cliche.na";
