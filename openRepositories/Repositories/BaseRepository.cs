@@ -594,7 +594,7 @@ namespace openPERRepositories.Repositories
             return drawings;
         }
 
-        public string GetImageNameForClicheDrawing(decimal  clichePartNumber, int clichePartDrawingNumber)
+        public string GetImageNameForClicheDrawing(decimal clichePartNumber, int clichePartDrawingNumber)
         {
             using var connection = new SqliteConnection($"Data Source={_pathToDb}");
             var sql = @"select DISTINCT CLH_COD FROM CPXDATA
@@ -608,7 +608,7 @@ namespace openPERRepositories.Repositories
             return rc;
         }
 
-        public List<TablePartModel> GetPartsForCliche(string catalogueCode, decimal clichePartNumber, 
+        public List<TablePartModel> GetPartsForCliche(string catalogueCode, decimal clichePartNumber,
             int clicheDrawingNumber, string languageCode)
         {
             using var connection = new SqliteConnection($"Data Source={_pathToDb}");
@@ -724,7 +724,42 @@ namespace openPERRepositories.Repositories
                     SubGroupCode = reader.GetInt32(3),
                     SubSubGroupCode = reader.GetInt32(4),
                     DrawingNumber = reader.GetInt32(5),
-                    SubGroupDescription = reader.GetString(6)
+                    SubGroupDescription = reader.GetString(6),
+                    ClichePart = false
+                };
+                drawings.Add(p);
+            }, partNumber, languageCode);
+
+            // This could be a part in a cliche
+            sql = @"select DISTINCT 
+	                A.CAT_COD, CT.CAT_DSC , A.GRP_COD, A.SGRP_COD, T.SGS_COD, T.DRW_NUM, SGRP_DSC, CT.MK_COD, CMG_COD, MK2_COD,
+	                CDS.CDS_DSC, T.PRT_COD, C.PRT_COD, C.CPD_NUM
+                        from CPXDATA C
+                        JOIN APPLICABILITY A ON C.PRT_COD = A.PRT_COD
+                        JOIN SUBGROUPS_DSC SD ON SD.GRP_COD = T.GRP_COD AND SD.SGRP_COD = T.SGRP_COD AND SD.LNG_COD = $p2
+                        JOIN CATALOGUES CT ON CT.CAT_COD = A.CAT_COD
+                        JOIN CODES_DSC CDS ON CDS.CDS_COD = A.CDS_COD AND CDS.LNG_COD = $p2
+                        JOIN TBDATA T ON T.PRT_COD = C.CPLX_PRT_COD AND T.CAT_COD = A.CAT_COD
+	                        AND A.GRP_COD = T.GRP_COD AND A.SGRP_COD = T.SGRP_COD
+
+                        WHERE C.PRT_COD = $p1";
+            connection.RunSqlAllRows(sql, (reader) =>
+            {
+                var p = new PartDrawing
+                {
+                    Make = reader.GetString(7),
+                    SubMake = reader.GetString(9),
+                    Model = reader.GetString(8),
+                    CatalogueCode = reader.GetString(0),
+                    CatalogueDescription = reader.GetString(1),
+                    GroupCode = reader.GetInt32(2),
+                    SubGroupCode = reader.GetInt32(3),
+                    SubSubGroupCode = reader.GetInt32(4),
+                    DrawingNumber = reader.GetInt32(5),
+                    SubGroupDescription = reader.GetString(6),
+                    ClichePartNumber = reader.GetDecimal(11),
+                    ClichePartDrawingNumber = reader.GetInt32(13),
+                    ClichePart = true
                 };
                 drawings.Add(p);
             }, partNumber, languageCode);

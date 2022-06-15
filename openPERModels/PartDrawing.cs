@@ -12,5 +12,8 @@
         public string SubGroupDescription { get; set; }
         public int SubSubGroupCode { get; set; }
         public int DrawingNumber { get; set; }
+        public decimal ClichePartNumber { get; set; }
+        public int ClichePartDrawingNumber { get; set; }
+        public bool ClichePart { get; set; }
     }
 }
