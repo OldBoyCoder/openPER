@@ -19,7 +19,7 @@ namespace openPER.Controllers
         }
         [Route(
             "Detail/{ReleaseCode}/{MakeCode}/{SubMakeCode}/{ModelCode}/{CatalogueCode}/{GroupCode}/{SubGroupCode}/{SubSubGroupCode}/{DrawingNumber}/{ClichePartNumber}/{ClicheDrawingNumber}")]
-        public IActionResult Detail(int releaseCode, string makeCode, string subMakeCode, string modelCode, string catalogueCode, int groupCode, int subGroupCode, int subSubGroupCode, int drawingNumber, string clichePartNumber, int clicheDrawingNumber)
+        public IActionResult Detail(int releaseCode, string makeCode, string subMakeCode, string modelCode, string catalogueCode, int groupCode, int subGroupCode, int subSubGroupCode, int drawingNumber, double clichePartNumber, int clicheDrawingNumber)
         {
             var language = Helpers.LanguageSupport.SetCultureBasedOnCookie(HttpContext);
             ControllerHelpers.ResetReleaseCookie(HttpContext, releaseCode);
@@ -48,6 +48,11 @@ namespace openPER.Controllers
             model.ClicheDrawings.ForEach(x => x.ReleaseCode = releaseCode);
             model.ClicheDrawings.ForEach(x => x.SubMakeCode = subMakeCode);
             model.CurrentDrawing = clicheDrawingNumber;
+            model.CurrentClicheDrawing = new ClicheDrawingViewModel();
+            model.CurrentClicheDrawing.CurrentDrawingNumber = clicheDrawingNumber;
+            model.CurrentClicheDrawing.ParentPartNumber = clichePartNumber;
+            List<TablePartModel> parts = _rep.GetPartsForCliche(releaseCode, clichePartNumber, clicheDrawingNumber, language);
+            model.CurrentClicheDrawing.Parts = _mapper.Map<List<TablePartModel>, List<PartViewModel>>(parts);
             return View(model);
         }
     }

@@ -13,14 +13,14 @@ namespace openPER.Controllers
         }
         public IActionResult Index()
         {
-            var p = new PartViewModel();
+            var p = new PartSearchViewModel();
             return View(p);
         }
 
         [HttpGet]
         public ActionResult SearchResults(string partNumber)
         {
-            var p = new PartViewModel();
+            var p = new PartSearchViewModel();
             var language = Helpers.LanguageSupport.SetCultureBasedOnCookie(HttpContext);
             var releaseCode = Helpers.ReleaseHelpers.GetCurrentReleaseNumber(HttpContext);
 

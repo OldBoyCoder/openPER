@@ -167,15 +167,21 @@ namespace openPERRepositories.Repositories
             return rc;
         }
 
-        public List<DrawingKeyModel> GetDrawingKeysForCliche(string makeCode, string subMakeCode, string modelCode, string catalogueCode, int groupCode,
-            int subGroupCode, int subSubGroupCode, string clichePartNumber)
+        public List<DrawingKeyModel> GetDrawingKeysForCliche(string makeCode, string subMakeCode, string modelCode,
+            string catalogueCode, int groupCode,
+            int subGroupCode, int subSubGroupCode, double clichePartNumber)
         {
             return _rep.GetDrawingKeysForCliche(makeCode,subMakeCode,modelCode,catalogueCode,groupCode, subGroupCode, subSubGroupCode, clichePartNumber);
         }
 
-        public string GetImageNameForClicheDrawing(string clichePartNumber, int clichePartDrawingNumber)
+        public string GetImageNameForClicheDrawing(double clichePartNumber, int clichePartDrawingNumber)
         {
             return _rep.GetImageNameForClicheDrawing(clichePartNumber, clichePartDrawingNumber);
+        }
+
+        public List<TablePartModel> GetPartsForCliche(double clichePartNumber, int clicheDrawingNumber, string languageCode)
+        {
+            return _rep.GetPartsForCliche(clichePartNumber, clicheDrawingNumber, languageCode);
         }
 
         public List<MakeModel> GetAllMakes()

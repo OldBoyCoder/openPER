@@ -39,12 +39,12 @@
             </div>
         </div>
         <div class="col-lg-6 col-md-12 col-sm-12 col-12">
-           @* <table class="table table-sm">
-                <tr><th>&nbsp;</th><th>Prod. code</th><th>Fur. Descr.< /th><th>Comp.</th><th>Modif.</th><th>Qty</th><th>Notes</th><th>Components</th></tr>
+            <table class="table table-sm">
+                <tr><th>&nbsp;</th><th>Prod. code</th><th>Fur. Descr.< /th><th>Comp.</th><th>Modif.</th><th>Qty</th><th>Notes</th></tr>
                 @{
 
                     int lastOrder = 999;
-                    @foreach (var item in Model.TableData.Parts)
+                    @foreach (var item in Model.CurrentClicheDrawing.Parts)
                     {
                         if (item.TableOrder != lastOrder)
                         {
@@ -66,17 +66,10 @@
                             </td>
                             <td>@Html.DisplayFor(model => item.Quantity)</td>
                             <td>@Html.DisplayFor(model => item.Notes)</td>
-                            <td>
-                                @if (item.IsAComponent)
-                                {
-                                    @Html.ActionLink("Go", "Detail", "Cliche", new { Model.ReleaseCode, Model.TableData.MakeCode, Model.TableData.SubMakeCode, Model.TableData.ModelCode, Model.TableData.CatalogueCode, Model.TableData.GroupCode, Model.TableData.SubGroupCode, Model.TableData.SubSubGroupCode, DrawingNumber = Model.TableData.CurrentDrawing, ClichePartNumber = item.PartNumber })
-                                }
-                            </td>
-
                         </tr>
                     }
                 }
-            </table>*@
+            </table>
         </div>
     </div>
 </div>

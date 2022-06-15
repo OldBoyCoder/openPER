@@ -235,7 +235,7 @@ namespace openPERRepositories.Repositories
         }
 
         public List<DrawingKeyModel> GetDrawingKeysForCliche(int releaseCode, string makeCode,string subMakeCode, string modelCode, string catalogueCode, int groupCode,
-            int subGroupCode, int subSubGroupCode, string clichePartNumber)
+            int subGroupCode, int subSubGroupCode, double clichePartNumber)
         {
             return releaseCode switch
             {
@@ -245,12 +245,22 @@ namespace openPERRepositories.Repositories
             };
         }
 
-        public string GetImageNameForClicheDrawing(int releaseCode, string clichePartNumber, int clichePartDrawingNumber)
+        public string GetImageNameForClicheDrawing(int releaseCode, double clichePartNumber, int clichePartDrawingNumber)
         {
             return releaseCode switch
             {
                 18 => _repository18.GetImageNameForClicheDrawing(clichePartNumber, clichePartDrawingNumber),
                 84 => _repository84.GetImageNameForClicheDrawing(clichePartNumber, clichePartDrawingNumber),
+                _ => throw new System.NotImplementedException()
+            };
+        }
+
+        public List<TablePartModel> GetPartsForCliche(int releaseCode, double clichePartNumber, int clicheDrawingNumber, string languageCode)
+        {
+            return releaseCode switch
+            {
+                18 => _repository18.GetPartsForCliche(clichePartNumber, clicheDrawingNumber, languageCode),
+                84 => _repository84.GetPartsForCliche(clichePartNumber, clicheDrawingNumber, languageCode),
                 _ => throw new System.NotImplementedException()
             };
         }

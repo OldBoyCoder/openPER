@@ -113,12 +113,12 @@ namespace openPERRepositories.Repositories
                 drawingNumber, imageName);
         }
 
-        public byte[] GetThumbnailForCliche(string clichePartNumber, int clichePartDrawingNumber, string imageName)
+        public byte[] GetThumbnailForCliche(double clichePartNumber, int clichePartDrawingNumber, string imageName)
         {
             throw new NotImplementedException();
         }
 
-        public byte[] GetImageForCliche(string clichePartNumber, int clichePartDrawingNumber, string imageName)
+        public byte[] GetImageForCliche(double clichePartNumber, int clichePartDrawingNumber, string imageName)
         {
             throw new NotImplementedException();
         }

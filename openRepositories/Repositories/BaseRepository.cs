@@ -565,8 +565,9 @@ namespace openPERRepositories.Repositories
             int subgroup, int subSubGroup,
             int drawing);
 
-        public List<DrawingKeyModel> GetDrawingKeysForCliche(string makeCode, string subMakeCode, string modelCode, string catalogueCode, int groupCode,
-            int subGroupCode, int subSubGroupCode, string clichePartNumber)
+        public List<DrawingKeyModel> GetDrawingKeysForCliche(string makeCode, string subMakeCode, string modelCode,
+            string catalogueCode, int groupCode,
+            int subGroupCode, int subSubGroupCode, double clichePartNumber)
         {
             var drawings = new List<DrawingKeyModel>();
             using var connection = new SqliteConnection($"Data Source={_pathToDb}");
@@ -593,7 +594,7 @@ namespace openPERRepositories.Repositories
             return drawings;
         }
 
-        public string GetImageNameForClicheDrawing(string clichePartNumber, int clichePartDrawingNumber)
+        public string GetImageNameForClicheDrawing(double clichePartNumber, int clichePartDrawingNumber)
         {
             using var connection = new SqliteConnection($"Data Source={_pathToDb}");
             var sql = @"select DISTINCT CLH_COD FROM CPXDATA
@@ -604,6 +605,32 @@ namespace openPERRepositories.Repositories
             {
                 rc = reader.GetInt32(0).ToString();
             },clichePartNumber,  clichePartDrawingNumber);
+            return rc;
+        }
+
+        public List<TablePartModel> GetPartsForCliche(double clichePartNumber, int clicheDrawingNumber, string languageCode)
+        {
+            using var connection = new SqliteConnection($"Data Source={_pathToDb}");
+            var rc = new List<TablePartModel>();
+            var sql = @"SELECT C.PRT_COD, CLH_COD, CPD_RIF, CPD_QTY, IFNULL(CPD_AGG_DSC, ''), CDS_DSC
+                        FROM CPXDATA C 
+                        JOIN PARTS P ON P.PRT_COD = C.PRT_COD
+                        JOIN CODES_DSC ON P.CDS_COD = CODES_DSC.CDS_COD AND CODES_DSC.LNG_COD = $p3
+
+                        WHERE C.CPLX_PRT_COD = $p1 AND C.CPD_NUM = $p2
+                        ORDER BY CPD_RIF, CPD_RIF_SEQ";
+            connection.RunSqlAllRows(sql, (reader) =>
+            {
+
+                rc.Add(new TablePartModel
+                {
+                    PartNumber = reader.GetDouble(0),
+                    TableOrder = reader.GetInt32(2),
+                    Quantity = reader.GetString(3),
+                    FurtherDescription = reader.GetString(4),
+                    Description = reader.GetString(5)
+                });
+            }, clichePartNumber, clicheDrawingNumber, languageCode);
             return rc;
         }
 
