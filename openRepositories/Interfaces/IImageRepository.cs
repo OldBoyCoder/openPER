@@ -10,7 +10,7 @@ namespace openPERRepositories.Interfaces
             MapImageModel mapDetails);
         byte[] GetImageForDrawing(string makeCode, string modelCode, string catalogueCode, int groupCode, int subgroupCode, int subSubGroupCode, int drawingNumber, string imageName);
         byte[] GetThumbnailForDrawing(string makeCode, string modelCode, string catalogueCode, int groupCode, int subGroupCode, int subSubGroupCode, int drawingNumber, string imageName);
-        byte[] GetThumbnailForCliche(double clichePartNumber, int clichePartDrawingNumber, string imageName);
-        byte[] GetImageForCliche(double clichePartNumber, int clichePartDrawingNumber, string imageName);
+        byte[] GetThumbnailForCliche(decimal clichePartNumber, int clichePartDrawingNumber, string imageName);
+        byte[] GetImageForCliche(decimal clichePartNumber, int clichePartDrawingNumber, string imageName);
     }
 }

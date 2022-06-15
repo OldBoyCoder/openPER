@@ -1,10 +1,10 @@
 ﻿using System.Collections.Generic;
 using AutoMapper;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.Routing;
 using openPER.ViewModels;
 using openPERModels;
 using openPERRepositories.Interfaces;
+
 
 namespace openPER.Controllers
 {
@@ -19,7 +19,9 @@ namespace openPER.Controllers
         }
         [Route(
             "Detail/{ReleaseCode}/{MakeCode}/{SubMakeCode}/{ModelCode}/{CatalogueCode}/{GroupCode}/{SubGroupCode}/{SubSubGroupCode}/{DrawingNumber}/{ClichePartNumber}/{ClicheDrawingNumber}")]
-        public IActionResult Detail(int releaseCode, string makeCode, string subMakeCode, string modelCode, string catalogueCode, int groupCode, int subGroupCode, int subSubGroupCode, int drawingNumber, double clichePartNumber, int clicheDrawingNumber)
+        public IActionResult Detail(int releaseCode, string makeCode, string subMakeCode, string modelCode,
+            string catalogueCode, int groupCode, int subGroupCode, int subSubGroupCode, int drawingNumber,
+            decimal clichePartNumber, int clicheDrawingNumber)
         {
             var language = Helpers.LanguageSupport.SetCultureBasedOnCookie(HttpContext);
             ControllerHelpers.ResetReleaseCookie(HttpContext, releaseCode);

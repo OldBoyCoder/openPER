@@ -9,9 +9,9 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "VinSearcher", "VinSearcher\
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "VinSearcherTests", "VinSearcherTests\VinSearcherTests.csproj", "{5EE2389A-3661-47DF-90C0-E724DA6DB6D1}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "openPERModels", "openPERModels\openPERModels.csproj", "{2DE76556-C548-43CD-8C65-1B95C93A2327}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "openPERModels", "openPERModels\openPERModels.csproj", "{2DE76556-C548-43CD-8C65-1B95C93A2327}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "openPERRepositories", "openRepositories\openPERRepositories.csproj", "{A1ECEB97-2E3F-4E96-A60B-5E8E7FA0EE8E}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "openPERRepositories", "openRepositories\openPERRepositories.csproj", "{A1ECEB97-2E3F-4E96-A60B-5E8E7FA0EE8E}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
