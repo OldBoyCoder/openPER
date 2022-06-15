@@ -39,7 +39,7 @@
         </div>
         <div class="col-lg-6 col-md-12 col-sm-12 col-12">
             <table class="table table-sm">
-                <tr><th>&nbsp;</th><th>Prod. code</th><th>Fur. Descr.< /th><th>Comp.</th><th>Modif.</th><th>Qty</th><th>Notes</th></tr>
+                <tr><th>&nbsp;</th><th>Prod. code</th><th>Fur. Descr.</th><th>Comp.</th><th>Modif.</th><th>Qty</th><th>Notes</th></tr>
                 @{
 
                     int lastOrder = 999;
@@ -52,7 +52,7 @@
                         }
                         <tr>
                             <td>&nbsp;</td>
-                            <td ><a href="@Url.Action("SearchResults", "Part", new { item.PartNumber })">@Html.DisplayFor(model => item.PartNumber)</a> <a href="https://www.google.com/search?q=FIAT+@item.PartNumber" target="_blank" class="bi bi-search"></a></td>
+                            <td >@Html.ActionLink(item.PartNumber.ToString("0") ,"SearchResults", "Part", new { item.PartNumber }) <a href="https://www.google.com/search?q=FIAT+@item.PartNumber.ToString("0")" target="_blank" class="bi bi-search"></a></td>
                             <td>@Html.DisplayFor(model => item.FurtherDescription)</td>
                             <td>@Html.DisplayFor(model => item.Compatibility)</td>
                             <td>
