@@ -118,7 +118,7 @@
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
   <data name="IntroParagraph" xml:space="preserve">
-    <value>Hello and welcome to openPER.</value>
+    <value>Hello and welcome to openPER.  This is an open source project to recreate the functonality of the FIAT ePER system.  The project is currently hosted at https://github.com/OldBoyCoder/openPER</value>
     <comment>Main index page welcome text</comment>
   </data>
 </root>

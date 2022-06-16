@@ -42,7 +42,7 @@
                 <tr><th>&nbsp;</th><th>Prod. code</th><th>Fur. Descr.</th><th>Comp.</th><th>Modif.</th><th>Qty</th><th>Notes</th></tr>
                 @{
 
-                    int lastOrder = 999;
+                    int lastOrder = 999; 
                     @foreach (var item in Model.CurrentClicheDrawing.Parts)
                     {
                         if (item.TableOrder != lastOrder)

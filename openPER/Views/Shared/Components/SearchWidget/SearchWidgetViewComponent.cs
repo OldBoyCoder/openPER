@@ -15,7 +15,7 @@ namespace openPER.Views.Shared.Components.SearchWidget
         {
             var model = new SearchViewModel();
             int releaseCode = Helpers.ReleaseHelpers.GetCurrentReleaseNumber(HttpContext);
-            model.VinSearch.Models = _rep.GetAllModels(releaseCode);
+            model.VinSearch.Models = _rep.GetAllVinModels(releaseCode);
             return View("Default", model);
         }
 

@@ -1,6 +1,9 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using System.Linq;
+using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Logging;
 using openPER.ViewModels;
+using openPERModels;
 using openPERRepositories.Interfaces;
 using VinSearcher;
 
@@ -11,11 +14,21 @@ namespace openPER.Controllers
         private readonly ILogger<VinSearchController> _logger;
         private readonly IVersionedRepository _rep;
 
+        private IConfiguration _config;
+        private string _pathToVindata;
 
-        public VinSearchController(ILogger<VinSearchController> logger, IVersionedRepository repository)
+        public VinSearchController(ILogger<VinSearchController> logger, IVersionedRepository repository, IConfiguration config)
         {
             _logger = logger;
             _rep = repository;
+            _config = config;
+            var s = _config.GetSection("Releases").Get<ReleaseModel[]>();
+            var release = s.FirstOrDefault(x => x.Release == 18);
+            if (release != null)
+            {
+                _pathToVindata = release.VinData;
+            }
+
         }
 
         public IActionResult Index()
@@ -24,7 +37,7 @@ namespace openPER.Controllers
             
             var model = new VinSearchViewModel
             {
-                Models = _rep.GetAllModels(releaseCode)
+                Models = _rep.GetAllVinModels(releaseCode)
             };
             return View(model);
         }
@@ -34,7 +47,7 @@ namespace openPER.Controllers
             VinSearchViewModel vinSearch = null;
             var releaseCode = Helpers.ReleaseHelpers.GetCurrentReleaseNumber(HttpContext);
 
-            var x = new VinSearch();
+            var x = new Release18VinSearch(_pathToVindata);
             var language = Helpers.LanguageSupport.SetCultureBasedOnCookie(HttpContext);
             if (selectedModel != null && chassisNumber != null)
             {
@@ -61,7 +74,7 @@ namespace openPER.Controllers
         public IActionResult SearchByFullVin(string fullVin)
         {
             var releaseCode = Helpers.ReleaseHelpers.GetCurrentReleaseNumber(HttpContext);
-            var x = new VinSearch();
+            var x = new Release18VinSearch(_pathToVindata);
 
             var language = Helpers.LanguageSupport.SetCultureBasedOnCookie(HttpContext);
             if (string.IsNullOrEmpty(fullVin) || fullVin.Length != 17)

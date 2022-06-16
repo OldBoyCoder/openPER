@@ -185,6 +185,12 @@ namespace openPERRepositories.Repositories
             return _rep.GetPartsForCliche(catalogueCode,clichePartNumber, clicheDrawingNumber, languageCode);
         }
 
+        public List<ModelModel> GetAllVinModels()
+        {
+            return _rep.GetAllVinModels();
+
+        }
+
         public List<MakeModel> GetAllMakes()
         {
             var cacheKeys = new { type = "GetAllMakes" };

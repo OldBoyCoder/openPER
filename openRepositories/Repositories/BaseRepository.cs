@@ -413,12 +413,13 @@ namespace openPERRepositories.Repositories
             using var connection = new SqliteConnection($"Data Source={_pathToDb}");
             var sql = @"select M.MOD_COD, M.MVS_VERSION, M.MVS_SERIE, MVS_DSC, MVS_SINCOM_VERS,MVS_ENGINE_TYPE, MV.VMK_DSC, VV.VMK_DSC,
                         M.VMK_TYPE_M||VMK_COD_M, M.VMK_TYPE_V||VMK_COD_V,
-                        C.CAT_COD, C.CMD_DSC, COL.DSC_COLORE_INT_VET, MM.MOD_DSC from MVS M 
-                        JOIN COMM_MODELS C ON C.MOD_COD = M.MOD_COD
+                        CT.CAT_COD, CT.CAT_DSC, IFNULL(COL.DSC_COLORE_INT_VET, ''), MM.MOD_DSC, CT.MK_COD, CT.MK2_COD, CT.CMG_COD 
+                        from MVS M 
                         JOIN MODELS MM ON MM.MOD_COD = M.MOD_COD
+                        JOIN CATALOGUES CT ON CT.CAT_COD = M.CAT_COD
 						LEFT OUTER JOIN VMK_DSC MV ON MV.CAT_COD = M.CAT_COD AND MV.VMK_TYPE = M.VMK_TYPE_M AND MV.VMK_COD = M.VMK_COD_M AND MV.LNG_COD = $p1
 						LEFT OUTER JOIN VMK_DSC VV ON VV.CAT_COD = M.CAT_COD AND VV.VMK_TYPE = M.VMK_TYPE_V AND VV.VMK_COD = M.VMK_COD_V AND VV.LNG_COD = $p1
-                        LEFT OUTER JOIN INTERNAL_COLOURS_DSC COL ON COL.CAT_COD = C.CAT_COD AND COD_COLORE_INT_VET = $p5
+                        LEFT OUTER JOIN INTERNAL_COLOURS_DSC COL ON COL.CAT_COD = CT.CAT_COD AND COD_COLORE_INT_VET = $p5 AND COL.LNG_COD = $p1
 					where M.MOD_COD = $p2 AND MVS_VERSION = $p3 AND MVS_SERIE = $p4";
             connection.RunSqlFirstRowOnly(sql, (reader) =>
             {
@@ -437,6 +438,9 @@ namespace openPERRepositories.Repositories
                 m.ColourCode = colourCode;
                 m.ColourDescription = reader.GetString(12);
                 m.ModelDescription = reader.GetString(13);
+                m.MakeCode = reader.GetString(14);
+                m.SubMakeCode = reader.GetString(15);
+                m.ModelCode = reader.GetString(16);
             }, languageCode, mvsCode, mvsVersion, mvsSeries, colourCode);
             return m;
         }
@@ -658,6 +662,27 @@ namespace openPERRepositories.Repositories
 
 
             return rc;
+        }
+
+        public List<ModelModel> GetAllVinModels()
+        {
+            var rc = new List<ModelModel>();
+            using var connection = new SqliteConnection($"Data Source={_pathToDb}");
+            //            var sql = @"SELECT MOD_COD, MOD_DSC, MK_COD FROM MODELS ORDER BY MOD_SORT_KEY ";
+            var sql = @"SELECT MOD_COD, MOD_DSC, MK_COD FROM MODELS ORDER BY MOD_DSC ";
+            connection.RunSqlAllRows(sql, (reader) =>
+            {
+                var m = new ModelModel
+                {
+                    Code = reader.GetString(0),
+                    Description = reader.GetString(1),
+                    MakeCode = reader.GetString(2)
+                };
+                rc.Add(m);
+            });
+            return rc;
+
+
         }
 
         // ReSharper disable once UnusedParameter.Local

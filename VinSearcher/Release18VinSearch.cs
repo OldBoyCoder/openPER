@@ -2,8 +2,13 @@
 
 namespace VinSearcher
 {
-    public class VinSearch:IReturnedDataHandler
+    public class Release18VinSearch:IReturnedDataHandler
     {
+        private readonly string _pathToVinData;
+        public Release18VinSearch(string pathToVinData)
+        {
+            _pathToVinData = pathToVinData;
+        }
 
         public List<VinResult> FindVehiclesByFullVin(string vinNumber)
         {
@@ -15,7 +20,7 @@ namespace VinSearcher
         {
             var x = new KtdReader.KtdReader();
             var searchKey = modelNumber + chassisNumber.PadLeft(8, '0');
-            var record = x.RecordsForKey(@"C:\ePer installs\Release 18\SP.CH.00900.FCTLR", searchKey, 1, this);
+            var record = x.RecordsForKey(_pathToVinData, searchKey, 1, this);
             if (record != null)
             {
                 var vehicle = new VinResult
@@ -40,11 +45,6 @@ namespace VinSearcher
                 return true;
             }
             return false;
-        }
-
-        private void LoadFileHeaderData()
-        {
-
         }
     }
 }
