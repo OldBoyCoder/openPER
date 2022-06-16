@@ -19,6 +19,9 @@
         public string ColourDescription { get;  set; }
         public string FullMvsCode => $"{MvsCode}.{MvsVersion}.{MvsSeries}";
 
-        public string ModelDescription { get;  set; }
+        public string ModelCode { get; set; }
+        public string ModelDescription { get; set; }
+        public string MakeCode { get; set; }
+        public string SubMakeCode { get; set; }
     }
 }

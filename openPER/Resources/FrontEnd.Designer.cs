@@ -8,7 +8,10 @@
 // </auto-generated>
 //------------------------------------------------------------------------------
 
-namespace openPER.Resources {
+namespace Resources {
+    using System;
+    
+    
     /// <summary>
     ///   A strongly-typed resource class, for looking up localized strings, etc.
     /// </summary>
@@ -58,7 +61,7 @@ namespace openPER.Resources {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Hello and welcome to openPER..
+        ///   Looks up a localized string similar to Hello and welcome to openPER.  This is an open source project to recreate the functonality of the FIAT ePER system.  The project is currently hosted at https://github.com/OldBoyCoder/openPER.
         /// </summary>
         public static string IntroParagraph {
             get {

@@ -33,6 +33,8 @@ namespace openPERRepositories.Interfaces
         string GetImageNameForClicheDrawing(decimal clichePartNumber, int clichePartDrawingNumber);
         List<TablePartModel> GetPartsForCliche(string catalogueCode, decimal clichePartNumber, int clicheDrawingNumber,
             string languageCode);
+
+        List<ModelModel> GetAllVinModels();
     }
 
 }

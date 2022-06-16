@@ -265,5 +265,15 @@ namespace openPERRepositories.Repositories
                 _ => throw new System.NotImplementedException()
             };
         }
+
+        public List<ModelModel> GetAllVinModels(int releaseCode)
+        {
+            return releaseCode switch
+            {
+                18 => _repository18.GetAllVinModels(),
+                84 => _repository84.GetAllVinModels(),
+                _ => throw new System.NotImplementedException()
+            };
+        }
     }
 }
