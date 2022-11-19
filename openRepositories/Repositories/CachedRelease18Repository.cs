@@ -274,12 +274,12 @@ namespace openPERRepositories.Repositories
             return rc;
         }
 
-        public TableModel GetTable(string catalogueCode, int groupCode, int subGroupCode, int sgsCode, int drawingNumber, string languageCode)
+        public TableModel GetTable(string catalogueCode, int groupCode, int subGroupCode, int sgsCode, int drawingNumber, int revision, string languageCode)
         {
             var cacheKeys = new { type = "GetTable", k1 = catalogueCode, k2 = groupCode, k3 = subGroupCode, k4 = sgsCode, k5 = drawingNumber, k6 = languageCode };
             if (!_cache.TryGetValue(cacheKeys, out TableModel rc))
             {
-                rc = _rep.GetTable(catalogueCode, groupCode, subGroupCode, sgsCode, drawingNumber, languageCode);
+                rc = _rep.GetTable(catalogueCode, groupCode, subGroupCode, sgsCode, drawingNumber, revision,languageCode);
                 var cacheEntryOptions = new MemoryCacheEntryOptions().SetSlidingExpiration(TimeSpan.FromHours(24));
                 _cache.Set(cacheKeys, rc, cacheEntryOptions);
             }
