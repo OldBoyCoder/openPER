@@ -116,12 +116,12 @@ namespace openPERRepositories.Repositories
             };
         }
 
-        public TableModel GetTable(int release, string catalogueCode, int groupCode, int subGroupCode, int subSubGroupCode, int drawingNumber, string languageCode)
+        public TableModel GetTable(int release, string catalogueCode, int groupCode, int subGroupCode, int subSubGroupCode, int drawingNumber,int revision, string languageCode)
         {
             return release switch
             {
-                18 => _repository18.GetTable(catalogueCode, groupCode, subGroupCode, subSubGroupCode, drawingNumber, languageCode),
-                84 => _repository84.GetTable(catalogueCode, groupCode, subGroupCode, subSubGroupCode, drawingNumber, languageCode),
+                18 => _repository18.GetTable(catalogueCode, groupCode, subGroupCode, subSubGroupCode, drawingNumber, revision,languageCode),
+                84 => _repository84.GetTable(catalogueCode, groupCode, subGroupCode, subSubGroupCode, drawingNumber,revision, languageCode),
                 _ => throw new System.NotImplementedException()
             };
         }
