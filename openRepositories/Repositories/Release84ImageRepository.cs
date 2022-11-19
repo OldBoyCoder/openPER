@@ -8,7 +8,7 @@ using openPERRepositories.Interfaces;
 
 namespace openPERRepositories.Repositories
 {
-    internal class Release84ImageRepository :IImageRepository
+    public class Release84ImageRepository :IImageRepository
     {
         private IConfiguration _config;
         private readonly string _pathToImages;

@@ -7,7 +7,6 @@ namespace openPERModels
     /// </summary>
     public class DrawingKeyModel
     {
-        public int ReleaseCode { get; set; }
         public string MakeCode { get; set; }
         public string SubMakeCode { get; set; }
         public string ModelCode { get; set; }

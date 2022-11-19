@@ -4,7 +4,6 @@ namespace openPER.ViewModels
 {
     public class DrawingKeyViewModel
     {
-        public int ReleaseCode { get; set; }
         public string MakeCode { get; set; }
         public string SubMakeCode { get; set; }
         public string ModelCode { get; set; }
@@ -19,6 +18,6 @@ namespace openPER.ViewModels
         public int ClichePartCode { get; set; }
         public string VariantPattern { get; set; }
 
-        public string FullKey => $"{ReleaseCode}/{MakeCode}/{ModelCode}/{CatalogueCode}/{GroupCode}/{SubGroupCode}/{SubSubGroupCode}/{DrawingNumber}/{ClichePartNumber}";
+        public string FullKey => $"{MakeCode}/{ModelCode}/{CatalogueCode}/{GroupCode}/{SubGroupCode}/{SubSubGroupCode}/{DrawingNumber}/{ClichePartNumber}";
     }
 }

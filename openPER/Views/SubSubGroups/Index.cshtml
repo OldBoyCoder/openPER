@@ -29,13 +29,13 @@
                 {
                     <tr>
                         <td>
-                            @Html.ActionLink($"{group.FullDisplayCode} {group.Description}", "Index", "SubSubGroups", new { Model.ReleaseCode, Model.MakeCode, Model.SubMakeCode, Model.ModelCode, Model.CatalogueCode, group.GroupCode, SubGroupCode = group.Code })
+                            @Html.ActionLink($"{group.FullDisplayCode} {group.Description}", "Index", "SubSubGroups", new {  Model.MakeCode, Model.SubMakeCode, Model.ModelCode, Model.CatalogueCode, group.GroupCode, SubGroupCode = group.Code })
                         </td>
                     </tr>
                 }
                 <tr>
                     <td>
-                        @Html.ActionLink("All drawings", "Index", "Drawings", new { Model.ReleaseCode, Model.MakeCode, Model.ModelCode, Model.CatalogueCode, Model.GroupCode, DrawingNumber = 1 })
+                        @Html.ActionLink("All drawings", "Index", "Drawings", new {  Model.MakeCode, Model.ModelCode, Model.CatalogueCode, Model.GroupCode, DrawingNumber = 1 })
                     </td>
                 </tr>
                 </tbody>
@@ -51,7 +51,7 @@
                 {
                     @:<tr>
                 <td>
-                    @Html.ActionLink($"{Model.GroupCode:000}{Model.SubGroupCode:00}/{group.Code:00}", "Detail", "Drawings", new {Model.ReleaseCode,Model.MakeCode,Model.SubMakeCode, Model.ModelCode, Model.CatalogueCode, Model.GroupCode, Model.SubGroupCode, SubSubGroupCode=group.Code, DrawingNumber=1, Revision=1})
+                    @Html.ActionLink($"{Model.GroupCode:000}{Model.SubGroupCode:00}/{group.Code:00}", "Detail", "Drawings", new {Model.MakeCode,Model.SubMakeCode, Model.ModelCode, Model.CatalogueCode, Model.GroupCode, Model.SubGroupCode, SubSubGroupCode=group.Code, DrawingNumber=1, Revision=1})
                 </td>
                 <td>
                     @string.Join('+', group.Variations.Select(x=>x.VariationType+x.VariationCode).Concat(group.Options.Select(x=>x.OptionType+x.OptionCode)))
@@ -116,7 +116,7 @@
                         @:</tr>
                     }
                 }
-                <tr><td>@Html.ActionLink("All drawings", "Index", "Drawings", new {Model.ReleaseCode,Model.MakeCode, Model.ModelCode, Model.CatalogueCode,Model.GroupCode,Model.SubGroupCode, DrawingNumber=1, Revision=1})</td></tr>
+                <tr><td>@Html.ActionLink("All drawings", "Index", "Drawings", new {Model.MakeCode, Model.ModelCode, Model.CatalogueCode,Model.GroupCode,Model.SubGroupCode, DrawingNumber=1, Revision=1})</td></tr>
             </table>
 
         </div>

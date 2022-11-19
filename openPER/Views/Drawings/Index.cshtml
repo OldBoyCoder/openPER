@@ -30,7 +30,7 @@
                         {
 
                             case DrawingsRequestType.Catalogue:
-                                @Html.ActionLink($"{drawing.CatalogueCode}/{drawing.GroupCode}/{drawing.SubGroupCode}/{drawing.SubSubGroupCode}/{ix}", "Detail", "Drawings", new { Model.ReleaseCode, drawing.MakeCode, drawing.ModelCode, drawing.CatalogueCode, DrawingNumber = ix++ })
+                                @Html.ActionLink($"{drawing.CatalogueCode}/{drawing.GroupCode}/{drawing.SubGroupCode}/{drawing.SubSubGroupCode}/{ix}", "Detail", "Drawings", new {drawing.MakeCode, drawing.ModelCode, drawing.CatalogueCode, DrawingNumber = ix++ })
                                 break;
                         }
                     }

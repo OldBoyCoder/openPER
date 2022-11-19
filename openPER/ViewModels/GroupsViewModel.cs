@@ -2,7 +2,7 @@
 
 namespace openPER.ViewModels
 {
-    public class GroupsViewModel:VersionedViewModel
+    public class GroupsViewModel
     {
         public List<GroupViewModel> Groups { get; set; }
         public string MakeCode { get; internal set; }

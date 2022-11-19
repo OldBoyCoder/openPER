@@ -3,7 +3,7 @@ using openPERModels;
 
 namespace openPER.ViewModels
 {
-    public class VinSearchViewModel:VersionedViewModel
+    public class VinSearchViewModel
     {
         public List<ModelModel> Models { get; set; }
         public MvsModel MvsData { get; set; }
