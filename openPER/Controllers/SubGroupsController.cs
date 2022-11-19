@@ -22,6 +22,7 @@ namespace openPER.Controllers
             // Standard prologue
             var language = Helpers.LanguageSupport.SetCultureBasedOnCookie(HttpContext);
             var breadcrumb = new BreadcrumbModel { MakeCode = makeCode, SubMakeCode = subMakeCode, ModelCode = modelCode, CatalogueCode = catalogueCode, GroupCode = groupCode };
+            _rep.PopulateBreadcrumbDescriptions(breadcrumb, language);
 
             var model = new SubGroupsViewModel
             {
