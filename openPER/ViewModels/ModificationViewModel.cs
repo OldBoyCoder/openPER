@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.Linq;
 
 namespace openPER.ViewModels
 {
@@ -15,11 +16,10 @@ namespace openPER.ViewModels
         {
             get
             {
-                var rc = Description;
-                foreach (var item in Activations)
-                {
-                    rc += $" {item.ActivationCode} {item.ActivationDescription} ({item.VariationType}{item.VariationCode} {item.VariationDescription} {item.OptionType}{item.OptionCode}{item.OptionDescription})";
-                }
+                var rc = $"{Code} - {Description}";
+                if (Activations.Count > 0) rc += " (";
+                rc += string.Join(',', Activations.Select(x => $"{x.ActivationCode.Trim()} {x.ActivationDescription.Trim()}"));
+                if (Activations.Count > 0) rc += ")";
                 return rc;
             }
         }
