@@ -9,7 +9,7 @@ namespace openPER.ViewModels
             SubGroup,
             SubSubGroup,
         }
-        public class DrawingsViewModel : VersionedViewModel
+        public class DrawingsViewModel 
         {
             public BreadcrumbViewModel Breadcrumb { get; set; }
             // We need a list of all drawings for this page

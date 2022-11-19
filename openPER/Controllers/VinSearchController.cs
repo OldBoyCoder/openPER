@@ -12,18 +12,18 @@ namespace openPER.Controllers
     public class VinSearchController : Controller
     {
         private readonly ILogger<VinSearchController> _logger;
-        private readonly IVersionedRepository _rep;
+        private readonly IRepository _rep;
 
         private IConfiguration _config;
         private string _pathToVindata;
 
-        public VinSearchController(ILogger<VinSearchController> logger, IVersionedRepository repository, IConfiguration config)
+        public VinSearchController(ILogger<VinSearchController> logger, IRepository repository, IConfiguration config)
         {
             _logger = logger;
             _rep = repository;
             _config = config;
             var s = _config.GetSection("Releases").Get<ReleaseModel[]>();
-            var release = s.FirstOrDefault(x => x.Release == 18);
+            var release = s.FirstOrDefault(x => x.Release == 84);
             if (release != null)
             {
                 _pathToVindata = release.VinData;
@@ -33,11 +33,9 @@ namespace openPER.Controllers
 
         public IActionResult Index()
         {
-            var releaseCode = Helpers.ReleaseHelpers.GetCurrentReleaseNumber(HttpContext);
-            
             var model = new VinSearchViewModel
             {
-                Models = _rep.GetAllVinModels(releaseCode)
+                Models = _rep.GetAllVinModels()
             };
             return View(model);
         }
@@ -45,7 +43,6 @@ namespace openPER.Controllers
         public IActionResult SearchByChassisAndVin(string selectedModel, string chassisNumber)
         {
             VinSearchViewModel vinSearch = null;
-            var releaseCode = Helpers.ReleaseHelpers.GetCurrentReleaseNumber(HttpContext);
 
             var x = new Release18VinSearch(_pathToVindata);
             var language = Helpers.LanguageSupport.SetCultureBasedOnCookie(HttpContext);
@@ -56,12 +53,11 @@ namespace openPER.Controllers
                 {
                     vinSearch = new VinSearchViewModel
                     {
-                        ReleaseCode = releaseCode
                     };
                     var mvsCode = searchResult.Mvs.Substring(0, 3);
                     var mvsVersion = searchResult.Mvs.Substring(3, 3);
                     var mvsSeries = searchResult.Mvs.Substring(6, 1);
-                    vinSearch.MvsData = _rep.GetMvsDetails(releaseCode, mvsCode, mvsVersion, mvsSeries, searchResult.InteriorColour, language);
+                    vinSearch.MvsData = _rep.GetMvsDetails(mvsCode, mvsVersion, mvsSeries, searchResult.InteriorColour, language);
                     vinSearch.ChassisNumber = searchResult.Chassis;
                     vinSearch.Organization = searchResult.Organization;
                     vinSearch.ProductionDate = searchResult.Date;
@@ -73,7 +69,6 @@ namespace openPER.Controllers
         [HttpGet]
         public IActionResult SearchByFullVin(string fullVin)
         {
-            var releaseCode = Helpers.ReleaseHelpers.GetCurrentReleaseNumber(HttpContext);
             var x = new Release18VinSearch(_pathToVindata);
 
             var language = Helpers.LanguageSupport.SetCultureBasedOnCookie(HttpContext);
@@ -88,13 +83,12 @@ namespace openPER.Controllers
                 var mvsCode = searchResult.Mvs.Substring(0, 3);
                 var mvsVersion = searchResult.Mvs.Substring(3, 3);
                 var mvsSeries = searchResult.Mvs.Substring(6, 1);
-                vinSearch.MvsData = _rep.GetMvsDetails(releaseCode, mvsCode, mvsVersion, mvsSeries, searchResult.InteriorColour, language);
+                vinSearch.MvsData = _rep.GetMvsDetails(mvsCode, mvsVersion, mvsSeries, searchResult.InteriorColour, language);
                 vinSearch.ChassisNumber = searchResult.Chassis;
                 vinSearch.Organization = searchResult.Organization;
                 vinSearch.ProductionDate = searchResult.Date;
                 vinSearch.EngineNumber = searchResult.Motor;
-                vinSearch.Models = _rep.GetAllModels(releaseCode);
-                vinSearch.ReleaseCode = releaseCode;
+                vinSearch.Models = _rep.GetAllModels();
             }
             return View("Index", vinSearch);
         }

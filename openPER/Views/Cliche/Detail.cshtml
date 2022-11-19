@@ -15,7 +15,7 @@
             <div class="container">
                 <div class="row">
                     <div class="col-12">
-                        <img class="img-fluid" src="@Url.Action("Drawing", "Image", new {Model.ReleaseCode, ClichePartNumber = Model.ClicheDrawings.First(x=>x.ClichePartDrawingNumber==Model.CurrentDrawing).ClichePartNumber,  ClichePartDrawingNumber = Model.CurrentDrawing})">
+                        <img class="img-fluid" src="@Url.Action("Drawing", "Image", new {ClichePartNumber = Model.ClicheDrawings.First(x=>x.ClichePartDrawingNumber==Model.CurrentDrawing).ClichePartNumber,  ClichePartDrawingNumber = Model.CurrentDrawing})">
                     </div>
                 </div>
                 <div class="row">
@@ -26,8 +26,8 @@
                                     @foreach (var drawing in Model.ClicheDrawings)
                                     {
                                         <div class="col-xs-4">
-                                            <img class="img-fluid" src="@Url.Action("Thumbnail", "Image", new {Model.ReleaseCode, drawing.ClichePartNumber, drawing.ClichePartDrawingNumber })"><br />
-                                            @Html.ActionLink("Go", "Detail", "Cliche", new { Model.ReleaseCode, Model.Breadcrumb.MakeCode, Model.Breadcrumb.SubMakeCode, Model.Breadcrumb.ModelCode, Model.Breadcrumb.CatalogueCode, Model.Breadcrumb.GroupCode, Model.Breadcrumb.SubGroupCode, Model.Breadcrumb.SubSubGroupCode, DrawingNumber = Model.Breadcrumb.DrawingNumber, ClichePartNumber = drawing.ClichePartNumber, ClicheDrawingNumber=drawing.ClichePartDrawingNumber })</div>
+                                            <img class="img-fluid" src="@Url.Action("Thumbnail", "Image", new {drawing.ClichePartNumber, drawing.ClichePartDrawingNumber })"><br />
+                                            @Html.ActionLink("Go", "Detail", "Cliche", new { Model.Breadcrumb.MakeCode, Model.Breadcrumb.SubMakeCode, Model.Breadcrumb.ModelCode, Model.Breadcrumb.CatalogueCode, Model.Breadcrumb.GroupCode, Model.Breadcrumb.SubGroupCode, Model.Breadcrumb.SubSubGroupCode, DrawingNumber = Model.Breadcrumb.DrawingNumber, ClichePartNumber = drawing.ClichePartNumber, ClicheDrawingNumber=drawing.ClichePartDrawingNumber })</div>
                                     }
                                 }
                             </div>

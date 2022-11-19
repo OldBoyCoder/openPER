@@ -10,7 +10,7 @@
             @await Html.PartialAsync("_SidebarMenu", Model.Navigation)
         </div>
         <div class="col-lg-8 col-md-8 col-sm-12 col-12">
-            <img src="@Url.Action("ModelImage", "Image", new { Model.ReleaseCode, Make = Model.Navigation.Breadcrumb.MakeCode, SubMake = Model.Navigation.Breadcrumb.SubMakeCode, Model = Model.Navigation.Breadcrumb.ModelCode})" alt="@(Model.Navigation.Breadcrumb.ModelDescription)" title="@(Model.Navigation.Breadcrumb.ModelDescription)">
+            <img src="@Url.Action("ModelImage", "Image", new {Make = Model.Navigation.Breadcrumb.MakeCode, SubMake = Model.Navigation.Breadcrumb.SubMakeCode, Model = Model.Navigation.Breadcrumb.ModelCode})" alt="@(Model.Navigation.Breadcrumb.ModelDescription)" title="@(Model.Navigation.Breadcrumb.ModelDescription)">
 
             </div>  
             @*        <div class="container">
@@ -19,8 +19,8 @@
                     foreach (var cat in Model.Catalogues)
                     {
                         <div class="col-lg-4 col-md-4 col-sm-12 col-12">
-                            <a href="@Url.Action("Index", "Groups", new { Model.Navigation.Breadcrumb.ReleaseCode, MakeCode = Model.Navigation.Breadcrumb.MakeCode, SubMakeCode = Model.Navigation.Breadcrumb.SubMakeCode, ModelCode = Model.Navigation.Breadcrumb.ModelCode, CatalogueCode = cat.Code })">
-                                <img src="@Url.Action("CatalogueImage", "Image", new { Model.ReleaseCode, Make = Model.Navigation.Breadcrumb.MakeCode, SubMake = Model.Navigation.Breadcrumb.SubMakeCode, Model = Model.Navigation.Breadcrumb.ModelCode, Catalogue=cat.Code })" alt="@(cat.Description)" title="@(cat.Description)">
+                            <a href="@Url.Action("Index", "Groups", new { MakeCode = Model.Navigation.Breadcrumb.MakeCode, SubMakeCode = Model.Navigation.Breadcrumb.SubMakeCode, ModelCode = Model.Navigation.Breadcrumb.ModelCode, CatalogueCode = cat.Code })">
+                                <img src="@Url.Action("CatalogueImage", "Image", new {  Make = Model.Navigation.Breadcrumb.MakeCode, SubMake = Model.Navigation.Breadcrumb.SubMakeCode, Model = Model.Navigation.Breadcrumb.ModelCode, Catalogue=cat.Code })" alt="@(cat.Description)" title="@(cat.Description)">
                             </a>
                         </div>
                     }

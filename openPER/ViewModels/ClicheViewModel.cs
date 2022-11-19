@@ -2,7 +2,7 @@
 
 namespace openPER.ViewModels
 {
-    public class ClicheViewModel : VersionedViewModel
+    public class ClicheViewModel 
     {
 
         public BreadcrumbViewModel Breadcrumb { get; set; }

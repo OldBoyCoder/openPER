@@ -11,7 +11,7 @@
         <tr><td>Model</td><td>@Html.DisplayTextFor(m=>m.MvsData.MvsCode) | @Html.DisplayTextFor(m=>m.MvsData.ModelDescription)</td></tr>
         <tr><td>Chassis No.</td><td>@Html.DisplayTextFor(m=>m.ChassisNumber)</td></tr>
         <!-- TODO this shouldn't be hardcoded as a BArchetta' -->
-        <tr><td>Catalogue</td><td>@Html.ActionLink(Model.MvsData.CatalogueCode +" | "+Model.MvsData.CatalogueDescription, "Index", "Groups", new { Model.ReleaseCode, MakeCode=Model.MvsData.MakeCode,SubMakeCode=Model.MvsData.SubMakeCode, ModelCode=Model.MvsData.ModelCode, CatalogueCode=Model.MvsData.CatalogueCode})</td></tr>
+        <tr><td>Catalogue</td><td>@Html.ActionLink(Model.MvsData.CatalogueCode +" | "+Model.MvsData.CatalogueDescription, "Index", "Groups", new { MakeCode=Model.MvsData.MakeCode,SubMakeCode=Model.MvsData.SubMakeCode, ModelCode=Model.MvsData.ModelCode, CatalogueCode=Model.MvsData.CatalogueCode})</td></tr>
         <tr><td>MVS</td><td>@Html.DisplayTextFor(m=>m.MvsData.FullMvsCode) | @Html.DisplayTextFor(m=>m.MvsData.Description)</td></tr>
         <tr><td>Engine stamp</td><td>@Html.DisplayTextFor(m=>m.MvsData.EngineType)</td></tr>
         <tr><td>Version code</td><td>@Html.DisplayTextFor(m=>m.MvsData.SincomVersion)</td></tr>

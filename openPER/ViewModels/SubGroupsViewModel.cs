@@ -2,7 +2,7 @@
 
 namespace openPER.ViewModels
 {
-    public class SubGroupsViewModel:VersionedViewModel
+    public class SubGroupsViewModel
     {
         public List<SubGroupViewModel> SubGroups { get; set; }
         public string MakeCode { get; set; }
