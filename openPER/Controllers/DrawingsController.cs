@@ -17,8 +17,8 @@ namespace openPER.Controllers
             _mapper = mapper;
         }
         // The most specific route, only the drawings for the lowest level are returned
-        [Route("Detail/{ReleaseCode}/{MakeCode}/{SubMakeCode}/{ModelCode}/{CatalogueCode}/{GroupCode}/{SubGroupCode}/{SubSubGroupCode}/{DrawingNumber}")]
-        public IActionResult Detail(int releaseCode, string makeCode,string subMakeCode, string modelCode, string catalogueCode, int groupCode, int subGroupCode, int subSubGroupCode, int drawingNumber)
+        [Route("Detail/{ReleaseCode}/{MakeCode}/{SubMakeCode}/{ModelCode}/{CatalogueCode}/{GroupCode}/{SubGroupCode}/{SubSubGroupCode}/{DrawingNumber}/{Revision}")]
+        public IActionResult Detail(int releaseCode, string makeCode,string subMakeCode, string modelCode, string catalogueCode, int groupCode, int subGroupCode, int subSubGroupCode, int drawingNumber, int revision)
         {
             // Standard prologue
             var language = Helpers.LanguageSupport.SetCultureBasedOnCookie(HttpContext);
@@ -34,6 +34,7 @@ namespace openPER.Controllers
             model.Breadcrumb = _mapper.Map<BreadcrumbModel, BreadcrumbViewModel>(breadcrumb);
             model.Breadcrumb.ReleaseCode = releaseCode;
 
+
             model.ReleaseCode = releaseCode;
             // We need to get all of the drawing keys for this sub sub group
             List<DrawingKeyModel> drawings = _rep.GetDrawingKeysForSubSubGroup(releaseCode, makeCode, modelCode,
@@ -46,7 +47,7 @@ namespace openPER.Controllers
             // Get the table for this drawing
             model.TableData = _mapper.Map<TableModel, TableViewModel>(
                 _rep.GetTable(drawing.ReleaseCode, drawing.CatalogueCode, drawing.GroupCode, drawing.SubGroupCode,
-                    drawing.SubSubGroupCode, drawing.DrawingNumber, language));
+                    drawing.SubSubGroupCode, drawing.DrawingNumber,revision, language));
             model.TableData.MakeCode = makeCode;
             model.TableData.SubMakeCode = subMakeCode;
             model.TableData.ModelCode = modelCode;
@@ -54,8 +55,8 @@ namespace openPER.Controllers
 
             return View(model);
         }
-        [Route("Detail/{ReleaseCode}/{MakeCode}/{SubMakeCode}/{ModelCode}/{CatalogueCode}/{DrawingNumber}")]
-        public IActionResult Detail(int releaseCode, string makeCode,string subMakeCode, string modelCode, string catalogueCode, int drawingNumber)
+        [Route("Detail/{ReleaseCode}/{MakeCode}/{SubMakeCode}/{ModelCode}/{CatalogueCode}/{DrawingNumber}/{Revision}")]
+        public IActionResult Detail(int releaseCode, string makeCode,string subMakeCode, string modelCode, string catalogueCode, int drawingNumber, int revision)
         {
             // Standard prologue
             var language = Helpers.LanguageSupport.SetCultureBasedOnCookie(HttpContext);
@@ -75,7 +76,7 @@ namespace openPER.Controllers
             // Get the table for this drawing
             model.TableData = _mapper.Map<TableModel, TableViewModel>(
                 _rep.GetTable(drawing.ReleaseCode, drawing.CatalogueCode, drawing.GroupCode, drawing.SubGroupCode,
-                    drawing.SubSubGroupCode, drawing.DrawingNumber, language));
+                    drawing.SubSubGroupCode, drawing.DrawingNumber,revision, language));
             model.TableData.MakeCode = makeCode;
             model.TableData.SubMakeCode = subMakeCode;
             model.TableData.ModelCode = modelCode;

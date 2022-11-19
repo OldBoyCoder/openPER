@@ -5,7 +5,7 @@ namespace openPERRepositories.Interfaces
 {
     public interface IRepository
     {
-        TableModel GetTable(string catalogueCode, int groupCode, int subGroupCode, int sgsCode, int drawingNumber, string languageCode);
+        TableModel GetTable(string catalogueCode, int groupCode, int subGroupCode, int sgsCode, int drawingNumber, int revision, string languageCode);
         List<MakeModel> GetAllMakes();
         List<ModelModel> GetAllModelsForMake(string make, string subMake);
         List<ModelModel> GetAllModels();
