@@ -9,10 +9,10 @@
     ViewData["Title"] = "Index";
 }
 @await Html.PartialAsync("_Breadcrumb", Model.Breadcrumb)
-<div class="container">
+<div class="container-fluid">
     <div class="row">
         <div class="col-lg-6 col-md-12 col-sm-12 col-12">
-            <div class="container">
+            <div class="container-fluid">
                 <div class="row">
                     <div class="col-12">
                         <img class="img-fluid" src="@Url.Action("Drawing", "Image", new {ClichePartNumber = Model.ClicheDrawings.First(x=>x.ClichePartDrawingNumber==Model.CurrentDrawing).ClichePartNumber,  ClichePartDrawingNumber = Model.CurrentDrawing})">
@@ -20,7 +20,7 @@
                 </div>
                 <div class="row">
                     <div class="col-12">
-                        <div class="container horizontal-scrollable">
+                        <div class="container-fluid horizontal-scrollable">
                             <div class="row text-center">
                                 @{
                                     @foreach (var drawing in Model.ClicheDrawings)

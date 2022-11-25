@@ -4,7 +4,7 @@
     ViewData["Title"] = "Index";
 }
 @await Html.PartialAsync("_Breadcrumb", Model.Breadcrumb)
-<div class="container">
+<div class="container-fluid">
     <div class="row">
         <div class="col-lg-12 col-md-12 col-sm-12 col-12">
             <div class="dropdown show">
@@ -14,10 +14,11 @@
                 <div class="dropdown-menu" aria-labelledby="subGroupMenuLink">
                     @{
                         int ix = 1;
-                        @foreach (var drawing in Model.Drawings.GroupBy(x=>new {x.MakeCode, x.SubMakeCode,x.ModelCode, x.CatalogueCode, x.GroupCode, x.SubGroupCode, x.SubSubGroupCode}, (key, group)=>new {key.MakeCode, key.SubMakeCode,key.ModelCode, key.CatalogueCode, key.GroupCode, key.SubGroupCode, key.SubSubGroupCode}))
+                        @foreach (var drawing in Model.Drawings.GroupBy(x => new { x.MakeCode, x.SubMakeCode, x.ModelCode, x.CatalogueCode, x.GroupCode, x.SubGroupCode, x.SubSubGroupCode }, (key, group) => new { key.MakeCode, key.SubMakeCode, key.ModelCode, key.CatalogueCode, key.GroupCode, key.SubGroupCode, key.SubSubGroupCode }))
                         {
-                            
-                            @Html.ActionLink($"{drawing.GroupCode:000}{drawing.SubGroupCode:00}/{drawing.SubSubGroupCode:00}", "Detail", "Drawings", new {drawing.MakeCode, drawing.SubMakeCode, drawing.ModelCode, drawing.CatalogueCode, drawing.GroupCode, drawing.SubGroupCode, drawing.SubSubGroupCode, DrawingNumber = ix }, new {@class="dropdown-item"});
+
+                            @Html.ActionLink($"{drawing.GroupCode:000}{drawing.SubGroupCode:00}/{drawing.SubSubGroupCode:00}", "Detail", "Drawings", new {drawing.MakeCode, drawing.SubMakeCode, drawing.ModelCode, drawing.CatalogueCode, drawing.GroupCode, drawing.SubGroupCode, drawing.SubSubGroupCode, DrawingNumber = ix }, new {@class="dropdown-item"})
+                            ;
                         }
                     }
                 </div>
@@ -31,7 +32,8 @@
                         ix = 1;
                         @foreach (var drawing in Model.Drawings)
                         {
-                            @Html.ActionLink($"{drawing.Variant} {drawing.VariantPattern}", "Detail", "Drawings", new {drawing.MakeCode, drawing.SubMakeCode, drawing.ModelCode, drawing.CatalogueCode, drawing.GroupCode, drawing.SubGroupCode, drawing.SubSubGroupCode, DrawingNumber = ix++ }, new {@class="dropdown-item"});
+                            @Html.ActionLink($"{drawing.Variant} {drawing.VariantPattern}", "Detail", "Drawings", new {drawing.MakeCode, drawing.SubMakeCode, drawing.ModelCode, drawing.CatalogueCode, drawing.GroupCode, drawing.SubGroupCode, drawing.SubSubGroupCode, DrawingNumber = ix++ }, new {@class="dropdown-item"})
+                            ;
                         }
                     }
                 </div>
@@ -39,50 +41,32 @@
         </div>
     </div>
     <div class="row">
-        <div class="col-lg-6 col-md-12 col-sm-12 col-12">
-            <div class="container">
+        <div class="col-lg-5 col-md-12 col-sm-12 col-12">
+            <div class="container-fluid">
                 <div class="row">
                     <div class="col-12">
                         <img class="img-fluid" src="@Url.Action("Drawing", "Image", new {Make = Model.TableData.MakeCode, Model = Model.TableData.ModelCode, Catalogue = Model.TableData.CatalogueCode, Group = Model.TableData.GroupCode, SubGroup = Model.TableData.SubGroupCode, SubSubGroup = Model.TableData.SubSubGroupCode, Variant = Model.TableData.Variant, Model.TableData.Revision })">
                     </div>
                 </div>
-                <div class="row">
-                    <div class="col-12">
-                        <div class="container horizontal-scrollable">
-                            <div class="row text-center">
-                                @{
-                                    ix = 1;
-                                    @foreach (var drawing in Model.Drawings)
-                                    {
-                                        <div class="col-xs-4">
-                                            <img class="img-fluid" src="@Url.Action("Thumbnail", "Image", new {Make = drawing.MakeCode, Model = drawing.ModelCode, Catalogue = drawing.CatalogueCode, Group = drawing.GroupCode, SubGroup = drawing.SubGroupCode, SubSubGroup = drawing.SubSubGroupCode, Variant = drawing.Variant, Revision=drawing.Revision })"><br />
-                                            @Html.ActionLink($"{drawing.CatalogueCode}/{drawing.GroupCode:000}{drawing.SubGroupCode:00}/{drawing.SubSubGroupCode:00}/{ix}", "Detail", "Drawings", new {drawing.MakeCode, drawing.SubMakeCode, drawing.ModelCode, drawing.CatalogueCode, drawing.GroupCode, drawing.SubGroupCode, drawing.SubSubGroupCode, DrawingNumber = ix++ })
-                                        </div>
-                                    }
-                                }
-                            </div>
-                        </div>
-                    </div>
-                </div>
             </div>
         </div>
-        <div class="col-lg-6 col-md-12 col-sm-12 col-12">
+        <div class="col-lg-7 col-md-12 col-sm-12 col-12">
             <table class="table table-sm">
-                <tr><th>&nbsp;</th><th>Prod. code</th><th>Fur. Descr.</th><th>Comp.</th><th>Modif.</th><th>Qty</th><th>Notes</th><th>Components</th></tr>
+                <tr><th>code</th><th>Prod. code</th><th>Description</th><th>Compat.</th><th>Modif.</th><th>Qty</th><th>Notes</th><th>Components</th></tr>
                 @{
 
-                    int lastOrder = 999;
+                    //int lastOrder = 999;
                     @foreach (var item in Model.TableData.Parts)
                     {
-                        if (item.TableOrder != lastOrder)
-                        {
-                            <tr><td>@Html.DisplayFor(model => item.TableOrder)</td><td colspan="7">@Html.DisplayFor(model => item.Description)</td></tr>
-                            lastOrder = item.TableOrder;
-                        }
+                        //if (item.TableOrder != lastOrder)
+                        //{
+                        //    <tr><td>@Html.DisplayFor(model => item.TableOrder)</td><td colspan="7">@Html.DisplayFor(model => item.Description)</td></tr>
+                        //    lastOrder = item.TableOrder;
+                        //}
                         <tr>
-                            <td>&nbsp;</td>
+                            <td>@Html.DisplayFor(model => item.TableOrder)</td>
                             <td><a href="@Url.Action("SearchResults", "Part", new { item.PartNumber })">@Html.DisplayFor(model => item.PartNumber)</a> <a href="https://www.google.com/search?q=FIAT+@item.PartNumber" target="_blank" class="bi bi-search"></a></td>
-                            <td>@Html.DisplayFor(model => item.FurtherDescription)</td>
+                            <td>@Html.DisplayFor(model => item.Description) @Html.DisplayFor(model => item.FurtherDescription)</td>
                             <td>@Html.DisplayFor(model => item.Compatibility)</td>
                             <td>
                                 <ul>
@@ -105,6 +89,24 @@
                     }
                 }
             </table>
+        </div>
+        <div class="row">
+            <div class="col-12">
+                <div class="container-fluid horizontal-scrollable">
+                    <div class="row text-center">
+                        @{
+                            ix = 1;
+                            @foreach (var drawing in Model.Drawings)
+                            {
+                                <div class="col-xs-4">
+                                    <img class="img-fluid" src="@Url.Action("Thumbnail", "Image", new {Make = drawing.MakeCode, Model = drawing.ModelCode, Catalogue = drawing.CatalogueCode, Group = drawing.GroupCode, SubGroup = drawing.SubGroupCode, SubSubGroup = drawing.SubSubGroupCode, Variant = drawing.Variant, Revision=drawing.Revision })"><br />
+                                    @Html.ActionLink($"{drawing.CatalogueCode}/{drawing.GroupCode:000}{drawing.SubGroupCode:00}/{drawing.SubSubGroupCode:00}/{ix}", "Detail", "Drawings", new {drawing.MakeCode, drawing.SubMakeCode, drawing.ModelCode, drawing.CatalogueCode, drawing.GroupCode, drawing.SubGroupCode, drawing.SubSubGroupCode, DrawingNumber = ix++ })
+                                </div>
+                            }
+                        }
+                    </div>
+                </div>
+            </div>
         </div>
     </div>
 </div>
