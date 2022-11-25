@@ -27,7 +27,7 @@ namespace openPERRepositories.Interfaces
         List<GroupImageMapEntryModel> GetGroupMapEntriesForCatalogue(string catalogueCode, string languageCode);
         MapImageModel GetMapForCatalogueGroup(string make, string subMake, string model, string catalogue, int group);
         List<SubGroupImageMapEntryModel> GetSubGroupMapEntriesForCatalogueGroup(string catalogueCode, int groupCode, string languageCode);
-        string GetImageNameForDrawing(string make, string model, string catalogue, int group, int subgroup, int subSubGroup, int drawing);
+        string GetImageNameForDrawing(string make, string model, string catalogue, int group, int subgroup, int subSubGroup, int variant, int revision);
         List<DrawingKeyModel> GetDrawingKeysForCliche(string makeCode, string subMakeCode, string modelCode,
             string catalogueCode, int groupCode, int subGroupCode, int subSubGroupCode, decimal clichePartNumber);
         string GetImageNameForClicheDrawing(decimal clichePartNumber, int clichePartDrawingNumber);

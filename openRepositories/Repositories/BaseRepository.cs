@@ -20,16 +20,16 @@ namespace openPERRepositories.Repositories
         public abstract string GetMakeDescription(string makeCode, SqliteConnection connection);
 
 
-        protected List<int> GetDrawingNumbers(string catalogueCode, int groupCode, int subGroupCode, int sgsCode, SqliteConnection connection)
+        protected List<int> GetDrawingNumbers(string catalogueCode, int groupCode, int subGroupCode, int sgsCode, int revision, SqliteConnection connection)
         {
             var rc = new List<int>();
-            var sql = @"SELECT DISTINCT DRW_NUM 
+            var sql = @"SELECT DISTINCT VARIANTE 
                             FROM DRAWINGS  
-                            WHERE SGS_COD = $p1 AND SGRP_COD = $p2 AND GRP_COD = $p3 AND CAT_COD = $p4 ";
+                            WHERE SGS_COD = $p1 AND SGRP_COD = $p2 AND GRP_COD = $p3 AND CAT_COD = $p4 AND REVISIONE = $p5";
             connection.RunSqlAllRows(sql, (reader) =>
             {
                 rc.Add(reader.GetInt32(0));
-            }, sgsCode, subGroupCode, groupCode, catalogueCode);
+            }, sgsCode, subGroupCode, groupCode, catalogueCode, revision);
             return rc;
         }
 
@@ -357,10 +357,10 @@ namespace openPERRepositories.Repositories
         {
             var drawings = new List<DrawingKeyModel>();
             using var connection = new SqliteConnection($"Data Source={_pathToDb}");
-            var sql = @"SELECT DISTINCT CAT_COD, GRP_COD, SGRP_COD, SGS_COD, DRW_NUM 
-                            FROM TBDATA
+            var sql = @"SELECT DISTINCT CAT_COD, GRP_COD, SGRP_COD, SGS_COD, VARIANTE, REVISIONE
+                            FROM DRAWINGS
                             WHERE CAT_COD = $p1
-                            ORDER BY GRP_COD, SGRP_COD, SGS_COD, DRW_NUM";
+                            ORDER BY GRP_COD, SGRP_COD, SGS_COD, VARIANTE, REVISIONE";
             connection.RunSqlAllRows(sql, (reader) =>
             {
                 var language = new DrawingKeyModel()
@@ -371,7 +371,8 @@ namespace openPERRepositories.Repositories
                     GroupCode = reader.GetInt32(1),
                     SubGroupCode = reader.GetInt32(2),
                     SubSubGroupCode = reader.GetInt32(3),
-                    DrawingNumber = reader.GetInt32(4)
+                    Variant = reader.GetInt32(4),
+                    Revision = reader.GetInt32(5)
                 };
                 drawings.Add(language);
             }, catalogueCode);
@@ -381,10 +382,10 @@ namespace openPERRepositories.Repositories
         {
             var drawings = new List<DrawingKeyModel>();
             using var connection = new SqliteConnection($"Data Source={_pathToDb}");
-            var sql = @"SELECT DISTINCT CAT_COD, GRP_COD, SGRP_COD, SGS_COD, DRW_NUM 
-                            FROM TBDATA
+            var sql = @"SELECT DISTINCT CAT_COD, GRP_COD, SGRP_COD, SGS_COD, VARIANTE, REVISIONE 
+                            FROM DRAWINGS
                             WHERE CAT_COD = $p1 AND GRP_COD = $p2
-                            ORDER BY GRP_COD, SGRP_COD, SGS_COD, DRW_NUM";
+                            ORDER BY GRP_COD, SGRP_COD, SGS_COD, VARIANTE, REVISIONE";
             connection.RunSqlAllRows(sql, (reader) =>
             {
                 var language = new DrawingKeyModel()
@@ -395,7 +396,9 @@ namespace openPERRepositories.Repositories
                     GroupCode = reader.GetInt32(1),
                     SubGroupCode = reader.GetInt32(2),
                     SubSubGroupCode = reader.GetInt32(3),
-                    DrawingNumber = reader.GetInt32(4)
+                    Variant = reader.GetInt32(4),
+                    Revision = reader.GetInt32(5)
+
                 };
                 drawings.Add(language);
             }, catalogueCode, groupCode);
@@ -407,10 +410,10 @@ namespace openPERRepositories.Repositories
         {
             var drawings = new List<DrawingKeyModel>();
             using var connection = new SqliteConnection($"Data Source={_pathToDb}");
-            var sql = @"SELECT DISTINCT CAT_COD, GRP_COD, SGRP_COD, SGS_COD, DRW_NUM 
-                            FROM TBDATA
+            var sql = @"SELECT DISTINCT CAT_COD, GRP_COD, SGRP_COD, SGS_COD, VARIANTE, REVISIONE 
+                            FROM DRAWINGS
                             WHERE CAT_COD = $p1 AND GRP_COD = $p2 AND SGRP_COD = $p3
-                            ORDER BY GRP_COD, SGRP_COD, SGS_COD, DRW_NUM";
+                            ORDER BY GRP_COD, SGRP_COD, SGS_COD, VARIANTE, REVISIONE";
             connection.RunSqlAllRows(sql, (reader) =>
             {
                 var language = new DrawingKeyModel()
@@ -421,7 +424,8 @@ namespace openPERRepositories.Repositories
                     GroupCode = reader.GetInt32(1),
                     SubGroupCode = reader.GetInt32(2),
                     SubSubGroupCode = reader.GetInt32(3),
-                    DrawingNumber = reader.GetInt32(4)
+                    Variant = reader.GetInt32(4),
+                    Revision = reader.GetInt32(5)
                 };
                 drawings.Add(language);
             }, catalogueCode, groupCode, subGroupCode);
@@ -454,7 +458,7 @@ namespace openPERRepositories.Repositories
 
         public abstract string GetImageNameForDrawing(string make, string model, string catalogue, int group,
             int subgroup, int subSubGroup,
-            int drawing);
+            int drawing, int revision);
 
         public List<DrawingKeyModel> GetDrawingKeysForCliche(string makeCode, string subMakeCode, string modelCode,
             string catalogueCode, int groupCode,
@@ -596,8 +600,8 @@ namespace openPERRepositories.Repositories
         {
             var drawings = new List<PartDrawing>();
             using var connection = new SqliteConnection($"Data Source={_pathToDb}");
-            var sql = @"SELECT DISTINCT T.CAT_COD,CAT_DSC, T.GRP_COD, T.SGRP_COD, SGS_COD, DRW_NUM, SGRP_DSC,
-                                        MK_COD, CMG_COD, MK2_COD
+            var sql = @"SELECT DISTINCT T.CAT_COD,CAT_DSC, T.GRP_COD, T.SGRP_COD, SGS_COD, VARIANTE, SGRP_DSC,
+                                        MK_COD, CMG_COD, MK2_COD, REVISIONE
                                 FROM APPLICABILITY A
                                 JOIN TBDATA T ON T.PRT_COD = A.PRT_COD AND T.GRP_COD = A.GRP_COD AND T.SGRP_COD = A.SGRP_COD
                                 JOIN SUBGROUPS_DSC SD ON SD.SGRP_COD = T.SGRP_COD AND SD.GRP_COD = T.GRP_COD AND SD.LNG_COD = $p2
@@ -615,8 +619,9 @@ namespace openPERRepositories.Repositories
                     GroupCode = reader.GetInt32(2),
                     SubGroupCode = reader.GetInt32(3),
                     SubSubGroupCode = reader.GetInt32(4),
-                    DrawingNumber = reader.GetInt32(5),
+                    Variant = reader.GetInt32(5),
                     SubGroupDescription = reader.GetString(6),
+                    Revision = reader.GetInt32(10),
                     ClichePart = false
                 };
                 drawings.Add(p);
@@ -624,8 +629,8 @@ namespace openPERRepositories.Repositories
 
             // This could be a part in a cliche
             sql = @"select DISTINCT 
-	                A.CAT_COD, CT.CAT_DSC , A.GRP_COD, A.SGRP_COD, T.SGS_COD, T.DRW_NUM, SGRP_DSC, CT.MK_COD, CMG_COD, MK2_COD,
-	                CDS.CDS_DSC, T.PRT_COD, C.PRT_COD, C.CPD_NUM
+	                A.CAT_COD, CT.CAT_DSC , A.GRP_COD, A.SGRP_COD, T.SGS_COD, T.VARIANTE, SGRP_DSC, CT.MK_COD, CMG_COD, MK2_COD,
+	                CDS.CDS_DSC, T.PRT_COD, C.PRT_COD, C.CPD_NUM, T.REVISIONE
                         from CPXDATA C
                         JOIN APPLICABILITY A ON C.PRT_COD = A.PRT_COD
                         JOIN SUBGROUPS_DSC SD ON SD.GRP_COD = T.GRP_COD AND SD.SGRP_COD = T.SGRP_COD AND SD.LNG_COD = $p2
@@ -647,10 +652,11 @@ namespace openPERRepositories.Repositories
                     GroupCode = reader.GetInt32(2),
                     SubGroupCode = reader.GetInt32(3),
                     SubSubGroupCode = reader.GetInt32(4),
-                    DrawingNumber = reader.GetInt32(5),
+                    Variant = reader.GetInt32(5),
                     SubGroupDescription = reader.GetString(6),
                     ClichePartNumber = reader.GetDecimal(11),
                     ClichePartDrawingNumber = reader.GetInt32(13),
+                    Revision = reader.GetInt32(14),
                     ClichePart = true
                 };
                 drawings.Add(p);

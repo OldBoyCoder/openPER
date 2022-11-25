@@ -12,7 +12,7 @@
         <tr>
             <td>@drawing.FullKey</td>
             <td>
-                <img src="@Url.Action("Drawing", "Image", new {Make=drawing.MakeCode, Model=drawing.ModelCode, Catalogue=drawing.CatalogueCode, Group = drawing.GroupCode, SubGroup = drawing.SubGroupCode, SubSubGroup=drawing.SubSubGroupCode, Drawing=drawing.DrawingNumber})">
+                <img src="@Url.Action("Drawing", "Image", new {Make=drawing.MakeCode, Model=drawing.ModelCode, Catalogue=drawing.CatalogueCode, Group = drawing.GroupCode, SubGroup = drawing.SubGroupCode, SubSubGroup=drawing.SubSubGroupCode, Variant=drawing.Variant, Revision=drawing.Revision})">
             </td>
         </tr>
     }
@@ -24,7 +24,7 @@
             @foreach (var drawing in Model.Drawings)
             {
                 <div class="col-xs-4">
-                    <img src="@Url.Action("Thumbnail", "Image", new { Make = drawing.MakeCode, Model = drawing.ModelCode, Catalogue = drawing.CatalogueCode, Group = drawing.GroupCode, SubGroup = drawing.SubGroupCode, SubSubGroup = drawing.SubSubGroupCode, Drawing = drawing.DrawingNumber })"><br />
+                    <img src="@Url.Action("Thumbnail", "Image", new { Make = drawing.MakeCode, Model = drawing.ModelCode, Catalogue = drawing.CatalogueCode, Group = drawing.GroupCode, SubGroup = drawing.SubGroupCode, SubSubGroup = drawing.SubSubGroupCode, Variant = drawing.Variant, Revision=drawing.Revision })"><br />
                     @{
                         switch (Model.RequestType)
                         {
