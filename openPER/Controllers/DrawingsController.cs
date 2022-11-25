@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.Linq;
 using AutoMapper;
 using Microsoft.AspNetCore.Mvc;
 using openPER.ViewModels;
@@ -17,8 +18,8 @@ namespace openPER.Controllers
             _mapper = mapper;
         }
         // The most specific route, only the drawings for the lowest level are returned
-        [Route("Detail/{MakeCode}/{SubMakeCode}/{ModelCode}/{CatalogueCode}/{GroupCode}/{SubGroupCode}/{SubSubGroupCode}/{DrawingNumber}/{Revision}")]
-        public IActionResult Detail(string makeCode,string subMakeCode, string modelCode, string catalogueCode, int groupCode, int subGroupCode, int subSubGroupCode, int drawingNumber, int revision)
+        [Route("Detail/{MakeCode}/{SubMakeCode}/{ModelCode}/{CatalogueCode}/{GroupCode}/{SubGroupCode}/{SubSubGroupCode}/{DrawingNumber}")]
+        public IActionResult Detail(string makeCode,string subMakeCode, string modelCode, string catalogueCode, int groupCode, int subGroupCode, int subSubGroupCode, int drawingNumber)
         {
             // Standard prologue
             var language = Helpers.LanguageSupport.SetCultureBasedOnCookie(HttpContext);
@@ -37,14 +38,16 @@ namespace openPER.Controllers
             model.Drawings = _mapper.Map<List<DrawingKeyModel>, List<DrawingKeyViewModel>>(drawings);
             model.Drawings.ForEach(x => x.SubMakeCode = subMakeCode);
             // Now we get the rest of the details for the drawing we're interested in
-            var drawing = model.Drawings[drawingNumber - 1];
+            var drawing = model.Drawings[drawingNumber-1];
             // Get the table for this drawing
             model.TableData = _mapper.Map<TableModel, TableViewModel>(
                 _rep.GetTable(drawing.CatalogueCode, drawing.GroupCode, drawing.SubGroupCode,
-                    drawing.SubSubGroupCode, drawing.DrawingNumber,revision, language));
+                    drawing.SubSubGroupCode, drawing.Variant,drawing.Revision, language));
             model.TableData.MakeCode = makeCode;
             model.TableData.SubMakeCode = subMakeCode;
             model.TableData.ModelCode = modelCode;
+            model.TableData.Revision = drawing.Revision;
+            model.TableData.Variant = drawing.Variant;
             model.TableData.CurrentDrawing = drawingNumber;
 
             return View(model);
@@ -67,7 +70,7 @@ namespace openPER.Controllers
             // Get the table for this drawing
             model.TableData = _mapper.Map<TableModel, TableViewModel>(
                 _rep.GetTable(drawing.CatalogueCode, drawing.GroupCode, drawing.SubGroupCode,
-                    drawing.SubSubGroupCode, drawing.DrawingNumber,revision, language));
+                    drawing.SubSubGroupCode, drawing.Variant,revision, language));
             model.TableData.MakeCode = makeCode;
             model.TableData.SubMakeCode = subMakeCode;
             model.TableData.ModelCode = modelCode;

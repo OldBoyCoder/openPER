@@ -17,21 +17,21 @@
                         @foreach (var drawing in Model.Drawings.GroupBy(x=>new {x.MakeCode, x.SubMakeCode,x.ModelCode, x.CatalogueCode, x.GroupCode, x.SubGroupCode, x.SubSubGroupCode}, (key, group)=>new {key.MakeCode, key.SubMakeCode,key.ModelCode, key.CatalogueCode, key.GroupCode, key.SubGroupCode, key.SubSubGroupCode}))
                         {
                             
-                            @Html.ActionLink($"{drawing.GroupCode:000}{drawing.SubGroupCode:00}/{drawing.SubSubGroupCode:00}", "Detail", "Drawings", new {drawing.MakeCode, drawing.SubMakeCode, drawing.ModelCode, drawing.CatalogueCode, drawing.GroupCode, drawing.SubGroupCode, drawing.SubSubGroupCode, DrawingNumber = 1 }, new {@class="dropdown-item"});
+                            @Html.ActionLink($"{drawing.GroupCode:000}{drawing.SubGroupCode:00}/{drawing.SubSubGroupCode:00}", "Detail", "Drawings", new {drawing.MakeCode, drawing.SubMakeCode, drawing.ModelCode, drawing.CatalogueCode, drawing.GroupCode, drawing.SubGroupCode, drawing.SubSubGroupCode, DrawingNumber = ix }, new {@class="dropdown-item"});
                         }
                     }
                 </div>
             </div>
             <div class="dropdown show">
                 <a class="btn btn-secondary dropdown-toggle" href="#" role="button" id="variantMenuLink" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                    @($"{Model.Drawings[Model.TableData.CurrentDrawing-1].DrawingNumber} {Model.Drawings[Model.TableData.CurrentDrawing-1].VariantPattern}")
+                    @($"{Model.Drawings[Model.TableData.CurrentDrawing-1].Variant} {Model.Drawings[Model.TableData.CurrentDrawing-1].VariantPattern}")
                 </a>
                 <div class="dropdown-menu" aria-labelledby="variantMenuLink">
                     @{
                         ix = 1;
                         @foreach (var drawing in Model.Drawings)
                         {
-                            @Html.ActionLink($"{drawing.DrawingNumber} {drawing.VariantPattern}", "Detail", "Drawings", new {drawing.MakeCode, drawing.SubMakeCode, drawing.ModelCode, drawing.CatalogueCode, drawing.GroupCode, drawing.SubGroupCode, drawing.SubSubGroupCode, DrawingNumber = ix++ }, new {@class="dropdown-item"});
+                            @Html.ActionLink($"{drawing.Variant} {drawing.VariantPattern}", "Detail", "Drawings", new {drawing.MakeCode, drawing.SubMakeCode, drawing.ModelCode, drawing.CatalogueCode, drawing.GroupCode, drawing.SubGroupCode, drawing.SubSubGroupCode, DrawingNumber = ix++ }, new {@class="dropdown-item"});
                         }
                     }
                 </div>
@@ -43,7 +43,7 @@
             <div class="container">
                 <div class="row">
                     <div class="col-12">
-                        <img class="img-fluid" src="@Url.Action("Drawing", "Image", new {Make = Model.TableData.MakeCode, Model = Model.TableData.ModelCode, Catalogue = Model.TableData.CatalogueCode, Group = Model.TableData.GroupCode, SubGroup = Model.TableData.SubGroupCode, SubSubGroup = Model.TableData.SubSubGroupCode, Drawing = Model.TableData.CurrentDrawing })">
+                        <img class="img-fluid" src="@Url.Action("Drawing", "Image", new {Make = Model.TableData.MakeCode, Model = Model.TableData.ModelCode, Catalogue = Model.TableData.CatalogueCode, Group = Model.TableData.GroupCode, SubGroup = Model.TableData.SubGroupCode, SubSubGroup = Model.TableData.SubSubGroupCode, Variant = Model.TableData.Variant, Model.TableData.Revision })">
                     </div>
                 </div>
                 <div class="row">
@@ -55,7 +55,7 @@
                                     @foreach (var drawing in Model.Drawings)
                                     {
                                         <div class="col-xs-4">
-                                            <img class="img-fluid" src="@Url.Action("Thumbnail", "Image", new {Make = drawing.MakeCode, Model = drawing.ModelCode, Catalogue = drawing.CatalogueCode, Group = drawing.GroupCode, SubGroup = drawing.SubGroupCode, SubSubGroup = drawing.SubSubGroupCode, Drawing = drawing.DrawingNumber })"><br />
+                                            <img class="img-fluid" src="@Url.Action("Thumbnail", "Image", new {Make = drawing.MakeCode, Model = drawing.ModelCode, Catalogue = drawing.CatalogueCode, Group = drawing.GroupCode, SubGroup = drawing.SubGroupCode, SubSubGroup = drawing.SubSubGroupCode, Variant = drawing.Variant, Revision=drawing.Revision })"><br />
                                             @Html.ActionLink($"{drawing.CatalogueCode}/{drawing.GroupCode:000}{drawing.SubGroupCode:00}/{drawing.SubSubGroupCode:00}/{ix}", "Detail", "Drawings", new {drawing.MakeCode, drawing.SubMakeCode, drawing.ModelCode, drawing.CatalogueCode, drawing.GroupCode, drawing.SubGroupCode, drawing.SubSubGroupCode, DrawingNumber = ix++ })
                                         </div>
                                     }

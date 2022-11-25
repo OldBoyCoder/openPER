@@ -48,20 +48,20 @@ namespace openPER.Controllers
         }
         //            <img src="@Url.Action("Drawing", "Image", new {Make=Model.MakeCode, Model=Model.ModelCode, Catalogue=Model.CatalogueCode, Group = Model.GroupCode, SubGroup = Model.SubGroupCode, Model.SubSubGroupCode, Drawing=Model.CurrentDrawing})">
 
-        [Route("Image/Drawing/{Make}/{Model}/{Catalogue}/{Group}/{Subgroup}/{SubSubGroup}/{Drawing}")]
-        public ActionResult Drawing(string make, string model, string catalogue, int group, int subgroup, int subSubGroup, int drawing)
+        [Route("Image/Drawing/{Make}/{Model}/{Catalogue}/{Group}/{Subgroup}/{SubSubGroup}/{Variant}/{Revision}")]
+        public ActionResult Drawing(string make, string model, string catalogue, int group, int subgroup, int subSubGroup, int variant, int revision)
         {
             var imageName = _repository.GetImageNameForDrawing(make, model, catalogue, group, subgroup,
-                subSubGroup, drawing);
-            var x = _imageRep.GetImageForDrawing(make, model, catalogue, group, subgroup, subSubGroup, drawing, imageName);
+                subSubGroup, variant, revision);
+            var x = _imageRep.GetImageForDrawing(make, model, catalogue, group, subgroup, subSubGroup, variant, imageName);
             return File(x, "image/png");
         }
-        [Route("Image/Thumbnail/{Make}/{Model}/{Catalogue}/{Group}/{Subgroup}/{SubSubGroup}/{Drawing}")]
-        public ActionResult Thumbnail(string make, string model, string catalogue, int group, int subgroup, int subSubGroup, int drawing)
+        [Route("Image/Thumbnail/{Make}/{Model}/{Catalogue}/{Group}/{Subgroup}/{SubSubGroup}/{Variant}/{Revision}")]
+        public ActionResult Thumbnail(string make, string model, string catalogue, int group, int subgroup, int subSubGroup, int variant, int revision)
         {
             var imageName = _repository.GetImageNameForDrawing(make, model, catalogue, group, subgroup,
-                subSubGroup, drawing);
-            var x = _imageRep.GetThumbnailForDrawing(make, model, catalogue, group, subgroup, subSubGroup, drawing, imageName);
+                subSubGroup, variant, revision);
+            var x = _imageRep.GetThumbnailForDrawing(make, model, catalogue, group, subgroup, subSubGroup, variant, imageName);
             return File(x, "image/png");
         }
 

@@ -5,7 +5,7 @@ namespace openPER.ViewModels
 {
     public class PartViewModel
     {
-        public decimal PartNumber { get; set; }
+        public int PartNumber { get; set; }
         public string Description { get; set; }
         public string FurtherDescription { get; set; }
         public string Quantity { get; set; }

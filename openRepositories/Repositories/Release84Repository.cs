@@ -116,17 +116,17 @@ namespace openPERRepositories.Repositories
         }
 
         public override string GetImageNameForDrawing(string make, string model, string catalogue, int group, int subgroup, int subSubGroup,
-            int drawing)
+            int drawing, int revision)
         {
             string rc = "";
             using var connection = new SqliteConnection($"Data Source={_pathToDb}");
             var sql = @"SELECT DISTINCT IMG_PATH
                             FROM DRAWINGS
-                            WHERE CAT_COD = $p1 AND GRP_COD = $p2 AND SGRP_COD  = $p3 AND SGS_COD = $p4 AND DRW_NUM = $p5";
+                            WHERE CAT_COD = $p1 AND GRP_COD = $p2 AND SGRP_COD  = $p3 AND SGS_COD = $p4 AND VARIANTE = $p5 AND REVISIONE = $p6";
             connection.RunSqlFirstRowOnly(sql, (reader) =>
             {
                 rc = reader.GetString(0);
-            }, catalogue, group, subgroup, subSubGroup, drawing);
+            }, catalogue, group, subgroup, subSubGroup, drawing, revision);
             return rc;
         }
 
@@ -193,7 +193,7 @@ namespace openPERRepositories.Repositories
         {
             var drawings = new List<DrawingKeyModel>();
             using var connection = new SqliteConnection($"Data Source={_pathToDb}");
-            var sql = @"SELECT DISTINCT CAT_COD, GRP_COD, SGRP_COD, SGS_COD, DRW_NUM, IFNULL( PATTERN, ''), REVISIONE
+            var sql = @"SELECT DISTINCT CAT_COD, GRP_COD, SGRP_COD, SGS_COD, VARIANTE, IFNULL( PATTERN, ''), REVISIONE
                             FROM DRAWINGS
                             WHERE CAT_COD = $p1 AND GRP_COD = $p2 AND SGRP_COD = $p3 AND SGS_COD = $p4
                             ORDER BY GRP_COD, SGRP_COD, SGS_COD, DRW_NUM";
@@ -207,7 +207,7 @@ namespace openPERRepositories.Repositories
                     GroupCode = reader.GetInt32(1),
                     SubGroupCode = reader.GetInt32(2),
                     SubSubGroupCode = reader.GetInt32(3),
-                    DrawingNumber = reader.GetInt32(4),
+                    Variant = reader.GetInt32(4),
                     VariantPattern = reader.GetString(5),
                     Revision = reader.GetInt32(6)
                 };
@@ -232,7 +232,7 @@ namespace openPERRepositories.Repositories
             // TODO Add variant information to sgs description
             t.SgsDesc = GetSubGroupDescription(groupCode, subGroupCode, languageCode, connection);
             t.Parts = GetTableParts(catalogueCode, groupCode, subGroupCode, sgsCode, drawingNumber, revision, languageCode, connection);
-            t.DrawingNumbers = GetDrawingNumbers(catalogueCode, groupCode, subGroupCode, sgsCode, connection);
+            t.DrawingNumbers = GetDrawingNumbers(catalogueCode, groupCode, subGroupCode, sgsCode, revision, connection);
             // t.Narratives = GetSgsNarrative(catalogueCode, groupCode, subGroupCode, sgsCode, languageCode);
             t.CurrentDrawing = drawingNumber;
             return t;

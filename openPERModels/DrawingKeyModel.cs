@@ -14,11 +14,11 @@ namespace openPERModels
         public int GroupCode { get; set; }
         public int SubGroupCode { get; set; }
         public int SubSubGroupCode { get; set; }
-        public int DrawingNumber { get; set; }
         public int Revision { get; set; }
         public decimal ClichePartNumber { get; set; }
         public int ClichePartDrawingNumber { get; set; }
         public int ClichePartCode { get; set; }
         public string VariantPattern { get; set; }
+        public int Variant { get; set; }
     }
 }
