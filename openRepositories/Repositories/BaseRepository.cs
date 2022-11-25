@@ -600,13 +600,12 @@ namespace openPERRepositories.Repositories
         {
             var drawings = new List<PartDrawing>();
             using var connection = new SqliteConnection($"Data Source={_pathToDb}");
-            var sql = @"SELECT DISTINCT T.CAT_COD,CAT_DSC, T.GRP_COD, T.SGRP_COD, SGS_COD, VARIANTE, SGRP_DSC,
-                                        MK_COD, CMG_COD, MK2_COD, REVISIONE
-                                FROM APPLICABILITY A
-                                JOIN TBDATA T ON T.PRT_COD = A.PRT_COD AND T.GRP_COD = A.GRP_COD AND T.SGRP_COD = A.SGRP_COD
-                                JOIN SUBGROUPS_DSC SD ON SD.SGRP_COD = T.SGRP_COD AND SD.GRP_COD = T.GRP_COD AND SD.LNG_COD = $p2
-                                JOIN CATALOGUES C ON C.CAT_COD = T.CAT_COD
-                                WHERE A.PRT_COD = $p1";
+            var sql = @"select A.CAT_COD, C.CAT_DSC, A.GRP_COD, A.SGRP_COD, T.SGS_COD, T.VARIANTE, SGRP_DSC, MK_COD, CMG_COD, MK2_COD, REVISIONE  
+                            FROM APPLICABILITY A
+							JOIN CATALOGUES C ON C.CAT_COD = A.CAT_COD
+							JOIN TBDATA T ON T.PRT_COD = A.PRT_COD AND T.CAT_COD = A.CAT_COD AND T.GRP_COD = A.GRP_COD AND T.SGRP_COD = A.SGRP_COD
+							JOIN SUBGROUPS_DSC SD ON SD.SGRP_COD = T.SGRP_COD AND SD.GRP_COD = T.GRP_COD AND SD.LNG_COD = $p2
+							where A.prt_cod = $p1";
             connection.RunSqlAllRows(sql, (reader) =>
             {
                 var p = new PartDrawing
@@ -625,7 +624,7 @@ namespace openPERRepositories.Repositories
                     ClichePart = false
                 };
                 drawings.Add(p);
-            }, partNumber, languageCode);
+            }, (int)partNumber, languageCode);
 
             // This could be a part in a cliche
             sql = @"select DISTINCT 
