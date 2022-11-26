@@ -10,8 +10,8 @@
             @await Html.PartialAsync("_SidebarMenu", Model.Navigation)
         </div>
         <div class="col-lg-8 col-md-8 col-sm-12 col-12">
-            <strong>Main category selection</strong>
-            <p>Select the main category from the side menu or directly from the car map.</p>
+            <strong>@Resources.FrontEnd.CategorySelectTitle</strong>
+            <p>@Resources.FrontEnd.CategorySelectBody</p>
             <div style="position: relative; left: 0; right: 0;">
                 <img src="@Url.Action("CatalogueImage", "Image", new {Make = Model.MakeCode, SubMake = Model.SubMakeCode, Model = Model.ModelCode, Catalogue = Model.CatalogueCode })">
                 
