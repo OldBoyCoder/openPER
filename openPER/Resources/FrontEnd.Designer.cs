@@ -61,6 +61,24 @@ namespace Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Select the main category from the side menu or directly from the car map..
+        /// </summary>
+        public static string CategorySelectBody {
+            get {
+                return ResourceManager.GetString("CategorySelectBody", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to .
+        /// </summary>
+        public static string CategorySelectTitle {
+            get {
+                return ResourceManager.GetString("CategorySelectTitle", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Hello and welcome to openPER.  This is an open source project to recreate the functonality of the FIAT ePER system.  The project is currently hosted at https://github.com/OldBoyCoder/openPER.
         /// </summary>
         public static string IntroParagraph {

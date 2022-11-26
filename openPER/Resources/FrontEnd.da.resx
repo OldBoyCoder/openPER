@@ -117,6 +117,12 @@
   <resheader name="writer">
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
+  <data name="CategorySelectBody" xml:space="preserve">
+    <value>Vælg interessegruppe fra sidemenu eller fra bilillustrationen.</value>
+  </data>
+  <data name="CategorySelectTitle" xml:space="preserve">
+    <value>Udvælgelse af funktionsgruppe</value>
+  </data>
   <data name="IntroParagraph" xml:space="preserve">
     <value>Hej og velkommen til openPER</value>
   </data>

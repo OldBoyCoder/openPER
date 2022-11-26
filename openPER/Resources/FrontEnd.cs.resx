@@ -117,6 +117,12 @@
   <resheader name="writer">
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
+  <data name="CategorySelectBody" xml:space="preserve">
+    <value>Vyber skupinu v menu nebo přímo z obrázku</value>
+  </data>
+  <data name="CategorySelectTitle" xml:space="preserve">
+    <value>Označ funkční skupinu</value>
+  </data>
   <data name="IntroParagraph" xml:space="preserve">
     <value>Dobrý den a vítejte v openPER</value>
   </data>
