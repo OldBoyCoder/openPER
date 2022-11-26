@@ -18,58 +18,28 @@ namespace openPER.Controllers
             _mapper = mapper;
         }
         // The most specific route, only the drawings for the lowest level are returned
-        [Route("Detail/{MakeCode}/{SubMakeCode}/{ModelCode}/{CatalogueCode}/{GroupCode}/{SubGroupCode}/{SubSubGroupCode}/{DrawingNumber}")]
-        public IActionResult Detail(string makeCode,string subMakeCode, string modelCode, string catalogueCode, int groupCode, int subGroupCode, int subSubGroupCode, int drawingNumber)
+        [Route("Detail/{MakeCode}/{SubMakeCode}/{ModelCode}/{CatalogueCode}/{GroupCode}/{SubGroupCode}/{SubSubGroupCode}/{DrawingNumber}/{Scope}")]
+        public IActionResult Detail(string makeCode, string subMakeCode, string modelCode, string catalogueCode, int groupCode, int subGroupCode, int subSubGroupCode, int drawingNumber, string scope)
         {
             // Standard prologue
             var language = Helpers.LanguageSupport.SetCultureBasedOnCookie(HttpContext);
 
             var model = new DrawingsViewModel();
             // We need to get all of the drawing keys for this sub sub group
-            List<DrawingKeyModel> drawings = _rep.GetDrawingKeysForSubSubGroup(makeCode, modelCode,
+            List<DrawingKeyModel> drawings;
+            if (scope == "SubSubGroup")
+                drawings = _rep.GetDrawingKeysForSubSubGroup(makeCode, modelCode,
                 catalogueCode, groupCode, subGroupCode, subSubGroupCode);
-
-            model.Drawings = _mapper.Map<List<DrawingKeyModel>, List<DrawingKeyViewModel>>(drawings);
-
-            model.Drawings.ForEach(x => x.SubMakeCode = subMakeCode);
-
-            // Now we get the rest of the details for the drawing we're interested in
-            var drawing = model.Drawings[drawingNumber-1];
-            // Get the table for this drawing
-            model.TableData = PopulateTableViewModelFromDrawing(drawing, language);
-            model.TableData.CurrentDrawing = drawingNumber;
-            // Sort out breadcrumbs
-            var breadcrumb = new BreadcrumbModel
-            {
-                MakeCode = makeCode,
-                SubMakeCode = subMakeCode,
-                ModelCode = modelCode,
-                CatalogueCode = catalogueCode,
-                GroupCode = groupCode,
-                SubGroupCode = subGroupCode,
-                SubSubGroupCode = subSubGroupCode,
-                DrawingNumber = drawingNumber
-            };
-            _rep.PopulateBreadcrumbDescriptions(breadcrumb, language);
-            model.Breadcrumb = _mapper.Map<BreadcrumbModel, BreadcrumbViewModel>(breadcrumb);
-
-            return View(model);
-        }
-        [Route("Detail/{MakeCode}/{SubMakeCode}/{ModelCode}/{CatalogueCode}/{GroupCode}/{SubGroupCode}/{DrawingNumber}")]
-        public IActionResult Detail(string makeCode, string subMakeCode, string modelCode, string catalogueCode, int groupCode, int subGroupCode, int drawingNumber)
-        {
-            // Standard prologue
-            var language = Helpers.LanguageSupport.SetCultureBasedOnCookie(HttpContext);
-
-            var model = new DrawingsViewModel();
-            // We need to get all of the drawing keys for this sub sub group
-            List<DrawingKeyModel> drawings = _rep.GetDrawingKeysForSubGroup(makeCode, modelCode,
+            else if (scope == "SubGroup")
+                drawings = _rep.GetDrawingKeysForSubGroup(makeCode, modelCode,
                 catalogueCode, groupCode, subGroupCode);
+            else
+                drawings = _rep.GetDrawingKeysForGroup(makeCode, modelCode, catalogueCode, groupCode);
 
             model.Drawings = _mapper.Map<List<DrawingKeyModel>, List<DrawingKeyViewModel>>(drawings);
 
             model.Drawings.ForEach(x => x.SubMakeCode = subMakeCode);
-
+            model.Scope = scope;
             // Now we get the rest of the details for the drawing we're interested in
             var drawing = model.Drawings[drawingNumber - 1];
             // Get the table for this drawing
@@ -78,12 +48,13 @@ namespace openPER.Controllers
             // Sort out breadcrumbs
             var breadcrumb = new BreadcrumbModel
             {
-                MakeCode = makeCode,
-                SubMakeCode = subMakeCode,
-                ModelCode = modelCode,
-                CatalogueCode = catalogueCode,
-                GroupCode = groupCode,
-                SubGroupCode = subGroupCode,
+                MakeCode = drawing.MakeCode,
+                SubMakeCode = drawing.SubMakeCode,
+                ModelCode = drawing.ModelCode,
+                CatalogueCode = drawing.CatalogueCode,
+                GroupCode = drawing.GroupCode,
+                SubGroupCode = drawing.SubGroupCode,
+                SubSubGroupCode = drawing.SubSubGroupCode,
                 DrawingNumber = drawingNumber
             };
             _rep.PopulateBreadcrumbDescriptions(breadcrumb, language);
@@ -91,34 +62,50 @@ namespace openPER.Controllers
 
             return View(model);
         }
-        [Route("Detail/{MakeCode}/{SubMakeCode}/{ModelCode}/{CatalogueCode}/{GroupCode}/{DrawingNumber}")]
-        public IActionResult Detail(string makeCode, string subMakeCode, string modelCode, string catalogueCode, int groupCode, int drawingNumber)
+        [Route("Detail/{MakeCode}/{SubMakeCode}/{ModelCode}/{CatalogueCode}/{GroupCode}/{SubGroupCode}/{SubSubGroupCode}/{Variant}/{Revision}/{Scope}")]
+        public IActionResult Detail(string makeCode, string subMakeCode, string modelCode, string catalogueCode, int groupCode, int subGroupCode, int subSubGroupCode, int variant, int revision, string scope)
         {
             // Standard prologue
             var language = Helpers.LanguageSupport.SetCultureBasedOnCookie(HttpContext);
 
             var model = new DrawingsViewModel();
             // We need to get all of the drawing keys for this sub sub group
-            List<DrawingKeyModel> drawings = _rep.GetDrawingKeysForGroup(makeCode, modelCode,
-                catalogueCode, groupCode);
+            List<DrawingKeyModel> drawings;
+            if (scope == "SubSubGroup")
+                drawings = _rep.GetDrawingKeysForSubSubGroup(makeCode, modelCode,
+                catalogueCode, groupCode, subGroupCode, subSubGroupCode);
+            else if (scope == "SubGroup")
+                drawings = _rep.GetDrawingKeysForSubGroup(makeCode, modelCode,
+                catalogueCode, groupCode, subGroupCode);
+            else
+                drawings = _rep.GetDrawingKeysForGroup(makeCode, modelCode, catalogueCode, groupCode);
 
             model.Drawings = _mapper.Map<List<DrawingKeyModel>, List<DrawingKeyViewModel>>(drawings);
 
             model.Drawings.ForEach(x => x.SubMakeCode = subMakeCode);
-
+            model.Scope = scope;
             // Now we get the rest of the details for the drawing we're interested in
-            var drawing = model.Drawings[drawingNumber - 1];
+            var drawingNumber = 0;
+            foreach (var d in model.Drawings)
+            {
+                if (d.Variant == variant && d.Revision == revision)
+                    break;
+                drawingNumber++;
+            }
+            var drawing = model.Drawings[drawingNumber];
             // Get the table for this drawing
             model.TableData = PopulateTableViewModelFromDrawing(drawing, language);
             model.TableData.CurrentDrawing = drawingNumber;
             // Sort out breadcrumbs
             var breadcrumb = new BreadcrumbModel
             {
-                MakeCode = makeCode,
-                SubMakeCode = subMakeCode,
-                ModelCode = modelCode,
-                CatalogueCode = catalogueCode,
-                GroupCode = groupCode,
+                MakeCode = drawing.MakeCode,
+                SubMakeCode = drawing.SubMakeCode,
+                ModelCode = drawing.ModelCode,
+                CatalogueCode = drawing.CatalogueCode,
+                GroupCode = drawing.GroupCode,
+                SubGroupCode = drawing.SubGroupCode,
+                SubSubGroupCode = drawing.SubSubGroupCode,
                 DrawingNumber = drawingNumber
             };
             _rep.PopulateBreadcrumbDescriptions(breadcrumb, language);

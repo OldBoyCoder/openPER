@@ -32,7 +32,7 @@
                         }
                         else
                         {
-                            <a href="@Url.Action("Detail", "Drawings", new {MakeCode = drawing.Make, SubMakeCode = drawing.SubMake, ModelCode = drawing.Model, drawing.CatalogueCode, drawing.GroupCode, drawing.SubGroupCode, drawing.SubSubGroupCode, drawing.Variant, drawing.Revision })">
+                            <a href="@Url.Action("Detail", "Drawings", new {MakeCode = drawing.Make, SubMakeCode = drawing.SubMake, ModelCode = drawing.Model, drawing.CatalogueCode, drawing.GroupCode, drawing.SubGroupCode, drawing.SubSubGroupCode, drawing.Variant, drawing.Revision, Scope="SubSubGroup" })">
                                 @drawing.GroupCode.ToString("000")@drawing.SubGroupCode.ToString("00")/@drawing.SubSubGroupCode.ToString("00") - @drawing.SubGroupDescription
                             </a>
                         }
