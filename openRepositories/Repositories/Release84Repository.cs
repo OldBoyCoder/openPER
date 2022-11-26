@@ -140,18 +140,6 @@ namespace openPERRepositories.Repositories
                 new ("R","R", "ALFA ROMEO"),
                 new ("F", "C", "ABARTH")
             };
-            //using var connection = new SqliteConnection($"Data Source={_pathToDb}");
-            //var sql = @"SELECT MK_COD, MK_DSC FROM MAKES ORDER BY MK_DSC ";
-            //connection.RunSqlAllRows(sql, (reader) =>
-            //{
-            //    var m = new MakeModel
-            //    {
-            //        Code = reader.GetString(0),
-            //        Description = reader.GetString(1)
-            //    };
-            //    rc.Add(m);
-
-            //}, null);
             return rc;
 
         }
@@ -213,6 +201,61 @@ namespace openPERRepositories.Repositories
                 };
                 drawings.Add(language);
             }, catalogueCode, groupCode, subGroupCode, subSubGroupCode);
+
+            return drawings;
+        }
+        public override List<DrawingKeyModel> GetDrawingKeysForSubGroup(string makeCode, string modelCode, string catalogueCode, int groupCode,
+            int subGroupCode)
+        {
+            var drawings = new List<DrawingKeyModel>();
+            using var connection = new SqliteConnection($"Data Source={_pathToDb}");
+            var sql = @"SELECT DISTINCT CAT_COD, GRP_COD, SGRP_COD, SGS_COD, VARIANTE, IFNULL( PATTERN, ''), REVISIONE
+                            FROM DRAWINGS
+                            WHERE CAT_COD = $p1 AND GRP_COD = $p2 AND SGRP_COD = $p3
+                            ORDER BY GRP_COD, SGRP_COD, SGS_COD, DRW_NUM";
+            connection.RunSqlAllRows(sql, (reader) =>
+            {
+                var language = new DrawingKeyModel()
+                {
+                    MakeCode = makeCode,
+                    ModelCode = modelCode,
+                    CatalogueCode = reader.GetString(0),
+                    GroupCode = reader.GetInt32(1),
+                    SubGroupCode = reader.GetInt32(2),
+                    SubSubGroupCode = reader.GetInt32(3),
+                    Variant = reader.GetInt32(4),
+                    VariantPattern = reader.GetString(5),
+                    Revision = reader.GetInt32(6)
+                };
+                drawings.Add(language);
+            }, catalogueCode, groupCode, subGroupCode);
+
+            return drawings;
+        }
+        public override List<DrawingKeyModel> GetDrawingKeysForGroup(string makeCode, string modelCode, string catalogueCode, int groupCode)
+        {
+            var drawings = new List<DrawingKeyModel>();
+            using var connection = new SqliteConnection($"Data Source={_pathToDb}");
+            var sql = @"SELECT DISTINCT CAT_COD, GRP_COD, SGRP_COD, SGS_COD, VARIANTE, IFNULL( PATTERN, ''), REVISIONE
+                            FROM DRAWINGS
+                            WHERE CAT_COD = $p1 AND GRP_COD = $p2 
+                            ORDER BY GRP_COD, SGRP_COD, SGS_COD, DRW_NUM";
+            connection.RunSqlAllRows(sql, (reader) =>
+            {
+                var language = new DrawingKeyModel()
+                {
+                    MakeCode = makeCode,
+                    ModelCode = modelCode,
+                    CatalogueCode = reader.GetString(0),
+                    GroupCode = reader.GetInt32(1),
+                    SubGroupCode = reader.GetInt32(2),
+                    SubSubGroupCode = reader.GetInt32(3),
+                    Variant = reader.GetInt32(4),
+                    VariantPattern = reader.GetString(5),
+                    Revision = reader.GetInt32(6)
+                };
+                drawings.Add(language);
+            }, catalogueCode, groupCode);
 
             return drawings;
         }
