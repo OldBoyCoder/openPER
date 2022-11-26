@@ -23,7 +23,7 @@
                 }
             </div>
             <p>
-                @Html.ActionLink($"All drawings", "Detail", "Drawings", new {Model.MakeCode, Model.SubMakeCode, Model.ModelCode, Model.CatalogueCode, Model.GroupCode, DrawingNumber = 1})
+                @Html.ActionLink($"All drawings", "Detail", "Drawings", new {Model.MakeCode, Model.SubMakeCode, Model.ModelCode, Model.CatalogueCode, Model.GroupCode,SubGroupCode="*", SubSubGroupCode="*", DrawingNumber = 1, Scope="Group"})
 
             </p>
         </div>
