@@ -17,7 +17,7 @@
                         @foreach (var drawing in Model.Drawings.GroupBy(x => new { x.MakeCode, x.SubMakeCode, x.ModelCode, x.CatalogueCode, x.GroupCode, x.SubGroupCode, x.SubSubGroupCode }, (key, group) => new { key.MakeCode, key.SubMakeCode, key.ModelCode, key.CatalogueCode, key.GroupCode, key.SubGroupCode, key.SubSubGroupCode }))
                         {
                             var index = Model.Drawings.FindIndex(x => x.CatalogueCode == drawing.CatalogueCode && x.GroupCode == drawing.GroupCode
-                                    && x.SubGroupCode == drawing.SubGroupCode && x.SubSubGroupCode == drawing.SubSubGroupCode);
+                            && x.SubGroupCode == drawing.SubGroupCode && x.SubSubGroupCode == drawing.SubSubGroupCode);
                             @Html.ActionLink($"{drawing.GroupCode:000}{drawing.SubGroupCode:00}/{drawing.SubSubGroupCode:00}", "Detail", "Drawings", new {drawing.MakeCode, drawing.SubMakeCode, drawing.ModelCode, drawing.CatalogueCode, drawing.GroupCode, drawing.SubGroupCode, drawing.SubSubGroupCode, DrawingNumber= index+1, Model.Scope }, new {@class="dropdown-item"})
                             ;
                         }
@@ -60,6 +60,7 @@
                 @{
 
                     //int lastOrder = 999;
+
                     @foreach (var item in Model.TableData.Parts)
                     {
                         //if (item.TableOrder != lastOrder)
@@ -68,13 +69,21 @@
                         //    lastOrder = item.TableOrder;
                         //}
                         <tr>
-                            <td>@Html.DisplayFor(model => item.TableOrder)</td>
-                            <td><a href="@Url.Action("SearchResults", "Part", new { item.PartNumber })">@Html.DisplayFor(model => item.PartNumber)</a> <a href="https://www.google.com/search?q=FIAT+@item.PartNumber" target="_blank" class="bi bi-search"></a></td>
-                            <td>@Html.DisplayFor(model => item.Description) @Html.DisplayFor(model => item.FurtherDescription)</td>
-                            <td>@Html.DisplayFor(model => item.Compatibility)</td>
                             <td>
-                                <ul>
-                                    @foreach (var mod in item.Modifications)
+                                @Html.DisplayFor(model => item.TableOrder)
+                                @{
+                                    if (Model.TableData.HighlightPart == item.PartNumber)
+                                    {
+                                        <b>*</b>
+                                    }
+                                }
+                                </td>
+                                <td><a href="@Url.Action("SearchResults", "Part", new { item.PartNumber })">@Html.DisplayFor(model => item.PartNumber)</a> <a href="https://www.google.com/search?q=FIAT+@item.PartNumber" target="_blank" class="bi bi-search"></a></td>
+                                <td>@Html.DisplayFor(model => item.Description) @Html.DisplayFor(model => item.FurtherDescription)</td>
+                                <td>@Html.DisplayFor(model => item.Compatibility)</td>
+                                <td>
+                                    <ul>
+                                        @foreach (var mod in item.Modifications)
                                     {
                                         <li title="@mod.FullDescription">@Html.DisplayFor(model => mod.Type)@Html.DisplayFor(model => mod.Code)</li>
                                     }
