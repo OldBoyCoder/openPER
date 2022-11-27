@@ -136,7 +136,7 @@
                         @foreach (var m in Model.SideMenuItems.AllSubSubGroups)
                         {
                             <li class="nav-item">
-                                @Html.ActionLink($"{Model.Breadcrumb.GroupCode:000}{Model.Breadcrumb.SubGroupCode:00}/{m.Code:00} {m.Description}", "Detail", "Drawings", new { Model.Breadcrumb.MakeCode, Model.Breadcrumb.SubMakeCode, Model.Breadcrumb.ModelCode, Model.Breadcrumb.CatalogueCode, Model.Breadcrumb.GroupCode, Model.Breadcrumb.SubGroupCode, SubSubGroupCode=m.Code, DrawingNumber=1, Scope="SubSubGroup" }, new { @class = "nav-link side-menu-item" })
+                                @Html.ActionLink($"{Model.Breadcrumb.GroupCode:000}{Model.Breadcrumb.SubGroupCode:00}/{m.Code:00} {m.Description}", "Detail", "Drawings", new { Model.Breadcrumb.MakeCode, Model.Breadcrumb.SubMakeCode, Model.Breadcrumb.ModelCode, Model.Breadcrumb.CatalogueCode, Model.Breadcrumb.GroupCode, Model.Breadcrumb.SubGroupCode, SubSubGroupCode=m.Code, DrawingNumber=0, Scope="SubSubGroup" }, new { @class = "nav-link side-menu-item" })
                             </li>
                         }
                     </ul>
