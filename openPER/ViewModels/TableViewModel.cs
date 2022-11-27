@@ -23,7 +23,7 @@ namespace openPER.ViewModels
         public int Revision { get; set; }
         public int CurrentDrawing { get; set; }
         public List<string> Narratives { get; set; }
-
+        public int HighlightPart { get; set; }
         public  string Path => $"{MakeCode}/{ModelCode}/{CatalogueCode}/{GroupCode:00}/{SubGroupCode:000}/{SubSubGroupCode:00}";
     }
 }

@@ -62,8 +62,8 @@ namespace openPER.Controllers
 
             return View(model);
         }
-        [Route("Detail/{MakeCode}/{SubMakeCode}/{ModelCode}/{CatalogueCode}/{GroupCode}/{SubGroupCode}/{SubSubGroupCode}/{Variant}/{Revision}/{Scope}")]
-        public IActionResult Detail(string makeCode, string subMakeCode, string modelCode, string catalogueCode, int groupCode, int subGroupCode, int subSubGroupCode, int variant, int revision, string scope)
+        [Route("Detail/{MakeCode}/{SubMakeCode}/{ModelCode}/{CatalogueCode}/{GroupCode}/{SubGroupCode}/{SubSubGroupCode}/{Variant}/{Revision}/{Scope}/{HighlightPart?}")]
+        public IActionResult Detail(string makeCode, string subMakeCode, string modelCode, string catalogueCode, int groupCode, int subGroupCode, int subSubGroupCode, int variant, int revision, string scope, int highlightPart = -1)
         {
             // Standard prologue
             var language = Helpers.LanguageSupport.SetCultureBasedOnCookie(HttpContext);
@@ -96,6 +96,7 @@ namespace openPER.Controllers
             // Get the table for this drawing
             model.TableData = PopulateTableViewModelFromDrawing(drawing, language);
             model.TableData.CurrentDrawing = drawingNumber;
+            model.TableData.HighlightPart = highlightPart;
             // Sort out breadcrumbs
             var breadcrumb = new BreadcrumbModel
             {
@@ -110,7 +111,6 @@ namespace openPER.Controllers
             };
             _rep.PopulateBreadcrumbDescriptions(breadcrumb, language);
             model.Breadcrumb = _mapper.Map<BreadcrumbModel, BreadcrumbViewModel>(breadcrumb);
-
             return View(model);
         }
 
