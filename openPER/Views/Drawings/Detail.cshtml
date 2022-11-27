@@ -9,15 +9,16 @@
         <div class="col-lg-12 col-md-12 col-sm-12 col-12">
             <div class="dropdown show">
                 <a class="btn btn-secondary dropdown-toggle" href="#" role="button" id="subGroupMenuLink" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                    "Group"
+                    @($"{Model.Drawings[Model.TableData.CurrentDrawing-1].GroupCode:000}{Model.Drawings[Model.TableData.CurrentDrawing-1].SubGroupCode:00}/{Model.Drawings[Model.TableData.CurrentDrawing-1].SubSubGroupCode:00}")
                 </a>
                 <div class="dropdown-menu" aria-labelledby="subGroupMenuLink">
                     @{
                         int ix = 1;
                         @foreach (var drawing in Model.Drawings.GroupBy(x => new { x.MakeCode, x.SubMakeCode, x.ModelCode, x.CatalogueCode, x.GroupCode, x.SubGroupCode, x.SubSubGroupCode }, (key, group) => new { key.MakeCode, key.SubMakeCode, key.ModelCode, key.CatalogueCode, key.GroupCode, key.SubGroupCode, key.SubSubGroupCode }))
                         {
-
-                            @Html.ActionLink($"{drawing.GroupCode:000}{drawing.SubGroupCode:00}/{drawing.SubSubGroupCode:00}", "Detail", "Drawings", new {drawing.MakeCode, drawing.SubMakeCode, drawing.ModelCode, drawing.CatalogueCode, drawing.GroupCode, drawing.SubGroupCode, drawing.SubSubGroupCode, DrawingNumber = ix, Model.Scope }, new {@class="dropdown-item"})
+                            var index = Model.Drawings.FindIndex(x => x.CatalogueCode == drawing.CatalogueCode && x.GroupCode == drawing.GroupCode
+                                    && x.SubGroupCode == drawing.SubGroupCode && x.SubSubGroupCode == drawing.SubSubGroupCode);
+                            @Html.ActionLink($"{drawing.GroupCode:000}{drawing.SubGroupCode:00}/{drawing.SubSubGroupCode:00}", "Detail", "Drawings", new {drawing.MakeCode, drawing.SubMakeCode, drawing.ModelCode, drawing.CatalogueCode, drawing.GroupCode, drawing.SubGroupCode, drawing.SubSubGroupCode, DrawingNumber= index+1, Model.Scope }, new {@class="dropdown-item"})
                             ;
                         }
                     }
@@ -29,10 +30,13 @@
                 </a>
                 <div class="dropdown-menu" aria-labelledby="variantMenuLink">
                     @{
+                        var currentDrawing = Model.Drawings[Model.TableData.CurrentDrawing];
                         ix = 1;
                         @foreach (var drawing in Model.Drawings)
                         {
-                            @Html.ActionLink($"{drawing.Variant} {drawing.VariantPattern}", "Detail", "Drawings", new {drawing.MakeCode, drawing.SubMakeCode, drawing.ModelCode, drawing.CatalogueCode, drawing.GroupCode, drawing.SubGroupCode, drawing.SubSubGroupCode, DrawingNumber = ix++, Model.Scope }, new {@class="dropdown-item"})
+                            // Only include variants for current sub sub group
+                            if (drawing.GroupCode == currentDrawing.GroupCode && drawing.SubGroupCode == currentDrawing.SubGroupCode && drawing.SubSubGroupCode == currentDrawing.SubSubGroupCode)
+                                @Html.ActionLink($"{drawing.Variant} {drawing.VariantPattern}", "Detail", "Drawings", new {drawing.MakeCode, drawing.SubMakeCode, drawing.ModelCode, drawing.CatalogueCode, drawing.GroupCode, drawing.SubGroupCode, drawing.SubSubGroupCode, DrawingNumber = ix++, Model.Scope }, new {@class="dropdown-item"})
                             ;
                         }
                     }
