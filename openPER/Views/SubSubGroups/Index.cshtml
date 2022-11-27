@@ -51,7 +51,7 @@
                 {
                     @:<tr>
                 <td>
-                    @Html.ActionLink($"{Model.GroupCode:000}{Model.SubGroupCode:00}/{group.Code:00}", "Detail", "Drawings", new {Model.MakeCode,Model.SubMakeCode, Model.ModelCode, Model.CatalogueCode, Model.GroupCode, Model.SubGroupCode, SubSubGroupCode=group.Code, DrawingNumber=1, Scope="SubSubGroup"})
+                    @Html.ActionLink($"{Model.GroupCode:000}{Model.SubGroupCode:00}/{group.Code:00} {group.Description}", "Detail", "Drawings", new {Model.MakeCode,Model.SubMakeCode, Model.ModelCode, Model.CatalogueCode, Model.GroupCode, Model.SubGroupCode, SubSubGroupCode=group.Code, DrawingNumber=1, Scope="SubSubGroup"})
                 </td>
                 <td>
                     @string.Join('+', group.Variations.Select(x=>x.VariationType+x.VariationCode).Concat(group.Options.Select(x=>x.OptionType+x.OptionCode)))

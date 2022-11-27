@@ -159,7 +159,8 @@ namespace openPERRepositories.Repositories
         {
             var rc = new List<SubSubGroupModel>();
             using var connection = new SqliteConnection($"Data Source={_pathToDb}");
-            var sql = @"select distinct T.SGS_COD FROM TBDATA T
+            var sql = @"select distinct T.SGS_COD, TD.DSC FROM DRAWINGS T
+                            JOIN TABLES_DSC TD ON TD.LNG_COD = $p4 AND TD.COD = T.TABLE_DSC_COD
                             WHERE CAT_COD = $p1 AND T.GRP_COD = $p2 AND T.SGRP_COD = $p3
                             order by T.SGS_COD";
             connection.RunSqlAllRows(sql, (reader) =>
@@ -167,13 +168,14 @@ namespace openPERRepositories.Repositories
                 var m = new SubSubGroupModel
                 {
                     Code = reader.GetInt32(0),
+                    Description = reader.GetString(1)
 
                 };
                 //m.Modifications = AddSgsModifications(catalogueCode, groupCode, subGroupCode, m.Code, languageCode, connection);
                 // m.Options = AddSgsOptions(catalogueCode, groupCode, subGroupCode, m.Code, languageCode, connection);
                 // m.Variations = AddSgsVariations(catalogueCode, groupCode, subGroupCode, m.Code, languageCode, connection);
                 rc.Add(m);
-            }, catalogueCode, groupCode, subGroupCode);
+            }, catalogueCode, groupCode, subGroupCode, languageCode);
             return rc;
         }
         public override List<DrawingKeyModel> GetDrawingKeysForSubSubGroup(string makeCode, string modelCode, string catalogueCode, int groupCode,

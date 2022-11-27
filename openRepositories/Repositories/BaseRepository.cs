@@ -80,6 +80,20 @@ namespace openPERRepositories.Repositories
             }, groupCode, subGroupCode, languageCode);
             return rc;
         }
+        protected string GetSubSubGroupDescription(string catalogCode, int groupCode, int subGroupCode, int subSubGroupCode, string languageCode, SqliteConnection connection)
+        {
+            var rc = "";
+            var sql = @"select distinct TD.DSC FROM DRAWINGS T
+                            JOIN TABLES_DSC TD ON TD.LNG_COD = $p5 AND TD.COD = T.TABLE_DSC_COD
+                            WHERE CAT_COD = $p1 AND T.GRP_COD = $p2 AND T.SGRP_COD = $p3 AND T.SGS_COD = $p4
+                            ";
+
+            connection.RunSqlFirstRowOnly(sql, (reader) =>
+            {
+                rc = reader.GetString(0);
+            }, catalogCode, groupCode, subGroupCode,subSubGroupCode, languageCode);
+            return rc;
+        }
 
 
         private string GetModelDescription(string makeCode, string subMakeCode, string modelCode, SqliteConnection connection)
@@ -397,6 +411,7 @@ namespace openPERRepositories.Repositories
                 breadcrumb.CatalogueCode, connection);
             if (breadcrumb.GroupCode != null) breadcrumb.GroupDescription = GetGroupDescription(breadcrumb.GroupCode.Value, languageCode, connection);
             if (breadcrumb.GroupCode != null && breadcrumb.SubGroupCode != null) breadcrumb.SubGroupDescription = GetSubGroupDescription(breadcrumb.GroupCode.Value, breadcrumb.SubGroupCode.Value, languageCode, connection);
+            if (breadcrumb.GroupCode != null && breadcrumb.SubGroupCode != null && breadcrumb.SubSubGroupCode !=null) breadcrumb.SubSubGroupDescription = GetSubSubGroupDescription(breadcrumb.CatalogueCode, breadcrumb.GroupCode.Value, breadcrumb.SubGroupCode.Value, breadcrumb.SubSubGroupCode.Value, languageCode, connection);
         }
 
         public abstract List<GroupImageMapEntryModel> GetGroupMapEntriesForCatalogue(string catalogueCode, string languageCode);
