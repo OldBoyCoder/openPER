@@ -22,7 +22,7 @@
                                 <li class="breadcrumb-item">@Html.ActionLink($"{Model.GroupCode.Value:000}{Model.SubGroupCode.Value:00} {Model.SubGroupDescription}", "Index", "SubSubGroups", new {Model.MakeCode, Model.SubMakeCode, Model.ModelCode, Model.CatalogueCode, Model.GroupCode, Model.SubGroupCode })</li>
                                 @if (Model.SubSubGroupCode != null)
                                 {
-                                    <li class="breadcrumb-item">@Html.ActionLink($"{Model.GroupCode.Value:000}{Model.SubGroupCode.Value:00}/{Model.SubSubGroupCode:00}", "Detail", "Drawings", new {  Model.MakeCode, Model.SubMakeCode, Model.ModelCode, Model.CatalogueCode, Model.GroupCode, Model.SubGroupCode, Model.SubSubGroupCode, DrawingNumber = 1 })</li>
+                                    <li class="breadcrumb-item">@Html.ActionLink($"{Model.GroupCode.Value:000}{Model.SubGroupCode.Value:00}/{Model.SubSubGroupCode:00} {Model.SubSubGroupDescription}", "Detail", "Drawings", new {  Model.MakeCode, Model.SubMakeCode, Model.ModelCode, Model.CatalogueCode, Model.GroupCode, Model.SubGroupCode, Model.SubSubGroupCode, DrawingNumber = 1 })</li>
                                     @if (Model.DrawingNumber != null)
                                     {
                                         <li class="breadcrumb-item">
