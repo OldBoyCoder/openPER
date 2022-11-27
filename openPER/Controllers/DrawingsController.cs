@@ -41,7 +41,7 @@ namespace openPER.Controllers
             model.Drawings.ForEach(x => x.SubMakeCode = subMakeCode);
             model.Scope = scope;
             // Now we get the rest of the details for the drawing we're interested in
-            var drawing = model.Drawings[drawingNumber - 1];
+            var drawing = model.Drawings[drawingNumber];
             // Get the table for this drawing
             model.TableData = PopulateTableViewModelFromDrawing(drawing, language);
             model.TableData.CurrentDrawing = drawingNumber;
