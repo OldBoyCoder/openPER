@@ -7,6 +7,17 @@
 <div class="container-fluid">
     <div class="row">
         <div class="col-lg-12 col-md-12 col-sm-12 col-12">
+            @if (Model.TableData.CurrentDrawing > 0)
+            {
+                var d = Model.Drawings[Model.TableData.CurrentDrawing - 1];
+                @Html.ActionLink($"<<", "Detail", "Drawings", new {d.MakeCode, d.SubMakeCode, d.ModelCode, d.CatalogueCode, d.GroupCode, d.SubGroupCode, d.SubSubGroupCode, DrawingNumber= Model.TableData.CurrentDrawing - 1, Model.Scope })
+            }
+            <span>@(Model.TableData.CurrentDrawing+1) of @Model.Drawings.Count</span>
+            @if (Model.TableData.CurrentDrawing < Model.Drawings.Count-1)
+            {
+                var d = Model.Drawings[Model.TableData.CurrentDrawing + 1];
+                @Html.ActionLink($">>", "Detail", "Drawings", new {d.MakeCode, d.SubMakeCode, d.ModelCode, d.CatalogueCode, d.GroupCode, d.SubGroupCode, d.SubSubGroupCode, DrawingNumber= Model.TableData.CurrentDrawing + 1, Model.Scope })
+            }
             <div class="dropdown show">
                 <a class="btn btn-secondary dropdown-toggle" href="#" role="button" id="subGroupMenuLink" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                     @($"{Model.Drawings[Model.TableData.CurrentDrawing].GroupCode:000}{Model.Drawings[Model.TableData.CurrentDrawing].SubGroupCode:00}/{Model.Drawings[Model.TableData.CurrentDrawing].SubSubGroupCode:00}")
@@ -32,12 +43,38 @@
                     @{
                         var currentDrawing = Model.Drawings[Model.TableData.CurrentDrawing];
                         ix = 0;
+                        var usedVariants = new List<int>();
                         @foreach (var drawing in Model.Drawings)
                         {
                             // Only include variants for current sub sub group
                             if (drawing.GroupCode == currentDrawing.GroupCode && drawing.SubGroupCode == currentDrawing.SubGroupCode && drawing.SubSubGroupCode == currentDrawing.SubSubGroupCode)
-                                @Html.ActionLink($"{drawing.Variant} {drawing.VariantPattern}", "Detail", "Drawings", new {drawing.MakeCode, drawing.SubMakeCode, drawing.ModelCode, drawing.CatalogueCode, drawing.GroupCode, drawing.SubGroupCode, drawing.SubSubGroupCode, DrawingNumber = ix++, Model.Scope }, new {@class="dropdown-item"})
+                            {
+                                if (!usedVariants.Contains(drawing.Variant))
+                                {
+                                    @Html.ActionLink($"{drawing.Variant} {drawing.VariantPattern}", "Detail", "Drawings", new {drawing.MakeCode, drawing.SubMakeCode, drawing.ModelCode, drawing.CatalogueCode, drawing.GroupCode, drawing.SubGroupCode, drawing.SubSubGroupCode, DrawingNumber = ix, Model.Scope }, new {@class="dropdown-item"})
+                                    ;
+                                    usedVariants.Add(drawing.Variant);
+                                }
+                            }
+                            ix++;
+                        }
+                    }
+                </div>
+            </div>
+            <div class="dropdown show">
+                <a class="btn btn-secondary dropdown-toggle" href="#" role="button" id="revisionMenuLink" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                    @($"{Model.Drawings[Model.TableData.CurrentDrawing].Revision} ({Model.Drawings[Model.TableData.CurrentDrawing].RevisionModifications})")
+                </a>
+                <div class="dropdown-menu" aria-labelledby="revisionMenuLink">
+                    @{
+                        ix = 0;
+                        @foreach (var drawing in Model.Drawings)
+                        {
+                            // Only include revisions for current sub sub group and variant
+                            if (drawing.GroupCode == currentDrawing.GroupCode && drawing.SubGroupCode == currentDrawing.SubGroupCode && drawing.SubSubGroupCode == currentDrawing.SubSubGroupCode && drawing.Variant == currentDrawing.Variant)
+                                @Html.ActionLink($"{drawing.Revision} ({drawing.RevisionModifications})", "Detail", "Drawings", new {drawing.MakeCode, drawing.SubMakeCode, drawing.ModelCode, drawing.CatalogueCode, drawing.GroupCode, drawing.SubGroupCode, drawing.SubSubGroupCode, DrawingNumber = ix, Model.Scope }, new {@class="dropdown-item"})
                             ;
+                            ix++;
                         }
                     }
                 </div>

@@ -20,5 +20,7 @@ namespace openPERModels
         public int ClichePartCode { get; set; }
         public string VariantPattern { get; set; }
         public int Variant { get; set; }
+        public string RevisionModifications { get; set; }
+
     }
 }

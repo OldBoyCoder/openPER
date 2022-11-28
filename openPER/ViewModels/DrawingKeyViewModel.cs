@@ -17,6 +17,7 @@ namespace openPER.ViewModels
         public int ClichePartDrawingNumber { get; set; }
         public int ClichePartCode { get; set; }
         public string VariantPattern { get; set; }
+        public string RevisionModifications { get; set; }
 
         public string FullKey => $"{MakeCode}/{ModelCode}/{CatalogueCode}/{GroupCode}/{SubGroupCode}/{SubSubGroupCode}/{Variant}/{Revision}/{ClichePartNumber}";
     }

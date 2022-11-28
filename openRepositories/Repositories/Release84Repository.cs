@@ -183,7 +183,7 @@ namespace openPERRepositories.Repositories
         {
             var drawings = new List<DrawingKeyModel>();
             using var connection = new SqliteConnection($"Data Source={_pathToDb}");
-            var sql = @"SELECT DISTINCT CAT_COD, GRP_COD, SGRP_COD, SGS_COD, VARIANTE, IFNULL( PATTERN, ''), REVISIONE
+            var sql = @"SELECT DISTINCT CAT_COD, GRP_COD, SGRP_COD, SGS_COD, VARIANTE, IFNULL( PATTERN, ''), REVISIONE, IFNULL(MODIF, '')
                             FROM DRAWINGS
                             WHERE CAT_COD = $p1 AND GRP_COD = $p2 AND SGRP_COD = $p3 AND SGS_COD = $p4
                             ORDER BY GRP_COD, SGRP_COD, SGS_COD, DRW_NUM";
@@ -199,7 +199,8 @@ namespace openPERRepositories.Repositories
                     SubSubGroupCode = reader.GetInt32(3),
                     Variant = reader.GetInt32(4),
                     VariantPattern = reader.GetString(5),
-                    Revision = reader.GetInt32(6)
+                    Revision = reader.GetInt32(6),
+                    RevisionModifications = reader.GetString(7)
                 };
                 drawings.Add(language);
             }, catalogueCode, groupCode, subGroupCode, subSubGroupCode);
@@ -211,7 +212,7 @@ namespace openPERRepositories.Repositories
         {
             var drawings = new List<DrawingKeyModel>();
             using var connection = new SqliteConnection($"Data Source={_pathToDb}");
-            var sql = @"SELECT DISTINCT CAT_COD, GRP_COD, SGRP_COD, SGS_COD, VARIANTE, IFNULL( PATTERN, ''), REVISIONE
+            var sql = @"SELECT DISTINCT CAT_COD, GRP_COD, SGRP_COD, SGS_COD, VARIANTE, IFNULL( PATTERN, ''), REVISIONE, IFNULL(MODIF, '')
                             FROM DRAWINGS
                             WHERE CAT_COD = $p1 AND GRP_COD = $p2 AND SGRP_COD = $p3
                             ORDER BY GRP_COD, SGRP_COD, SGS_COD, DRW_NUM";
@@ -227,7 +228,8 @@ namespace openPERRepositories.Repositories
                     SubSubGroupCode = reader.GetInt32(3),
                     Variant = reader.GetInt32(4),
                     VariantPattern = reader.GetString(5),
-                    Revision = reader.GetInt32(6)
+                    Revision = reader.GetInt32(6),
+                    RevisionModifications = reader.GetString(7)
                 };
                 drawings.Add(language);
             }, catalogueCode, groupCode, subGroupCode);
@@ -238,7 +240,7 @@ namespace openPERRepositories.Repositories
         {
             var drawings = new List<DrawingKeyModel>();
             using var connection = new SqliteConnection($"Data Source={_pathToDb}");
-            var sql = @"SELECT DISTINCT CAT_COD, GRP_COD, SGRP_COD, SGS_COD, VARIANTE, IFNULL( PATTERN, ''), REVISIONE
+            var sql = @"SELECT DISTINCT CAT_COD, GRP_COD, SGRP_COD, SGS_COD, VARIANTE, IFNULL( PATTERN, ''), REVISIONE, IFNULL(MODIF, '')
                             FROM DRAWINGS
                             WHERE CAT_COD = $p1 AND GRP_COD = $p2 
                             ORDER BY GRP_COD, SGRP_COD, SGS_COD, DRW_NUM";
@@ -254,7 +256,8 @@ namespace openPERRepositories.Repositories
                     SubSubGroupCode = reader.GetInt32(3),
                     Variant = reader.GetInt32(4),
                     VariantPattern = reader.GetString(5),
-                    Revision = reader.GetInt32(6)
+                    Revision = reader.GetInt32(6),
+                    RevisionModifications = reader.GetString(7)
                 };
                 drawings.Add(language);
             }, catalogueCode, groupCode);
