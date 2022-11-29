@@ -143,21 +143,21 @@
                 }
             </table>
         </div>
-        <div class="row">
-            <div class="col-12">
-                <div class="container-fluid horizontal-scrollable">
-                    <div class="row text-center">
-                        @{
-                            ix = 0;
-                            @foreach (var drawing in Model.Drawings)
-                            {
-                                <div class="col-xs-4">
-                                    <img class="img-fluid" src="@Url.Action("Thumbnail", "Image", new {Make = drawing.MakeCode, Model = drawing.ModelCode, Catalogue = drawing.CatalogueCode, Group = drawing.GroupCode, SubGroup = drawing.SubGroupCode, SubSubGroup = drawing.SubSubGroupCode, Variant = drawing.Variant, Revision=drawing.Revision })"><br />
-                                    @Html.ActionLink($"{drawing.CatalogueCode}/{drawing.GroupCode:000}{drawing.SubGroupCode:00}/{drawing.SubSubGroupCode:00}/{drawing.Variant}/{drawing.Revision}", "Detail", "Drawings", new {drawing.MakeCode, drawing.SubMakeCode, drawing.ModelCode, drawing.CatalogueCode, drawing.GroupCode, drawing.SubGroupCode, drawing.SubSubGroupCode, DrawingNumber = ix++, Model.Scope })
-                                </div>
-                            }
+    </div>
+    <div class="row">
+        <div class="col-12">
+            <div class="container-flex horizontal-scrollable">
+                <div class="row text-center">
+                    @{
+                        ix = 0;
+                        @foreach (var drawing in Model.Drawings)
+                        {
+                            <div class="col-xs-4 @(Model.TableData.CurrentDrawing == ix?"border":"")">
+                                <img class="img-fluid" src="@Url.Action("Thumbnail", "Image", new {Make = drawing.MakeCode, Model = drawing.ModelCode, Catalogue = drawing.CatalogueCode, Group = drawing.GroupCode, SubGroup = drawing.SubGroupCode, SubSubGroup = drawing.SubSubGroupCode, Variant = drawing.Variant, Revision=drawing.Revision })"><br />
+                                @Html.ActionLink($"{drawing.CatalogueCode}/{drawing.GroupCode:000}{drawing.SubGroupCode:00}/{drawing.SubSubGroupCode:00}/{drawing.Variant}/{drawing.Revision}", "Detail", "Drawings", new {drawing.MakeCode, drawing.SubMakeCode, drawing.ModelCode, drawing.CatalogueCode, drawing.GroupCode, drawing.SubGroupCode, drawing.SubSubGroupCode, DrawingNumber = ix++, Model.Scope })
+                            </div>
                         }
-                    </div>
+                    }
                 </div>
             </div>
         </div>
