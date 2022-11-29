@@ -39,7 +39,7 @@ namespace VinSearcher
 
         public bool ProcessRow(List<string> data, string searchKey)
         {
-            if (searchKey.Substring(0, 3) == data[0].Substring(0,3) &&
+            if (searchKey[..3] == data[0][..3] &&
                 searchKey.Substring(3, 8) == data[1])
             {
                 return true;
