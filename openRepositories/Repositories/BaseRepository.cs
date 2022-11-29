@@ -169,7 +169,7 @@ namespace openPERRepositories.Repositories
         {
             var rc = new List<GroupModel>();
             using var connection = new SqliteConnection($"Data Source={_pathToDb}");
-            var sql = @"select distinct T.GRP_COD, GRP_DSC FROM TBDATA T
+            var sql = @"select distinct T.GRP_COD, GRP_DSC FROM DRAWINGS T
                             JOIN GROUPS_DSC G ON G.GRP_COD = T.GRP_COD AND G.LNG_COD = $p2
                             WHERE CAT_COD = $p1
                             order by T.GRP_COD";
@@ -193,7 +193,7 @@ namespace openPERRepositories.Repositories
         {
             var rc = new List<SubGroupModel>();
             using var connection = new SqliteConnection($"Data Source={_pathToDb}");
-            var sql = @"select distinct T.SGRP_COD, SGRP_DSC FROM TBDATA T
+            var sql = @"select distinct T.SGRP_COD, SGRP_DSC FROM DRAWINGS T
                             JOIN SUBGROUPS_DSC G ON G.GRP_COD = T.GRP_COD AND G.SGRP_COD = T.SGRP_COD AND G.LNG_COD = $p1
                             WHERE CAT_COD = $p2 AND T.GRP_COD = $p3
                             order by T.SGRP_COD";
