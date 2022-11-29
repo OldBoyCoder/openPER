@@ -14,7 +14,6 @@ namespace openPER.Views.Shared.Components.LanguageChoiceWidget
         }
         public IViewComponentResult Invoke()
         {
-            // TODO work out what to do about repositor release number
             var model = new SessionOptionsViewModel
             {
                 Languages = _rep.GetAllLanguages()
