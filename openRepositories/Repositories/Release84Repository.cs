@@ -786,12 +786,12 @@ namespace openPERRepositories.Repositories
         }
         public List<DrawingKeyModel> GetDrawingKeysForCliche(string makeCode, string subMakeCode, string modelCode,
             string catalogueCode, int groupCode,
-            int subGroupCode, int subSubGroupCode, decimal clichePartNumber)
+            int subGroupCode, int subSubGroupCode, string clichePartNumber)
         {
             var drawings = new List<DrawingKeyModel>();
             using var connection = new SqliteConnection($"Data Source={_pathToDb}");
             var sql = @"SELECT DISTINCT CPD_NUM, CLH_COD
-                            FROM CPXDATA
+                            FROM CLICHE
                             WHERE CPLX_PRT_COD = $p1
                             ORDER BY CPD_NUM";
             connection.RunSqlAllRows(sql, (reader) =>
@@ -806,28 +806,28 @@ namespace openPERRepositories.Repositories
                     SubSubGroupCode = subSubGroupCode,
                     ClichePartNumber = clichePartNumber,
                     ClichePartDrawingNumber = reader.GetInt32(0),
-                    ClichePartCode = reader.GetInt32(1)
+                    ClichePartCode = reader.GetString(1)
                 };
                 drawings.Add(language);
-            }, (decimal)clichePartNumber);
+            }, clichePartNumber);
             return drawings;
         }
 
-        public string GetImageNameForClicheDrawing(decimal clichePartNumber, int clichePartDrawingNumber)
+        public string GetImageNameForClicheDrawing(string clichePartNumber, int clichePartDrawingNumber)
         {
             using var connection = new SqliteConnection($"Data Source={_pathToDb}");
-            var sql = @"select DISTINCT CLH_COD FROM CPXDATA
+            var sql = @"select DISTINCT IMG_PATH FROM CLICHE
                         where CPLX_PRT_COD = $p1 and CPD_NUM = $p2
                         ";
             var rc = "";
             connection.RunSqlFirstRowOnly(sql, (reader) =>
             {
-                rc = reader.GetInt32(0).ToString();
-            }, (decimal)clichePartNumber, clichePartDrawingNumber);
+                rc = reader.GetString(0);
+            }, clichePartNumber, clichePartDrawingNumber);
             return rc;
         }
 
-        public List<TablePartModel> GetPartsForCliche(string catalogueCode, decimal clichePartNumber,
+        public List<TablePartModel> GetPartsForCliche(string catalogueCode, string clichePartNumber,
             int clicheDrawingNumber, string languageCode)
         {
             using var connection = new SqliteConnection($"Data Source={_pathToDb}");
@@ -850,7 +850,7 @@ namespace openPERRepositories.Repositories
                     FurtherDescription = reader.GetString(4),
                     Description = reader.GetString(5)
                 });
-            }, (decimal)clichePartNumber, clicheDrawingNumber, languageCode);
+            }, clichePartNumber, clicheDrawingNumber, languageCode);
 
             var maxRIF = 1;
             if (rc.Count > 0)
@@ -873,7 +873,7 @@ namespace openPERRepositories.Repositories
                     FurtherDescription = "",
                     Description = reader.GetString(1)
                 });
-            }, (decimal)clichePartNumber, catalogueCode, languageCode);
+            }, clichePartNumber, catalogueCode, languageCode);
 
 
             return rc;
