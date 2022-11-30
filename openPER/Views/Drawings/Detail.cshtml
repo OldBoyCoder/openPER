@@ -35,16 +35,16 @@
                 <div class="btn-group mr-2" role="group">
                     <div class="dropdown show">
                         <a class="btn btn-secondary dropdown-toggle" href="#" role="button" id="subGroupMenuLink" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                            @($"{Model.Drawings[Model.TableData.CurrentDrawing].GroupCode:000}{Model.Drawings[Model.TableData.CurrentDrawing].SubGroupCode:00}/{Model.Drawings[Model.TableData.CurrentDrawing].SubSubGroupCode:00}")
+                            @($"{Model.Drawings[Model.TableData.CurrentDrawing].GroupCode:000}{Model.Drawings[Model.TableData.CurrentDrawing].SubGroupCode:00}/{Model.Drawings[Model.TableData.CurrentDrawing].SubSubGroupCode:00} - {Model.Drawings[Model.TableData.CurrentDrawing].Description}")
                         </a>
                         <div class="dropdown-menu" aria-labelledby="subGroupMenuLink">
                             @{
                                 int ix = 1;
-                                @foreach (var drawing in Model.Drawings.GroupBy(x => new { x.MakeCode, x.SubMakeCode, x.ModelCode, x.CatalogueCode, x.GroupCode, x.SubGroupCode, x.SubSubGroupCode }, (key, group) => new { key.MakeCode, key.SubMakeCode, key.ModelCode, key.CatalogueCode, key.GroupCode, key.SubGroupCode, key.SubSubGroupCode }))
+                                @foreach (var drawing in Model.Drawings.GroupBy(x => new { x.MakeCode, x.SubMakeCode, x.ModelCode, x.CatalogueCode, x.GroupCode, x.SubGroupCode, x.SubSubGroupCode, x.Description }, (key, group) => new { key.MakeCode, key.SubMakeCode, key.ModelCode, key.CatalogueCode, key.GroupCode, key.SubGroupCode, key.SubSubGroupCode, key.Description }))
                                 {
                                     var index = Model.Drawings.FindIndex(x => x.CatalogueCode == drawing.CatalogueCode && x.GroupCode == drawing.GroupCode
                                     && x.SubGroupCode == drawing.SubGroupCode && x.SubSubGroupCode == drawing.SubSubGroupCode);
-                                    @Html.ActionLink($"{drawing.GroupCode:000}{drawing.SubGroupCode:00}/{drawing.SubSubGroupCode:00}", "Detail", "Drawings", new {drawing.MakeCode, drawing.SubMakeCode, drawing.ModelCode, drawing.CatalogueCode, drawing.GroupCode, drawing.SubGroupCode, drawing.SubSubGroupCode, DrawingNumber= index, Model.Scope }, new {@class="dropdown-item"})
+                                    @Html.ActionLink($"{drawing.GroupCode:000}{drawing.SubGroupCode:00}/{drawing.SubSubGroupCode:00} - {drawing.Description}", "Detail", "Drawings", new {drawing.MakeCode, drawing.SubMakeCode, drawing.ModelCode, drawing.CatalogueCode, drawing.GroupCode, drawing.SubGroupCode, drawing.SubSubGroupCode, DrawingNumber= index, Model.Scope }, new {@class="dropdown-item"})
                                     ;
                                 }
                             }
@@ -133,7 +133,7 @@
                             <td>
                                 @Html.DisplayFor(model => item.TableOrder)
                             </td>
-                            <td><a href="@Url.Action("SearchResults", "Part", new { item.PartNumber })">@Html.DisplayFor(model => item.PartNumber)</a> <a href="https://www.google.com/search?q=FIAT+@item.PartNumber" target="_blank" class="bi bi-search"></a></td>
+                            <td align="right"><a href="@Url.Action("SearchResults", "Part", new { item.PartNumber })">@Html.DisplayFor(model => item.PartNumber)</a> <a href="https://www.google.com/search?q=FIAT+@item.PartNumber" target="_blank" class="bi bi-search"></a></td>
                             <td>@Html.DisplayFor(model => item.Description) @Html.DisplayFor(model => item.FurtherDescription)</td>
                             <td>@Html.DisplayFor(model => item.Compatibility)</td>
                             <td>
@@ -169,7 +169,7 @@
                         {
                             <div class="col-xs-4 @(Model.TableData.CurrentDrawing == ix?"border":"")">
                                 <img class="img-fluid" src="@Url.Action("Thumbnail", "Image", new {Make = drawing.MakeCode, Model = drawing.ModelCode, Catalogue = drawing.CatalogueCode, Group = drawing.GroupCode, SubGroup = drawing.SubGroupCode, SubSubGroup = drawing.SubSubGroupCode, Variant = drawing.Variant, Revision=drawing.Revision })"><br />
-                                @Html.ActionLink($"{drawing.CatalogueCode}/{drawing.GroupCode:000}{drawing.SubGroupCode:00}/{drawing.SubSubGroupCode:00}/{drawing.Variant}/{drawing.Revision}", "Detail", "Drawings", new {drawing.MakeCode, drawing.SubMakeCode, drawing.ModelCode, drawing.CatalogueCode, drawing.GroupCode, drawing.SubGroupCode, drawing.SubSubGroupCode, DrawingNumber = ix++, Model.Scope })
+                                @Html.ActionLink($"{drawing.GroupCode:000}{drawing.SubGroupCode:00}/{drawing.SubSubGroupCode:00} - {drawing.Description} (Var.:{drawing.Variant}/Rev.:{drawing.Revision})", "Detail", "Drawings", new {drawing.MakeCode, drawing.SubMakeCode, drawing.ModelCode, drawing.CatalogueCode, drawing.GroupCode, drawing.SubGroupCode, drawing.SubSubGroupCode, DrawingNumber = ix++, Model.Scope })
                             </div>
                         }
                     }

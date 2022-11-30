@@ -1,4 +1,4 @@
-Correct text in thumbnails on drawing screen
+DONE Correct text in thumbnails on drawing screen
 Make thumbnail clickable on drawing screen
 Sort out breadcrumbs esp with regard to scoping
 Finish VIN search for r84
@@ -6,9 +6,13 @@ Add list of modifications by catalogue
 Add printing
 Add filtering by VIN details
 Fix display of subsubgroup screen - lots currently blank
-Add narrative to dropdowns on drawing screen
+DONE Add narrative to dropdowns on drawing screen
 Complete localization of literals
 Check and fix display of cliches now we've re-done the drawing screen
 Find image maps for drawings so part numbers can be clickable
 Add search by part description
 Add list of models variants and what not to the catalogue
+Add caching facade to the repository
+Allow user to choose search engine
+DONE CHange part number to text
+Add explanation of modificationa and variants for dropdowns to the drawing screen
