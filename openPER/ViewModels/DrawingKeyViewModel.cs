@@ -15,7 +15,7 @@ namespace openPER.ViewModels
         public int Revision { get; set; }
         public string ClichePartNumber { get; set; }
         public int ClichePartDrawingNumber { get; set; }
-        public int ClichePartCode { get; set; }
+        public string ClichePartCode { get; set; }
         public string VariantPattern { get; set; }
         public string RevisionModifications { get; set; }
         public string Description { get; set; }
