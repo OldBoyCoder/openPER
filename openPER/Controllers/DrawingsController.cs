@@ -29,12 +29,12 @@ namespace openPER.Controllers
             List<DrawingKeyModel> drawings;
             if (scope == "SubSubGroup")
                 drawings = _rep.GetDrawingKeysForSubSubGroup(makeCode, modelCode,
-                catalogueCode, groupCode, subGroupCode, subSubGroupCode);
+                catalogueCode, groupCode, subGroupCode, subSubGroupCode, language);
             else if (scope == "SubGroup")
                 drawings = _rep.GetDrawingKeysForSubGroup(makeCode, modelCode,
-                catalogueCode, groupCode, subGroupCode);
+                catalogueCode, groupCode, subGroupCode, language);
             else
-                drawings = _rep.GetDrawingKeysForGroup(makeCode, modelCode, catalogueCode, groupCode);
+                drawings = _rep.GetDrawingKeysForGroup(makeCode, modelCode, catalogueCode, groupCode, language);
 
             model.Drawings = _mapper.Map<List<DrawingKeyModel>, List<DrawingKeyViewModel>>(drawings);
 
@@ -63,7 +63,7 @@ namespace openPER.Controllers
             return View(model);
         }
         [Route("Detail/{MakeCode}/{SubMakeCode}/{ModelCode}/{CatalogueCode}/{GroupCode}/{SubGroupCode}/{SubSubGroupCode}/{Variant}/{Revision}/{Scope}/{HighlightPart?}")]
-        public IActionResult Detail(string makeCode, string subMakeCode, string modelCode, string catalogueCode, int groupCode, int subGroupCode, int subSubGroupCode, int variant, int revision, string scope, int highlightPart = -1)
+        public IActionResult Detail(string makeCode, string subMakeCode, string modelCode, string catalogueCode, int groupCode, int subGroupCode, int subSubGroupCode, int variant, int revision, string scope, string highlightPart = "~")
         {
             // Standard prologue
             var language = Helpers.LanguageSupport.SetCultureBasedOnCookie(HttpContext);
@@ -73,12 +73,12 @@ namespace openPER.Controllers
             List<DrawingKeyModel> drawings;
             if (scope == "SubSubGroup")
                 drawings = _rep.GetDrawingKeysForSubSubGroup(makeCode, modelCode,
-                catalogueCode, groupCode, subGroupCode, subSubGroupCode);
+                catalogueCode, groupCode, subGroupCode, subSubGroupCode, language);
             else if (scope == "SubGroup")
                 drawings = _rep.GetDrawingKeysForSubGroup(makeCode, modelCode,
-                catalogueCode, groupCode, subGroupCode);
+                catalogueCode, groupCode, subGroupCode, language);
             else
-                drawings = _rep.GetDrawingKeysForGroup(makeCode, modelCode, catalogueCode, groupCode);
+                drawings = _rep.GetDrawingKeysForGroup(makeCode, modelCode, catalogueCode, groupCode, language);
 
             model.Drawings = _mapper.Map<List<DrawingKeyModel>, List<DrawingKeyViewModel>>(drawings);
 

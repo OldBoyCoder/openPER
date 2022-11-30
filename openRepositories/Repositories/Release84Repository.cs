@@ -182,12 +182,13 @@ namespace openPERRepositories.Repositories
             return rc;
         }
         public  List<DrawingKeyModel> GetDrawingKeysForSubSubGroup(string makeCode, string modelCode, string catalogueCode, int groupCode,
-            int subGroupCode, int subSubGroupCode)
+            int subGroupCode, int subSubGroupCode, string languageCode)
         {
             var drawings = new List<DrawingKeyModel>();
             using var connection = new SqliteConnection($"Data Source={_pathToDb}");
-            var sql = @"SELECT DISTINCT CAT_COD, GRP_COD, SGRP_COD, SGS_COD, VARIANTE, IFNULL( PATTERN, ''), REVISIONE, IFNULL(MODIF, '')
+            var sql = @"SELECT DISTINCT CAT_COD, GRP_COD, SGRP_COD, SGS_COD, VARIANTE, IFNULL( PATTERN, ''), REVISIONE, IFNULL(MODIF, ''), DSC
                             FROM DRAWINGS
+                            JOIN TABLES_DSC TD ON TD.LNG_COD = $p5 AND TD.COD = TABLE_DSC_COD
                             WHERE CAT_COD = $p1 AND GRP_COD = $p2 AND SGRP_COD = $p3 AND SGS_COD = $p4
                             ORDER BY GRP_COD, SGRP_COD, SGS_COD, DRW_NUM";
             connection.RunSqlAllRows(sql, (reader) =>
@@ -203,20 +204,22 @@ namespace openPERRepositories.Repositories
                     Variant = reader.GetInt32(4),
                     VariantPattern = reader.GetString(5),
                     Revision = reader.GetInt32(6),
-                    RevisionModifications = reader.GetString(7)
+                    RevisionModifications = reader.GetString(7),
+                    Description = reader.GetString(8)
                 };
                 drawings.Add(language);
-            }, catalogueCode, groupCode, subGroupCode, subSubGroupCode);
+            }, catalogueCode, groupCode, subGroupCode, subSubGroupCode, languageCode);
 
             return drawings;
         }
         public  List<DrawingKeyModel> GetDrawingKeysForSubGroup(string makeCode, string modelCode, string catalogueCode, int groupCode,
-            int subGroupCode)
+            int subGroupCode, string languageCode)
         {
             var drawings = new List<DrawingKeyModel>();
             using var connection = new SqliteConnection($"Data Source={_pathToDb}");
-            var sql = @"SELECT DISTINCT CAT_COD, GRP_COD, SGRP_COD, SGS_COD, VARIANTE, IFNULL( PATTERN, ''), REVISIONE, IFNULL(MODIF, '')
+            var sql = @"SELECT DISTINCT CAT_COD, GRP_COD, SGRP_COD, SGS_COD, VARIANTE, IFNULL( PATTERN, ''), REVISIONE, IFNULL(MODIF, ''), DSC
                             FROM DRAWINGS
+                            JOIN TABLES_DSC TD ON TD.LNG_COD = $p4 AND TD.COD = TABLE_DSC_COD
                             WHERE CAT_COD = $p1 AND GRP_COD = $p2 AND SGRP_COD = $p3
                             ORDER BY GRP_COD, SGRP_COD, SGS_COD, DRW_NUM";
             connection.RunSqlAllRows(sql, (reader) =>
@@ -232,19 +235,21 @@ namespace openPERRepositories.Repositories
                     Variant = reader.GetInt32(4),
                     VariantPattern = reader.GetString(5),
                     Revision = reader.GetInt32(6),
-                    RevisionModifications = reader.GetString(7)
+                    RevisionModifications = reader.GetString(7),
+                    Description = reader.GetString(8)
                 };
                 drawings.Add(language);
-            }, catalogueCode, groupCode, subGroupCode);
+            }, catalogueCode, groupCode, subGroupCode, languageCode);
 
             return drawings;
         }
-        public  List<DrawingKeyModel> GetDrawingKeysForGroup(string makeCode, string modelCode, string catalogueCode, int groupCode)
+        public  List<DrawingKeyModel> GetDrawingKeysForGroup(string makeCode, string modelCode, string catalogueCode, int groupCode, string languageCode)
         {
             var drawings = new List<DrawingKeyModel>();
             using var connection = new SqliteConnection($"Data Source={_pathToDb}");
-            var sql = @"SELECT DISTINCT CAT_COD, GRP_COD, SGRP_COD, SGS_COD, VARIANTE, IFNULL( PATTERN, ''), REVISIONE, IFNULL(MODIF, '')
+            var sql = @"SELECT DISTINCT CAT_COD, GRP_COD, SGRP_COD, SGS_COD, VARIANTE, IFNULL( PATTERN, ''), REVISIONE, IFNULL(MODIF, ''), DSC
                             FROM DRAWINGS
+                            JOIN TABLES_DSC TD ON TD.LNG_COD = $p3 AND TD.COD = TABLE_DSC_COD
                             WHERE CAT_COD = $p1 AND GRP_COD = $p2 
                             ORDER BY GRP_COD, SGRP_COD, SGS_COD, DRW_NUM";
             connection.RunSqlAllRows(sql, (reader) =>
@@ -260,10 +265,12 @@ namespace openPERRepositories.Repositories
                     Variant = reader.GetInt32(4),
                     VariantPattern = reader.GetString(5),
                     Revision = reader.GetInt32(6),
-                    RevisionModifications = reader.GetString(7)
+                    RevisionModifications = reader.GetString(7),
+                    Description = reader.GetString(8)
+
                 };
                 drawings.Add(language);
-            }, catalogueCode, groupCode);
+            }, catalogueCode, groupCode, languageCode);
 
             return drawings;
         }
@@ -303,7 +310,7 @@ namespace openPERRepositories.Repositories
             {
                 var part = new TablePartModel
                 {
-                    PartNumber = (decimal)reader.GetDouble(1),
+                    PartNumber = reader.GetString(1),
                     TableOrder = reader.GetInt32(0),
                     Quantity = reader.GetString(2),
                     Description = reader.GetString(3),
@@ -422,7 +429,7 @@ namespace openPERRepositories.Repositories
             {
                 rc = true;
 
-            }, (decimal)part.PartNumber);
+            }, part.PartNumber);
             return rc;
         }
         private static string GetCatalogueDescription(string makeCode, string subMakeCode, string catalogueCode, SqliteConnection connection)
@@ -737,12 +744,13 @@ namespace openPERRepositories.Repositories
             });
             return languages;
         }
-        public List<DrawingKeyModel> GetDrawingKeysForCatalogue(string makeCode, string modelCode, string catalogueCode)
+        public List<DrawingKeyModel> GetDrawingKeysForCatalogue(string makeCode, string modelCode, string catalogueCode, string languageCode)
         {
             var drawings = new List<DrawingKeyModel>();
             using var connection = new SqliteConnection($"Data Source={_pathToDb}");
-            var sql = @"SELECT DISTINCT CAT_COD, GRP_COD, SGRP_COD, SGS_COD, VARIANTE, REVISIONE
+            var sql = @"SELECT DISTINCT CAT_COD, GRP_COD, SGRP_COD, SGS_COD, VARIANTE, REVISIONE, DSC
                             FROM DRAWINGS
+                            JOIN TABLES_DSC TD ON TD.LNG_COD = $p2 AND TD.COD = TABLE_DSC_COD
                             WHERE CAT_COD = $p1
                             ORDER BY GRP_COD, SGRP_COD, SGS_COD, VARIANTE, REVISIONE";
             connection.RunSqlAllRows(sql, (reader) =>
@@ -756,10 +764,11 @@ namespace openPERRepositories.Repositories
                     SubGroupCode = reader.GetInt32(2),
                     SubSubGroupCode = reader.GetInt32(3),
                     Variant = reader.GetInt32(4),
-                    Revision = reader.GetInt32(5)
+                    Revision = reader.GetInt32(5),
+                    Description = reader.GetString(6)
                 };
                 drawings.Add(language);
-            }, catalogueCode);
+            }, catalogueCode, languageCode);
             return drawings;
         }
         public void PopulateBreadcrumbDescriptions(BreadcrumbModel breadcrumb, string languageCode)
@@ -835,7 +844,7 @@ namespace openPERRepositories.Repositories
 
                 rc.Add(new TablePartModel
                 {
-                    PartNumber = (decimal)reader.GetDecimal(0),
+                    PartNumber = reader.GetString(0),
                     TableOrder = reader.GetInt32(2),
                     Quantity = reader.GetString(3),
                     FurtherDescription = reader.GetString(4),
@@ -858,7 +867,7 @@ namespace openPERRepositories.Repositories
 
                 rc.Add(new TablePartModel
                 {
-                    PartNumber = (decimal)reader.GetDouble(0),
+                    PartNumber = reader.GetString(0),
                     TableOrder = maxRIF++,
                     Quantity = "01",
                     FurtherDescription = "",
@@ -890,7 +899,7 @@ namespace openPERRepositories.Repositories
                 {
                     p = new PartModel
                     {
-                        PartNumber = (decimal)reader.GetDecimal(0),
+                        PartNumber = reader.GetString(0),
                         Description = reader.GetString(2),
                         FamilyCode = reader.GetString(3),
                         FamilyDescription = reader.GetString(4),
@@ -907,7 +916,7 @@ namespace openPERRepositories.Repositories
             return p;
         }
 
-        private List<PartDrawing> GetDrawingsForPartNumber(decimal partNumber, string languageCode)
+        private List<PartDrawing> GetDrawingsForPartNumber(string partNumber, string languageCode)
         {
             var drawings = new List<PartDrawing>();
             using var connection = new SqliteConnection($"Data Source={_pathToDb}");
@@ -935,7 +944,7 @@ namespace openPERRepositories.Repositories
                     ClichePart = false
                 };
                 drawings.Add(p);
-            }, (int)partNumber, languageCode);
+            }, partNumber, languageCode);
 
             // This could be a part in a cliche
             sql = @"select DISTINCT 

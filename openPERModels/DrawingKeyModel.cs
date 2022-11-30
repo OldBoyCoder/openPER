@@ -21,6 +21,7 @@ namespace openPERModels
         public string VariantPattern { get; set; }
         public int Variant { get; set; }
         public string RevisionModifications { get; set; }
+        public string Description { get; set; }
 
     }
 }

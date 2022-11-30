@@ -52,7 +52,7 @@
                         }
                         <tr>
                             <td>&nbsp;</td>
-                            <td >@Html.ActionLink(item.PartNumber.ToString("0") ,"SearchResults", "Part", new { item.PartNumber }) <a href="https://www.google.com/search?q=FIAT+@item.PartNumber.ToString("0")" target="_blank" class="bi bi-search"></a></td>
+                            <td >@Html.ActionLink(item.PartNumber ,"SearchResults", "Part", new { item.PartNumber }) <a href="https://www.google.com/search?q=FIAT+@item.PartNumber" target="_blank" class="bi bi-search"></a></td>
                             <td>@Html.DisplayFor(model => item.FurtherDescription)</td>
                             <td>@Html.DisplayFor(model => item.Compatibility)</td>
                             <td>
