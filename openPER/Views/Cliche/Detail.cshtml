@@ -15,7 +15,7 @@
             <div class="container-fluid">
                 <div class="row">
                     <div class="col-12">
-                        <img class="img-fluid" src="@Url.Action("Drawing", "Image", new {ClichePartNumber = Model.ClicheDrawings.First(x=>x.ClichePartDrawingNumber==Model.CurrentDrawing).ClichePartNumber,  ClichePartDrawingNumber = Model.CurrentDrawing})">
+                        <img class="img-fluid" src="@Model.ClicheDrawings.First(x=>x.ClichePartDrawingNumber==Model.CurrentDrawing).ImagePath">
                     </div>
                 </div>
                 <div class="row">
@@ -26,7 +26,7 @@
                                     @foreach (var drawing in Model.ClicheDrawings)
                                     {
                                         <div class="col-xs-4">
-                                            <img class="img-fluid" src="@Url.Action("Thumbnail", "Image", new {drawing.ClichePartNumber, drawing.ClichePartDrawingNumber })"><br />
+                                            <img class="img-fluid" src="@drawing.ThumbImagePath"><br />
                                             @Html.ActionLink("Go", "Detail", "Cliche", new { Model.Breadcrumb.MakeCode, Model.Breadcrumb.SubMakeCode, Model.Breadcrumb.ModelCode, Model.Breadcrumb.CatalogueCode, Model.Breadcrumb.GroupCode, Model.Breadcrumb.SubGroupCode, Model.Breadcrumb.SubSubGroupCode, DrawingNumber = Model.Breadcrumb.DrawingNumber, ClichePartNumber = drawing.ClichePartNumber, ClicheDrawingNumber=drawing.ClichePartDrawingNumber })</div>
                                     }
                                 }

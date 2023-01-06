@@ -1,10 +1,13 @@
 ﻿namespace openPERModels
 {
-    public class MvsModel
+    public class MvsData
     {
-        public string MvsCode { get; set; }
+        public string MvsMark { get; set; }
+        public string MvsModel { get; set; }
         public string MvsVersion { get; set; }
         public string MvsSeries { get; set; }
+        public string MvsGuide { get; set; }
+        public string MvsShopEquipment { get; set; }
 
         public string Description { get; set; }
         public string SincomVersion { get; set; }
@@ -17,7 +20,7 @@
         public string CatalogueDescription { get;  set; }
         public string ColourCode { get;  set; }
         public string ColourDescription { get;  set; }
-        public string FullMvsCode => $"{MvsCode}.{MvsVersion}.{MvsSeries}";
+        public string FullMvsCode => $"{MvsMark}.{MvsModel}.{MvsVersion}.{MvsSeries}.{MvsGuide}.{MvsShopEquipment}";
 
         public string ModelCode { get; set; }
         public string ModelDescription { get; set; }

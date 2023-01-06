@@ -19,6 +19,7 @@ namespace openPER.Controllers
         }
         [Route(
             "Detail/{MakeCode}/{SubMakeCode}/{ModelCode}/{CatalogueCode}/{GroupCode}/{SubGroupCode}/{SubSubGroupCode}/{DrawingNumber}/{ClichePartNumber}/{ClicheDrawingNumber}")]
+        [ApiExplorerSettings(IgnoreApi = true)]
         public IActionResult Detail(string makeCode, string subMakeCode, string modelCode,
             string catalogueCode, int groupCode, int subGroupCode, int subSubGroupCode, int drawingNumber,
             string clichePartNumber, int clicheDrawingNumber)

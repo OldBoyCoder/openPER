@@ -103,7 +103,7 @@
             <div class="container-fluid">
                 <div class="row">
                     <div class="col-12">
-                        <img class="img-fluid" src="@Url.Action("Drawing", "Image", new {Make = Model.TableData.MakeCode, Model = Model.TableData.ModelCode, Catalogue = Model.TableData.CatalogueCode, Group = Model.TableData.GroupCode, SubGroup = Model.TableData.SubGroupCode, SubSubGroup = Model.TableData.SubSubGroupCode, Variant = Model.TableData.Variant, Model.TableData.Revision })">
+                        <img class="img-fluid" src="@Model.TableData.ImagePath">
                     </div>
                 </div>
             </div>
@@ -168,7 +168,7 @@
                         @foreach (var drawing in Model.Drawings)
                         {
                             <div class="col-xs-4 @(Model.TableData.CurrentDrawing == ix?"border":"")">
-                                <img class="img-fluid" src="@Url.Action("Thumbnail", "Image", new {Make = drawing.MakeCode, Model = drawing.ModelCode, Catalogue = drawing.CatalogueCode, Group = drawing.GroupCode, SubGroup = drawing.SubGroupCode, SubSubGroup = drawing.SubSubGroupCode, Variant = drawing.Variant, Revision=drawing.Revision })"><br />
+                                <img class="img-fluid" src="@drawing.ThumbImagePath"><br />
                                 @Html.ActionLink($"{drawing.GroupCode:000}{drawing.SubGroupCode:00}/{drawing.SubSubGroupCode:00} - {drawing.Description} (Var.:{drawing.Variant}/Rev.:{drawing.Revision})", "Detail", "Drawings", new {drawing.MakeCode, drawing.SubMakeCode, drawing.ModelCode, drawing.CatalogueCode, drawing.GroupCode, drawing.SubGroupCode, drawing.SubSubGroupCode, DrawingNumber = ix++, Model.Scope })
                             </div>
                         }

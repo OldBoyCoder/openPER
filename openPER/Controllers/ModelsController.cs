@@ -17,6 +17,7 @@ namespace openPER.Controllers
             _mapper = mapper;
         }
         [Route("Models/{MakeCode}/{SubMakeCode}")]
+        [ApiExplorerSettings(IgnoreApi = true)]
         public IActionResult Index(string makeCode, string subMakeCode)
         {
             // Standard prologue

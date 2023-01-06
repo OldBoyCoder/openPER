@@ -19,6 +19,8 @@ namespace openPER.ViewModels
         public string VariantPattern { get; set; }
         public string RevisionModifications { get; set; }
         public string Description { get; set; }
+        public string ThumbImagePath { get; set; }
+        public string ImagePath { get; set; }
 
         public string FullKey => $"{MakeCode}/{ModelCode}/{CatalogueCode}/{GroupCode}/{SubGroupCode}/{SubSubGroupCode}/{Variant}/{Revision}/{ClichePartNumber}";
     }

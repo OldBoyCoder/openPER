@@ -18,6 +18,7 @@ namespace openPER.Controllers
             _mapper = mapper;
         }
         [Route("Catalogues/{MakeCode}/{SubMakeCode}/{ModelCode}")]
+        [ApiExplorerSettings(IgnoreApi = true)]
         public IActionResult Index(string makeCode, string subMakeCode, string modelCode)
         {
             // Standard prologue
@@ -34,12 +35,13 @@ namespace openPER.Controllers
                     SideMenuItems = new SideMenuItemsViewModel
                     {
                         AllMakes = _mapper.Map<List<MakeModel>, List<MakeViewModel>>(_rep.GetAllMakes()),
-                        AllModels = _mapper.Map<List<ModelModel>, List<ModelViewModel>>(_rep.GetAllModelsForMake( makeCode,
+                        AllModels = _mapper.Map<List<ModelModel>, List<ModelViewModel>>(_rep.GetAllModelsForMake(makeCode,
                             subMakeCode)),
                         AllCatalogues = _mapper.Map<List<CatalogueModel>, List<CatalogueViewModel>>(
-                            _rep.GetAllCatalogues( makeCode, subMakeCode, modelCode, language))
+                            _rep.GetAllCatalogues(makeCode, subMakeCode, modelCode, language))
                     }
-                }
+                },
+                ImagePath = _rep.GetImageNameForModel(makeCode, subMakeCode, modelCode)
 
             };
             model.Models =

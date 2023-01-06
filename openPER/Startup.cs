@@ -22,9 +22,10 @@ namespace openPER
         public void ConfigureServices(IServiceCollection services)
         {
             services.AddScoped<IRepository, Release84Repository>();
-            services.AddScoped<IImageRepository, Release84ImageRepository>();
             services.AddControllersWithViews();
             services.AddAutoMapper(Assembly.GetExecutingAssembly());
+            services.AddEndpointsApiExplorer();
+            services.AddSwaggerGen();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -33,6 +34,8 @@ namespace openPER
             if (env.IsDevelopment())
             {
                 app.UseDeveloperExceptionPage();
+                app.UseSwagger();
+                app.UseSwaggerUI();
             }
             else
             {

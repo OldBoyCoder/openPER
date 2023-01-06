@@ -17,6 +17,7 @@ namespace openPER.Controllers
             _mapper = mapper;
         }
         [Route("Makes")]
+        [ApiExplorerSettings(IgnoreApi = true)]
         public IActionResult Index()
         {
             var language = Helpers.LanguageSupport.SetCultureBasedOnCookie(HttpContext);
