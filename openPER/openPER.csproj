@@ -6,8 +6,21 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <Compile Remove="Data\CDN\**" />
+    <Compile Remove="wwwroot\SiteImages\CDN\**" />
+    <Content Remove="Data\CDN\**" />
+    <Content Remove="wwwroot\SiteImages\CDN\**" />
+    <EmbeddedResource Remove="Data\CDN\**" />
+    <EmbeddedResource Remove="wwwroot\SiteImages\CDN\**" />
+    <None Remove="Data\CDN\**" />
+    <None Remove="wwwroot\SiteImages\CDN\**" />
+  </ItemGroup>
+
+  <ItemGroup>
     <PackageReference Include="AutoMapper.Extensions.Microsoft.DependencyInjection" Version="12.0.0" />
     <PackageReference Include="Microsoft.VisualStudio.Web.CodeGeneration.Design" Version="6.0.10" />
+    <PackageReference Include="Microsoft.Web.Deployment" Version="4.0.5" />
+    <PackageReference Include="Swashbuckle.AspNetCore" Version="6.5.0" />
   </ItemGroup>
 
   <ItemGroup>
@@ -69,6 +82,7 @@
   </ItemGroup>
 
   <ItemGroup>
+    <Folder Include="Data\Release84\VinData\" />
     <Folder Include="Interfaces\" />
     <Folder Include="wwwroot\SiteImages\" />
   </ItemGroup>

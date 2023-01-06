@@ -13,7 +13,7 @@
             <strong>@Resources.FrontEnd.CategorySelectTitle</strong>
             <p>@Resources.FrontEnd.CategorySelectBody</p>
             <div style="position: relative; left: 0; right: 0;">
-                <img src="@Url.Action("CatalogueImage", "Image", new {Make = Model.MakeCode, SubMake = Model.SubMakeCode, Model = Model.ModelCode, Catalogue = Model.CatalogueCode })">
+                <img src="@Model.ImagePath">
                 
                 @foreach (var mapEntry in Model.MapEntries)
                 {

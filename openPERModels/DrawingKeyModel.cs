@@ -22,6 +22,7 @@ namespace openPERModels
         public int Variant { get; set; }
         public string RevisionModifications { get; set; }
         public string Description { get; set; }
-
+        public string ThumbImagePath { get; set; }
+        public string ImagePath { get; set; }
     }
 }

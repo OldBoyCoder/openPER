@@ -10,7 +10,7 @@
             @await Html.PartialAsync("_SidebarMenu", Model.Navigation)
         </div>
         <div class="col-lg-8 col-md-8 col-sm-12 col-12">
-            <img src="@Url.Action("ModelImage", "Image", new {Make = Model.Navigation.Breadcrumb.MakeCode, SubMake = Model.Navigation.Breadcrumb.SubMakeCode, Model = Model.Navigation.Breadcrumb.ModelCode})" alt="@(Model.Navigation.Breadcrumb.ModelDescription)" title="@(Model.Navigation.Breadcrumb.ModelDescription)">
+            <img src="@Model.ImagePath" alt="@(Model.Navigation.Breadcrumb.ModelDescription)" title="@(Model.Navigation.Breadcrumb.ModelDescription)">
 
             </div>  
             @*        <div class="container">

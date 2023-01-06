@@ -29,6 +29,7 @@ namespace openPER.Controllers
             _mapper = mapper;
         }
 
+        [ApiExplorerSettings(IgnoreApi = true)]
         public IActionResult Index()
         {
             var language = Helpers.LanguageSupport.SetCultureBasedOnCookie(HttpContext);
@@ -52,17 +53,20 @@ namespace openPER.Controllers
             return View(model);
         }
 
+        [ApiExplorerSettings(IgnoreApi = true)]
         public IActionResult Privacy()
         {
             return View();
         }
 
         [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]
+        [ApiExplorerSettings(IgnoreApi = true)]
         public IActionResult Error()
         {
             return View(new ErrorViewModel { RequestId = Activity.Current?.Id ?? HttpContext.TraceIdentifier });
         }
         [HttpPost]
+        [ApiExplorerSettings(IgnoreApi = true)]
         public IActionResult SetLanguage(SessionOptionsViewModel model)
         {
             var cookieOptions = new CookieOptions
@@ -89,6 +93,7 @@ namespace openPER.Controllers
             return Redirect(Request.GetTypedHeaders().Referer.ToString());
         }
         [Route("Home/SetLanguage/{LanguageCode}")]
+        [ApiExplorerSettings(IgnoreApi = true)]
         public IActionResult SetLanguage(string languageCode)
         {
             var cookieOptions = new CookieOptions
@@ -117,6 +122,7 @@ namespace openPER.Controllers
         }
 
         [HttpPost]
+        [ApiExplorerSettings(IgnoreApi = true)]
         public IActionResult Index(SessionOptionsViewModel model)
         {
             var cookieOptions = new CookieOptions

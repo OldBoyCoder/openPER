@@ -13,6 +13,7 @@ namespace openPERRepositories.Repositories
     {
         internal IConfiguration _config;
         internal string _pathToDb;
+        internal string _pathToCdn;
         public Release84Repository(IConfiguration config)
         {
             _config = config;
@@ -21,10 +22,11 @@ namespace openPERRepositories.Repositories
             if (release != null)
             {
                 _pathToDb = System.IO.Path.Combine(release.FolderName, release.DbName);
+                _pathToCdn = release.CDNRoot;
             }
         }
 
-        public  MapImageModel GetMapAndImageForCatalogue(string makeCode, string subMakeCode, string modelCode,
+        public MapImageModel GetMapAndImageForCatalogue(string makeCode, string subMakeCode, string modelCode,
             string catalogueCode)
         {
             var model = new MapImageModel();
@@ -35,11 +37,11 @@ namespace openPERRepositories.Repositories
             connection.RunSqlAllRows(sql, (reader) =>
             {
                 model.MapName = (reader.IsDBNull(0)) ? "" : reader.GetString(0);
-                model.ImageName = reader.GetString(1);
+                model.ImageName = _pathToCdn + "L_EPERFIG/" + reader.GetString(1);
             }, makeCode, subMakeCode, catalogueCode);
             return model;
         }
-        public  List<GroupImageMapEntryModel> GetGroupMapEntriesForCatalogue(string catalogueCode, string languageCode)
+        public List<GroupImageMapEntryModel> GetGroupMapEntriesForCatalogue(string catalogueCode, string languageCode)
         {
             var map = new List<GroupImageMapEntryModel>();
             using var connection = new SqliteConnection($"Data Source={_pathToDb}");
@@ -66,7 +68,7 @@ namespace openPERRepositories.Repositories
 
         }
 
-        public  MapImageModel GetMapForCatalogueGroup(string make, string subMake, string model, string catalogue, int group)
+        public MapImageModel GetMapForCatalogueGroup(string make, string subMake, string model, string catalogue, int group)
         {
             var map = new MapImageModel();
             using var connection = new SqliteConnection($"Data Source={_pathToDb}");
@@ -87,12 +89,12 @@ namespace openPERRepositories.Repositories
             sql = @"SELECT DISTINCT IMG_NAME
                         FROM GROUPS
                         WHERE GRP_COD = $p1 AND CAT_COD = $p2";
-            connection.RunSqlFirstRowOnly(sql, (reader) => { map.ImageName = reader.GetString(0); }, group, catalogue);
+            connection.RunSqlFirstRowOnly(sql, (reader) => { map.ImageName = _pathToCdn + "L_EPERFIG/" + reader.GetString(0); }, group, catalogue);
 
             return map;
         }
 
-        public  List<SubGroupImageMapEntryModel> GetSubGroupMapEntriesForCatalogueGroup(string catalogueCode, int groupCode, string languageCode)
+        public List<SubGroupImageMapEntryModel> GetSubGroupMapEntriesForCatalogueGroup(string catalogueCode, int groupCode, string languageCode)
         {
             var map = new List<SubGroupImageMapEntryModel>();
             using var connection = new SqliteConnection($"Data Source={_pathToDb}");
@@ -118,7 +120,7 @@ namespace openPERRepositories.Repositories
             return map;
         }
 
-        public  string GetImageNameForDrawing(string make, string model, string catalogue, int group, int subgroup, int subSubGroup,
+        public string GetImageNameForDrawing(string catalogue, int group, int subgroup, int subSubGroup,
             int drawing, int revision)
         {
             string rc = "";
@@ -133,7 +135,7 @@ namespace openPERRepositories.Repositories
             return rc;
         }
 
-        public  List<MakeModel> GetAllMakes()
+        public List<MakeModel> GetAllMakes()
         {
             var rc = new List<MakeModel>
             {
@@ -158,7 +160,7 @@ namespace openPERRepositories.Repositories
             return rc;
         }
 
-        public  List<SubSubGroupModel> GetSubSubGroupsForCatalogueGroupSubGroup(string catalogueCode, int groupCode, int subGroupCode, string languageCode)
+        public List<SubSubGroupModel> GetSubSubGroupsForCatalogueGroupSubGroup(string catalogueCode, int groupCode, int subGroupCode, string languageCode)
         {
             var rc = new List<SubSubGroupModel>();
             using var connection = new SqliteConnection($"Data Source={_pathToDb}");
@@ -181,19 +183,19 @@ namespace openPERRepositories.Repositories
             }, catalogueCode, groupCode, subGroupCode, languageCode);
             return rc;
         }
-        public  List<DrawingKeyModel> GetDrawingKeysForSubSubGroup(string makeCode, string modelCode, string catalogueCode, int groupCode,
+        public List<DrawingKeyModel> GetDrawingKeysForSubSubGroup(string makeCode, string modelCode, string catalogueCode, int groupCode,
             int subGroupCode, int subSubGroupCode, string languageCode)
         {
             var drawings = new List<DrawingKeyModel>();
             using var connection = new SqliteConnection($"Data Source={_pathToDb}");
-            var sql = @"SELECT DISTINCT CAT_COD, GRP_COD, SGRP_COD, SGS_COD, VARIANTE, IFNULL( PATTERN, ''), REVISIONE, IFNULL(MODIF, ''), DSC
+            var sql = @"SELECT DISTINCT CAT_COD, GRP_COD, SGRP_COD, SGS_COD, VARIANTE, IFNULL( PATTERN, ''), REVISIONE, IFNULL(MODIF, ''), DSC, IMG_PATH
                             FROM DRAWINGS
                             JOIN TABLES_DSC TD ON TD.LNG_COD = $p5 AND TD.COD = TABLE_DSC_COD
                             WHERE CAT_COD = $p1 AND GRP_COD = $p2 AND SGRP_COD = $p3 AND SGS_COD = $p4
                             ORDER BY GRP_COD, SGRP_COD, SGS_COD, DRW_NUM";
             connection.RunSqlAllRows(sql, (reader) =>
             {
-                var language = new DrawingKeyModel()
+                var drawing = new DrawingKeyModel()
                 {
                     MakeCode = makeCode,
                     ModelCode = modelCode,
@@ -207,24 +209,28 @@ namespace openPERRepositories.Repositories
                     RevisionModifications = reader.GetString(7),
                     Description = reader.GetString(8)
                 };
-                drawings.Add(language);
+                var ThumbImagePath = reader.GetString(9);
+                var imageParts = ThumbImagePath.Split(new[] { '.' });
+                drawing.ThumbImagePath = _pathToCdn + imageParts[0] + ".th." + imageParts[1];
+
+                drawings.Add(drawing);
             }, catalogueCode, groupCode, subGroupCode, subSubGroupCode, languageCode);
 
             return drawings;
         }
-        public  List<DrawingKeyModel> GetDrawingKeysForSubGroup(string makeCode, string modelCode, string catalogueCode, int groupCode,
+        public List<DrawingKeyModel> GetDrawingKeysForSubGroup(string makeCode, string modelCode, string catalogueCode, int groupCode,
             int subGroupCode, string languageCode)
         {
             var drawings = new List<DrawingKeyModel>();
             using var connection = new SqliteConnection($"Data Source={_pathToDb}");
-            var sql = @"SELECT DISTINCT CAT_COD, GRP_COD, SGRP_COD, SGS_COD, VARIANTE, IFNULL( PATTERN, ''), REVISIONE, IFNULL(MODIF, ''), DSC
+            var sql = @"SELECT DISTINCT CAT_COD, GRP_COD, SGRP_COD, SGS_COD, VARIANTE, IFNULL( PATTERN, ''), REVISIONE, IFNULL(MODIF, ''), DSC, IMG_PATH
                             FROM DRAWINGS
                             JOIN TABLES_DSC TD ON TD.LNG_COD = $p4 AND TD.COD = TABLE_DSC_COD
                             WHERE CAT_COD = $p1 AND GRP_COD = $p2 AND SGRP_COD = $p3
                             ORDER BY GRP_COD, SGRP_COD, SGS_COD, DRW_NUM";
             connection.RunSqlAllRows(sql, (reader) =>
             {
-                var language = new DrawingKeyModel()
+                var drawing = new DrawingKeyModel()
                 {
                     MakeCode = makeCode,
                     ModelCode = modelCode,
@@ -238,23 +244,27 @@ namespace openPERRepositories.Repositories
                     RevisionModifications = reader.GetString(7),
                     Description = reader.GetString(8)
                 };
-                drawings.Add(language);
+                var ThumbImagePath = reader.GetString(9);
+                var imageParts = ThumbImagePath.Split(new[] { '.' });
+                drawing.ThumbImagePath = _pathToCdn + imageParts[0] + ".th." + imageParts[1];
+
+                drawings.Add(drawing);
             }, catalogueCode, groupCode, subGroupCode, languageCode);
 
             return drawings;
         }
-        public  List<DrawingKeyModel> GetDrawingKeysForGroup(string makeCode, string modelCode, string catalogueCode, int groupCode, string languageCode)
+        public List<DrawingKeyModel> GetDrawingKeysForGroup(string makeCode, string modelCode, string catalogueCode, int groupCode, string languageCode)
         {
             var drawings = new List<DrawingKeyModel>();
             using var connection = new SqliteConnection($"Data Source={_pathToDb}");
-            var sql = @"SELECT DISTINCT CAT_COD, GRP_COD, SGRP_COD, SGS_COD, VARIANTE, IFNULL( PATTERN, ''), REVISIONE, IFNULL(MODIF, ''), DSC
+            var sql = @"SELECT DISTINCT CAT_COD, GRP_COD, SGRP_COD, SGS_COD, VARIANTE, IFNULL( PATTERN, ''), REVISIONE, IFNULL(MODIF, ''), DSC, IMG_PATH
                             FROM DRAWINGS
                             JOIN TABLES_DSC TD ON TD.LNG_COD = $p3 AND TD.COD = TABLE_DSC_COD
                             WHERE CAT_COD = $p1 AND GRP_COD = $p2 
                             ORDER BY GRP_COD, SGRP_COD, SGS_COD, DRW_NUM";
             connection.RunSqlAllRows(sql, (reader) =>
             {
-                var language = new DrawingKeyModel()
+                var drawing = new DrawingKeyModel()
                 {
                     MakeCode = makeCode,
                     ModelCode = modelCode,
@@ -266,15 +276,17 @@ namespace openPERRepositories.Repositories
                     VariantPattern = reader.GetString(5),
                     Revision = reader.GetInt32(6),
                     RevisionModifications = reader.GetString(7),
-                    Description = reader.GetString(8)
-
+                    Description = reader.GetString(8),
                 };
-                drawings.Add(language);
+                var ThumbImagePath = reader.GetString(9);
+                var imageParts = ThumbImagePath.Split(new[] { '.' });
+                drawing.ThumbImagePath = _pathToCdn + imageParts[0] + ".th." + imageParts[1];
+                drawings.Add(drawing);
             }, catalogueCode, groupCode, languageCode);
 
             return drawings;
         }
-        public  TableModel GetTable(string catalogueCode, int groupCode, int subGroupCode, int sgsCode, int drawingNumber, int revision, string languageCode)
+        public TableModel GetTable(string catalogueCode, int groupCode, int subGroupCode, int sgsCode, int drawingNumber, int revision, string languageCode)
         {
             var t = new TableModel();
             using var connection = new SqliteConnection($"Data Source={_pathToDb}");
@@ -293,6 +305,7 @@ namespace openPERRepositories.Repositories
             t.DrawingNumbers = GetDrawingNumbers(catalogueCode, groupCode, subGroupCode, sgsCode, revision, connection);
             // t.Narratives = GetSgsNarrative(catalogueCode, groupCode, subGroupCode, sgsCode, languageCode);
             t.CurrentDrawing = drawingNumber;
+            t.ImagePath = _pathToCdn + GetImageNameForDrawing(catalogueCode, groupCode, subGroupCode, sgsCode, drawingNumber, revision);
             return t;
         }
         private static List<TablePartModel> GetTableParts(string catalogueCode, int groupCode, int subGroupCode, int sgsCode, int drawingNumber, int revision, string languageCode, SqliteConnection connection)
@@ -424,7 +437,7 @@ namespace openPERRepositories.Repositories
         private static bool IsPartAComponent(TablePartModel part, SqliteConnection connection)
         {
             var rc = false;
-            var sql = @"SELECT DISTINCT CPLX_PRT_COD FROM CPXDATA WHERE CPLX_PRT_COD = $p1";
+            var sql = @"SELECT DISTINCT CPLX_PRT_COD FROM CLICHE WHERE CPLX_PRT_COD = $p1";
             connection.RunSqlFirstRowOnly(sql, (reader) =>
             {
                 rc = true;
@@ -525,7 +538,9 @@ namespace openPERRepositories.Repositories
                     Code = reader.GetString(0),
                     Description = reader.GetString(1),
                     MakeCode = makeCode,
-                    SubMakeCode = subMake
+                    SubMakeCode = subMake,
+                    ImagePath = _pathToCdn + $"SmallModelImages{subMake}/{reader.GetString(0).ToUpper()}.jpg"
+
                 };
                 rc.Add(m);
             }, subMake);
@@ -690,9 +705,9 @@ namespace openPERRepositories.Repositories
             return rc;
         }
 
-        public MvsModel GetMvsDetails(string mvsCode, string mvsVersion, string mvsSeries, string colourCode, string languageCode)
+        public MvsData GetMvsDetails(string mvsCode, string mvsVersion, string mvsSeries, string colourCode, string languageCode)
         {
-            var m = new MvsModel();
+            var m = new MvsData();
             using var connection = new SqliteConnection($"Data Source={_pathToDb}");
             var sql = @"select M.MOD_COD, M.MVS_VERSION, M.MVS_SERIE, MVS_DSC, MVS_SINCOM_VERS,MVS_ENGINE_TYPE, MV.VMK_DSC, VV.VMK_DSC,
                         M.VMK_TYPE_M||VMK_COD_M, M.VMK_TYPE_V||VMK_COD_V,
@@ -706,9 +721,9 @@ namespace openPERRepositories.Repositories
 					where M.MOD_COD = $p2 AND MVS_VERSION = $p3 AND MVS_SERIE = $p4";
             connection.RunSqlFirstRowOnly(sql, (reader) =>
             {
-                m.MvsCode = reader.GetString(0);
-                m.MvsVersion = reader.GetString(1);
-                m.MvsSeries = reader.GetString(2);
+                m.MvsMark = reader.GetString(0);
+                m.MvsModel = reader.GetString(1);
+                m.MvsVersion = reader.GetString(2);
                 m.Description = reader.GetString(3);
                 m.SincomVersion = reader.GetString(4);
                 m.EngineType = reader.GetString(5);
@@ -748,14 +763,14 @@ namespace openPERRepositories.Repositories
         {
             var drawings = new List<DrawingKeyModel>();
             using var connection = new SqliteConnection($"Data Source={_pathToDb}");
-            var sql = @"SELECT DISTINCT CAT_COD, GRP_COD, SGRP_COD, SGS_COD, VARIANTE, REVISIONE, DSC
+            var sql = @"SELECT DISTINCT CAT_COD, GRP_COD, SGRP_COD, SGS_COD, VARIANTE, REVISIONE, DSC, IMG_PATH
                             FROM DRAWINGS
                             JOIN TABLES_DSC TD ON TD.LNG_COD = $p2 AND TD.COD = TABLE_DSC_COD
                             WHERE CAT_COD = $p1
                             ORDER BY GRP_COD, SGRP_COD, SGS_COD, VARIANTE, REVISIONE";
             connection.RunSqlAllRows(sql, (reader) =>
             {
-                var language = new DrawingKeyModel()
+                var drawing = new DrawingKeyModel()
                 {
                     MakeCode = makeCode,
                     ModelCode = modelCode,
@@ -767,7 +782,10 @@ namespace openPERRepositories.Repositories
                     Revision = reader.GetInt32(5),
                     Description = reader.GetString(6)
                 };
-                drawings.Add(language);
+                var ThumbImagePath = reader.GetString(7);
+                var imageParts = ThumbImagePath.Split(new[] { '.' });
+                drawing.ThumbImagePath = _pathToCdn + imageParts[0] + ".th." + imageParts[1];
+                drawings.Add(drawing);
             }, catalogueCode, languageCode);
             return drawings;
         }
@@ -790,13 +808,13 @@ namespace openPERRepositories.Repositories
         {
             var drawings = new List<DrawingKeyModel>();
             using var connection = new SqliteConnection($"Data Source={_pathToDb}");
-            var sql = @"SELECT DISTINCT CPD_NUM, CLH_COD
+            var sql = @"SELECT DISTINCT CPD_NUM, CLH_COD, IMG_PATH
                             FROM CLICHE
                             WHERE CPLX_PRT_COD = $p1
                             ORDER BY CPD_NUM";
             connection.RunSqlAllRows(sql, (reader) =>
             {
-                var language = new DrawingKeyModel()
+                var drawing = new DrawingKeyModel()
                 {
                     MakeCode = makeCode,
                     ModelCode = modelCode,
@@ -808,7 +826,12 @@ namespace openPERRepositories.Repositories
                     ClichePartDrawingNumber = reader.GetInt32(0),
                     ClichePartCode = reader.GetString(1)
                 };
-                drawings.Add(language);
+                var ThumbImagePath = reader.GetString(2);
+                var imageParts = ThumbImagePath.Split(new[] { '.' });
+                drawing.ThumbImagePath = _pathToCdn + imageParts[0] + ".th." + imageParts[1];
+                drawing.ImagePath = _pathToCdn + ThumbImagePath;
+
+                drawings.Add(drawing);
             }, clichePartNumber);
             return drawings;
         }
@@ -915,6 +938,38 @@ namespace openPERRepositories.Repositories
             }
             return p;
         }
+        public List<PartModel> GetPartSearch(string modelName, string partDescription, string languageCode)
+        {
+            var rc = new List<PartModel>();
+            using (var connection = new SqliteConnection($"Data Source={_pathToDb}"))
+            {
+                var sql = @"select P.PRT_COD, C.CDS_COD, C.CDS_DSC,F.FAM_COD, F.FAM_DSC, U.UM_COD, U.UM_DSC, PRT_WEIGHT  from PARTS P 
+                                JOIN CODES_DSC C ON C.CDS_COD = P.CDS_COD AND C.LNG_COD = $p1
+                                JOIN FAM_DSC F ON F.FAM_COD = P.PRT_FAM_COD AND F.LNG_COD = $p1
+                                JOIN APPLICABILITY A ON A.PRT_COD = P.PRT_COD 
+                                JOIN catalogues CT ON CT.CAT_COD = A.CAT_COD
+                                LEFT OUTER  JOIN UN_OF_MEAS U ON U.UM_COD = P.UM_COD
+                                LEFT OUTER JOIN RPLNT R ON R.RPL_COD = P.PRT_COD
+                                where C.CDS_DSC LIKE '%" + partDescription + "%' AND CT.CAT_DSC LIKE '%" + modelName + "%'";
+                connection.RunSqlAllRows(sql, (reader) =>
+                {
+                    var p = new PartModel
+                    {
+                        PartNumber = reader.GetString(0),
+                        Description = reader.GetString(2),
+                        FamilyCode = reader.GetString(3),
+                        FamilyDescription = reader.GetString(4),
+                        UnitOfSale = reader.GetString(5),
+                        Weight = reader.GetInt32(6)
+                    };
+                    p.Drawings = GetDrawingsForPartNumber(p.PartNumber, languageCode);
+                    rc.Add(p);
+                }, languageCode);
+
+            }
+            return rc;
+        }
+
 
         private List<PartDrawing> GetDrawingsForPartNumber(string partNumber, string languageCode)
         {
@@ -984,6 +1039,175 @@ namespace openPERRepositories.Repositories
             return drawings;
         }
 
+        public List<MvsData> GetMvsDetails(string mvsMarque, string mvsModel, string mvsVersion, string mvsSeries, string mvsGuide, string mvsShopEquipment, string colourCode, string languageCode)
+        {
+            using var connection = new SqliteConnection($"Data Source={_pathToDb}");
+            List<MvsData> rc;
+            if (!string.IsNullOrEmpty(mvsSeries))
+            {
+                rc = GetMvsDataWithDetailedMvsCode(mvsMarque, mvsModel, mvsVersion, mvsSeries, mvsGuide, mvsShopEquipment, colourCode, languageCode);
+                if (rc.Count == 0)
+                    rc = GetMvsDataWithVagueMvsCode(mvsMarque, mvsModel, mvsVersion, mvsSeries, mvsGuide, mvsShopEquipment, colourCode, languageCode);
+            }
+            else
+            {
+                rc = GetMvsDataWithVagueMvsCode(mvsMarque, mvsModel, mvsVersion, mvsSeries, mvsGuide, mvsShopEquipment, colourCode, languageCode);
+            }
 
+
+            return rc;
+        }
+        private List<MvsData> GetMvsDataWithDetailedMvsCode(string mvsMarque, string mvsModel, string mvsVersion, string mvsSeries, string mvsGuide, string mvsShopEquipment, string colourCode, string languageCode)
+        {
+            using var connection = new SqliteConnection($"Data Source={_pathToDb}");
+            var rc = new List<MvsData>();
+            var sincom = mvsMarque + mvsModel + mvsVersion + mvsGuide + mvsShopEquipment;
+            var sql = @"SELECT M.CAT_COD, MVS_DSC, VMK_TYPE_M, VMK_COD_M, VMK_TYPE_V, VMK_COD_V, VMK_TYPE_R, 
+                            VMK_COD_R, MVS_ENGINE_TYPE, MVS_DOORS_NUM, SINCOM, PATTERN,
+                            C.CAT_DSC, C.MK_COD, C.MK2_COD,
+                            MOD.CMG_DSC
+                            FROM MVS M
+                            JOIN CATALOGUES C ON C.CAT_COD = M.CAT_COD
+                            JOIN COMM_MODGRP MOD ON MOD.MK2_COD = C.MK2_COD AND MOD.CMG_COD = C.CMG_COD
+                            WHERE SINCOM = $p1";
+            connection.RunSqlAllRows(sql, (reader) =>
+            {
+                var p = new MvsData
+                {
+                    MvsMark = mvsMarque,
+                    MvsModel = mvsModel,
+                    MvsVersion = mvsVersion,
+                    MvsSeries = mvsSeries,
+                    MvsGuide = mvsGuide,
+                    MvsShopEquipment = mvsShopEquipment,
+                    CatalogueCode = reader.GetString(0),
+                    Description = reader.IsDBNull(1) ? "" : reader.GetString(1),
+                    EngineType = reader.IsDBNull(8) ? "" : reader.GetString(8),
+                    SincomVersion = reader.IsDBNull(10) ? "" : reader.GetString(10),
+                    CatalogueDescription = reader.IsDBNull(12) ? "" : reader.GetString(12),
+                    MakeCode = reader.IsDBNull(13) ? "" : reader.GetString(13),
+                    SubMakeCode = reader.IsDBNull(14) ? "" : reader.GetString(14),
+                    ModelDescription = reader.IsDBNull(15) ? "" : reader.GetString(15)
+                };
+                rc.Add(p);
+            }, sincom);
+
+            return rc;
+
+        }
+        private List<MvsData> GetMvsDataWithVagueMvsCode(string mvsMarque, string mvsModel, string mvsVersion, string mvsSeries, string mvsGuide, string mvsShopEquipment, string colourCode, string languageCode)
+        {
+            using var connection = new SqliteConnection($"Data Source={_pathToDb}");
+            var rc = new List<MvsData>();
+            var sql = @"SELECT M.CAT_COD, MVS_DSC, VMK_TYPE_M, VMK_COD_M, VMK_TYPE_V, VMK_COD_V, VMK_TYPE_R, 
+                            VMK_COD_R, MVS_ENGINE_TYPE, MVS_DOORS_NUM, SINCOM, PATTERN,
+                            C.CAT_DSC, C.MK_COD, C.MK2_COD,
+                            MOD.CMG_DSC
+                            FROM MVS M
+                            JOIN CATALOGUES C ON C.CAT_COD = M.CAT_COD
+                            JOIN COMM_MODGRP MOD ON MOD.MK2_COD = C.MK2_COD AND MOD.CMG_COD = C.CMG_COD
+                            WHERE MOD_COD = $p1 AND MVS_VERSION = $p2 AND MVS_SERIE = $p3";
+            connection.RunSqlAllRows(sql, (reader) =>
+            {
+                var p = new MvsData
+                {
+                    MvsMark = mvsMarque,
+                    MvsModel = mvsModel,
+                    MvsVersion = mvsVersion,
+                    MvsSeries = mvsSeries,
+                    MvsGuide = mvsGuide,
+                    MvsShopEquipment = mvsShopEquipment,
+                    CatalogueCode = reader.GetString(0),
+                    Description = reader.IsDBNull(1) ? "" : reader.GetString(1),
+                    EngineType = reader.IsDBNull(8) ? "" : reader.GetString(8),
+                    SincomVersion = reader.IsDBNull(10) ? "" : reader.GetString(10),
+                    CatalogueDescription = reader.IsDBNull(12) ? "" : reader.GetString(12),
+                    MakeCode = reader.IsDBNull(13) ? "" : reader.GetString(13),
+                    SubMakeCode = reader.IsDBNull(14) ? "" : reader.GetString(14),
+                    ModelDescription = reader.IsDBNull(15) ? "" : reader.GetString(15)
+                };
+                rc.Add(p);
+            }, mvsMarque, mvsModel, mvsVersion);
+
+            return rc;
+
+        }
+
+        public string GetInteriorColourDescription(string catCode, string interiorColourCode, string language)
+        {
+            using var connection = new SqliteConnection($"Data Source={_pathToDb}");
+            var rc = "Unknown";
+            var sql = @"SELECT DSC_COLORE_INT_VET
+                            FROM INTERNAL_COLOURS_DSC
+                            WHERE CAT_COD = $p1 AND COD_COLORE_INT_VET = $p2 AND LNG_COD = $p3";
+            connection.RunSqlFirstRowOnly(sql, (reader) =>
+            {
+                rc = reader.GetString(0);
+            }, catCode, interiorColourCode, language);
+
+            return rc;
+        }
+        public string GetExteriorColourDescription(string catCode, string exteriorColourCode, string language)
+        {
+            using var connection = new SqliteConnection($"Data Source={_pathToDb}");
+            var rc = "Unknown";
+            var sql = @"SELECT DSC_COLORE_EXT_VET
+                            FROM EXTERNAL_COLOURS_DSC
+                            WHERE CAT_COD = $p1 AND COD_COLORE_EXT_VET = $p2 AND LNG_COD = $p3";
+            connection.RunSqlFirstRowOnly(sql, (reader) =>
+            {
+                rc = reader.GetString(0);
+            }, catCode, exteriorColourCode, language);
+
+            return rc;
+        }
+
+        public string GetOptionCodeDescription(string catCode, string code, string language)
+        {
+            using var connection = new SqliteConnection($"Data Source={_pathToDb}");
+            var rc = code;
+            var sql = @"SELECT VMK_DSC
+                            FROM CARAT_DSC
+                            WHERE CAT_COD = $p1 AND VMK_TYPE = $p2 AND LNG_COD = $p3";
+            connection.RunSqlFirstRowOnly(sql, (reader) =>
+            {
+                rc = reader.GetString(0);
+            }, catCode, code, language);
+
+            return rc;
+        }
+        public string GetOptionValueDescription(string catCode, string code, string value, string language)
+        {
+            using var connection = new SqliteConnection($"Data Source={_pathToDb}");
+            var rc = value;
+            var sql = @"SELECT VMK_DSC
+                            FROM VMK_DSC
+                            WHERE CAT_COD = $p1 AND VMK_TYPE = $p2 AND LNG_COD = $p3 AND VMK_COD = $p4";
+            connection.RunSqlFirstRowOnly(sql, (reader) =>
+            {
+                rc = reader.GetString(0);
+            }, catCode, code, language, value);
+
+            return rc;
+        }
+        public string GetOptionValueDescription(string catCode, string code, string language)
+        {
+            using var connection = new SqliteConnection($"Data Source={_pathToDb}");
+            var rc = code;
+            var sql = @"SELECT VMK_DSC
+                            FROM VMK_DSC
+                            WHERE CAT_COD = $p1 AND VMK_TYPE = $p2 AND LNG_COD = $p3 AND VMK_COD IS NULL";
+            connection.RunSqlFirstRowOnly(sql, (reader) =>
+            {
+                rc = reader.GetString(0);
+            }, catCode, code, language);
+
+            return rc;
+        }
+
+        public string GetImageNameForModel(string makeCode, string subMakeCode, string modelCode)
+        {
+            return _pathToCdn + $"ModelImages{subMakeCode}/{modelCode.ToUpper()}.jpg";
+        }
     }
 }
