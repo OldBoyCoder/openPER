@@ -809,6 +809,7 @@ namespace openPERRepositories.Repositories
         public void PopulateBreadcrumbDescriptions(BreadcrumbModel breadcrumb, string languageCode)
         {
             using var connection = new MySqlConnection(_pathToDb);
+            breadcrumb.Language = languageCode;
             if (breadcrumb.MakeCode != null) breadcrumb.MakeDescription = GetMakeDescription(breadcrumb.MakeCode);
             if (breadcrumb.SubMakeCode != null) breadcrumb.SubMakeDescription = GetSubMakeDescription(breadcrumb.MakeCode, breadcrumb.SubMakeCode);
             if (breadcrumb.ModelCode != null) breadcrumb.ModelDescription = GetModelDescription(breadcrumb.MakeCode, breadcrumb.SubMakeCode, breadcrumb.ModelCode);

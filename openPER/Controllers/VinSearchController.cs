@@ -48,7 +48,8 @@ namespace openPER.Controllers
             VinSearchViewModel vinSearch = null;
 
             var x = new Release84VinSearch(_pathToVindataCH, _pathToVindataRT);
-            var language = Helpers.LanguageSupport.SetCultureBasedOnCookie(HttpContext);
+            // TODO Get language from route
+            var language = "3";
             if (selectedModel != null && chassisNumber != null)
             {
                 var searchResult = x.FindVehicleByModelAndChassis(selectedModel.PadLeft(3, '0'), chassisNumber.PadLeft(8, '0'));
@@ -70,7 +71,8 @@ namespace openPER.Controllers
         {
             var x = new Release84VinSearch(_pathToVindataCH, _pathToVindataRT);
 
-            var language = Helpers.LanguageSupport.SetCultureBasedOnCookie(HttpContext);
+            // TODO Get language from route
+            var language = "3";
             if (string.IsNullOrEmpty(fullVin) || fullVin.Length != 17)
                 return View("Index", null);
 

@@ -16,11 +16,11 @@ namespace openPER.Controllers
             _rep = repository;
             _mapper = mapper;
         }
-        [Route("Makes")]
+        [Route("Makes/{language}")]
         [ApiExplorerSettings(IgnoreApi = true)]
-        public IActionResult Index()
+        public IActionResult Index(string language)
         {
-            var language = Helpers.LanguageSupport.SetCultureBasedOnCookie(HttpContext);
+            Helpers.LanguageSupport.SetCultureBasedOnRoute(language);
 
             var breadcrumb = new BreadcrumbModel ();
             _rep.PopulateBreadcrumbDescriptions(breadcrumb, language);
@@ -34,7 +34,8 @@ namespace openPER.Controllers
                     SideMenuItems = new SideMenuItemsViewModel
                     {
                         AllMakes = _mapper.Map<List<MakeModel>, List<MakeViewModel>>(_rep.GetAllMakes()),
-                    }
+                    },
+                    Language = language
                 }
 
             };

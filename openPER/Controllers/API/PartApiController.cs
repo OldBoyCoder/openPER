@@ -30,7 +30,8 @@ namespace openPER.Controllers.API
         public IActionResult GetPart(string partCode)
         {
             var p = new PartSearchViewModel();
-            var language = Helpers.LanguageSupport.SetCultureBasedOnCookie(HttpContext);
+            // TODO Get language from route
+            var language = "3";
 
             if (partCode == null) return NotFound();
             p.PartNumberSearch = partCode;
@@ -43,7 +44,8 @@ namespace openPER.Controllers.API
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         public IActionResult GetPart(string modelName, string partDescription)
         {
-            var language = Helpers.LanguageSupport.SetCultureBasedOnCookie(HttpContext);
+            // TODO Get language from route
+            var language = "3";
 
             if (string.IsNullOrEmpty(modelName) || string.IsNullOrEmpty(partDescription)) return NotFound();
 
