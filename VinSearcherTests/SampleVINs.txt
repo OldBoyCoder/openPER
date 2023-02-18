@@ -1,0 +1,46 @@
+﻿ZFA25000002E43936 - Not found
+ZFA22500000288407 - 3N - NUOVO FIORINO-QUBO (2007-....)  - Note 225 is not MVS code that is 300
+AFZ146U0303515292 - Not found
+ZFA25000002888198 - Not found
+ZFA3120000JB85609 - Not found
+3C4PFBHY6FT656475
+zfa18200005039901 - 1M - BRAVA G.98 BZ/DS (1998-2001) - In 18
+ZFA19800004275255 - 3Y - NUOVA BRAVO MY 2010 (2010-2014) - Not in 18
+ZFA19900000913670 - 51 - NUOVA PUNTO MY2012 (2012-2013)
+ZFA23000006168641 - PE - DUCATO'94 DIESEL (1994-2002)
+zfa23000005673744 - PE - DUCATO'94 DIESEL (1994-2002)
+ZFA18300000040598 - My B
+
+basic details always in CH
+More details in RT
+
+NM432300003050000 is in CH 
+NM432300003092525 isn't in RT under the VIN but can be got through model (110) and chassy (03092525)
+
+My B
+MVS		CHASSY		ORGANIZATION	MOTOR	DATE		INT_COLOR	VIN
+1838290	00040598	00040754		0307159	19981224	402	
+VIN : ZFA18300000040598
+Ricambio : 40754
+
+Earliest date 
+Latest date		
+
+There are two sources of data for vehicle information in release 84 of ePER
+The CH file.  This contains details of xxx vehicles
+The RT file.  This contains details of xxx vehicles.  Every vehicle in the RT file is also in the CH file.  The data in the RT file is richer than that contained in the CH file but there are some
+items that are only in the CH file such as production date.
+
+In both files there is evidence of incorrect data.  Examples found so far:
+I suspect the files we're provided with are based on a bring together of data from a variety of sources and production lines over a prolonged time period.
+This gives plenty of opportunity to introduce differences in approach, format and conventions.  I've tried to reconcile these as best I can but if you see anything odd let me know
+Also let me know if ePer can find your car but openPer can't, it may mean I've misunderstood something in the data. 
+Bizarre production dates.  Most dates ar eiher six characters in format YYMMDD or eight characters in format YYYYMMDD.  However, there are many examples of other date formats
+One in particular seems to affect cars produced for the Indian market.  I've tried to puzzle out these date formats without success.  Suffice to say if the date looks weird in openPER
+then let me know, especially if you know the production for your car as that might help me understand the format.
+Batch of chassis numbers in the CH table with a B prefix - could be OCRed incorrectly from 0 I suppose? 44620 of them
+Batch of chassis numbers in the CH table with a BZ prefix 
+Batch of chassis numbers in the CH table with a BS prefix 
+
+CREATE TABLE VIN_DATA_RT_NOMATCH1 AS select * from VIN_DATA_RT WHERE VIN NOT IN (SELECT VIN FROM VIN_DATA_CH)
+CREATE TABLE VIN_DATA_RT_NOMATCH2 AS SELECT *  FROM VIN_DATA_RT_NOMATCH1  WHERE MODELLO||VERSIONE||SERIE || '0' || trim(TELAIO) NOT IN (SELECT substr(MVS,1, 7) || trim(CHASSY) FROM VIN_DATA_CH)

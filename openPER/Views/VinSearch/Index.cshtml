@@ -6,12 +6,37 @@
 }
 @if (Model != null && Model.MvsData != null)
 {
-    <table class="table-sm">
+    @foreach (var result in Model.MvsData)
+    {
+        <table class="table-sm">
+            <caption>List of vehicle details</caption>
+            <tr><td>Model</td><td>@Html.DisplayTextFor(m=>result.FullMvsCode) | @Html.DisplayTextFor(m=>result.Description)</td></tr>
+            <tr><td>Chassis No.</td><td>@Html.DisplayTextFor(m=>m.ChassisNumber)</td></tr>
+            <!-- TODO this shouldn't be hardcoded as a BArchetta' -->
+            <tr><td>Catalogue</td><td>@Html.ActionLink(result.CatalogueCode +" | "+result.CatalogueDescription, "Index", "Groups", new { MakeCode=result.MakeCode,SubMakeCode=result.SubMakeCode, ModelCode=result.ModelCode, CatalogueCode=result.CatalogueCode})</td></tr>
+            <tr><td>MVS</td><td>@Html.DisplayTextFor(m=>result.FullMvsCode) | @Html.DisplayTextFor(m=>result.Description)</td></tr>
+            <tr><td>Engine stamp</td><td>@Html.DisplayTextFor(m=>result.EngineType)</td></tr>
+            <tr><td>Version code</td><td>@Html.DisplayTextFor(m=>result.SincomVersion)</td></tr>
+            <tr><td>Version</td><td>@Html.DisplayTextFor(m=>result.VariantCode) | @Html.DisplayTextFor(m=>result.VariantDescription)</td></tr>
+            <tr><td>Engine version</td><td>@Html.DisplayTextFor(m=>result.EngineCode) | @Html.DisplayTextFor(m=>result.EngineDescription)</td></tr>
+            <tr><td>Interior colour</td><td>@Html.DisplayTextFor(m=>Model.InteriorColourCode) | @Html.DisplayTextFor(m=>Model.InteriorColourDesc)</td></tr>
+            <tr><td>Exterior colour</td><td>@Html.DisplayTextFor(m=>Model.ExteriorColourCode) | @Html.DisplayTextFor(m=>Model.ExteriorColourDesc)</td></tr>
+            <tr><td>Production date</td><td>@Html.DisplayTextFor(m=>m.ProductionDate)</td></tr>
+            <tr><td>Vehicle No.</td><td>@Html.DisplayTextFor(m=>m.Organization)</td></tr>
+            <tr><td>Engine No.</td><td>@Html.DisplayTextFor(m=>m.EngineNumber)</td></tr>
+            @foreach (var option in Model.Options.OrderBy(x=>x.Sequence).ThenBy(x=>x.CodeDescription))
+            {
+                <tr><td>@Html.DisplayTextFor(m=>option.CodeDescription) (@Html.DisplayTextFor(m=>option.Code))</td><td>@Html.DisplayTextFor(m=>option.ValueDescription)</td></tr>
+
+            }
+        </table>
+    }
+    @*    <table class="table-sm">
         <caption>List of vehicle details</caption>
-        <tr><td>Model</td><td>@Html.DisplayTextFor(m=>m.MvsData.MvsCode) | @Html.DisplayTextFor(m=>m.MvsData.ModelDescription)</td></tr>
+        <tr><td>Model</td><td>@Html.DisplayTextFor(m=>m.MvsData.MvsMark) | @Html.DisplayTextFor(m=>m.MvsData.ModelDescription)</td></tr>
         <tr><td>Chassis No.</td><td>@Html.DisplayTextFor(m=>m.ChassisNumber)</td></tr>
         <!-- TODO this shouldn't be hardcoded as a BArchetta' -->
-        <tr><td>Catalogue</td><td>@Html.ActionLink(Model.MvsData.CatalogueCode +" | "+Model.MvsData.CatalogueDescription, "Index", "Groups", new { Model.ReleaseCode, MakeCode=Model.MvsData.MakeCode,SubMakeCode=Model.MvsData.SubMakeCode, ModelCode=Model.MvsData.ModelCode, CatalogueCode=Model.MvsData.CatalogueCode})</td></tr>
+        <tr><td>Catalogue</td><td>@Html.ActionLink(Model.MvsData.CatalogueCode +" | "+Model.MvsData.CatalogueDescription, "Index", "Groups", new { MakeCode=Model.MvsData.MakeCode,SubMakeCode=Model.MvsData.SubMakeCode, ModelCode=Model.MvsData.ModelCode, CatalogueCode=Model.MvsData.CatalogueCode})</td></tr>
         <tr><td>MVS</td><td>@Html.DisplayTextFor(m=>m.MvsData.FullMvsCode) | @Html.DisplayTextFor(m=>m.MvsData.Description)</td></tr>
         <tr><td>Engine stamp</td><td>@Html.DisplayTextFor(m=>m.MvsData.EngineType)</td></tr>
         <tr><td>Version code</td><td>@Html.DisplayTextFor(m=>m.MvsData.SincomVersion)</td></tr>
@@ -21,7 +46,7 @@
         <tr><td>Production date</td><td>@Html.DisplayTextFor(m=>m.ProductionDate)</td></tr>
         <tr><td>Vehicle No.</td><td>@Html.DisplayTextFor(m=>m.Organization)</td></tr>
         <tr><td>Engine No.</td><td>@Html.DisplayTextFor(m=>m.EngineNumber)</td></tr>
-    </table>
+    </table>*@
 }
 else
 {

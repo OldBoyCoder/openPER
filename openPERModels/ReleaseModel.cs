@@ -6,6 +6,8 @@
         public string FolderName { get; set; }
         public string DbName { get; set; }
         public string Description { get; set; }
-        public string VinData { get; set; }
+        public string VinDataCH { get; set; }
+        public string VinDataRT { get; set; }
+        public string CDNRoot { get; set; }
     }
 }

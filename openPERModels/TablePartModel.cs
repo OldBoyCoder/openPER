@@ -4,7 +4,7 @@ namespace openPERModels
 {
     public class TablePartModel
     {
-        public decimal PartNumber { get; set; }
+        public string PartNumber { get; set; }
         public string Description { get; set; }
         public string FurtherDescription { get; set; }
         public string Quantity { get; set; }

@@ -19,9 +19,12 @@ namespace openPER.ViewModels
         public string SgsDesc { get; set; }
         public List<int> DrawingNumbers { get; set; }
         public List<PartViewModel> Parts { get; set; }
+        public int Variant { get; set; }
+        public int Revision { get; set; }
         public int CurrentDrawing { get; set; }
         public List<string> Narratives { get; set; }
-
+        public string HighlightPart { get; set; }
+        public string ImagePath { get; set; }
         public  string Path => $"{MakeCode}/{ModelCode}/{CatalogueCode}/{GroupCode:00}/{SubGroupCode:000}/{SubSubGroupCode:00}";
     }
 }

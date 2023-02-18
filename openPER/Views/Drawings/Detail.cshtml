@@ -4,85 +4,137 @@
     ViewData["Title"] = "Index";
 }
 @await Html.PartialAsync("_Breadcrumb", Model.Breadcrumb)
-<div class="container">
+<div class="container-fluid">
     <div class="row">
         <div class="col-lg-12 col-md-12 col-sm-12 col-12">
-            <div class="dropdown show">
-                <a class="btn btn-secondary dropdown-toggle" href="#" role="button" id="subGroupMenuLink" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                    "Group"
-                </a>
-                <div class="dropdown-menu" aria-labelledby="subGroupMenuLink">
-                    @{
-                        int ix = 1;
-                        @foreach (var drawing in Model.Drawings.GroupBy(x=>new {x.ReleaseCode,x.MakeCode, x.SubMakeCode,x.ModelCode, x.CatalogueCode, x.GroupCode, x.SubGroupCode, x.SubSubGroupCode}, (key, group)=>new {key.ReleaseCode,key.MakeCode, key.SubMakeCode,key.ModelCode, key.CatalogueCode, key.GroupCode, key.SubGroupCode, key.SubSubGroupCode}))
-                        {
-                            
-                            @Html.ActionLink($"{drawing.GroupCode:000}{drawing.SubGroupCode:00}/{drawing.SubSubGroupCode:00}", "Detail", "Drawings", new { Model.ReleaseCode, drawing.MakeCode, drawing.SubMakeCode, drawing.ModelCode, drawing.CatalogueCode, drawing.GroupCode, drawing.SubGroupCode, drawing.SubSubGroupCode, DrawingNumber = 1 }, new {@class="dropdown-item"});
-                        }
+            <div class="btn-toolbar" role="toolbar">
+                <div class="btn-group mr-2" role="group">
+                    @if (Model.TableData.CurrentDrawing > 0)
+                    {
+                        var d = Model.Drawings[Model.TableData.CurrentDrawing - 1];
+                        @Html.ActionLink($"<<", "Detail", "Drawings", new {d.MakeCode, d.SubMakeCode, d.ModelCode, d.CatalogueCode, d.GroupCode, d.SubGroupCode, d.SubSubGroupCode, DrawingNumber= Model.TableData.CurrentDrawing - 1, Model.Scope }, new {@class="btn btn-secondary"})
+
+                    }
+                    else
+                    {
+                        @Html.ActionLink($"<<", "Detail", "Drawings", new {}, new {@class="btn disabled btn-secondary"})
+
+                    }
+                    <button type="button" class="btn btn-secondary">@(Model.TableData.CurrentDrawing+1) / @Model.Drawings.Count</button>
+                    @if (Model.TableData.CurrentDrawing < Model.Drawings.Count - 1)
+                    {
+                        var d = Model.Drawings[Model.TableData.CurrentDrawing + 1];
+                        @Html.ActionLink($">>", "Detail", "Drawings", new {d.MakeCode, d.SubMakeCode, d.ModelCode, d.CatalogueCode, d.GroupCode, d.SubGroupCode, d.SubSubGroupCode, DrawingNumber= Model.TableData.CurrentDrawing + 1, Model.Scope }, new {@class="btn btn-secondary"})
+                    }
+                    else
+                    {
+                        @Html.ActionLink($">>", "Detail", "Drawings", new {}, new {@class="btn disabled btn-secondary"})
+
                     }
                 </div>
-            </div>
-            <div class="dropdown show">
-                <a class="btn btn-secondary dropdown-toggle" href="#" role="button" id="variantMenuLink" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                    @($"{Model.Drawings[Model.TableData.CurrentDrawing-1].DrawingNumber} {Model.Drawings[Model.TableData.CurrentDrawing-1].VariantPattern}")
-                </a>
-                <div class="dropdown-menu" aria-labelledby="variantMenuLink">
-                    @{
-                        ix = 1;
-                        @foreach (var drawing in Model.Drawings)
-                        {
-                            @Html.ActionLink($"{drawing.DrawingNumber} {drawing.VariantPattern}", "Detail", "Drawings", new { Model.ReleaseCode, drawing.MakeCode, drawing.SubMakeCode, drawing.ModelCode, drawing.CatalogueCode, drawing.GroupCode, drawing.SubGroupCode, drawing.SubSubGroupCode, DrawingNumber = ix++ }, new {@class="dropdown-item"});
-                        }
-                    }
-                </div>
-            </div>
-        </div>
-    </div>
-    <div class="row">
-        <div class="col-lg-6 col-md-12 col-sm-12 col-12">
-            <div class="container">
-                <div class="row">
-                    <div class="col-12">
-                        <img class="img-fluid" src="@Url.Action("Drawing", "Image", new { Model.ReleaseCode, Make = Model.TableData.MakeCode, Model = Model.TableData.ModelCode, Catalogue = Model.TableData.CatalogueCode, Group = Model.TableData.GroupCode, SubGroup = Model.TableData.SubGroupCode, SubSubGroup = Model.TableData.SubSubGroupCode, Drawing = Model.TableData.CurrentDrawing })">
-                    </div>
-                </div>
-                <div class="row">
-                    <div class="col-12">
-                        <div class="container horizontal-scrollable">
-                            <div class="row text-center">
-                                @{
-                                    ix = 1;
-                                    @foreach (var drawing in Model.Drawings)
-                                    {
-                                        <div class="col-xs-4">
-                                            <img class="img-fluid" src="@Url.Action("Thumbnail", "Image", new { Model.ReleaseCode, Make = drawing.MakeCode, Model = drawing.ModelCode, Catalogue = drawing.CatalogueCode, Group = drawing.GroupCode, SubGroup = drawing.SubGroupCode, SubSubGroup = drawing.SubSubGroupCode, Drawing = drawing.DrawingNumber })"><br />
-                                            @Html.ActionLink($"{drawing.CatalogueCode}/{drawing.GroupCode:000}{drawing.SubGroupCode:00}/{drawing.SubSubGroupCode:00}/{ix}", "Detail", "Drawings", new { Model.ReleaseCode, drawing.MakeCode, drawing.SubMakeCode, drawing.ModelCode, drawing.CatalogueCode, drawing.GroupCode, drawing.SubGroupCode, drawing.SubSubGroupCode, DrawingNumber = ix++ })
-                                        </div>
-                                    }
+                <div class="btn-group mr-2" role="group">
+                    <div class="dropdown show">
+                        <a class="btn btn-secondary dropdown-toggle" href="#" role="button" id="subGroupMenuLink" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                            @($"{Model.Drawings[Model.TableData.CurrentDrawing].GroupCode:000}{Model.Drawings[Model.TableData.CurrentDrawing].SubGroupCode:00}/{Model.Drawings[Model.TableData.CurrentDrawing].SubSubGroupCode:00} - {Model.Drawings[Model.TableData.CurrentDrawing].Description}")
+                        </a>
+                        <div class="dropdown-menu" aria-labelledby="subGroupMenuLink">
+                            @{
+                                int ix = 1;
+                                @foreach (var drawing in Model.Drawings.GroupBy(x => new { x.MakeCode, x.SubMakeCode, x.ModelCode, x.CatalogueCode, x.GroupCode, x.SubGroupCode, x.SubSubGroupCode, x.Description }, (key, group) => new { key.MakeCode, key.SubMakeCode, key.ModelCode, key.CatalogueCode, key.GroupCode, key.SubGroupCode, key.SubSubGroupCode, key.Description }))
+                                {
+                                    var index = Model.Drawings.FindIndex(x => x.CatalogueCode == drawing.CatalogueCode && x.GroupCode == drawing.GroupCode
+                                    && x.SubGroupCode == drawing.SubGroupCode && x.SubSubGroupCode == drawing.SubSubGroupCode);
+                                    @Html.ActionLink($"{drawing.GroupCode:000}{drawing.SubGroupCode:00}/{drawing.SubSubGroupCode:00} - {drawing.Description}", "Detail", "Drawings", new {drawing.MakeCode, drawing.SubMakeCode, drawing.ModelCode, drawing.CatalogueCode, drawing.GroupCode, drawing.SubGroupCode, drawing.SubSubGroupCode, DrawingNumber= index, Model.Scope }, new {@class="dropdown-item"})
+                                    ;
                                 }
-                            </div>
+                            }
+                        </div>
+                    </div>
+                    <div class="dropdown show">
+                        <a class="btn btn-secondary dropdown-toggle" href="#" role="button" id="variantMenuLink" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                            @($"{Model.Drawings[Model.TableData.CurrentDrawing].Variant} {Model.Drawings[Model.TableData.CurrentDrawing].VariantPattern}")
+                        </a>
+                        <div class="dropdown-menu" aria-labelledby="variantMenuLink">
+                            @{
+                                var currentDrawing = Model.Drawings[Model.TableData.CurrentDrawing];
+                                ix = 0;
+                                var usedVariants = new List<int>();
+                                @foreach (var drawing in Model.Drawings)
+                                {
+                                    // Only include variants for current sub sub group
+                                    if (drawing.GroupCode == currentDrawing.GroupCode && drawing.SubGroupCode == currentDrawing.SubGroupCode && drawing.SubSubGroupCode == currentDrawing.SubSubGroupCode)
+                                    {
+                                        if (!usedVariants.Contains(drawing.Variant))
+                                        {
+                                            @Html.ActionLink($"{drawing.Variant} {drawing.VariantPattern}", "Detail", "Drawings", new {drawing.MakeCode, drawing.SubMakeCode, drawing.ModelCode, drawing.CatalogueCode, drawing.GroupCode, drawing.SubGroupCode, drawing.SubSubGroupCode, DrawingNumber = ix, Model.Scope }, new {@class="dropdown-item"})
+                                            ;
+                                            usedVariants.Add(drawing.Variant);
+                                        }
+                                    }
+                                    ix++;
+                                }
+                            }
+                        </div>
+                    </div>
+                    <div class="dropdown show">
+                        <a class="btn btn-secondary dropdown-toggle" href="#" role="button" id="revisionMenuLink" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                            @($"{Model.Drawings[Model.TableData.CurrentDrawing].Revision} ({Model.Drawings[Model.TableData.CurrentDrawing].RevisionModifications})")
+                        </a>
+                        <div class="dropdown-menu" aria-labelledby="revisionMenuLink">
+                            @{
+                                ix = 0;
+                                @foreach (var drawing in Model.Drawings)
+                                {
+                                    // Only include revisions for current sub sub group and variant
+                                    if (drawing.GroupCode == currentDrawing.GroupCode && drawing.SubGroupCode == currentDrawing.SubGroupCode && drawing.SubSubGroupCode == currentDrawing.SubSubGroupCode && drawing.Variant == currentDrawing.Variant)
+                                        @Html.ActionLink($"{drawing.Revision} ({drawing.RevisionModifications})", "Detail", "Drawings", new {drawing.MakeCode, drawing.SubMakeCode, drawing.ModelCode, drawing.CatalogueCode, drawing.GroupCode, drawing.SubGroupCode, drawing.SubSubGroupCode, DrawingNumber = ix, Model.Scope }, new {@class="dropdown-item"})
+                                    ;
+                                    ix++;
+                                }
+                            }
                         </div>
                     </div>
                 </div>
             </div>
         </div>
-        <div class="col-lg-6 col-md-12 col-sm-12 col-12">
+    </div>
+    <div class="row">
+        <div class="col-lg-5 col-md-12 col-sm-12 col-12">
+            <div class="container-fluid">
+                <div class="row">
+                    <div class="col-12">
+                        <img class="img-fluid" src="@Model.TableData.ImagePath">
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col-lg-7 col-md-12 col-sm-12 col-12">
             <table class="table table-sm">
-                <tr><th>&nbsp;</th><th>Prod. code</th><th>Fur. Descr.</th><th>Comp.</th><th>Modif.</th><th>Qty</th><th>Notes</th><th>Components</th></tr>
+                <tr><th>code</th><th>Prod. code</th><th>Description</th><th>Compat.</th><th>Modif.</th><th>Qty</th><th>Notes</th><th>Components</th></tr>
                 @{
 
-                    int lastOrder = 999;
+                    //int lastOrder = 999;
+                    var cls = "table-secondary";
+                    var lastCode = 0;
                     @foreach (var item in Model.TableData.Parts)
                     {
-                        if (item.TableOrder != lastOrder)
+                        //if (item.TableOrder != lastOrder)
+                        //{
+                        //    <tr><td>@Html.DisplayFor(model => item.TableOrder)</td><td colspan="7">@Html.DisplayFor(model => item.Description)</td></tr>
+                        //    lastOrder = item.TableOrder;
+                        //}
+                        @if (lastCode != item.TableOrder)
                         {
-                            <tr><td>@Html.DisplayFor(model => item.TableOrder)</td><td colspan="7">@Html.DisplayFor(model => item.Description)</td></tr>
-                            lastOrder = item.TableOrder;
+                            cls = cls == "table-secondary" ? "table-default" : "table-secondary";
+                            lastCode = item.TableOrder;
                         }
-                        <tr>
-                            <td>&nbsp;</td>
-                            <td><a href="@Url.Action("SearchResults", "Part", new { item.PartNumber })">@Html.DisplayFor(model => item.PartNumber)</a> <a href="https://www.google.com/search?q=FIAT+@item.PartNumber" target="_blank" class="bi bi-search"></a></td>
-                            <td>@Html.DisplayFor(model => item.FurtherDescription)</td>
+                        <tr class="@cls @(Model.TableData.HighlightPart == item.PartNumber ? "table-info":"")">
+
+                            <td>
+                                @Html.DisplayFor(model => item.TableOrder)
+                            </td>
+                            <td align="right"><a href="@Url.Action("SearchResults", "Part", new { item.PartNumber })">@Html.DisplayFor(model => item.PartNumber)</a> <a href="https://www.google.com/search?q=FIAT+@item.PartNumber" target="_blank" class="bi bi-search"></a></td>
+                            <td>@Html.DisplayFor(model => item.Description) @Html.DisplayFor(model => item.FurtherDescription)</td>
                             <td>@Html.DisplayFor(model => item.Compatibility)</td>
                             <td>
                                 <ul>
@@ -97,7 +149,7 @@
                             <td>
                                 @if (item.IsAComponent)
                                 {
-                                    @Html.ActionLink("Go", "Detail", "Cliche", new { Model.ReleaseCode, Model.TableData.MakeCode, Model.TableData.SubMakeCode, Model.TableData.ModelCode, Model.TableData.CatalogueCode, Model.TableData.GroupCode, Model.TableData.SubGroupCode, Model.TableData.SubSubGroupCode, DrawingNumber = Model.TableData.CurrentDrawing, ClichePartNumber = item.PartNumber, ClicheDrawingNumber = 1 })
+                                    @Html.ActionLink("Go", "Detail", "Cliche", new { Model.TableData.MakeCode, Model.TableData.SubMakeCode, Model.TableData.ModelCode, Model.TableData.CatalogueCode, Model.TableData.GroupCode, Model.TableData.SubGroupCode, Model.TableData.SubSubGroupCode, DrawingNumber = Model.TableData.CurrentDrawing, ClichePartNumber = item.PartNumber, ClicheDrawingNumber = 1 })
                                 }
                             </td>
 
@@ -105,6 +157,24 @@
                     }
                 }
             </table>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-12">
+            <div class="container-flex horizontal-scrollable">
+                <div class="row text-center">
+                    @{
+                        ix = 0;
+                        @foreach (var drawing in Model.Drawings)
+                        {
+                            <div class="col-xs-4 @(Model.TableData.CurrentDrawing == ix?"border":"")">
+                                <img class="img-fluid" src="@drawing.ThumbImagePath"><br />
+                                @Html.ActionLink($"{drawing.GroupCode:000}{drawing.SubGroupCode:00}/{drawing.SubSubGroupCode:00} - {drawing.Description} (Var.:{drawing.Variant}/Rev.:{drawing.Revision})", "Detail", "Drawings", new {drawing.MakeCode, drawing.SubMakeCode, drawing.ModelCode, drawing.CatalogueCode, drawing.GroupCode, drawing.SubGroupCode, drawing.SubSubGroupCode, DrawingNumber = ix++, Model.Scope })
+                            </div>
+                        }
+                    }
+                </div>
+            </div>
         </div>
     </div>
 </div>
