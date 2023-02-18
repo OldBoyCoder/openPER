@@ -1,12 +1,12 @@
 ﻿using System;
 using System.Diagnostics;
-using Microsoft.Data.Sqlite;
+using MySqlConnector;
 
 namespace openPERRepositories.Repositories
 {
     internal static class RepositoryHelpers
     {
-        internal static void RunSqlAllRows(this SqliteConnection connection, string sql, Action<SqliteDataReader> rowHandler, params object[] parameters)
+        internal static void RunSqlAllRows(this MySqlConnection connection, string sql, Action<MySqlDataReader> rowHandler, params object[] parameters)
         {
             var stopWatch = new Stopwatch();
             if (connection.State != System.Data.ConnectionState.Open)
@@ -17,7 +17,7 @@ namespace openPERRepositories.Repositories
             {
                 for (int i = 0; i < parameters.Length; i++)
                 {
-                    command.Parameters.AddWithValue("$p" + (i + 1).ToString(), parameters[i]);
+                    command.Parameters.AddWithValue("@p" + (i + 1).ToString(), parameters[i]);
                 }
             }
 
@@ -31,7 +31,7 @@ namespace openPERRepositories.Repositories
             stopWatch.Stop();
             Console.WriteLine($"{sql} {stopWatch.ElapsedMilliseconds}");
         }
-        internal static void RunSqlFirstRowOnly(this SqliteConnection connection, string sql, Action<SqliteDataReader> rowHandler, params object[] parameters)
+        internal static void RunSqlFirstRowOnly(this MySqlConnection connection, string sql, Action<MySqlDataReader> rowHandler, params object[] parameters)
         {
             if (connection.State != System.Data.ConnectionState.Open)
                 connection.Open();
@@ -41,7 +41,7 @@ namespace openPERRepositories.Repositories
             {
                 for (int i = 0; i < parameters.Length; i++)
                 {
-                    command.Parameters.AddWithValue("$p" + (i + 1).ToString(), parameters[i]);
+                    command.Parameters.AddWithValue("@p" + (i + 1).ToString(), parameters[i]);
                 }
             }
 
