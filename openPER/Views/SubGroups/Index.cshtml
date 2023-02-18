@@ -16,14 +16,14 @@
                 
                 @foreach (var mapEntry in Model.MapEntries)
                 {
-                    <a title="@($"{mapEntry.GroupCode:000}{mapEntry.SubGroupCode:00} {mapEntry.Description}")"   href="@Url.Action("Index", "SubSubGroups", new {Model.MakeCode,Model.SubMakeCode, Model.ModelCode, Model.CatalogueCode, mapEntry.GroupCode, mapEntry.SubGroupCode})">
+                    <a title="@($"{mapEntry.GroupCode:000}{mapEntry.SubGroupCode:00} {mapEntry.Description}")"   href="@Url.Action("Index", "SubSubGroups", new {Model.Navigation.Language, Model.MakeCode,Model.SubMakeCode, Model.ModelCode, Model.CatalogueCode, mapEntry.GroupCode, mapEntry.SubGroupCode})">
                         <div style="position: absolute; top: @(mapEntry.Y+"px"); left: @(mapEntry.X+"px"); width: 24px;height:24px">
                             <img src="~/SiteImages/SelectCircle.png"/></div></a>
 
                 }
             </div>
             <p>
-                @Html.ActionLink($"All drawings", "Detail", "Drawings", new {Model.MakeCode, Model.SubMakeCode, Model.ModelCode, Model.CatalogueCode, Model.GroupCode,SubGroupCode="*", SubSubGroupCode="*", DrawingNumber = 0, Scope="Group"})
+                @Html.ActionLink($"All drawings", "Detail", "Drawings", new {Model.Navigation.Language, Model.MakeCode, Model.SubMakeCode, Model.ModelCode, Model.CatalogueCode, Model.GroupCode,SubGroupCode="*", SubSubGroupCode="*", DrawingNumber = 0, Scope="Group"})
 
             </p>
         </div>

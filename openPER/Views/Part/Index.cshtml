@@ -25,7 +25,7 @@
                     <td>
                         @if (drawing.ClichePart)
                         {
-                            <a href="@Url.Action("Detail", "Cliche", new {MakeCode = drawing.Make, SubMakeCode = drawing.SubMake, ModelCode = drawing.Model, drawing.CatalogueCode, drawing.GroupCode, drawing.SubGroupCode, drawing.SubSubGroupCode, drawing.Variant, ClichePartNumber = drawing.ClichePartNumber, ClicheDrawingNumber=drawing.ClichePartDrawingNumber  })">
+                            <a href="@Url.Action("Detail", "Cliche", new { MakeCode = drawing.Make, SubMakeCode = drawing.SubMake, ModelCode = drawing.Model, drawing.CatalogueCode, drawing.GroupCode, drawing.SubGroupCode, drawing.SubSubGroupCode, drawing.Variant, ClichePartNumber = drawing.ClichePartNumber, ClicheDrawingNumber=drawing.ClichePartDrawingNumber  })">
                                 @drawing.GroupCode.ToString("000")@drawing.SubGroupCode.ToString("00")/@drawing.SubSubGroupCode.ToString("00") - @drawing.SubGroupDescription/@drawing.ClichePartNumber.ToString("0")/@drawing.ClichePartDrawingNumber
                             </a>
 

@@ -38,16 +38,11 @@ namespace openPER.Helpers
                 return Cultures.Find(x => x.culture == culture.TwoLetterISOLanguageName).ePerCode;
             return "3";
         }
-        public static string SetCultureBasedOnCookie(HttpContext context)
+        public static string SetCultureBasedOnRoute(string language)
         {
-            var language = "3";
-            if (context.Request.Cookies.ContainsKey("PreferredLanguage"))
-            {
-                language = context.Request.Cookies["PreferredLanguage"];
-                var newCulture = ConvertLanguageCodeToCulture(language);
-                Thread.CurrentThread.CurrentCulture = newCulture;
-                Thread.CurrentThread.CurrentUICulture = newCulture;
-            }
+            var newCulture = ConvertLanguageCodeToCulture(language);
+            Thread.CurrentThread.CurrentCulture = newCulture;
+            Thread.CurrentThread.CurrentUICulture = newCulture;
             return language;
 
         }

@@ -16,12 +16,12 @@ namespace openPER.Controllers
             _rep = rep;
             _mapper = mapper;
         }
-        [Route("Models/{MakeCode}/{SubMakeCode}")]
+        [Route("Models/{language}/{MakeCode}/{SubMakeCode}")]
         [ApiExplorerSettings(IgnoreApi = true)]
-        public IActionResult Index(string makeCode, string subMakeCode)
+        public IActionResult Index(string language,string makeCode, string subMakeCode)
         {
             // Standard prologue
-            var language = Helpers.LanguageSupport.SetCultureBasedOnCookie(HttpContext);
+            Helpers.LanguageSupport.SetCultureBasedOnRoute(language);
 
 
             var breadcrumb = new BreadcrumbModel { MakeCode = makeCode, SubMakeCode = subMakeCode };
@@ -39,7 +39,8 @@ namespace openPER.Controllers
                         AllMakes = _mapper.Map<List<MakeModel>, List<MakeViewModel>>(_rep.GetAllMakes()),
                         AllModels = _mapper.Map<List<ModelModel>, List<ModelViewModel>>(_rep.GetAllModelsForMake(makeCode,
                             subMakeCode))
-                    }
+                    },
+                    Language = language
                 }
 
             };

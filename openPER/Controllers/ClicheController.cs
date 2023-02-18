@@ -18,13 +18,13 @@ namespace openPER.Controllers
             _mapper = mapper;   
         }
         [Route(
-            "Detail/{MakeCode}/{SubMakeCode}/{ModelCode}/{CatalogueCode}/{GroupCode}/{SubGroupCode}/{SubSubGroupCode}/{DrawingNumber}/{ClichePartNumber}/{ClicheDrawingNumber}")]
+            "Detail/{language}/{MakeCode}/{SubMakeCode}/{ModelCode}/{CatalogueCode}/{GroupCode}/{SubGroupCode}/{SubSubGroupCode}/{DrawingNumber}/{ClichePartNumber}/{ClicheDrawingNumber}")]
         [ApiExplorerSettings(IgnoreApi = true)]
-        public IActionResult Detail(string makeCode, string subMakeCode, string modelCode,
+        public IActionResult Detail(string language, string makeCode, string subMakeCode, string modelCode,
             string catalogueCode, int groupCode, int subGroupCode, int subSubGroupCode, int drawingNumber,
             string clichePartNumber, int clicheDrawingNumber)
         {
-            var language = Helpers.LanguageSupport.SetCultureBasedOnCookie(HttpContext);
+            Helpers.LanguageSupport.SetCultureBasedOnRoute(language);
             var model = new ClicheViewModel();
             var breadcrumb = new BreadcrumbModel
             {
