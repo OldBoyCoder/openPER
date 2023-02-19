@@ -21,6 +21,7 @@ namespace openPER.Controllers
         public IActionResult Index(string language)
         {
             Helpers.LanguageSupport.SetCultureBasedOnRoute(language);
+            ViewData["Language"] = language;
 
             var breadcrumb = new BreadcrumbModel ();
             _rep.PopulateBreadcrumbDescriptions(breadcrumb, language);
