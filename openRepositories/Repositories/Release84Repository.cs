@@ -1046,7 +1046,7 @@ namespace openPERRepositories.Repositories
                     SubSubGroupCode = reader.GetInt32(4),
                     Variant = reader.GetInt32(5),
                     SubGroupDescription = reader.GetString(6),
-                    ClichePartNumber = reader.GetDecimal(11),
+                    ClichePartNumber = reader.GetString(11),
                     ClichePartDrawingNumber = reader.GetInt32(13),
                     Revision = reader.GetInt32(14),
                     ClichePart = true
