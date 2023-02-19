@@ -24,9 +24,54 @@ namespace openPER.Controllers
                 var subSubGroupCode = HttpContext.Request.Query["SGS_COD"][0];
                 var drawingNumber = "0";
                 if (HttpContext.Request.Query.ContainsKey("DRW_NUM"))
-                    drawingNumber = (int.Parse(HttpContext.Request.Query["DRW_NUM"][0])-1).ToString();
+                    drawingNumber = (int.Parse(HttpContext.Request.Query["DRW_NUM"][0]) - 1).ToString();
                 var scope = "SubSubGroup";
-                return RedirectToAction("Detail", "Drawings", new {Language= language,MakeCode=makeCode, SubMakeCode=subMakeCode,ModelCode=modelCode, CatalogueCode=catalogueCode, GroupCode=groupCode, SubGroupCode=subGroupCode, SubSubGroupCode=subSubGroupCode, DrawingNumber=drawingNumber, Scope=scope });
+                return RedirectToAction("Detail", "Drawings", new { Language = language, MakeCode = makeCode, SubMakeCode = subMakeCode, ModelCode = modelCode, CatalogueCode = catalogueCode, GroupCode = groupCode, SubGroupCode = subGroupCode, SubSubGroupCode = subSubGroupCode, DrawingNumber = drawingNumber, Scope = scope });
+            }
+            if (key == "HOME")
+            {
+                var language = HttpContext.Request.Query["LANGUAGE"][0];
+                var makeCode = HttpContext.Request.Query["MAKE"][0];
+                var subMakeCode = HttpContext.Request.Query["SBMK"][0];
+                return RedirectToAction("Index", "Models", new { Language = language, MakeCode = makeCode, SubMakeCode = subMakeCode });
+            }
+            if (key == "VERSION")
+            {
+                var language = HttpContext.Request.Query["LANGUAGE"][0];
+                var makeCode = HttpContext.Request.Query["MAKE"][0];
+                var subMakeCode = HttpContext.Request.Query["SBMK"][0];
+                var modelCode = HttpContext.Request.Query["COMM_MODEL"][0];
+                return RedirectToAction("Index", "Catalogues", new { Language = language, MakeCode = makeCode, SubMakeCode = subMakeCode, ModelCode = modelCode });
+            }
+            if (key == "GROUP")
+            {
+                var language = HttpContext.Request.Query["LANGUAGE"][0];
+                var makeCode = HttpContext.Request.Query["MAKE"][0];
+                var subMakeCode = HttpContext.Request.Query["SBMK"][0];
+                var modelCode = HttpContext.Request.Query["COMM_MODEL"][0];
+                var catalogueCode = HttpContext.Request.Query["CAT_COD"][0];
+                return RedirectToAction("Index", "Groups", new { Language = language, MakeCode = makeCode, SubMakeCode = subMakeCode, ModelCode = modelCode, CatalogueCode = catalogueCode });
+            }
+            if (key == "SUBGROUP")
+            {
+                var language = HttpContext.Request.Query["LANGUAGE"][0];
+                var makeCode = HttpContext.Request.Query["MAKE"][0];
+                var subMakeCode = HttpContext.Request.Query["SBMK"][0];
+                var modelCode = HttpContext.Request.Query["COMM_MODEL"][0];
+                var catalogueCode = HttpContext.Request.Query["CAT_COD"][0];
+                var groupCode = HttpContext.Request.Query["GRP_COD"][0];
+                return RedirectToAction("Index", "SubGroups", new { Language = language, MakeCode = makeCode, SubMakeCode = subMakeCode, ModelCode = modelCode, CatalogueCode = catalogueCode, GroupCode = groupCode });
+            }
+            if (key == "SUBGROUP_7")
+            {
+                var language = HttpContext.Request.Query["LANGUAGE"][0];
+                var makeCode = HttpContext.Request.Query["MAKE"][0];
+                var subMakeCode = HttpContext.Request.Query["SBMK"][0];
+                var modelCode = HttpContext.Request.Query["COMM_MODEL"][0];
+                var catalogueCode = HttpContext.Request.Query["CAT_COD"][0];
+                var groupCode = HttpContext.Request.Query["GRP_COD"][0];
+                var subGroupCode = HttpContext.Request.Query["SGRP_COD"][0];
+                return RedirectToAction("Index", "SubSubGroups", new { Language = language, MakeCode = makeCode, SubMakeCode = subMakeCode, ModelCode = modelCode, CatalogueCode = catalogueCode, GroupCode = groupCode, SubGroupCode = subGroupCode });
             }
             return View();
         }
