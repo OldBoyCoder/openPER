@@ -149,7 +149,7 @@
                             <td>
                                 @if (item.IsAComponent)
                                 {
-                                    @Html.ActionLink("Go", "Detail", "Cliche", new { Model.TableData.MakeCode, Model.TableData.SubMakeCode, Model.TableData.ModelCode, Model.TableData.CatalogueCode, Model.TableData.GroupCode, Model.TableData.SubGroupCode, Model.TableData.SubSubGroupCode, DrawingNumber = Model.TableData.CurrentDrawing, ClichePartNumber = item.PartNumber, ClicheDrawingNumber = 1 })
+                                    @Html.ActionLink("Go", "Detail", "Cliche", new {Model.Breadcrumb.Language, Model.TableData.MakeCode, Model.TableData.SubMakeCode, Model.TableData.ModelCode, Model.TableData.CatalogueCode, Model.TableData.GroupCode, Model.TableData.SubGroupCode, Model.TableData.SubSubGroupCode, DrawingNumber = Model.TableData.CurrentDrawing, ClichePartNumber = item.PartNumber, ClicheDrawingNumber = 1 })
                                 }
                             </td>
 

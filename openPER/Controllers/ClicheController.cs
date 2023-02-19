@@ -42,6 +42,7 @@ namespace openPER.Controllers
                 ClicheDrawingNumber = clicheDrawingNumber
             };
             _rep.PopulateBreadcrumbDescriptions(breadcrumb, language);
+            breadcrumb.Language = language;
             model.Breadcrumb = _mapper.Map<BreadcrumbModel, BreadcrumbViewModel>(breadcrumb);
 
             List<DrawingKeyModel> drawings = _rep.GetDrawingKeysForCliche(makeCode, subMakeCode, modelCode,

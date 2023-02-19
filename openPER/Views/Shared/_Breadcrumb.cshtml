@@ -31,7 +31,7 @@
                                         @if (Model.ClichePartNumber != null)
                                         {
                                             <li class="breadcrumb-item">
-                                                @Html.ActionLink(Model.ClichePartNumber.ToString(), "Detail", "Cliche", new {Model.Language,  Model.MakeCode, Model.SubMakeCode, Model.ModelCode, Model.CatalogueCode, Model.GroupCode, Model.SubGroupCode, Model.SubSubGroupCode, DrawingNumber = Model.DrawingNumber, ClichePartNumber = Model.ClichePartNumber, ClicheDrawingNumber=1})
+                                                @Html.ActionLink(Model.ClichePartNumber, "Detail", "Cliche", new {Model.Language,  Model.MakeCode, Model.SubMakeCode, Model.ModelCode, Model.CatalogueCode, Model.GroupCode, Model.SubGroupCode, Model.SubSubGroupCode, DrawingNumber = Model.DrawingNumber, ClichePartNumber = Model.ClichePartNumber, ClicheDrawingNumber=1})
                                             </li>
                                             @if (Model.ClicheDrawingNumber != null)
                                             {

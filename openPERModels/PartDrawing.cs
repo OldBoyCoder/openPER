@@ -13,7 +13,7 @@
         public int SubSubGroupCode { get; set; }
         public int Variant { get; set; }
         public int Revision { get; set; }
-        public decimal ClichePartNumber { get; set; }
+        public string ClichePartNumber { get; set; }
         public int ClichePartDrawingNumber { get; set; }
         public bool ClichePart { get; set; }
     }
