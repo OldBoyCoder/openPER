@@ -36,6 +36,7 @@
         @using (Html.BeginForm("SearchResults", "Part", FormMethod.Get))
         {
             <div class="input-group m-1">
+                <input id="languageId" name="language" hidden value="@Model.Language"/>
                 <label for="searchByPart">Search for part number</label>
                 @Html.TextBoxFor(m=>m.PartNumber, new {@class="form-control-sm", type="search", placeholder="Part number", id="searchByPart"})
                 <span class="input-group-append">

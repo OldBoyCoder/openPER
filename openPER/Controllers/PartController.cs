@@ -18,12 +18,13 @@ namespace openPER.Controllers
         }
 
         [HttpGet]
-        public ActionResult SearchResults(string partNumber)
+
+        public ActionResult SearchResults(string language, string partNumber)
         {
             var p = new PartSearchViewModel();
-            // TODO Get language from route
-            var language = "3";
+            ViewData["Language"] = language;
 
+            p.Language = language;
             if (partNumber == null) return View("Index", null);
             p.PartNumberSearch = partNumber;
 

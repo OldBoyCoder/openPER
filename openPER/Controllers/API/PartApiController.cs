@@ -24,14 +24,12 @@ namespace openPER.Controllers.API
             _rep = rep;
             _mapper = mapper;
         }
-        [HttpGet("{partCode}")]
+        [HttpGet("{language}/{partCode}")]
         [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(PartSearchViewModel))]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
-        public IActionResult GetPart(string partCode)
+        public IActionResult GetPart(string language, string partCode)
         {
             var p = new PartSearchViewModel();
-            // TODO Get language from route
-            var language = "3";
 
             if (partCode == null) return NotFound();
             p.PartNumberSearch = partCode;
@@ -39,14 +37,11 @@ namespace openPER.Controllers.API
             p.Result = _rep.GetPartDetails(p.PartNumberSearch, language);
             return p.Result == null ? NotFound() : Ok(p);
         }
-        [HttpGet("{ModelName}/{PartDescription}")]
+        [HttpGet("{language}/{ModelName}/{PartDescription}")]
         [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(List<PartSearchViewModel>))]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
-        public IActionResult GetPart(string modelName, string partDescription)
+        public IActionResult GetPart(string language, string modelName, string partDescription)
         {
-            // TODO Get language from route
-            var language = "3";
-
             if (string.IsNullOrEmpty(modelName) || string.IsNullOrEmpty(partDescription)) return NotFound();
 
             var p = _rep.GetPartSearch(modelName, partDescription, language);

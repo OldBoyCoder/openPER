@@ -25,6 +25,8 @@ namespace openPER.Controllers
             string clichePartNumber, int clicheDrawingNumber)
         {
             Helpers.LanguageSupport.SetCultureBasedOnRoute(language);
+            ViewData["Language"] = language;
+
             var model = new ClicheViewModel();
             var breadcrumb = new BreadcrumbModel
             {

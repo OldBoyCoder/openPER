@@ -17,7 +17,7 @@ namespace openPER.Controllers
             _rep = rep;
             _mapper = mapper;
         }
-        [Route("Catalogues/{language=3}/{MakeCode}/{SubMakeCode}/{ModelCode}")]
+        [Route("Catalogues/{language}/{MakeCode}/{SubMakeCode}/{ModelCode}")]
         [ApiExplorerSettings(IgnoreApi = true)]
         public IActionResult Index(string language, string makeCode, string subMakeCode, string modelCode)
         {
@@ -25,6 +25,7 @@ namespace openPER.Controllers
             Helpers.LanguageSupport.SetCultureBasedOnRoute(language);
             var breadcrumb = new BreadcrumbModel { MakeCode = makeCode, SubMakeCode = subMakeCode, ModelCode = modelCode };
             _rep.PopulateBreadcrumbDescriptions(breadcrumb, language);
+            ViewData["Language"] = language;
 
             var model = new CataloguesViewModel
             {

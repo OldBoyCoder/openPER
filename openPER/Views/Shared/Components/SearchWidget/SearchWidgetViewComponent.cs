@@ -11,9 +11,10 @@ namespace openPER.Views.Shared.Components.SearchWidget
         {
             _rep = rep;
         }
-        public IViewComponentResult Invoke()
+        public IViewComponentResult Invoke(string language)
         {
             var model = new SearchViewModel();
+            model.Language = language;
             model.VinSearch.Models = _rep.GetAllVinModels();
             return View("Default", model);
         }

@@ -24,6 +24,8 @@ namespace openPER.Controllers
         {
             // Standard prologue
             Helpers.LanguageSupport.SetCultureBasedOnRoute(language);
+            ViewData["Language"] = language;
+
 
             var model = new DrawingsViewModel();
             // We need to get all of the drawing keys for this sub sub group
@@ -56,7 +58,8 @@ namespace openPER.Controllers
                 GroupCode = drawing.GroupCode,
                 SubGroupCode = drawing.SubGroupCode,
                 SubSubGroupCode = drawing.SubSubGroupCode,
-                DrawingNumber = drawingNumber
+                DrawingNumber = drawingNumber,
+                Scope = scope
             };
             _rep.PopulateBreadcrumbDescriptions(breadcrumb, language);
             model.Breadcrumb = _mapper.Map<BreadcrumbModel, BreadcrumbViewModel>(breadcrumb);
@@ -69,6 +72,8 @@ namespace openPER.Controllers
         {
             // Standard prologue
             Helpers.LanguageSupport.SetCultureBasedOnRoute(language);
+            ViewData["Language"] = language;
+
 
             var model = new DrawingsViewModel();
             // We need to get all of the drawing keys for this sub sub group
@@ -109,7 +114,8 @@ namespace openPER.Controllers
                 GroupCode = drawing.GroupCode,
                 SubGroupCode = drawing.SubGroupCode,
                 SubSubGroupCode = drawing.SubSubGroupCode,
-                DrawingNumber = drawingNumber
+                DrawingNumber = drawingNumber, 
+                Scope = scope
             };
             _rep.PopulateBreadcrumbDescriptions(breadcrumb, language);
             model.Breadcrumb = _mapper.Map<BreadcrumbModel, BreadcrumbViewModel>(breadcrumb);

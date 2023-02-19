@@ -133,7 +133,7 @@
                             <td>
                                 @Html.DisplayFor(model => item.TableOrder)
                             </td>
-                            <td align="right"><a href="@Url.Action("SearchResults", "Part", new { item.PartNumber })">@Html.DisplayFor(model => item.PartNumber)</a> <a href="https://www.google.com/search?q=FIAT+@item.PartNumber" target="_blank" class="bi bi-search"></a></td>
+                            <td align="right"><a href="@Url.Action("SearchResults", "Part", new {Model.Breadcrumb.Language, item.PartNumber })">@Html.DisplayFor(model => item.PartNumber)</a> <a href="https://www.google.com/search?q=FIAT+@item.PartNumber" target="_blank" class="bi bi-search"></a></td>
                             <td>@Html.DisplayFor(model => item.Description) @Html.DisplayFor(model => item.FurtherDescription)</td>
                             <td>@Html.DisplayFor(model => item.Compatibility)</td>
                             <td>

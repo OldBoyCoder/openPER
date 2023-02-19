@@ -22,6 +22,8 @@ namespace openPER.Controllers
         {
             // Standard prologue
             Helpers.LanguageSupport.SetCultureBasedOnRoute(language);
+            ViewData["Language"] = language;
+
             var breadcrumb = new BreadcrumbModel { MakeCode = makeCode, SubMakeCode = subMakeCode, ModelCode = modelCode, 
                 CatalogueCode = catalogueCode, GroupCode = groupCode, SubGroupCode = subGroupCode};
             _rep.PopulateBreadcrumbDescriptions(breadcrumb, language);
