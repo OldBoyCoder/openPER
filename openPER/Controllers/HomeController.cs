@@ -30,13 +30,14 @@ namespace openPER.Controllers
         }
 
         [ApiExplorerSettings(IgnoreApi = true)]
-        public IActionResult Index()
+        [Route("{language=3}")]
+        public IActionResult Index(string language)
         {
-            var language = Helpers.LanguageSupport.SetCultureBasedOnCookie(HttpContext);
-
             var breadcrumb = new BreadcrumbModel();
+            Helpers.LanguageSupport.SetCultureBasedOnRoute(language);
             _rep.PopulateBreadcrumbDescriptions(breadcrumb, language);
-
+            ViewData["Language"] = language;
+            var x = RouteData;
             var model = new MakesViewModel
             {
                 Makes = _mapper.Map<List<MakeModel>, List<MakeViewModel>>(_rep.GetAllMakes()),
@@ -46,7 +47,9 @@ namespace openPER.Controllers
                     SideMenuItems = new SideMenuItemsViewModel
                     {
                         AllMakes = _mapper.Map<List<MakeModel>, List<MakeViewModel>>(_rep.GetAllMakes()),
-                    }
+                    },
+                    Language = language
+
                 }
 
             };
@@ -69,22 +72,6 @@ namespace openPER.Controllers
         [ApiExplorerSettings(IgnoreApi = true)]
         public IActionResult SetLanguage(SessionOptionsViewModel model)
         {
-            var cookieOptions = new CookieOptions
-            {
-                // Set the secure flag, which Chrome's changes will require for SameSite none.
-                // Note this will also require you to be running on HTTPS.
-                Secure = true,
-
-                // Set the cookie to HTTP only which is good practice unless you really do need
-                // to access it client side in scripts.
-                HttpOnly = true,
-
-                // Add the SameSite attribute, this will emit the attribute with a value of none.
-                SameSite = SameSiteMode.Strict
-
-                // The client should follow its default cookie policy.
-                // SameSite = SameSiteMode.Unspecified
-            }; HttpContext.Response.Cookies.Append("PreferredLanguage", model.CurrentLanguage, cookieOptions);
             //HttpContext.Response.Cookies.Append("Release", model.CurrentVersion.ToString());
             var newCulture = Helpers.LanguageSupport.ConvertLanguageCodeToCulture(model.CurrentLanguage);
             Thread.CurrentThread.CurrentCulture = newCulture;
@@ -96,24 +83,6 @@ namespace openPER.Controllers
         [ApiExplorerSettings(IgnoreApi = true)]
         public IActionResult SetLanguage(string languageCode)
         {
-            var cookieOptions = new CookieOptions
-            {
-                // Set the secure flag, which Chrome's changes will require for SameSite none.
-                // Note this will also require you to be running on HTTPS.
-                Secure = true,
-
-                // Set the cookie to HTTP only which is good practice unless you really do need
-                // to access it client side in scripts.
-                HttpOnly = true,
-
-                // Add the SameSite attribute, this will emit the attribute with a value of none.
-                SameSite = SameSiteMode.Strict
-
-                // The client should follow its default cookie policy.
-                // SameSite = SameSiteMode.Unspecified
-            };
-            HttpContext.Response.Cookies.Append("PreferredLanguage", languageCode, cookieOptions);
-            //HttpContext.Response.Cookies.Append("Release", model.CurrentVersion.ToString());
             var newCulture = Helpers.LanguageSupport.ConvertLanguageCodeToCulture(languageCode);
             Thread.CurrentThread.CurrentCulture = newCulture;
             Thread.CurrentThread.CurrentUICulture = newCulture;
@@ -125,23 +94,6 @@ namespace openPER.Controllers
         [ApiExplorerSettings(IgnoreApi = true)]
         public IActionResult Index(SessionOptionsViewModel model)
         {
-            var cookieOptions = new CookieOptions
-            {
-                // Set the secure flag, which Chrome's changes will require for SameSite none.
-                // Note this will also require you to be running on HTTPS.
-                Secure = true,
-
-                // Set the cookie to HTTP only which is good practice unless you really do need
-                // to access it client side in scripts.
-                HttpOnly = true,
-
-                // Add the SameSite attribute, this will emit the attribute with a value of none.
-                //SameSite = SameSiteMode.None
-
-                // The client should follow its default cookie policy.
-                SameSite = SameSiteMode.Strict
-            };
-            HttpContext.Response.Cookies.Append("PreferredLanguage", model.CurrentLanguage, cookieOptions);
             var newCulture = Helpers.LanguageSupport.ConvertLanguageCodeToCulture(model.CurrentLanguage);
             Thread.CurrentThread.CurrentCulture = newCulture;
             Thread.CurrentThread.CurrentUICulture = newCulture;

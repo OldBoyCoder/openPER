@@ -4,13 +4,16 @@
 @foreach (var lang in Model.Languages)
 {
     <li>
+        @{Model.RouteData["language"] = lang.Code;}
         @if (lang.Code == Model.CurrentLanguage)
         {
-            @Html.ActionLink(lang.Description, "SetLanguage", "Home", new { LanguageCode = lang.Code }, new { @class = "dropdown-item active" })
+            @*@Html.ActionLink(lang.Description, "SetLanguage", "Home", new { LanguageCode = lang.Code }, new { @class = "dropdown-item active" })*@
+            @Html.RouteLink(lang.Description, Model.RouteData, new { @class = "dropdown-item active" })
         }
         else
         {
-            @Html.ActionLink(lang.Description, "SetLanguage", "Home", new { LanguageCode = lang.Code }, new { @class = "dropdown-item" })
+            @*@Html.ActionLink(lang.Description, "SetLanguage", "Home", new { LanguageCode = lang.Code }, new { @class = "dropdown-item" })*@
+            @Html.RouteLink(lang.Description, Model.RouteData, new { @class = "dropdown-item" })
         }
 
     </li>

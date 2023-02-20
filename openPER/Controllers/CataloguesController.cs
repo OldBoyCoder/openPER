@@ -17,14 +17,15 @@ namespace openPER.Controllers
             _rep = rep;
             _mapper = mapper;
         }
-        [Route("Catalogues/{MakeCode}/{SubMakeCode}/{ModelCode}")]
+        [Route("Catalogues/{language}/{MakeCode}/{SubMakeCode}/{ModelCode}")]
         [ApiExplorerSettings(IgnoreApi = true)]
-        public IActionResult Index(string makeCode, string subMakeCode, string modelCode)
+        public IActionResult Index(string language, string makeCode, string subMakeCode, string modelCode)
         {
             // Standard prologue
-            var language = Helpers.LanguageSupport.SetCultureBasedOnCookie(HttpContext);
+            Helpers.LanguageSupport.SetCultureBasedOnRoute(language);
             var breadcrumb = new BreadcrumbModel { MakeCode = makeCode, SubMakeCode = subMakeCode, ModelCode = modelCode };
             _rep.PopulateBreadcrumbDescriptions(breadcrumb, language);
+            ViewData["Language"] = language;
 
             var model = new CataloguesViewModel
             {
@@ -39,7 +40,8 @@ namespace openPER.Controllers
                             subMakeCode)),
                         AllCatalogues = _mapper.Map<List<CatalogueModel>, List<CatalogueViewModel>>(
                             _rep.GetAllCatalogues(makeCode, subMakeCode, modelCode, language))
-                    }
+                    },
+                    Language = language
                 },
                 ImagePath = _rep.GetImageNameForModel(makeCode, subMakeCode, modelCode)
 

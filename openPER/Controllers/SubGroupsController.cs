@@ -16,12 +16,14 @@ namespace openPER.Controllers
             _rep = rep;
             _mapper = mapper;
         }
-        [Route("SubGroups/{MakeCode}/{SubMakeCode}/{ModelCode}/{CatalogueCode}/{GroupCode}")]
+        [Route("SubGroups/{language}/{MakeCode}/{SubMakeCode}/{ModelCode}/{CatalogueCode}/{GroupCode}")]
         [ApiExplorerSettings(IgnoreApi = true)]
-        public IActionResult Index(string makeCode, string subMakeCode, string modelCode, string catalogueCode, int groupCode)
+        public IActionResult Index(string language, string makeCode, string subMakeCode, string modelCode, string catalogueCode, int groupCode)
         {
             // Standard prologue
-            var language = Helpers.LanguageSupport.SetCultureBasedOnCookie(HttpContext);
+            Helpers.LanguageSupport.SetCultureBasedOnRoute(language);
+            ViewData["Language"] = language;
+
             var breadcrumb = new BreadcrumbModel { MakeCode = makeCode, SubMakeCode = subMakeCode, ModelCode = modelCode, CatalogueCode = catalogueCode, GroupCode = groupCode };
             _rep.PopulateBreadcrumbDescriptions(breadcrumb, language);
             var mapDetails = _rep.GetMapForCatalogueGroup(makeCode, subMakeCode, modelCode, catalogueCode, groupCode);
@@ -52,7 +54,8 @@ namespace openPER.Controllers
                     _rep.GetGroupsForCatalogue(catalogueCode, language)),
                         AllSubGroups = _mapper.Map<List<SubGroupModel>, List<SubGroupViewModel>>(
                     _rep.GetSubGroupsForCatalogueGroup(catalogueCode, groupCode, language))
-                    }
+                    },
+                    Language = language
                 }
 
 

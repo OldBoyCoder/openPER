@@ -7,6 +7,7 @@
         public string FullVin { get; set; }
         public string SelectedModel { get; set; }
         public string ChassisNumber { get; set; }
+        public string Language { get; set; }
         public SearchViewModel()
         {
             VinSearch = new VinSearchViewModel();

@@ -32,7 +32,6 @@ namespace openPER.ApiControllers
         {
             var x = new Release84VinSearch(_pathToVindataCH, _pathToVindataRT);
 
-            var language = Helpers.LanguageSupport.SetCultureBasedOnCookie(HttpContext);
             if (string.IsNullOrEmpty(fullVin) || fullVin.Length != 17)
                 return NotFound();
 

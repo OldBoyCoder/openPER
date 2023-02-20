@@ -20,6 +20,8 @@
         public string GroupDescription { get; set; }
         public string SubGroupDescription { get; set; }
         public string SubSubGroupDescription { get; set; }
+        public string Language { get; set; }
+        public string Scope { get; set; }
 
 
     }

@@ -18,11 +18,13 @@ namespace openPER.Controllers
         }
 
         [HttpGet]
-        public ActionResult SearchResults(string partNumber)
+
+        public ActionResult SearchResults(string language, string partNumber)
         {
             var p = new PartSearchViewModel();
-            var language = Helpers.LanguageSupport.SetCultureBasedOnCookie(HttpContext);
+            ViewData["Language"] = language;
 
+            p.Language = language;
             if (partNumber == null) return View("Index", null);
             p.PartNumberSearch = partNumber;
 

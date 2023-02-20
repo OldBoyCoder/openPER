@@ -13,7 +13,7 @@ namespace openPERModels
         public string Notes1 { get; set; }
         public string Notes2 { get; set; }
         public string Notes3 { get; set; }
-        public string Sequence { get; set; }
+        public int Sequence { get; set; }
         public List<ModificationModel> Modifications { get; set; }
         public string Compatibility { get; set; }
         public bool IsAComponent { get; set; }

@@ -18,12 +18,14 @@ namespace openPER.Controllers
             _mapper = mapper;
         }
         // The most specific route, only the drawings for the lowest level are returned
-        [Route("Detail/{MakeCode}/{SubMakeCode}/{ModelCode}/{CatalogueCode}/{GroupCode}/{SubGroupCode}/{SubSubGroupCode}/{DrawingNumber}/{Scope}")]
+        [Route("Detail/{language}/{MakeCode}/{SubMakeCode}/{ModelCode}/{CatalogueCode}/{GroupCode}/{SubGroupCode}/{SubSubGroupCode}/{DrawingNumber}/{Scope}")]
         [ApiExplorerSettings(IgnoreApi = true)]
-        public IActionResult Detail(string makeCode, string subMakeCode, string modelCode, string catalogueCode, int groupCode, int subGroupCode, int subSubGroupCode, int drawingNumber, string scope)
+        public IActionResult Detail(string language, string makeCode, string subMakeCode, string modelCode, string catalogueCode, int groupCode, int subGroupCode, int subSubGroupCode, int drawingNumber, string scope)
         {
             // Standard prologue
-            var language = Helpers.LanguageSupport.SetCultureBasedOnCookie(HttpContext);
+            Helpers.LanguageSupport.SetCultureBasedOnRoute(language);
+            ViewData["Language"] = language;
+
 
             var model = new DrawingsViewModel();
             // We need to get all of the drawing keys for this sub sub group
@@ -56,19 +58,22 @@ namespace openPER.Controllers
                 GroupCode = drawing.GroupCode,
                 SubGroupCode = drawing.SubGroupCode,
                 SubSubGroupCode = drawing.SubSubGroupCode,
-                DrawingNumber = drawingNumber
+                DrawingNumber = drawingNumber,
+                Scope = scope
             };
             _rep.PopulateBreadcrumbDescriptions(breadcrumb, language);
             model.Breadcrumb = _mapper.Map<BreadcrumbModel, BreadcrumbViewModel>(breadcrumb);
 
             return View(model);
         }
-        [Route("Detail/{MakeCode}/{SubMakeCode}/{ModelCode}/{CatalogueCode}/{GroupCode}/{SubGroupCode}/{SubSubGroupCode}/{Variant}/{Revision}/{Scope}/{HighlightPart?}")]
+        [Route("Detail/{language}/{MakeCode}/{SubMakeCode}/{ModelCode}/{CatalogueCode}/{GroupCode}/{SubGroupCode}/{SubSubGroupCode}/{Variant}/{Revision}/{Scope}/{HighlightPart?}")]
         [ApiExplorerSettings(IgnoreApi = true)]
-        public IActionResult Detail(string makeCode, string subMakeCode, string modelCode, string catalogueCode, int groupCode, int subGroupCode, int subSubGroupCode, int variant, int revision, string scope, string highlightPart = "~")
+        public IActionResult Detail(string language, string makeCode, string subMakeCode, string modelCode, string catalogueCode, int groupCode, int subGroupCode, int subSubGroupCode, int variant, int revision, string scope, string highlightPart = "~")
         {
             // Standard prologue
-            var language = Helpers.LanguageSupport.SetCultureBasedOnCookie(HttpContext);
+            Helpers.LanguageSupport.SetCultureBasedOnRoute(language);
+            ViewData["Language"] = language;
+
 
             var model = new DrawingsViewModel();
             // We need to get all of the drawing keys for this sub sub group
@@ -109,7 +114,8 @@ namespace openPER.Controllers
                 GroupCode = drawing.GroupCode,
                 SubGroupCode = drawing.SubGroupCode,
                 SubSubGroupCode = drawing.SubSubGroupCode,
-                DrawingNumber = drawingNumber
+                DrawingNumber = drawingNumber, 
+                Scope = scope
             };
             _rep.PopulateBreadcrumbDescriptions(breadcrumb, language);
             model.Breadcrumb = _mapper.Map<BreadcrumbModel, BreadcrumbViewModel>(breadcrumb);

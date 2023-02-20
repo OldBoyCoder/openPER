@@ -24,7 +24,7 @@
                             <a class="nav-link dropdown-toggle" href="#" id="languageDropdownMenuLink" role="button" data-toggle="dropdown" aria-expanded="false">
                                 Language</a>
                             <ul class="dropdown-menu" aria-labelledby="languageDropdownMenuLink">
-                                <vc:language-choice-widget></vc:language-choice-widget>
+                                <vc:language-choice-widget language="@ViewData["Language"]"></vc:language-choice-widget>
                             </ul>
                         </li>
                         <li class="nav-item">
@@ -32,7 +32,7 @@
                                 <a class="nav-link dropdown-toggle" href="#" id="searchDropdownMenuLink" role="button" data-toggle="dropdown" aria-expanded="false">
                                     Search</a>
                                 <ul class="dropdown-menu" aria-labelledby="searchDropdownMenuLink">
-                                <vc:search-widget></vc:search-widget>
+                                <vc:search-widget language="@ViewData["Language"]"></vc:search-widget>
                                 </ul>
                             </div>
                         </li>

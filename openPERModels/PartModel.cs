@@ -11,5 +11,7 @@ namespace openPERModels
         public string UnitOfSale { get; set; }
         public int Weight { get; set; }
         public List<PartDrawing> Drawings { get; set; }
+        public List<PartReplacementModel> Replaces { get; set; }
+        public List<PartReplacementModel> ReplacedBy { get; set; }
     }
 }

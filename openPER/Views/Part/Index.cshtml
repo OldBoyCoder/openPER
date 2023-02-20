@@ -17,6 +17,34 @@
             <tr><td>Weight (grams)</td><td>@Model.Result.Weight</td><td></td><td></td></tr>
             <tr><td>Measurement unit</td><td>@Model.Result.UnitOfSale</td><td></td><td></td></tr>
         </table>
+        <h3>Replacements</h3>
+        <table class="table">
+            <tr><th>Repl. date</th><th>Replaced</th><th>Replacing</th><th>Description</th><th>Applicability</th></tr>
+            @foreach (var r in Model.Result.ReplacedBy)
+            {
+                <tr>
+                    <td>@r.ReplacementDate</td>
+                    <td><a href="@Url.Action("SearchResults", "Part", new {Model.Language, PartNumber=r.OldPartCode})">@Html.DisplayFor(model => r.OldPartCode)</a></td>
+                    <td><a href="@Url.Action("SearchResults", "Part", new {Model.Language, PartNumber=r.NewPartCode})">@Html.DisplayFor(model => r.NewPartCode)</a></td>
+                    <td>@r.PartDescription</td>
+                    <td>@r.GroupDescription</td>
+                </tr>
+            }
+        </table>
+        <h3>Product previously in use</h3>
+        <table class="table">
+            <tr><th>Repl. date</th><th>Replacing</th><th>Replaced</th><th>Description</th></tr>
+            @foreach (var r in Model.Result.Replaces)
+            {
+                <tr>
+                    <td>@r.ReplacementDate</td>
+                    <td><a href="@Url.Action("SearchResults", "Part", new {Model.Language, PartNumber=r.NewPartCode})">@Html.DisplayFor(model => r.NewPartCode)</a></td>
+                    <td><a href="@Url.Action("SearchResults", "Part", new {Model.Language, PartNumber=r.OldPartCode})">@Html.DisplayFor(model => r.OldPartCode)</a></td>
+                    <td>@r.PartDescription</td>
+                </tr>
+            }
+        </table>
+        <h3>Drawings</h3>
         <table class="table">
             @foreach (var drawing in Model.Result.Drawings)
             {
@@ -25,14 +53,14 @@
                     <td>
                         @if (drawing.ClichePart)
                         {
-                            <a href="@Url.Action("Detail", "Cliche", new {MakeCode = drawing.Make, SubMakeCode = drawing.SubMake, ModelCode = drawing.Model, drawing.CatalogueCode, drawing.GroupCode, drawing.SubGroupCode, drawing.SubSubGroupCode, drawing.Variant, ClichePartNumber = drawing.ClichePartNumber, ClicheDrawingNumber=drawing.ClichePartDrawingNumber  })">
-                                @drawing.GroupCode.ToString("000")@drawing.SubGroupCode.ToString("00")/@drawing.SubSubGroupCode.ToString("00") - @drawing.SubGroupDescription/@drawing.ClichePartNumber.ToString("0")/@drawing.ClichePartDrawingNumber
+                            <a href="@Url.Action("Detail", "Cliche", new {Model.Language, MakeCode = drawing.Make, SubMakeCode = drawing.SubMake, ModelCode = drawing.Model, drawing.CatalogueCode, drawing.GroupCode, drawing.SubGroupCode, drawing.SubSubGroupCode, DrawingNumber=drawing.Variant, ClichePartNumber = drawing.ClichePartNumber, ClicheDrawingNumber=drawing.ClichePartDrawingNumber  })">
+                                @drawing.GroupCode.ToString("000")@drawing.SubGroupCode.ToString("00")/@drawing.SubSubGroupCode.ToString("00") - @drawing.SubGroupDescription/@drawing.ClichePartNumber/@drawing.ClichePartDrawingNumber
                             </a>
 
                         }
                         else
                         {
-                            <a href="@Url.Action("Detail", "Drawings", new {MakeCode = drawing.Make, SubMakeCode = drawing.SubMake, ModelCode = drawing.Model, drawing.CatalogueCode, drawing.GroupCode, drawing.SubGroupCode, drawing.SubSubGroupCode, drawing.Variant, drawing.Revision, Scope="SubSubGroup", HighlightPart=Model.Result.PartNumber })">
+                            <a href="@Url.Action("Detail", "Drawings", new {Model.Language, MakeCode = drawing.Make, SubMakeCode = drawing.SubMake, ModelCode = drawing.Model, drawing.CatalogueCode, drawing.GroupCode, drawing.SubGroupCode, drawing.SubSubGroupCode, drawing.Variant, drawing.Revision, Scope="SubSubGroup", HighlightPart=Model.Result.PartNumber })">
                                 @drawing.GroupCode.ToString("000")@drawing.SubGroupCode.ToString("00")/@drawing.SubSubGroupCode.ToString("00") - @drawing.SubGroupDescription
                             </a>
                         }
