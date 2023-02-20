@@ -3,6 +3,7 @@ using openPERModels;
 
 namespace openPER.ViewModels
 {
+
     public class PartViewModel
     {
         public string PartNumber { get; set; }
@@ -18,5 +19,8 @@ namespace openPER.ViewModels
         public List<ModificationViewModel> Modifications { get; set; }
         public string Compatibility { get; internal set; }
         public bool IsAComponent { get; set; }
+        public List<PartReplacementViewModel> Replaces { get; set; }
+        public List<PartReplacementViewModel> ReplacedBy { get; set; }
+
     }
 }

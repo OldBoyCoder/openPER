@@ -17,6 +17,34 @@
             <tr><td>Weight (grams)</td><td>@Model.Result.Weight</td><td></td><td></td></tr>
             <tr><td>Measurement unit</td><td>@Model.Result.UnitOfSale</td><td></td><td></td></tr>
         </table>
+        <h3>Replacements</h3>
+        <table class="table">
+            <tr><th>Repl. date</th><th>Replaced</th><th>Replacing</th><th>Description</th><th>Applicability</th></tr>
+            @foreach (var r in Model.Result.ReplacedBy)
+            {
+                <tr>
+                    <td>@r.ReplacementDate</td>
+                    <td><a href="@Url.Action("SearchResults", "Part", new {Model.Language, PartNumber=r.OldPartCode})">@Html.DisplayFor(model => r.OldPartCode)</a></td>
+                    <td><a href="@Url.Action("SearchResults", "Part", new {Model.Language, PartNumber=r.NewPartCode})">@Html.DisplayFor(model => r.NewPartCode)</a></td>
+                    <td>@r.PartDescription</td>
+                    <td>@r.GroupDescription</td>
+                </tr>
+            }
+        </table>
+        <h3>Product previously in use</h3>
+        <table class="table">
+            <tr><th>Repl. date</th><th>Replacing</th><th>Replaced</th><th>Description</th></tr>
+            @foreach (var r in Model.Result.Replaces)
+            {
+                <tr>
+                    <td>@r.ReplacementDate</td>
+                    <td><a href="@Url.Action("SearchResults", "Part", new {Model.Language, PartNumber=r.NewPartCode})">@Html.DisplayFor(model => r.NewPartCode)</a></td>
+                    <td><a href="@Url.Action("SearchResults", "Part", new {Model.Language, PartNumber=r.OldPartCode})">@Html.DisplayFor(model => r.OldPartCode)</a></td>
+                    <td>@r.PartDescription</td>
+                </tr>
+            }
+        </table>
+        <h3>Drawings</h3>
         <table class="table">
             @foreach (var drawing in Model.Result.Drawings)
             {

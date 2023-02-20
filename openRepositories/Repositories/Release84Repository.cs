@@ -4,6 +4,7 @@ using MySqlConnector;
 using Microsoft.Extensions.Configuration;
 using openPERModels;
 using openPERRepositories.Interfaces;
+using System;
 
 // ReSharper disable StringLiteralTypo
 
@@ -953,9 +954,67 @@ namespace openPERRepositories.Repositories
             if (p != null)
             {
                 p.Drawings = GetDrawingsForPartNumber(p.PartNumber, languageCode);
+                p.ReplacedBy = GetReplacedByForPartNumber(p.PartNumber, languageCode);
+                p.Replaces = GetReplacesForPartNumber(p.PartNumber, languageCode);
             }
             return p;
         }
+
+        private List<PartReplacementModel> GetReplacedByForPartNumber(string partNumber, string languageCode)
+        {
+            var rc = new List<PartReplacementModel>();
+            using (var connection = new MySqlConnection(_pathToDb))
+            {
+                var sql = @"SELECT RPL_DATE, RPL_COD, RPL_GRPDSC, C.CDS_DSC
+                                 FROM rplnt R
+                                 JOIN parts P ON R.RPL_COD = P.PRT_COD
+                                 JOIN codes_dsc C ON C.CDS_COD = P.CDS_COD AND C.LNG_COD = @p2
+                                 LEFT OUTER  JOIN rplnt_grp G ON G.RPL_GRPNUM = R.RPL_GRPNUM AND G.LNG_COD = @p2 AND G.PRT_COD = R.PRT_COD
+                                 WHERE R.prt_cod = @p1 ORDER BY R.RPL_COD";
+                connection.RunSqlAllRows(sql, (reader) =>
+                {
+                    var p = new PartReplacementModel
+                    {
+                        ReplacementDate = reader.GetString(0),
+                        NewPartCode = reader.GetString(1),
+                        OldPartCode = partNumber,
+                        GroupDescription = reader.IsDBNull(2) ? "" : reader.GetString(3),
+                        PartDescription = reader.GetString(3)
+                    };
+                    rc.Add(p);
+                }, partNumber, languageCode);
+
+            }
+            return rc;
+        }
+        private List<PartReplacementModel> GetReplacesForPartNumber(string partNumber, string languageCode)
+        {
+            var rc = new List<PartReplacementModel>();
+            using (var connection = new MySqlConnection(_pathToDb))
+            {
+                var sql = @"SELECT RPL_DATE, R.PRT_COD, RPL_GRPDSC, C.CDS_DSC
+                                 FROM rplnt R
+                                 JOIN parts P ON R.RPL_COD = P.PRT_COD
+                                 JOIN codes_dsc C ON C.CDS_COD = P.CDS_COD AND C.LNG_COD = @p2
+                                 LEFT OUTER  JOIN rplnt_grp G ON G.RPL_GRPNUM = R.RPL_GRPNUM AND G.LNG_COD = @p2 AND G.PRT_COD = R.PRT_COD
+                                 WHERE R.RPL_COD = @p1 ORDER BY R.RPL_COD";
+                connection.RunSqlAllRows(sql, (reader) =>
+                {
+                    var p = new PartReplacementModel
+                    {
+                        ReplacementDate = reader.GetString(0),
+                        OldPartCode = reader.GetString(1),
+                        NewPartCode = partNumber,
+                        GroupDescription = reader.IsDBNull(2) ? "" : reader.GetString(3),
+                        PartDescription = reader.GetString(3)
+                    };
+                    rc.Add(p);
+                }, partNumber, languageCode);
+
+            }
+            return rc;
+        }
+
         public List<PartModel> GetPartSearch(string modelName, string partDescription, string languageCode)
         {
             var rc = new List<PartModel>();
