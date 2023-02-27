@@ -18,7 +18,7 @@ namespace openPER.Controllers
         }
         [Route("Groups/{language}/{MakeCode}/{SubMakeCode}/{ModelCode}/{CatalogueCode}")]
         [ApiExplorerSettings(IgnoreApi = true)]
-        public IActionResult Index(string language, string makeCode,string subMakeCode, string modelCode, string catalogueCode)
+        public IActionResult Index(string language, string makeCode,string subMakeCode, string modelCode, string catalogueCode, string VIN = "", string MVS = "")
         {
             // Standard prologue
             Helpers.LanguageSupport.SetCultureBasedOnRoute(language);
@@ -26,7 +26,7 @@ namespace openPER.Controllers
 
             var breadcrumb = new BreadcrumbModel
             {
-                MakeCode = makeCode, SubMakeCode = subMakeCode, ModelCode = modelCode, CatalogueCode = catalogueCode
+                MakeCode = makeCode, SubMakeCode = subMakeCode, ModelCode = modelCode, CatalogueCode = catalogueCode, VIN= VIN,MVS=MVS
             };
             _rep.PopulateBreadcrumbDescriptions(breadcrumb, language);
             var mapAndImage = _rep.GetMapAndImageForCatalogue(makeCode, subMakeCode, modelCode, catalogueCode);

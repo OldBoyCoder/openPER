@@ -4,6 +4,7 @@ using openPER.ViewModels;
 using Microsoft.AspNetCore.Mvc;
 using openPERModels;
 using openPERRepositories.Interfaces;
+using openPER.Helpers;
 
 namespace openPER.Controllers
 {
@@ -18,14 +19,17 @@ namespace openPER.Controllers
         }
         [Route("SubSubGroups/{language}/{MakeCode}/{SubMakeCode}/{ModelCode}/{CatalogueCode}/{GroupCode}/{SubGroupCode}")]
         [ApiExplorerSettings(IgnoreApi = true)]
-        public IActionResult Index(string language, string makeCode,string subMakeCode, string modelCode, string catalogueCode, int groupCode, int subGroupCode)
+        public IActionResult Index(string language, string makeCode,string subMakeCode, string modelCode, string catalogueCode, int groupCode, int subGroupCode, string VIN="", string MVS="")
         {
             // Standard prologue
             Helpers.LanguageSupport.SetCultureBasedOnRoute(language);
             ViewData["Language"] = language;
 
             var breadcrumb = new BreadcrumbModel { MakeCode = makeCode, SubMakeCode = subMakeCode, ModelCode = modelCode, 
-                CatalogueCode = catalogueCode, GroupCode = groupCode, SubGroupCode = subGroupCode};
+                CatalogueCode = catalogueCode, GroupCode = groupCode, SubGroupCode = subGroupCode,
+                VIN = VIN,
+                MVS = MVS
+            };
             _rep.PopulateBreadcrumbDescriptions(breadcrumb, language);
 
             var model = new SubSubGroupsViewModel
@@ -57,8 +61,22 @@ namespace openPER.Controllers
                     },
                     Language = language
                 }
-            };
 
+            };
+            if (MVS != "")
+            {
+                string sinComPattern = _rep.GetSincomPattern(MVS);
+                foreach (var subSubGroup in model.SubSubGroups)
+                {
+                    var pattern = subSubGroup.Pattern;
+                    if (!string.IsNullOrEmpty(pattern))
+                    {
+                        var rc = PatternMatchHelper.EvaluateRule(pattern, sinComPattern);
+                        if (rc == 0)
+                            subSubGroup.Visible = false;
+                    }
+                }
+            }
             return View(model);
         }
 

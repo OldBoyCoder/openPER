@@ -12,11 +12,10 @@
             <caption>List of vehicle details</caption>
             <tr><td>Model</td><td>@Html.DisplayTextFor(m=>result.FullMvsCode) | @Html.DisplayTextFor(m=>result.Description)</td></tr>
             <tr><td>Chassis No.</td><td>@Html.DisplayTextFor(m=>m.ChassisNumber)</td></tr>
-            <!-- TODO this shouldn't be hardcoded as a BArchetta' -->
             <tr><td>Catalogue</td><td>@Html.ActionLink(result.CatalogueCode +" | "+result.CatalogueDescription, "Index", "Groups", new { MakeCode=result.MakeCode,SubMakeCode=result.SubMakeCode, ModelCode=result.ModelCode, CatalogueCode=result.CatalogueCode})</td></tr>
             <tr><td>MVS</td><td>@Html.DisplayTextFor(m=>result.FullMvsCode) | @Html.DisplayTextFor(m=>result.Description)</td></tr>
             <tr><td>Engine stamp</td><td>@Html.DisplayTextFor(m=>result.EngineType)</td></tr>
-            <tr><td>Version code</td><td>@Html.DisplayTextFor(m=>result.SincomVersion)</td></tr>
+            <tr><td>Version code</td><td>@Html.DisplayTextFor(m=>result.Sincom)</td></tr>
             <tr><td>Version</td><td>@Html.DisplayTextFor(m=>result.VariantCode) | @Html.DisplayTextFor(m=>result.VariantDescription)</td></tr>
             <tr><td>Engine version</td><td>@Html.DisplayTextFor(m=>result.EngineCode) | @Html.DisplayTextFor(m=>result.EngineDescription)</td></tr>
             <tr><td>Interior colour</td><td>@Html.DisplayTextFor(m=>Model.InteriorColourCode) | @Html.DisplayTextFor(m=>Model.InteriorColourDesc)</td></tr>

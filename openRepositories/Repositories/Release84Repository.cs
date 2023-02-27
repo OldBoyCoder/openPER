@@ -59,7 +59,7 @@ namespace openPERRepositories.Repositories
                 {
                     X = reader.GetInt32(0),
                     Y = reader.GetInt32(1),
-                    Index = reader.IsDBNull(2)?0: reader.GetInt32(2),
+                    Index = reader.IsDBNull(2) ? 0 : reader.GetInt32(2),
                     GroupCode = reader.GetInt32(3),
                     Description = reader.GetString(4)
                 };
@@ -150,7 +150,7 @@ namespace openPERRepositories.Repositories
 
         }
 
-        public  string GetMakeDescription(string makeCode)
+        public string GetMakeDescription(string makeCode)
         {
             var rc = "";
             var sql = @"SELECT MK_DSC FROM MAKES WHERE MK_COD = @p1";
@@ -166,7 +166,7 @@ namespace openPERRepositories.Repositories
         {
             var rc = new List<SubSubGroupModel>();
             using var connection = new MySqlConnection(_pathToDb);
-            var sql = @"select distinct T.SGS_COD, TD.DSC FROM DRAWINGS T
+            var sql = @"select distinct T.SGS_COD, TD.DSC, PATTERN FROM DRAWINGS T
                             JOIN TABLES_DSC TD ON TD.LNG_COD = @p4 AND TD.COD = T.TABLE_DSC_COD
                             WHERE CAT_COD = @p1 AND T.GRP_COD = @p2 AND T.SGRP_COD = @p3
                             order by T.SGS_COD";
@@ -175,7 +175,8 @@ namespace openPERRepositories.Repositories
                 var m = new SubSubGroupModel
                 {
                     Code = reader.GetInt32(0),
-                    Description = reader.GetString(1)
+                    Description = reader.GetString(1),
+                    Pattern = reader.IsDBNull(2)?"":reader.GetString(2)
 
                 };
                 //m.Modifications = AddSgsModifications(catalogueCode, groupCode, subGroupCode, m.Code, languageCode, connection);
@@ -350,7 +351,7 @@ namespace openPERRepositories.Repositories
             }
             return parts;
         }
-        private  List<ModificationModel> GetPartModifications(string catalogueCode, string modifString, string languageCode)
+        private List<ModificationModel> GetPartModifications(string catalogueCode, string modifString, string languageCode)
         {
             var modifications = new List<ModificationModel>();
             if (string.IsNullOrEmpty(modifString)) return modifications;
@@ -429,7 +430,7 @@ namespace openPERRepositories.Repositories
 
 
         }
-        private  List<int> GetDrawingNumbers(string catalogueCode, int groupCode, int subGroupCode, int sgsCode, int revision)
+        private List<int> GetDrawingNumbers(string catalogueCode, int groupCode, int subGroupCode, int sgsCode, int revision)
         {
             var rc = new List<int>();
             using var connection = new MySqlConnection(_pathToDb);
@@ -443,7 +444,7 @@ namespace openPERRepositories.Repositories
             return rc;
         }
 
-        private  bool IsPartAComponent(TablePartModel part)
+        private bool IsPartAComponent(TablePartModel part)
         {
             using var connection = new MySqlConnection(_pathToDb);
             var rc = false;
@@ -469,7 +470,7 @@ namespace openPERRepositories.Repositories
             return rc;
         }
 
-        protected  string GetGroupDescription(int groupCode, string languageCode)
+        protected string GetGroupDescription(int groupCode, string languageCode)
         {
             using var connection = new MySqlConnection(_pathToDb);
             string rc = "";
@@ -493,7 +494,7 @@ namespace openPERRepositories.Repositories
             }, groupCode, subGroupCode, languageCode);
             return rc;
         }
-        private  string GetSubSubGroupDescription(string catalogCode, int groupCode, int subGroupCode, int subSubGroupCode, string languageCode)
+        private string GetSubSubGroupDescription(string catalogCode, int groupCode, int subGroupCode, int subSubGroupCode, string languageCode)
         {
             using var connection = new MySqlConnection(_pathToDb);
             var rc = "";
@@ -660,7 +661,7 @@ namespace openPERRepositories.Repositories
             }, catalogueCode, groupCode, subGroupCode, sgsCode, languageCode);
         }
 
-        private  List<ModificationModel> AddSgsModifications(string catalogueCode, int groupCode, int subGroupCode, int sgsCode, string languageCode)
+        private List<ModificationModel> AddSgsModifications(string catalogueCode, int groupCode, int subGroupCode, int sgsCode, string languageCode)
         {
             var sql = @"select SGSMOD_CD,S.MDF_COD,MDF_DSC from SGS_MOD S
                         JOIN MODIF_DSC M ON M.MDF_COD = S.MDF_COD 
@@ -681,7 +682,7 @@ namespace openPERRepositories.Repositories
             return rc;
         }
 
-        private  List<OptionModel> AddSgsOptions(string catalogueCode, int groupCode, int subGroupCode, int sgsCode, string languageCode)
+        private List<OptionModel> AddSgsOptions(string catalogueCode, int groupCode, int subGroupCode, int sgsCode, string languageCode)
         {
             var sql = @"select O.OPTK_TYPE,O.OPTK_COD,OPTK_DSC from SGS_OPT S
                         JOIN OPTKEYS_DSC O ON O.OPTK_TYPE = S.OPTK_TYPE AND O.OPTK_COD = S.OPTK_COD 
@@ -702,7 +703,7 @@ namespace openPERRepositories.Repositories
             return rc;
         }
 
-        private  List<VariationModel> AddSgsVariations(string catalogueCode, int groupCode, int subGroupCode, int sgsCode, string languageCode)
+        private List<VariationModel> AddSgsVariations(string catalogueCode, int groupCode, int subGroupCode, int sgsCode, string languageCode)
         {
             var sql = @"select V.VMK_TYPE,V.VMK_COD,VMK_DSC from SGS_VAL S
                         JOIN VMK_DSC V ON S.VMK_TYPE = V.VMK_TYPE AND S.VMK_COD = V.VMK_COD AND S.CAT_COD = V.CAT_COD
@@ -723,9 +724,9 @@ namespace openPERRepositories.Repositories
             return rc;
         }
 
-        public MvsData GetMvsDetails(string mvsCode, string mvsVersion, string mvsSeries, string colourCode, string languageCode)
+        public MvsDataModel GetMvsDetails(string mvsCode, string mvsVersion, string mvsSeries, string colourCode, string languageCode)
         {
-            var m = new MvsData();
+            var m = new MvsDataModel();
             using var connection = new MySqlConnection(_pathToDb);
             var sql = @"select M.MOD_COD, M.MVS_VERSION, M.MVS_SERIE, MVS_DSC, MVS_SINCOM_VERS,MVS_ENGINE_TYPE, MV.VMK_DSC, VV.VMK_DSC,
                         M.VMK_TYPE_M||VMK_COD_M, M.VMK_TYPE_V||VMK_COD_V,
@@ -743,7 +744,7 @@ namespace openPERRepositories.Repositories
                 m.MvsModel = reader.GetString(1);
                 m.MvsVersion = reader.GetString(2);
                 m.Description = reader.GetString(3);
-                m.SincomVersion = reader.GetString(4);
+                //m.Sincom = reader.GetString(4);
                 m.EngineType = reader.GetString(5);
                 m.EngineDescription = reader.GetString(6);
                 m.VariantDescription = reader.GetString(7);
@@ -1116,28 +1117,28 @@ namespace openPERRepositories.Repositories
             return drawings;
         }
 
-        public List<MvsData> GetMvsDetails(string mvsMarque, string mvsModel, string mvsVersion, string mvsSeries, string mvsGuide, string mvsShopEquipment, string colourCode, string languageCode)
+        public List<MvsDataModel> GetMvsDetails(string mvsMarque, string mvsModel, string mvsVersion, string mvsSeries, string mvsGuide, string mvsShopEquipment, string colourCode, string languageCode)
         {
             using var connection = new MySqlConnection(_pathToDb);
-            List<MvsData> rc;
+            List<MvsDataModel> rc;
             if (!string.IsNullOrEmpty(mvsSeries))
             {
                 rc = GetMvsDataWithDetailedMvsCode(mvsMarque, mvsModel, mvsVersion, mvsSeries, mvsGuide, mvsShopEquipment, colourCode, languageCode);
                 if (rc.Count == 0)
-                    rc = GetMvsDataWithVagueMvsCode(mvsMarque, mvsModel, mvsVersion, mvsSeries, mvsGuide, mvsShopEquipment, colourCode, languageCode);
+                    rc = GetMvsDataWithVagueMvsCode(mvsMarque, mvsModel, mvsVersion);
             }
             else
             {
-                rc = GetMvsDataWithVagueMvsCode(mvsMarque, mvsModel, mvsVersion, mvsSeries, mvsGuide, mvsShopEquipment, colourCode, languageCode);
+                rc = GetMvsDataWithVagueMvsCode(mvsMarque, mvsModel, mvsVersion);
             }
 
 
             return rc;
         }
-        private List<MvsData> GetMvsDataWithDetailedMvsCode(string mvsMarque, string mvsModel, string mvsVersion, string mvsSeries, string mvsGuide, string mvsShopEquipment, string colourCode, string languageCode)
+        private List<MvsDataModel> GetMvsDataWithDetailedMvsCode(string mvsMarque, string mvsModel, string mvsVersion, string mvsSeries, string mvsGuide, string mvsShopEquipment, string colourCode, string languageCode)
         {
             using var connection = new MySqlConnection(_pathToDb);
-            var rc = new List<MvsData>();
+            var rc = new List<MvsDataModel>();
             var sincom = mvsMarque + mvsModel + mvsVersion + mvsGuide + mvsShopEquipment;
             var sql = @"SELECT M.CAT_COD, MVS_DSC, VMK_TYPE_M, VMK_COD_M, VMK_TYPE_V, VMK_COD_V, VMK_TYPE_R, 
                             VMK_COD_R, MVS_ENGINE_TYPE, MVS_DOORS_NUM, SINCOM, PATTERN,
@@ -1149,7 +1150,7 @@ namespace openPERRepositories.Repositories
                             WHERE SINCOM = @p1";
             connection.RunSqlAllRows(sql, (reader) =>
             {
-                var p = new MvsData
+                var p = new MvsDataModel
                 {
                     MvsMark = mvsMarque,
                     MvsModel = mvsModel,
@@ -1160,7 +1161,7 @@ namespace openPERRepositories.Repositories
                     CatalogueCode = reader.GetString(0),
                     Description = reader.IsDBNull(1) ? "" : reader.GetString(1),
                     EngineType = reader.IsDBNull(8) ? "" : reader.GetString(8),
-                    SincomVersion = reader.IsDBNull(10) ? "" : reader.GetString(10),
+                    Sincom = reader.IsDBNull(10) ? "" : reader.GetString(10),
                     CatalogueDescription = reader.IsDBNull(12) ? "" : reader.GetString(12),
                     MakeCode = reader.IsDBNull(13) ? "" : reader.GetString(13),
                     SubMakeCode = reader.IsDBNull(14) ? "" : reader.GetString(14),
@@ -1172,36 +1173,35 @@ namespace openPERRepositories.Repositories
             return rc;
 
         }
-        private List<MvsData> GetMvsDataWithVagueMvsCode(string mvsMarque, string mvsModel, string mvsVersion, string mvsSeries, string mvsGuide, string mvsShopEquipment, string colourCode, string languageCode)
+        private List<MvsDataModel> GetMvsDataWithVagueMvsCode(string mvsMarque, string mvsModel, string mvsVersion)
         {
             using var connection = new MySqlConnection(_pathToDb);
-            var rc = new List<MvsData>();
+            var rc = new List<MvsDataModel>();
             var sql = @"SELECT M.CAT_COD, MVS_DSC, VMK_TYPE_M, VMK_COD_M, VMK_TYPE_V, VMK_COD_V, VMK_TYPE_R, 
                             VMK_COD_R, MVS_ENGINE_TYPE, MVS_DOORS_NUM, SINCOM, PATTERN,
                             C.CAT_DSC, C.MK_COD, C.MK2_COD,
-                            MOD.CMG_DSC
+                            MD.CMG_DSC, C.CMG_COD
                             FROM MVS M
                             JOIN CATALOGUES C ON C.CAT_COD = M.CAT_COD
-                            JOIN COMM_MODGRP MOD ON MOD.MK2_COD = C.MK2_COD AND MOD.CMG_COD = C.CMG_COD
+                            JOIN COMM_MODGRP MD ON MD.MK2_COD = C.MK2_COD AND MD.CMG_COD = C.CMG_COD
                             WHERE MOD_COD = @p1 AND MVS_VERSION = @p2 AND MVS_SERIE = @p3";
             connection.RunSqlAllRows(sql, (reader) =>
             {
-                var p = new MvsData
+                var p = new MvsDataModel
                 {
                     MvsMark = mvsMarque,
                     MvsModel = mvsModel,
                     MvsVersion = mvsVersion,
-                    MvsSeries = mvsSeries,
-                    MvsGuide = mvsGuide,
-                    MvsShopEquipment = mvsShopEquipment,
                     CatalogueCode = reader.GetString(0),
                     Description = reader.IsDBNull(1) ? "" : reader.GetString(1),
                     EngineType = reader.IsDBNull(8) ? "" : reader.GetString(8),
-                    SincomVersion = reader.IsDBNull(10) ? "" : reader.GetString(10),
+                    Sincom = reader.IsDBNull(10) ? "" : reader.GetString(10),
                     CatalogueDescription = reader.IsDBNull(12) ? "" : reader.GetString(12),
                     MakeCode = reader.IsDBNull(13) ? "" : reader.GetString(13),
                     SubMakeCode = reader.IsDBNull(14) ? "" : reader.GetString(14),
-                    ModelDescription = reader.IsDBNull(15) ? "" : reader.GetString(15)
+                    ModelDescription = reader.IsDBNull(15) ? "" : reader.GetString(15),
+                    ModelCode = reader.IsDBNull(16) ? "" : reader.GetString(16),
+                    Pattern = reader.IsDBNull(11) ? "" : reader.GetString(11)
                 };
                 rc.Add(p);
             }, mvsMarque, mvsModel, mvsVersion);
@@ -1285,6 +1285,97 @@ namespace openPERRepositories.Repositories
         public string GetImageNameForModel(string makeCode, string subMakeCode, string modelCode)
         {
             return _pathToCdn + $"ModelImages{subMakeCode}/{modelCode.ToUpper()}.jpg";
+        }
+
+        public List<VinSearchResultModel> FindMatchesForVin(string language, string fullVin)
+        {
+            var rc = new List<VinSearchResultModel>();
+            // There are two ways to find the vehicle.  Firstly a match on VIN directly
+            var @sql = @"SELECT MVS, CHASSY, ORGANIZATION, MOTOR, DATE, INT_COLOR, VIN
+                            FROM VIN_DATA_CH
+                            WHERE VIN = @p1";
+            using var connection = new MySqlConnection(_pathToDb);
+            connection.RunSqlAllRows(sql, (reader) =>
+            {
+                var p = new VinSearchResultModel
+                {
+                    Mvs = reader.GetString(0),
+                    Chassis = reader.GetString(1),
+                    Organization = reader.GetString(2),
+                    Motor = reader.GetString(3),
+                    BuildDate = reader.GetString(4),
+                    InteriorColourCode = reader.GetString(5),
+                    VIN = reader.GetString(6)
+                };
+                rc.Add(p);
+
+            }, fullVin);
+            if (rc.Count > 0) return rc;
+            // Secondly a match on model and chassis number.  First three digits of VIN have to be translated
+            // to a model code and there can be more than one
+
+            // There are two ways to find the vehicle.  Firstly a match on VIN directly
+            @sql = @"SELECT MVS, CHASSY, ORGANIZATION, MOTOR, DATE, INT_COLOR, CONCAT('XXX' ,V.VIN_COD ,'000' , C.CHASSY)
+                            FROM VIN_DATA_CH C
+                            JOIN VIN V ON V.MOD_COD = C.MODEL AND V.VIN_COD = @p1
+                            WHERE CHASSY = @p2";
+            connection.RunSqlAllRows(sql, (reader) =>
+            {
+                var p = new VinSearchResultModel
+                {
+                    Mvs = reader.GetString(0),
+                    Chassis = reader.GetString(1),
+                    Organization = reader.GetString(2),
+                    Motor = reader.GetString(3),
+                    BuildDate = reader.GetString(4),
+                    InteriorColourCode = reader.GetString(5),
+                    VIN = fullVin
+                };
+                rc.Add(p);
+
+            }, fullVin[3..6], fullVin[^8..]);
+
+
+            return rc;
+        }
+
+        public List<MvsDataModel> GetMvsDetails(string mvs)
+        {
+            return GetMvsDataWithVagueMvsCode(mvs[..3], mvs.Substring(3, 3), mvs.Substring(6, 1));
+        }
+        public List<MvsCatalogueOptionModel> GetMvsDetailsForCatalogue(string catalogueCode, string language)
+        {
+            var rc = new List<MvsCatalogueOptionModel>();
+            var @sql = @"SELECT CONCAT( IFNULL(V.VMK_TYPE, ''),IFNULL(VMK_COD, '')), C.vmk_dsc, V.VMK_DSC FROM VMK_DSC V
+	                        LEFT OUTER JOIN carat_dsc C ON C.CAT_COD = V.CAT_COD AND C.LNG_COD = @p2 AND V.VMK_TYPE = C.VMK_TYPE
+	                        WHERE V.CAT_COD = @p1 AND V.LNG_COD = @p2 
+                            ORDER BY C.VMK_TYPE, VMK_COD";
+            using var connection = new MySqlConnection(_pathToDb);
+            connection.RunSqlAllRows(sql, (reader) =>
+            {
+                var p = new MvsCatalogueOptionModel
+                {
+                    TypeCodePair = reader.GetString(0),
+                    TypeDescription = reader.IsDBNull(1) ? "":reader.GetString(1),
+                    CodeDescription = reader.IsDBNull(2)?"": reader.GetString(2)
+                };
+                rc.Add(p);
+
+            }, catalogueCode, language);
+            return rc;
+        }
+
+        public string GetSincomPattern(string mVS)
+        {
+            var rc = "";
+            var @sql = @"SELECT PATTERN FROM MVS WHERE SINCOM = @p1";
+            using var connection = new MySqlConnection(_pathToDb);
+            connection.RunSqlFirstRowOnly(sql, (reader) =>
+            {
+                rc = reader.IsDBNull(0) ? "" : reader.GetString(0);
+
+            }, mVS);
+            return rc;
         }
     }
 }

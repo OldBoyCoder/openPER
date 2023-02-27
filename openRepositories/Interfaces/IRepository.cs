@@ -15,10 +15,11 @@ namespace openPERRepositories.Interfaces
         List<SubSubGroupModel> GetSubSubGroupsForCatalogueGroupSubGroup(string catalogueCode, int groupCode, int subGroupCode, string languageCode);
         PartModel GetPartDetails(string partNumberSearch, string languageCode);
         List<PartModel> GetPartSearch(string modelName, string partDescription, string languageCode);
-        List<MvsData> GetMvsDetails(string mvsMarque, string mvsModel, string mvsVersion, string mvsSeries, string mvsGuide, string mvsShopEquipment,string colourCode, string languageCode);
+        List<MvsDataModel> GetMvsDetails(string mvsMarque, string mvsModel, string mvsVersion, string mvsSeries, string mvsGuide, string mvsShopEquipment,string colourCode, string languageCode);
+        List<VinSearchResultModel> FindMatchesForVin(string language, string fullVin);
         List<LanguageModel> GetAllLanguages();
         List<DrawingKeyModel> GetDrawingKeysForSubSubGroup( string makeCode, string modelCode, string catalogueCode, int groupCode, int subGroupCode, int subSubGroupCode, string languageCode);
-
+        List<MvsDataModel> GetMvsDetails(string mvs);
         List<DrawingKeyModel> GetDrawingKeysForCatalogue(string makeCode, string modelCode, string catalogueCode, string languageCode);
         List<DrawingKeyModel> GetDrawingKeysForGroup(string makeCode, string modelCode, string catalogueCode, int groupCode, string languageCode);
         List<DrawingKeyModel> GetDrawingKeysForSubGroup(string makeCode, string modelCode, string catalogueCode, int groupCode, int subGroupCode, string languageCode);
@@ -38,10 +39,12 @@ namespace openPERRepositories.Interfaces
 
         List<ModelModel> GetAllVinModels();
         string GetInteriorColourDescription(string catCode, string interiorColourCode, string language);
+        string GetSincomPattern(string mVS);
         string GetExteriorColourDescription(string catCode, string exteriorColourCode, string language);
         string GetOptionCodeDescription(string catCode, string code, string language);
         string GetOptionValueDescription(string catCode, string code, string value, string language);
         string GetOptionValueDescription(string catCode, string code, string language);
+        public List<MvsCatalogueOptionModel> GetMvsDetailsForCatalogue(string catalogueCode, string language);
     }
 
 }

@@ -9,5 +9,6 @@ namespace openPERModels
         public List<ModificationModel> Modifications { get; set; }
         public List<VariationModel> Variations { get; set; }
         public List<OptionModel> Options { get; set; }
+        public string Pattern { get; set; }
     }
 }

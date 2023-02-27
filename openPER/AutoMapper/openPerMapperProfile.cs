@@ -24,6 +24,8 @@ namespace openPER.AutoMapper
             CreateMap<ActivationModel, ActivationViewModel>();
             CreateMap<VariationModel, VariationViewModel>();
             CreateMap<ModificationModel, ModificationViewModel>();
+            CreateMap<VinSearchResultModel, VinSearchResultViewModel>();
+            CreateMap<MvsDataModel, MvsDataViewModel>();
 
 
         }

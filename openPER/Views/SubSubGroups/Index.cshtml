@@ -47,7 +47,7 @@
             <p>Select a subcategory from the side menu or directly from the map.</p>
             <table class="table table-sm">
                 <thead><tr><th>Subcategory</th><th>Compatibility</th><th>Code</th><th>Description</th></tr></thead>
-                @foreach (var group in Model.SubSubGroups)
+                @foreach (var group in Model.SubSubGroups.Where(x=>x.Visible))
                 {
                     @:<tr>
                 <td>

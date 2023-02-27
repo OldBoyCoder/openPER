@@ -18,13 +18,13 @@ namespace openPER.Controllers
         }
         [Route("SubGroups/{language}/{MakeCode}/{SubMakeCode}/{ModelCode}/{CatalogueCode}/{GroupCode}")]
         [ApiExplorerSettings(IgnoreApi = true)]
-        public IActionResult Index(string language, string makeCode, string subMakeCode, string modelCode, string catalogueCode, int groupCode)
+        public IActionResult Index(string language, string makeCode, string subMakeCode, string modelCode, string catalogueCode, int groupCode, string VIN = "", string MVS = "")
         {
             // Standard prologue
             Helpers.LanguageSupport.SetCultureBasedOnRoute(language);
             ViewData["Language"] = language;
 
-            var breadcrumb = new BreadcrumbModel { MakeCode = makeCode, SubMakeCode = subMakeCode, ModelCode = modelCode, CatalogueCode = catalogueCode, GroupCode = groupCode };
+            var breadcrumb = new BreadcrumbModel { MakeCode = makeCode, SubMakeCode = subMakeCode, ModelCode = modelCode, CatalogueCode = catalogueCode, GroupCode = groupCode, VIN = VIN, MVS = MVS };
             _rep.PopulateBreadcrumbDescriptions(breadcrumb, language);
             var mapDetails = _rep.GetMapForCatalogueGroup(makeCode, subMakeCode, modelCode, catalogueCode, groupCode);
             

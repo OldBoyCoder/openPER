@@ -23,6 +23,10 @@
         public string SubSubGroupDescription { get; set; }
         public string Language { get; set; }
         public string Scope { get; set; }
+        public string VIN { get; set; }
+        public string MVS { get; set; }
+
+
 
 
     }

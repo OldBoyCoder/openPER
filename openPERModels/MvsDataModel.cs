@@ -1,6 +1,6 @@
 ﻿namespace openPERModels
 {
-    public class MvsData
+    public class MvsDataModel
     {
         public string MvsMark { get; set; }
         public string MvsModel { get; set; }
@@ -10,7 +10,8 @@
         public string MvsShopEquipment { get; set; }
 
         public string Description { get; set; }
-        public string SincomVersion { get; set; }
+        public string Sincom { get; set; }
+        public string Pattern { get; set; }
         public string EngineType { get; set; }
         public string EngineDescription { get; set; }
         public string EngineCode { get; set; }

@@ -20,7 +20,7 @@ namespace openPER.Controllers
         // The most specific route, only the drawings for the lowest level are returned
         [Route("Detail/{language}/{MakeCode}/{SubMakeCode}/{ModelCode}/{CatalogueCode}/{GroupCode}/{SubGroupCode}/{SubSubGroupCode}/{DrawingNumber}/{Scope}")]
         [ApiExplorerSettings(IgnoreApi = true)]
-        public IActionResult Detail(string language, string makeCode, string subMakeCode, string modelCode, string catalogueCode, int groupCode, int subGroupCode, int subSubGroupCode, int drawingNumber, string scope)
+        public IActionResult Detail(string language, string makeCode, string subMakeCode, string modelCode, string catalogueCode, int groupCode, int subGroupCode, int subSubGroupCode, int drawingNumber, string scope, string VIN = "", string MVS = "")
         {
             // Standard prologue
             Helpers.LanguageSupport.SetCultureBasedOnRoute(language);
@@ -59,7 +59,9 @@ namespace openPER.Controllers
                 SubGroupCode = drawing.SubGroupCode,
                 SubSubGroupCode = drawing.SubSubGroupCode,
                 DrawingNumber = drawingNumber,
-                Scope = scope
+                Scope = scope,
+                VIN = VIN,
+                MVS = MVS
             };
             _rep.PopulateBreadcrumbDescriptions(breadcrumb, language);
             model.Breadcrumb = _mapper.Map<BreadcrumbModel, BreadcrumbViewModel>(breadcrumb);
