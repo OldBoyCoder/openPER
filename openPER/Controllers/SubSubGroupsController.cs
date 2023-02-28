@@ -71,8 +71,7 @@ namespace openPER.Controllers
                     var pattern = subSubGroup.Pattern;
                     if (!string.IsNullOrEmpty(pattern))
                     {
-                        var rc = PatternMatchHelper.EvaluateRule(pattern, sinComPattern);
-                        if (rc == 0)
+                        if(!PatternMatchHelper.EvaluateRule(pattern, sinComPattern))
                             subSubGroup.Visible = false;
                     }
                 }
