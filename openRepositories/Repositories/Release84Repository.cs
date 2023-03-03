@@ -166,22 +166,40 @@ namespace openPERRepositories.Repositories
         {
             var rc = new List<SubSubGroupModel>();
             using var connection = new MySqlConnection(_pathToDb);
-            var sql = @"select distinct T.SGS_COD, TD.DSC, PATTERN FROM DRAWINGS T
+            var sql = @"select distinct T.SGS_COD, TD.DSC, PATTERN, MODIF FROM DRAWINGS T
                             JOIN TABLES_DSC TD ON TD.LNG_COD = @p4 AND TD.COD = T.TABLE_DSC_COD
                             WHERE CAT_COD = @p1 AND T.GRP_COD = @p2 AND T.SGRP_COD = @p3
                             order by T.SGS_COD";
             connection.RunSqlAllRows(sql, (reader) =>
             {
-                var m = new SubSubGroupModel
+                var m = new SubSubGroupModel()
                 {
                     Code = reader.GetInt32(0),
                     Description = reader.GetString(1),
-                    Pattern = reader.IsDBNull(2)?"":reader.GetString(2)
-
+                    Pattern = reader.IsDBNull(2) ? "" : reader.GetString(2),
+                    Modifications = reader.IsDBNull(3) ? new List<ModificationModel>():
+                        CreateModificationListFromString(catalogueCode, reader.GetString(3), languageCode)
                 };
-                //m.Modifications = AddSgsModifications(catalogueCode, groupCode, subGroupCode, m.Code, languageCode, connection);
-                // m.Options = AddSgsOptions(catalogueCode, groupCode, subGroupCode, m.Code, languageCode, connection);
-                // m.Variations = AddSgsVariations(catalogueCode, groupCode, subGroupCode, m.Code, languageCode, connection);
+                // Create list of pattern codes.  Very quick and dirty
+                var p = m.Pattern;
+                p = p.Replace('(', ',').Replace(')', ',').Replace('+', ',').Replace('!', ',');
+                var patternParts = p.Split(",", StringSplitOptions.RemoveEmptyEntries);
+                var allPatternParts = GetMvsDetailsForCatalogue(catalogueCode, languageCode);
+                m.PatternParts = new List<PatternModel>();
+                foreach (var part in patternParts)
+                {
+                    var pattern = new PatternModel
+                    {
+                        FullCode = part
+                    };
+                    var d = allPatternParts.FirstOrDefault(x => x.TypeCodePair == part);
+                    if (d!=null)
+                    {
+                        pattern.CodeDescription = d.CodeDescription ;
+                        pattern.TypeDescription = d.TypeDescription;
+                    }
+                    m.PatternParts.Add(pattern);
+                }
                 rc.Add(m);
             }, catalogueCode, groupCode, subGroupCode, languageCode);
             return rc;
@@ -660,26 +678,27 @@ namespace openPERRepositories.Repositories
                 narratives.Add(reader.GetString(0) + reader.GetString(1) + " " + reader.GetString(2));
             }, catalogueCode, groupCode, subGroupCode, sgsCode, languageCode);
         }
-
-        private List<ModificationModel> AddSgsModifications(string catalogueCode, int groupCode, int subGroupCode, int sgsCode, string languageCode)
+        private List<ModificationModel> CreateModificationListFromString(string catalogueCode, string modificationList, string languageCode)
         {
-            var sql = @"select SGSMOD_CD,S.MDF_COD,MDF_DSC from SGS_MOD S
-                        JOIN MODIF_DSC M ON M.MDF_COD = S.MDF_COD 
-                        where S.CAT_COD = @p1 AND GRP_COD = @p2 AND SGRP_COD = @p3 AND SGS_COD = @p4 AND LNG_COD = @p5
-                        ";
-            var rc = new List<ModificationModel>();
-            using var connection = new MySqlConnection(_pathToDb);
-            connection.RunSqlAllRows(sql, (reader) =>
+            var modList = new List<ModificationModel>();
+            var parts = modificationList.Split(',');
+            var sequence = 1;
+            foreach (var part in parts)
             {
-                var mod = new ModificationModel
+                var mod = new ModificationModel();
+                mod.Type = part.Substring(0, 1);
+                mod.Code = int.Parse(part.Substring(1));
+                mod.Progression = sequence++;
+                var sql = "SELECT MDF_DSC FROM MODIF_DSC WHERE CAT_COD = @p1 AND MDF_COD = @p2 AND LNG_COD = @p3";
+                using var connection = new MySqlConnection(_pathToDb);
+                connection.RunSqlFirstRowOnly(sql, (reader) =>
                 {
-                    Type = reader.GetString(0),
-                    Code = reader.GetInt32(1),
-                    Description = reader.GetString(2)
-                };
-                rc.Add(mod);
-            }, catalogueCode, groupCode, subGroupCode, sgsCode, languageCode);
-            return rc;
+                    mod.Description = reader.GetString(0);
+                }, catalogueCode, mod.Code, languageCode);
+                mod.Activations = GetActivationsForModification(catalogueCode, mod.Code, languageCode);
+                modList.Add(mod);
+            }
+            return modList;
         }
 
         private List<OptionModel> AddSgsOptions(string catalogueCode, int groupCode, int subGroupCode, int sgsCode, string languageCode)

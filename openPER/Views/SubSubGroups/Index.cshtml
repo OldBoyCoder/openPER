@@ -12,109 +12,67 @@
         </div>
         @*
 
-            <table class="table table-sm table-hover">
-                <thead>
-                <tr>
-                    <th>Models - Versions</th>
-                </tr>
-                <tr>
-                    <th>Category</th>
-                </tr>
-                <tr>
-                    <th>Subcategory</th>
-                </tr>
-                </thead>
-                <tbody>
-                @foreach (var group in Model.SubGroups)
-                {
-                    <tr>
-                        <td>
-                            @Html.ActionLink($"{group.FullDisplayCode} {group.Description}", "Index", "SubSubGroups", new {  Model.MakeCode, Model.SubMakeCode, Model.ModelCode, Model.CatalogueCode, group.GroupCode, SubGroupCode = group.Code })
-                        </td>
-                    </tr>
-                }
-                <tr>
-                    <td>
-                        @Html.ActionLink("All drawings", "Index", "Drawings", new {  Model.MakeCode, Model.ModelCode, Model.CatalogueCode, Model.GroupCode, DrawingNumber = 1 })
-                    </td>
-                </tr>
-                </tbody>
-            </table>
+        <table class="table table-sm table-hover">
+        <thead>
+        <tr>
+        <th>Models - Versions</th>
+        </tr>
+        <tr>
+        <th>Category</th>
+        </tr>
+        <tr>
+        <th>Subcategory</th>
+        </tr>
+        </thead>
+        <tbody>
+        @foreach (var group in Model.SubGroups)
+        {
+        <tr>
+        <td>
+        @Html.ActionLink($"{group.FullDisplayCode} {group.Description}", "Index", "SubSubGroups", new {  Model.MakeCode, Model.SubMakeCode, Model.ModelCode, Model.CatalogueCode, group.GroupCode, SubGroupCode = group.Code })
+        </td>
+        </tr>
+        }
+        <tr>
+        <td>
+        @Html.ActionLink("All drawings", "Index", "Drawings", new {  Model.MakeCode, Model.ModelCode, Model.CatalogueCode, Model.GroupCode, DrawingNumber = 1 })
+        </td>
+        </tr>
+        </tbody>
+        </table>
         </div>
-*@
+        *@
         <div class="col-lg-8 col-md-8 col-sm-12 col-12">
             <strong>Subcategory selection</strong>
             <p>Select a subcategory from the side menu or directly from the map.</p>
             <table class="table table-sm">
-                <thead><tr><th>Subcategory</th><th>Compatibility</th><th>Code</th><th>Description</th></tr></thead>
-                @foreach (var group in Model.SubSubGroups.Where(x=>x.Visible))
+                <thead><tr><th>Subcategory</th><th>Compatibility</th><th>Compatibility description</th></tr></thead>
+                @foreach (var group in Model.SubSubGroups.Where(x => x.Visible))
                 {
-                    @:<tr>
-                <td>
-                    @Html.ActionLink($"{Model.GroupCode:000}{Model.SubGroupCode:00}/{group.Code:00} {group.Description}", "Detail", "Drawings", new {Model.Navigation.Language, Model.MakeCode,Model.SubMakeCode, Model.ModelCode, Model.CatalogueCode, Model.GroupCode, Model.SubGroupCode, SubSubGroupCode=group.Code, DrawingNumber=0, Scope="SubSubGroup"})
-                </td>
-                <td>
-                    @string.Join('+', group.Variations.Select(x=>x.VariationType+x.VariationCode).Concat(group.Options.Select(x=>x.OptionType+x.OptionCode)))
-                </td>
-                    var first = true;
-                    @foreach (var x in group.Variations)
-                    {
-                        if (!first)
-                        {
-                            @:<tr>
-                            @:<td>&nbsp;</td>
-                            @:<td>&nbsp;</td>
-                            @:<td>@x.VariationType @x.VariationCode</td>
-                            @:<td>@x.VariationDescription</td>
-                        }
-                        else
-                        {
-                            @:<td>@x.VariationType @x.VariationCode</td>
-                            @:<td>@x.VariationDescription</td>
-                            first = false;
-                        }
-                        @:</tr>
-                    }
-                    @foreach (var x in group.Options)
-                    {
-                        if (!first)
-                        {
-                            @:<tr>
-                            @:<td>&nbsp;</td>
-                            @:<td>&nbsp;</td>
-                            @:<td>@x.OptionType @x.OptionCode</td>
-                            @:<td>@x.OptionDescription</td>
-                        }
-                        else
-                        {
-                            @:<td>@x.OptionType @x.OptionCode</td>
-                            @:<td>@x.OptionDescription</td>
-                            first = false;
-                        }
-                        @:</tr>
-                    }
-                    @foreach (var x in group.Modifications)
-                    {
-                        if (!first)
-                        {
-                            @:<tr>
-                            @:<td>&nbsp;</td>
-                            @:<td>&nbsp;</td>
-                            @:<td>@x.Type @x.Code</td>
-                            @:<td>@x.Description</td>
-                        }
-                        else
-                        {
-                            @:<td>@x.Type @x.Code</td>
-                            @:<td>@x.Description</td>
-                            first = false;
-                        }
-                        @:</tr>
-                    }
-                    if (first)
-                    {
-                        @:</tr>
-                    }
+                    <tr>
+                        <td>
+                            @Html.ActionLink($"{Model.GroupCode:000}{Model.SubGroupCode:00}/{group.Code:00} {group.Description}", "Detail", "Drawings", new {Model.Navigation.Language, Model.MakeCode,Model.SubMakeCode, Model.ModelCode, Model.CatalogueCode, Model.GroupCode, Model.SubGroupCode, SubSubGroupCode=group.Code, DrawingNumber=0, Scope="SubSubGroup"})
+                        </td>
+                        <td>
+                            @group.ApplicabilityText
+                        </td>
+                        <td>
+                            <table>
+                                @foreach(var mod in group.Modifications)
+                                {
+                                    <tr>
+                                        <td>@mod.FullDescription</td>
+                                    </tr>
+                                }
+                                @foreach(var pat in group.PatternParts)
+                                {
+                                    <tr>
+                                        <td>@pat.FullDescription</td>
+                                    </tr>
+                                }
+                            </table>
+                        </td>
+                    </tr>
                 }
                 <tr><td>@Html.ActionLink("All drawings", "Detail", "Drawings", new {Model.Navigation.Language, Model.MakeCode, Model.SubMakeCode, Model.ModelCode, Model.CatalogueCode,Model.GroupCode,Model.SubGroupCode,SubSubGroupCode = "ALL", DrawingNumber=0, Scope="SubGroup"})</td></tr>
 

@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.Linq;
 
 namespace openPER.ViewModels
 {
@@ -11,6 +12,20 @@ namespace openPER.ViewModels
         public List<OptionViewModel> Options { get; set; }
         public bool Visible { get; set; } = true;
         public string Pattern { get; set; }
+        public List<PatternViewModel> PatternParts { get; set; }
 
+        public string ApplicabilityText
+        {
+            get
+            {
+                var rc = "";
+                rc = Pattern;
+                if (Modifications != null)
+                {
+                    rc += " - " + string.Join(",", Modifications.Select(x => x.Type + x.Code.ToString("")));
+                }
+                return rc;
+            }
+        }
     }
 }
