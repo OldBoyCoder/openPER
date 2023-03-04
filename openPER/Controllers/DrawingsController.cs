@@ -48,7 +48,7 @@ namespace openPER.Controllers
             // Now we get the rest of the details for the drawing we're interested in
             var drawing = model.Drawings[drawingNumber];
             // Get the table for this drawing
-            model.TableData = PopulateTableViewModelFromDrawing(drawing, language);
+            model.TableData = PopulateTableViewModelFromDrawing(drawing, language, MVS, VIN);
             model.TableData.CurrentDrawing = drawingNumber;
 
             return View(model);
@@ -88,7 +88,7 @@ namespace openPER.Controllers
             }
             var drawing = model.Drawings[drawingNumber];
             // Get the table for this drawing
-            model.TableData = PopulateTableViewModelFromDrawing(drawing, language);
+            model.TableData = PopulateTableViewModelFromDrawing(drawing, language, MVS, VIN);
             model.TableData.CurrentDrawing = drawingNumber;
             model.TableData.HighlightPart = highlightPart;
 
@@ -96,7 +96,7 @@ namespace openPER.Controllers
             return View(model);
         }
 
-        private TableViewModel PopulateTableViewModelFromDrawing(DrawingKeyViewModel drawing, string language)
+        private TableViewModel PopulateTableViewModelFromDrawing(DrawingKeyViewModel drawing, string language, string mvs, string vin)
         {
             var tableData = _mapper.Map<TableModel, TableViewModel>(
                 _rep.GetTable(drawing.CatalogueCode, drawing.GroupCode, drawing.SubGroupCode,
@@ -106,6 +106,20 @@ namespace openPER.Controllers
             tableData.ModelCode = drawing.ModelCode;
             tableData.Revision = drawing.Revision;
             tableData.Variant = drawing.Variant;
+            if (mvs != "")
+            {
+                string sinComPattern = _rep.GetSincomPattern(mvs);
+                foreach (var p in tableData.Parts)
+                {
+                    var pattern = p.Compatibility;
+                    if (!string.IsNullOrEmpty(pattern))
+                    {
+                        if (!PatternMatchHelper.EvaluateRule(pattern, sinComPattern))
+                            p.Visible = false;
+                    }
+                }
+            }
+
             return tableData;
         }
 

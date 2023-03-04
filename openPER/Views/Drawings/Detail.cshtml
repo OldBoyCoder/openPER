@@ -128,13 +128,38 @@
                             cls = cls == "table-secondary" ? "table-default" : "table-secondary";
                             lastCode = item.TableOrder;
                         }
+
                         <tr class="@cls @(Model.TableData.HighlightPart == item.PartNumber ? "table-info":"")">
 
                             <td>
                                 @Html.DisplayFor(model => item.TableOrder)
                             </td>
-                            <td align="right"><a href="@Url.Action("SearchResults", "Part", new {Model.Navigation.Language, item.PartNumber })">@Html.DisplayFor(model => item.PartNumber)</a> <a href="https://www.google.com/search?q=@Model.Navigation.Breadcrumb.MakeDescription+@item.PartNumber" target="_blank" class="bi bi-search"></a></td>
-                            <td>@Html.DisplayFor(model => item.Description) @Html.DisplayFor(model => item.FurtherDescription)</td>
+                            <td align="right">
+                                @if (!item.Visible)
+                                {
+                                    <del>
+                                        <a href="@Url.Action("SearchResults", "Part", new {Model.Navigation.Language, item.PartNumber })">@Html.DisplayFor(model => item.PartNumber)</a> <a href="https://www.google.com/search?q=@Model.Navigation.Breadcrumb.MakeDescription+@item.PartNumber" target="_blank" class="bi bi-search"></a>
+                                    </del>
+                                }
+                                else
+                                {
+                                    <a href="@Url.Action("SearchResults", "Part", new {Model.Navigation.Language, item.PartNumber })">@Html.DisplayFor(model => item.PartNumber)</a> <a href="https://www.google.com/search?q=@Model.Navigation.Breadcrumb.MakeDescription+@item.PartNumber" target="_blank" class="bi bi-search"></a>
+                                }
+
+                            </td>
+                            <td>
+                                @if (!item.Visible)
+                                {
+                                    <del>
+                                        @Html.DisplayFor(model => item.Description) @Html.DisplayFor(model => item.FurtherDescription)
+                                    </del>
+                                }
+                                else
+                                {
+                                    @Html.DisplayFor(model => item.Description) @Html.DisplayFor(model => item.FurtherDescription)
+                                }
+                            </td>
+
                             <td>@Html.DisplayFor(model => item.Compatibility)</td>
                             <td>
                                 <ul>

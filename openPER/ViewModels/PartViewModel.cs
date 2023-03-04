@@ -21,6 +21,7 @@ namespace openPER.ViewModels
         public bool IsAComponent { get; set; }
         public List<PartReplacementViewModel> Replaces { get; set; }
         public List<PartReplacementViewModel> ReplacedBy { get; set; }
+        public bool Visible { get; set; } = true;
 
     }
 }
