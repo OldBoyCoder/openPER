@@ -48,6 +48,39 @@ namespace openPER.Controllers
                         if (!PatternMatchHelper.EvaluateRule(pattern, sinComPattern))
                             subSubGroup.Visible = false;
                     }
+                    var modifications = subSubGroup.Modifications;
+                    var vehicleModificationFilters = _rep.GetFiltersforVehicle(language, VIN, MVS);
+                    foreach (var mod in modifications)
+                    {
+                        foreach (var rule in mod.Activations)
+                        {
+                            // Does this apply to this vehicle
+                            if (PatternMatchHelper.EvaluateRule(rule.ActivationPattern, sinComPattern))
+                            {
+                                // Does this vehicle have the data needed
+                                if (vehicleModificationFilters.ContainsKey(rule.ActivationCode))
+                                {
+                                    // Before or after rule?
+                                    if (mod.Type == "C")
+                                    {
+                                        // C means stops at so if data is past this then it is invisible
+                                        if (int.Parse(rule.ActivationSpec) <= int.Parse(vehicleModificationFilters[rule.ActivationCode]))
+                                        {
+                                            subSubGroup.Visible = false;
+                                        }
+                                    }
+                                    if (mod.Type == "D")
+                                    {
+                                        // C means after a date if data is before this then it is invisible
+                                        if (int.Parse(rule.ActivationSpec) > int.Parse(vehicleModificationFilters[rule.ActivationCode]))
+                                        {
+                                            subSubGroup.Visible = false;
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
                 }
             }
             return View(model);

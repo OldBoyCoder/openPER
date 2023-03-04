@@ -18,7 +18,7 @@ namespace openPERModels
                 var rc = Description;
                 foreach (var item in Activations)
                 {
-                    rc += $" {item.ActivationCode} {item.ActivationDescription} ({item.VariationType}{item.VariationCode} {item.VariationDescription} {item.OptionType}{item.OptionCode}{item.OptionDescription})";
+                    rc += $" {item.ActivationCode} {item.ActivationDescription} ";
                 }
                 return rc;
             }

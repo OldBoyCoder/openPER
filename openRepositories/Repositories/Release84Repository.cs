@@ -180,6 +180,7 @@ namespace openPERRepositories.Repositories
                     Modifications = reader.IsDBNull(3) ? new List<ModificationModel>():
                         CreateModificationListFromString(catalogueCode, reader.GetString(3), languageCode)
                 };
+                
                 // Create list of pattern codes.  Very quick and dirty
                 var p = m.Pattern;
                 p = p.Replace('(', ',').Replace(')', ',').Replace('+', ',').Replace('!', ',');
@@ -401,12 +402,9 @@ namespace openPERRepositories.Repositories
         private List<ActivationModel> GetActivationsForModification(string catalogueCode, int modCode, string languageCode)
         {
             var modifications = new List<ActivationModel>();
-            var sql = @"SELECT IFNULL(A.ACT_MASK, ''),IFNULL(M.MDFACT_SPEC, ''), IFNULL(M.ACT_COD, ''), '', '', '',
-                    IFNULL(V.VMK_TYPE, ''), IFNULL(V.VMK_COD, ''), IFNULL(V.VMK_DSC, '')
+            var sql = @"SELECT IFNULL(ACT_COD, ''),IFNULL(M.MDFACT_SPEC, ''), IFNULL(M.ACT_COD, ''), MDFACT_SPEC, IFNULL(PATTERN, '')
                     FROM MDF_ACT M
-                    LEFT OUTER JOIN ACTIVATIONS A ON A.ACT_COD = M.ACT_COD
-                    LEFT OUTER JOIN VMK_DSC V ON V.CAT_COD = M.CAT_COD AND V.VMK_TYPE = M.VMK_TYPE AND V.VMK_COD = M.VMK_COD AND V.LNG_COD = @p2
-                    WHERE M.CAT_COD = @p3 AND M.MDF_COD = @p1";
+                    WHERE M.CAT_COD = @p2 AND M.MDF_COD = @p1";
             using var connection = new MySqlConnection(_pathToDb);
 
             connection.RunSqlAllRows(sql, (reader) =>
@@ -415,16 +413,25 @@ namespace openPERRepositories.Repositories
                 {
                     ActivationDescription = reader.GetString(0) + " " + reader.GetString(1),
                     ActivationCode = reader.GetString(2),
-                    OptionType = reader.GetString(3),
-                    OptionCode = reader.GetString(4),
-                    OptionDescription = reader.GetString(5),
-                    VariationType = reader.GetString(6),
-                    VariationCode = reader.GetString(7),
-                    VariationDescription = reader.GetString(8)
+                    ActivationSpec = reader.GetString(3),
+                    ActivationPattern = reader.GetString(4)
                 };
-                modifications.Add(mod);
+                if (mod.ActivationCode == "DAT")
+                {
+                    if (mod.ActivationSpec.Length == 10)
+                    {
+                        mod.ActivationSpec = mod.ActivationSpec.Substring(6, 4) + mod.ActivationSpec.Substring(3, 2) + mod.ActivationSpec[..2];
 
-            }, modCode, languageCode, catalogueCode);
+                        modifications.Add(mod);
+                    }
+                }
+                else
+                {
+                    mod.ActivationSpec = ("0000000000" + mod.ActivationSpec)[..10];
+                    modifications.Add(mod);
+                }
+
+            }, modCode, catalogueCode);
             return modifications;
         }
 
@@ -1394,6 +1401,19 @@ namespace openPERRepositories.Repositories
                 rc = reader.IsDBNull(0) ? "" : reader.GetString(0);
 
             }, mVS);
+            return rc;
+        }
+
+        public Dictionary<string, string> GetFiltersforVehicle(string language,string vin, string mvs)
+        {
+            var vehicles = FindMatchesForVin(language, vin);
+            if (vehicles.Count == 0) return null;
+            var rc = new Dictionary<string, string>();
+            var v = vehicles[0];
+            if (!string.IsNullOrEmpty(v.Chassis)) rc.Add("TEL", $"{v.Chassis}");
+            if (!string.IsNullOrEmpty(v.Motor)) rc.Add("MOT", $"{v.Motor}");
+            if (!string.IsNullOrEmpty(v.BuildDate)) rc.Add("DAT", $"{v.BuildDate}");
+            if (!string.IsNullOrEmpty(v.Organization)) rc.Add("VET", $"{v.Organization}");
             return rc;
         }
     }

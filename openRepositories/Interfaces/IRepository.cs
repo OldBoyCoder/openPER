@@ -28,6 +28,7 @@ namespace openPERRepositories.Interfaces
         string GetImageNameForModel(string makeCode, string subMakeCode, string modelCode);
         void PopulateBreadcrumbDescriptions(BreadcrumbModel breadcrumb, string languageCode);
         List<GroupImageMapEntryModel> GetGroupMapEntriesForCatalogue(string catalogueCode, string languageCode);
+        Dictionary<string, string> GetFiltersforVehicle(string language,string vIN, string mVS);
         MapImageModel GetMapForCatalogueGroup(string make, string subMake, string model, string catalogue, int group);
         List<SubGroupImageMapEntryModel> GetSubGroupMapEntriesForCatalogueGroup(string catalogueCode, int groupCode, string languageCode);
         string GetImageNameForDrawing( string catalogue, int group, int subgroup, int subSubGroup, int variant, int revision);
