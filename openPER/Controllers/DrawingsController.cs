@@ -2,6 +2,7 @@
 using System.Linq;
 using AutoMapper;
 using Microsoft.AspNetCore.Mvc;
+using openPER.Helpers;
 using openPER.ViewModels;
 using openPERModels;
 using openPERRepositories.Interfaces;
@@ -23,11 +24,12 @@ namespace openPER.Controllers
         public IActionResult Detail(string language, string makeCode, string subMakeCode, string modelCode, string catalogueCode, int groupCode, int subGroupCode, int subSubGroupCode, int drawingNumber, string scope, string VIN = "", string MVS = "")
         {
             // Standard prologue
-            Helpers.LanguageSupport.SetCultureBasedOnRoute(language);
+            LanguageSupport.SetCultureBasedOnRoute(language);
             ViewData["Language"] = language;
 
-
             var model = new DrawingsViewModel();
+            model.Navigation = NavigationHelper.PopulateNavigationModel(_mapper, _rep, language, makeCode, subMakeCode, modelCode, catalogueCode, groupCode, subGroupCode, subSubGroupCode, drawingNumber, scope, VIN, MVS);
+
             // We need to get all of the drawing keys for this sub sub group
             List<DrawingKeyModel> drawings;
             if (scope == "SubSubGroup")
@@ -48,29 +50,12 @@ namespace openPER.Controllers
             // Get the table for this drawing
             model.TableData = PopulateTableViewModelFromDrawing(drawing, language);
             model.TableData.CurrentDrawing = drawingNumber;
-            // Sort out breadcrumbs
-            var breadcrumb = new BreadcrumbModel
-            {
-                MakeCode = drawing.MakeCode,
-                SubMakeCode = drawing.SubMakeCode,
-                ModelCode = drawing.ModelCode,
-                CatalogueCode = drawing.CatalogueCode,
-                GroupCode = drawing.GroupCode,
-                SubGroupCode = drawing.SubGroupCode,
-                SubSubGroupCode = drawing.SubSubGroupCode,
-                DrawingNumber = drawingNumber,
-                Scope = scope,
-                VIN = VIN,
-                MVS = MVS
-            };
-            _rep.PopulateBreadcrumbDescriptions(breadcrumb, language);
-            model.Breadcrumb = _mapper.Map<BreadcrumbModel, BreadcrumbViewModel>(breadcrumb);
 
             return View(model);
         }
         [Route("Detail/{language}/{MakeCode}/{SubMakeCode}/{ModelCode}/{CatalogueCode}/{GroupCode}/{SubGroupCode}/{SubSubGroupCode}/{Variant}/{Revision}/{Scope}/{HighlightPart?}")]
         [ApiExplorerSettings(IgnoreApi = true)]
-        public IActionResult Detail(string language, string makeCode, string subMakeCode, string modelCode, string catalogueCode, int groupCode, int subGroupCode, int subSubGroupCode, int variant, int revision, string scope, string highlightPart = "~")
+        public IActionResult Detail(string language, string makeCode, string subMakeCode, string modelCode, string catalogueCode, int groupCode, int subGroupCode, int subSubGroupCode, int variant, int revision, string scope, string highlightPart = "~", string VIN = "", string MVS = "")
         {
             // Standard prologue
             Helpers.LanguageSupport.SetCultureBasedOnRoute(language);
@@ -106,21 +91,8 @@ namespace openPER.Controllers
             model.TableData = PopulateTableViewModelFromDrawing(drawing, language);
             model.TableData.CurrentDrawing = drawingNumber;
             model.TableData.HighlightPart = highlightPart;
-            // Sort out breadcrumbs
-            var breadcrumb = new BreadcrumbModel
-            {
-                MakeCode = drawing.MakeCode,
-                SubMakeCode = drawing.SubMakeCode,
-                ModelCode = drawing.ModelCode,
-                CatalogueCode = drawing.CatalogueCode,
-                GroupCode = drawing.GroupCode,
-                SubGroupCode = drawing.SubGroupCode,
-                SubSubGroupCode = drawing.SubSubGroupCode,
-                DrawingNumber = drawingNumber, 
-                Scope = scope
-            };
-            _rep.PopulateBreadcrumbDescriptions(breadcrumb, language);
-            model.Breadcrumb = _mapper.Map<BreadcrumbModel, BreadcrumbViewModel>(breadcrumb);
+
+            model.Navigation = NavigationHelper.PopulateNavigationModel(_mapper, _rep, language, makeCode, subMakeCode, modelCode, catalogueCode, groupCode, subGroupCode,subSubGroupCode, drawingNumber, scope, VIN, MVS);
             return View(model);
         }
 

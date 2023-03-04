@@ -4,7 +4,7 @@ namespace openPER.ViewModels
 {
     public class DrawingsViewModel
     {
-        public BreadcrumbViewModel Breadcrumb { get; set; }
+        public NavigationViewModel Navigation { get; set; }
         // We need a list of all drawings for this page
         public List<DrawingKeyViewModel> Drawings { get; set; }
         public TableViewModel TableData { get; set; }

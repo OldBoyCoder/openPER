@@ -10,6 +10,7 @@ using AutoMapper;
 using Microsoft.AspNetCore.Http;
 using openPERModels;
 using openPERRepositories.Interfaces;
+using openPER.Helpers;
 
 namespace openPER.Controllers
 {
@@ -33,26 +34,14 @@ namespace openPER.Controllers
         [Route("{language=3}")]
         public IActionResult Index(string language)
         {
-            var breadcrumb = new BreadcrumbModel();
-            Helpers.LanguageSupport.SetCultureBasedOnRoute(language);
-            _rep.PopulateBreadcrumbDescriptions(breadcrumb, language);
             ViewData["Language"] = language;
-            var x = RouteData;
+            LanguageSupport.SetCultureBasedOnRoute(language);
             var model = new MakesViewModel
             {
                 Makes = _mapper.Map<List<MakeModel>, List<MakeViewModel>>(_rep.GetAllMakes()),
-                Navigation = new NavigationViewModel
-                {
-                    Breadcrumb = _mapper.Map<BreadcrumbModel, BreadcrumbViewModel>(breadcrumb),
-                    SideMenuItems = new SideMenuItemsViewModel
-                    {
-                        AllMakes = _mapper.Map<List<MakeModel>, List<MakeViewModel>>(_rep.GetAllMakes()),
-                    },
-                    Language = language
-
-                }
-
+                Navigation = NavigationHelper.PopulateNavigationModel(_mapper, _rep, language)
             };
+
             return View(model);
         }
 

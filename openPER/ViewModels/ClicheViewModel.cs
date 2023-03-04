@@ -5,7 +5,7 @@ namespace openPER.ViewModels
     public class ClicheViewModel 
     {
 
-        public BreadcrumbViewModel Breadcrumb { get; set; }
+        public NavigationViewModel Navigation { get; set; }
 
         // We need a list of all drawings for this page
         public List<DrawingKeyViewModel> ClicheDrawings { get; set; }

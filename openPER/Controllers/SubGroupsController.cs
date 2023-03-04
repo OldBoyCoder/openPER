@@ -4,6 +4,7 @@ using openPER.ViewModels;
 using Microsoft.AspNetCore.Mvc;
 using openPERModels;
 using openPERRepositories.Interfaces;
+using openPER.Helpers;
 
 namespace openPER.Controllers
 {
@@ -21,14 +22,11 @@ namespace openPER.Controllers
         public IActionResult Index(string language, string makeCode, string subMakeCode, string modelCode, string catalogueCode, int groupCode, string VIN = "", string MVS = "")
         {
             // Standard prologue
-            Helpers.LanguageSupport.SetCultureBasedOnRoute(language);
+            LanguageSupport.SetCultureBasedOnRoute(language);
             ViewData["Language"] = language;
 
-            var breadcrumb = new BreadcrumbModel { MakeCode = makeCode, SubMakeCode = subMakeCode, ModelCode = modelCode, CatalogueCode = catalogueCode, GroupCode = groupCode, VIN = VIN, MVS = MVS };
-            _rep.PopulateBreadcrumbDescriptions(breadcrumb, language);
             var mapDetails = _rep.GetMapForCatalogueGroup(makeCode, subMakeCode, modelCode, catalogueCode, groupCode);
             
-
             var model = new SubGroupsViewModel
             {
                 SubGroups = _mapper.Map<List<SubGroupModel>, List<SubGroupViewModel>>(_rep.GetSubGroupsForCatalogueGroup(catalogueCode, groupCode, language)),
@@ -40,24 +38,7 @@ namespace openPER.Controllers
                 CatalogueCode = catalogueCode,
                 GroupCode = groupCode,
                 ImagePath = mapDetails.ImageName,
-                Navigation = new NavigationViewModel
-                {
-                    Breadcrumb = _mapper.Map<BreadcrumbModel, BreadcrumbViewModel>(breadcrumb),
-                    SideMenuItems = new SideMenuItemsViewModel
-                    {
-                        AllMakes = _mapper.Map<List<MakeModel>, List<MakeViewModel>>(_rep.GetAllMakes()),
-                        AllModels = _mapper.Map<List<ModelModel>, List<ModelViewModel>>(_rep.GetAllModelsForMake(makeCode,
-                    subMakeCode)),
-                        AllCatalogues = _mapper.Map<List<CatalogueModel>, List<CatalogueViewModel>>(
-                    _rep.GetAllCatalogues(makeCode, subMakeCode, modelCode, language)),
-                        AllGroups = _mapper.Map<List<GroupModel>, List<GroupViewModel>>(
-                    _rep.GetGroupsForCatalogue(catalogueCode, language)),
-                        AllSubGroups = _mapper.Map<List<SubGroupModel>, List<SubGroupViewModel>>(
-                    _rep.GetSubGroupsForCatalogueGroup(catalogueCode, groupCode, language))
-                    },
-                    Language = language
-                }
-
+                Navigation = NavigationHelper.PopulateNavigationModel(_mapper, _rep, language, makeCode, subMakeCode, modelCode, catalogueCode, groupCode, VIN, MVS),
 
             };
 

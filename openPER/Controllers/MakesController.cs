@@ -4,6 +4,7 @@ using Microsoft.AspNetCore.Mvc;
 using openPER.ViewModels;
 using openPERModels;
 using openPERRepositories.Interfaces;
+using openPER.Helpers;
 
 namespace openPER.Controllers
 {
@@ -20,24 +21,13 @@ namespace openPER.Controllers
         [ApiExplorerSettings(IgnoreApi = true)]
         public IActionResult Index(string language)
         {
-            Helpers.LanguageSupport.SetCultureBasedOnRoute(language);
+            LanguageSupport.SetCultureBasedOnRoute(language);
             ViewData["Language"] = language;
-
-            var breadcrumb = new BreadcrumbModel ();
-            _rep.PopulateBreadcrumbDescriptions(breadcrumb, language);
 
             var model = new MakesViewModel
             {
                 Makes = _mapper.Map<List<MakeModel>, List<MakeViewModel>>(_rep.GetAllMakes()),
-                Navigation = new NavigationViewModel
-                {
-                    Breadcrumb = _mapper.Map<BreadcrumbModel, BreadcrumbViewModel>(breadcrumb),
-                    SideMenuItems = new SideMenuItemsViewModel
-                    {
-                        AllMakes = _mapper.Map<List<MakeModel>, List<MakeViewModel>>(_rep.GetAllMakes()),
-                    },
-                    Language = language
-                }
+                Navigation = NavigationHelper.PopulateNavigationModel(_mapper, _rep, language)
 
             };
             return View(model);

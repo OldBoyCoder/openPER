@@ -4,6 +4,7 @@ using Microsoft.AspNetCore.Mvc;
 using openPER.ViewModels;
 using openPERModels;
 using openPERRepositories.Interfaces;
+using openPER.Helpers;
 
 namespace openPER.Controllers
 {
@@ -18,32 +19,17 @@ namespace openPER.Controllers
         }
         [Route("Models/{language}/{MakeCode}/{SubMakeCode}")]
         [ApiExplorerSettings(IgnoreApi = true)]
-        public IActionResult Index(string language,string makeCode, string subMakeCode)
+        public IActionResult Index(string language, string makeCode, string subMakeCode)
         {
             // Standard prologue
             Helpers.LanguageSupport.SetCultureBasedOnRoute(language);
             ViewData["Language"] = language;
 
-
-            var breadcrumb = new BreadcrumbModel { MakeCode = makeCode, SubMakeCode = subMakeCode };
-            _rep.PopulateBreadcrumbDescriptions(breadcrumb, language);
-
             var model = new ModelsViewModel
             {
                 Models = _mapper.Map<List<ModelModel>, List<ModelViewModel>>(_rep.GetAllModelsForMake(makeCode, subMakeCode)),
                 MakeCode = makeCode,
-                Navigation = new NavigationViewModel
-                {
-                    Breadcrumb = _mapper.Map<BreadcrumbModel, BreadcrumbViewModel>(breadcrumb),
-                    SideMenuItems = new SideMenuItemsViewModel
-                    {
-                        AllMakes = _mapper.Map<List<MakeModel>, List<MakeViewModel>>(_rep.GetAllMakes()),
-                        AllModels = _mapper.Map<List<ModelModel>, List<ModelViewModel>>(_rep.GetAllModelsForMake(makeCode,
-                            subMakeCode))
-                    },
-                    Language = language
-                }
-
+                Navigation = NavigationHelper.PopulateNavigationModel(_mapper, _rep, language, makeCode, subMakeCode)
             };
             return View(model);
 

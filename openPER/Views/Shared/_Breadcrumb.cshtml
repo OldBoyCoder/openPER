@@ -1,42 +1,42 @@
 ﻿@using openPER.ViewModels;
-@model BreadcrumbViewModel
+@model NavigationViewModel
 <div>
 
     <nav aria-label="breadcrumb">
         <ol class="breadcrumb">
             <li class="breadcrumb-item">@Html.ActionLink("HOME", "Index", "Makes", new {Model.Language})</li>
-            @if (Model.MakeCode != null)
+            @if (Model.Breadcrumb.MakeCode != null)
             {
-                <li class="breadcrumb-item">@Html.ActionLink(Model.SubMakeDescription, "Index", "Models", new {Model.Language, Model.MakeCode, Model.SubMakeCode })</li>
-                @if (Model.ModelCode != null)
+                <li class="breadcrumb-item">@Html.ActionLink(Model.Breadcrumb.SubMakeDescription, "Index", "Models", new {Model.Language, Model.Breadcrumb.MakeCode, Model.Breadcrumb.SubMakeCode })</li>
+                @if (Model.Breadcrumb.ModelCode != null)
                 {
-                    <li class="breadcrumb-item">@Html.ActionLink(Model.ModelDescription, "Index", "Catalogues", new { Model.Language, Model.MakeCode, Model.SubMakeCode, Model.ModelCode })</li>
-                    @if (Model.CatalogueDescription != null)
+                    <li class="breadcrumb-item">@Html.ActionLink(Model.Breadcrumb.ModelDescription, "Index", "Catalogues", new { Model.Language, Model.Breadcrumb.MakeCode, Model.Breadcrumb.SubMakeCode, Model.Breadcrumb.ModelCode })</li>
+                    @if (Model.Breadcrumb.CatalogueDescription != null)
                     {
-                        <li class="breadcrumb-item">@Html.ActionLink($"{Model.CatalogueCode} {Model.CatalogueDescription}", "Index", "Groups", new {Model.Language,  Model.MakeCode, Model.SubMakeCode, Model.ModelCode, Model.CatalogueCode, VIN=Model.VIN, MVS=Model.MVS })</li>
-                        @if (Model.GroupCode != null & Model.GroupDescription != null)
+                        <li class="breadcrumb-item">@Html.ActionLink($"{Model.Breadcrumb.CatalogueCode} {Model.Breadcrumb.CatalogueDescription}", "Index", "Groups", new {Model.Language,  Model.Breadcrumb.MakeCode, Model.Breadcrumb.SubMakeCode, Model.Breadcrumb.ModelCode, Model.Breadcrumb.CatalogueCode, VIN=Model.Filter.VIN, MVS=Model.Filter.MVS })</li>
+                        @if (Model.Breadcrumb.GroupCode != null & Model.Breadcrumb.GroupDescription != null)
                         {
-                            <li class="breadcrumb-item">@Html.ActionLink($"{Model.GroupCode.Value:000} {Model.GroupDescription}", "Index", "SubGroups", new {Model.Language, Model.MakeCode, Model.SubMakeCode, Model.ModelCode, Model.CatalogueCode, Model.GroupCode, VIN=Model.VIN, MVS=Model.MVS })</li>
-                            @if (Model.SubGroupCode != null && Model.SubGroupDescription != null)
+                            <li class="breadcrumb-item">@Html.ActionLink($"{Model.Breadcrumb.GroupCode.Value:000} {Model.Breadcrumb.GroupDescription}", "Index", "SubGroups", new {Model.Language, Model.Breadcrumb.MakeCode, Model.Breadcrumb.SubMakeCode, Model.Breadcrumb.ModelCode, Model.Breadcrumb.CatalogueCode, Model.Breadcrumb.GroupCode, VIN=Model.Filter.VIN, MVS=Model.Filter.MVS })</li>
+                            @if (Model.Breadcrumb.SubGroupCode != null && Model.Breadcrumb.SubGroupDescription != null)
                             {
-                                <li class="breadcrumb-item">@Html.ActionLink($"{Model.GroupCode.Value:000}{Model.SubGroupCode.Value:00} {Model.SubGroupDescription}", "Index", "SubSubGroups", new {Model.Language,Model.MakeCode, Model.SubMakeCode, Model.ModelCode, Model.CatalogueCode, Model.GroupCode, Model.SubGroupCode, VIN=Model.VIN, MVS=Model.MVS })</li>
-                                @if (Model.SubSubGroupCode != null)
+                                <li class="breadcrumb-item">@Html.ActionLink($"{Model.Breadcrumb.GroupCode.Value:000}{Model.Breadcrumb.SubGroupCode.Value:00} {Model.Breadcrumb.SubGroupDescription}", "Index", "SubSubGroups", new {Model.Language,Model.Breadcrumb.MakeCode, Model.Breadcrumb.SubMakeCode, Model.Breadcrumb.ModelCode, Model.Breadcrumb.CatalogueCode, Model.Breadcrumb.GroupCode, Model.Breadcrumb.SubGroupCode, VIN=Model.Filter.VIN, MVS=Model.Filter.MVS })</li>
+                                @if (Model.Breadcrumb.SubSubGroupCode != null)
                                 {
-                                    <li class="breadcrumb-item">@Html.ActionLink($"{Model.GroupCode.Value:000}{Model.SubGroupCode.Value:00}/{Model.SubSubGroupCode:00} {Model.SubSubGroupDescription}", "Detail", "Drawings", new { Model.Language, Model.MakeCode, Model.SubMakeCode, Model.ModelCode, Model.CatalogueCode, Model.GroupCode, Model.SubGroupCode, Model.SubSubGroupCode, DrawingNumber = 0, Model.Scope, VIN=Model.VIN, MVS=Model.MVS })</li>
-                                    @if (Model.DrawingNumber != null)
+                                    <li class="breadcrumb-item">@Html.ActionLink($"{Model.Breadcrumb.GroupCode.Value:000}{Model.Breadcrumb.SubGroupCode.Value:00}/{Model.Breadcrumb.SubSubGroupCode:00} {Model.Breadcrumb.SubSubGroupDescription}", "Detail", "Drawings", new { Model.Language, Model.Breadcrumb.MakeCode, Model.Breadcrumb.SubMakeCode, Model.Breadcrumb.ModelCode, Model.Breadcrumb.CatalogueCode, Model.Breadcrumb.GroupCode, Model.Breadcrumb.SubGroupCode, Model.Breadcrumb.SubSubGroupCode, DrawingNumber = 0, Model.Breadcrumb.Scope, VIN=Model.Filter.VIN, MVS=Model.Filter.MVS })</li>
+                                    @if (Model.Breadcrumb.DrawingNumber != null)
                                     {
                                         <li class="breadcrumb-item">
-                                            @Html.ActionLink(Model.DrawingNumber.ToString(), "Detail", "Drawings", new { Model.Language, Model.MakeCode, Model.SubMakeCode, Model.ModelCode, Model.CatalogueCode, Model.GroupCode, Model.SubGroupCode, Model.SubSubGroupCode, Model.DrawingNumber, Model.Scope, VIN=Model.VIN, MVS=Model.MVS })
+                                            @Html.ActionLink(Model.Breadcrumb.DrawingNumber.ToString(), "Detail", "Drawings", new { Model.Language, Model.Breadcrumb.MakeCode, Model.Breadcrumb.SubMakeCode, Model.Breadcrumb.ModelCode, Model.Breadcrumb.CatalogueCode, Model.Breadcrumb.GroupCode, Model.Breadcrumb.SubGroupCode, Model.Breadcrumb.SubSubGroupCode, Model.Breadcrumb.DrawingNumber, Model.Breadcrumb.Scope, VIN=Model.Filter.VIN, MVS=Model.Filter.MVS })
                                         </li>
-                                        @if (Model.ClichePartNumber != null)
+                                        @if (Model.Breadcrumb.ClichePartNumber != null)
                                         {
                                             <li class="breadcrumb-item">
-                                                @Html.ActionLink(Model.ClichePartNumber, "Detail", "Cliche", new {Model.Language,  Model.MakeCode, Model.SubMakeCode, Model.ModelCode, Model.CatalogueCode, Model.GroupCode, Model.SubGroupCode, Model.SubSubGroupCode, DrawingNumber = Model.DrawingNumber, ClichePartNumber = Model.ClichePartNumber, ClicheDrawingNumber=1})
+                                                @Html.ActionLink(Model.Breadcrumb.ClichePartNumber, "Detail", "Cliche", new {Model.Language,  Model.Breadcrumb.MakeCode, Model.Breadcrumb.SubMakeCode, Model.Breadcrumb.ModelCode, Model.Breadcrumb.CatalogueCode, Model.Breadcrumb.GroupCode, Model.Breadcrumb.SubGroupCode, Model.Breadcrumb.SubSubGroupCode, DrawingNumber = Model.Breadcrumb.DrawingNumber, ClichePartNumber = Model.Breadcrumb.ClichePartNumber, ClicheDrawingNumber=1})
                                             </li>
-                                            @if (Model.ClicheDrawingNumber != null)
+                                            @if (Model.Breadcrumb.ClicheDrawingNumber != null)
                                             {
                                                 <li class="breadcrumb-item">
-                                                    @Html.ActionLink(Model.ClicheDrawingNumber.ToString(), "Detail", "Cliche", new {Model.Language,  Model.MakeCode, Model.SubMakeCode, Model.ModelCode, Model.CatalogueCode, Model.GroupCode, Model.SubGroupCode, Model.SubSubGroupCode, DrawingNumber = Model.DrawingNumber, ClichePartNumber = Model.ClichePartNumber, ClicheDrawingNumber=Model.ClicheDrawingNumber })
+                                                    @Html.ActionLink(Model.Breadcrumb.ClicheDrawingNumber.ToString(), "Detail", "Cliche", new {Model.Language,  Model.Breadcrumb.MakeCode, Model.Breadcrumb.SubMakeCode, Model.Breadcrumb.ModelCode, Model.Breadcrumb.CatalogueCode, Model.Breadcrumb.GroupCode, Model.Breadcrumb.SubGroupCode, Model.Breadcrumb.SubSubGroupCode, DrawingNumber = Model.Breadcrumb.DrawingNumber, ClichePartNumber = Model.Breadcrumb.ClichePartNumber, ClicheDrawingNumber=Model.Breadcrumb.ClicheDrawingNumber })
                                                 </li>
 
                                             }

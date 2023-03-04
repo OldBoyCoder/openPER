@@ -8,7 +8,7 @@
 @{
     ViewData["Title"] = "Index";
 }
-@await Html.PartialAsync("_Breadcrumb", Model.Breadcrumb)
+@await Html.PartialAsync("_Breadcrumb", Model.Navigation)
 <div class="container-fluid">
     <div class="row">
         <div class="col-lg-6 col-md-12 col-sm-12 col-12">
@@ -27,7 +27,7 @@
                                     {
                                         <div class="col-xs-4">
                                             <img class="img-fluid" src="@drawing.ThumbImagePath"><br />
-                                            @Html.ActionLink("Go", "Detail", "Cliche", new {Model.Breadcrumb.Language, Model.Breadcrumb.MakeCode, Model.Breadcrumb.SubMakeCode, Model.Breadcrumb.ModelCode, Model.Breadcrumb.CatalogueCode, Model.Breadcrumb.GroupCode, Model.Breadcrumb.SubGroupCode, Model.Breadcrumb.SubSubGroupCode, DrawingNumber = Model.Breadcrumb.DrawingNumber, ClichePartNumber = drawing.ClichePartNumber, ClicheDrawingNumber=drawing.ClichePartDrawingNumber })</div>
+                                            @Html.ActionLink("Go", "Detail", "Cliche", new {Model.Navigation.Language, Model.Navigation.Breadcrumb.MakeCode, Model.Navigation.Breadcrumb.SubMakeCode, Model.Navigation.Breadcrumb.ModelCode, Model.Navigation.Breadcrumb.CatalogueCode, Model.Navigation.Breadcrumb.GroupCode, Model.Navigation.Breadcrumb.SubGroupCode, Model.Navigation.Breadcrumb.SubSubGroupCode, DrawingNumber = Model.Navigation.Breadcrumb.DrawingNumber, ClichePartNumber = drawing.ClichePartNumber, ClicheDrawingNumber=drawing.ClichePartDrawingNumber })</div>
                                     }
                                 }
                             </div>
@@ -52,7 +52,7 @@
                         }
                         <tr>
                             <td>&nbsp;</td>
-                            <td >@Html.ActionLink(item.PartNumber ,"SearchResults", "Part", new {Model.Breadcrumb.Language, item.PartNumber }) <a href="https://www.google.com/search?q=FIAT+@item.PartNumber" target="_blank" class="bi bi-search"></a></td>
+                            <td >@Html.ActionLink(item.PartNumber ,"SearchResults", "Part", new {Model.Navigation.Breadcrumb.Language, item.PartNumber }) <a href="https://www.google.com/search?q=FIAT+@item.PartNumber" target="_blank" class="bi bi-search"></a></td>
                             <td>@Html.DisplayFor(model => item.FurtherDescription)</td>
                             <td>@Html.DisplayFor(model => item.Compatibility)</td>
                             <td>
