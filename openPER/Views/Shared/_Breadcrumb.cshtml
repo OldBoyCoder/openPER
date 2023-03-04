@@ -31,12 +31,12 @@
                                         @if (Model.Breadcrumb.ClichePartNumber != null)
                                         {
                                             <li class="breadcrumb-item">
-                                                @Html.ActionLink(Model.Breadcrumb.ClichePartNumber, "Detail", "Cliche", new {Model.Language,  Model.Breadcrumb.MakeCode, Model.Breadcrumb.SubMakeCode, Model.Breadcrumb.ModelCode, Model.Breadcrumb.CatalogueCode, Model.Breadcrumb.GroupCode, Model.Breadcrumb.SubGroupCode, Model.Breadcrumb.SubSubGroupCode, DrawingNumber = Model.Breadcrumb.DrawingNumber, ClichePartNumber = Model.Breadcrumb.ClichePartNumber, ClicheDrawingNumber=1})
+                                                @Html.ActionLink(Model.Breadcrumb.ClichePartNumber, "Detail", "Cliche", new {Model.Language,  Model.Breadcrumb.MakeCode, Model.Breadcrumb.SubMakeCode, Model.Breadcrumb.ModelCode, Model.Breadcrumb.CatalogueCode, Model.Breadcrumb.GroupCode, Model.Breadcrumb.SubGroupCode, Model.Breadcrumb.SubSubGroupCode, DrawingNumber = Model.Breadcrumb.DrawingNumber, Model.Breadcrumb.Scope, ClichePartNumber = Model.Breadcrumb.ClichePartNumber, ClicheDrawingNumber=1, VIN=Model.Filter.VIN, MVS=Model.Filter.MVS })
                                             </li>
                                             @if (Model.Breadcrumb.ClicheDrawingNumber != null)
                                             {
                                                 <li class="breadcrumb-item">
-                                                    @Html.ActionLink(Model.Breadcrumb.ClicheDrawingNumber.ToString(), "Detail", "Cliche", new {Model.Language,  Model.Breadcrumb.MakeCode, Model.Breadcrumb.SubMakeCode, Model.Breadcrumb.ModelCode, Model.Breadcrumb.CatalogueCode, Model.Breadcrumb.GroupCode, Model.Breadcrumb.SubGroupCode, Model.Breadcrumb.SubSubGroupCode, DrawingNumber = Model.Breadcrumb.DrawingNumber, ClichePartNumber = Model.Breadcrumb.ClichePartNumber, ClicheDrawingNumber=Model.Breadcrumb.ClicheDrawingNumber })
+                                                    @Html.ActionLink(Model.Breadcrumb.ClicheDrawingNumber.ToString(), "Detail", "Cliche", new {Model.Language,  Model.Breadcrumb.MakeCode, Model.Breadcrumb.SubMakeCode, Model.Breadcrumb.ModelCode, Model.Breadcrumb.CatalogueCode, Model.Breadcrumb.GroupCode, Model.Breadcrumb.SubGroupCode, Model.Breadcrumb.SubSubGroupCode, DrawingNumber = Model.Breadcrumb.DrawingNumber, Model.Breadcrumb.Scope, ClichePartNumber = Model.Breadcrumb.ClichePartNumber, ClicheDrawingNumber=Model.Breadcrumb.ClicheDrawingNumber, VIN=Model.Filter.VIN, MVS=Model.Filter.MVS  })
                                                 </li>
 
                                             }

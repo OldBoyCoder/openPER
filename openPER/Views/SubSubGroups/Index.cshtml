@@ -10,38 +10,6 @@
             @await Html.PartialAsync("_SidebarMenu", Model.Navigation)
 
         </div>
-        @*
-
-        <table class="table table-sm table-hover">
-        <thead>
-        <tr>
-        <th>Models - Versions</th>
-        </tr>
-        <tr>
-        <th>Category</th>
-        </tr>
-        <tr>
-        <th>Subcategory</th>
-        </tr>
-        </thead>
-        <tbody>
-        @foreach (var group in Model.SubGroups)
-        {
-        <tr>
-        <td>
-        @Html.ActionLink($"{group.FullDisplayCode} {group.Description}", "Index", "SubSubGroups", new {  Model.MakeCode, Model.SubMakeCode, Model.ModelCode, Model.CatalogueCode, group.GroupCode, SubGroupCode = group.Code })
-        </td>
-        </tr>
-        }
-        <tr>
-        <td>
-        @Html.ActionLink("All drawings", "Index", "Drawings", new {  Model.MakeCode, Model.ModelCode, Model.CatalogueCode, Model.GroupCode, DrawingNumber = 1 })
-        </td>
-        </tr>
-        </tbody>
-        </table>
-        </div>
-        *@
         <div class="col-lg-8 col-md-8 col-sm-12 col-12">
             <strong>Subcategory selection</strong>
             <p>Select a subcategory from the side menu or directly from the map.</p>
@@ -51,7 +19,7 @@
                 {
                     <tr>
                         <td>
-                            @Html.ActionLink($"{Model.GroupCode:000}{Model.SubGroupCode:00}/{group.Code:00} {group.Description}", "Detail", "Drawings", new {Model.Navigation.Language, Model.MakeCode,Model.SubMakeCode, Model.ModelCode, Model.CatalogueCode, Model.GroupCode, Model.SubGroupCode, SubSubGroupCode=group.Code, DrawingNumber=0, Scope="SubSubGroup"})
+                            @Html.ActionLink($"{Model.GroupCode:000}{Model.SubGroupCode:00}/{group.Code:00} {group.Description}", "Detail", "Drawings", new {Model.Navigation.Language, Model.MakeCode,Model.SubMakeCode, Model.ModelCode, Model.CatalogueCode, Model.GroupCode, Model.SubGroupCode, SubSubGroupCode=group.Code, DrawingNumber=0, Scope="SubSubGroup", MVS=Model.Navigation.Filter.MVS, VIN=Model.Navigation.Filter.VIN})
                         </td>
                         <td>
                             @group.ApplicabilityText
@@ -74,7 +42,7 @@
                         </td>
                     </tr>
                 }
-                <tr><td>@Html.ActionLink("All drawings", "Detail", "Drawings", new {Model.Navigation.Language, Model.MakeCode, Model.SubMakeCode, Model.ModelCode, Model.CatalogueCode,Model.GroupCode,Model.SubGroupCode,SubSubGroupCode = "ALL", DrawingNumber=0, Scope="SubGroup"})</td></tr>
+                <tr><td>@Html.ActionLink("All drawings", "Detail", "Drawings", new {Model.Navigation.Language, Model.MakeCode, Model.SubMakeCode, Model.ModelCode, Model.CatalogueCode,Model.GroupCode,Model.SubGroupCode,SubSubGroupCode = "ALL", DrawingNumber=0, Scope="SubGroup", MVS=Model.Navigation.Filter.MVS, VIN=Model.Navigation.Filter.VIN})</td></tr>
 
             </table>
 

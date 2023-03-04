@@ -58,9 +58,9 @@ namespace openPER.Helpers
             return model;
         }
 
-        internal static NavigationViewModel PopulateNavigationModel(IMapper mapper, IRepository rep, string language, string makeCode, string subMakeCode, string modelCode, string catalogueCode, int groupCode, int subGroupCode, int subSubGroupCode, int drawingNumber, string clichePartNumber, int clicheDrawingNumber, string vin, string mvs)
+        internal static NavigationViewModel PopulateNavigationModel(IMapper mapper, IRepository rep, string language, string makeCode, string subMakeCode, string modelCode, string catalogueCode, int groupCode, int subGroupCode, int subSubGroupCode, int drawingNumber,string scope,  string clichePartNumber, int clicheDrawingNumber, string vin, string mvs)
         {
-            return InternalPopulateNavigationModel(mapper, rep, language, makeCode, subMakeCode, modelCode, catalogueCode, groupCode, subGroupCode, subSubGroupCode, drawingNumber, null, clichePartNumber, clicheDrawingNumber, vin, mvs);
+            return InternalPopulateNavigationModel(mapper, rep, language, makeCode, subMakeCode, modelCode, catalogueCode, groupCode, subGroupCode, subSubGroupCode, drawingNumber, scope, clichePartNumber, clicheDrawingNumber, vin, mvs);
         }
 
         internal static NavigationViewModel PopulateNavigationModel(IMapper mapper, IRepository rep, string language, string makeCode, string subMakeCode, string modelCode, string catalogueCode, int groupCode, string vin, string mvs)
