@@ -15,24 +15,33 @@
             <p>Select a subcategory from the side menu or directly from the map.</p>
             <table class="table table-sm">
                 <thead><tr><th>Subcategory</th><th>Compatibility</th><th>Compatibility description</th></tr></thead>
-                @foreach (var group in Model.SubSubGroups.Where(x => x.Visible))
+                @foreach (var group in Model.SubSubGroups)
                 {
                     <tr>
                         <td>
-                            @Html.ActionLink($"{Model.GroupCode:000}{Model.SubGroupCode:00}/{group.Code:00} {group.Description}", "Detail", "Drawings", new {Model.Navigation.Language, Model.MakeCode,Model.SubMakeCode, Model.ModelCode, Model.CatalogueCode, Model.GroupCode, Model.SubGroupCode, SubSubGroupCode=group.Code, DrawingNumber=0, Scope="SubSubGroup", MVS=Model.Navigation.Filter.MVS, VIN=Model.Navigation.Filter.VIN})
+                            @if (group.Visible)
+                            {
+                                @Html.ActionLink($"{Model.GroupCode:000}{Model.SubGroupCode:00}/{group.Code:00} {group.Description}", "Detail", "Drawings", new {Model.Navigation.Language, Model.MakeCode,Model.SubMakeCode, Model.ModelCode, Model.CatalogueCode, Model.GroupCode, Model.SubGroupCode, SubSubGroupCode=group.Code, DrawingNumber=0, Scope="SubSubGroup", MVS=Model.Navigation.Filter.MVS, VIN=Model.Navigation.Filter.VIN})
+                            }
+                            else
+                            {
+                                <del>
+                                    @Html.ActionLink($"{Model.GroupCode:000}{Model.SubGroupCode:00}/{group.Code:00} {group.Description}", "Detail", "Drawings", new {Model.Navigation.Language, Model.MakeCode,Model.SubMakeCode, Model.ModelCode, Model.CatalogueCode, Model.GroupCode, Model.SubGroupCode, SubSubGroupCode=group.Code, DrawingNumber=0, Scope="SubSubGroup", MVS=Model.Navigation.Filter.MVS, VIN=Model.Navigation.Filter.VIN})
+                                </del>
+                            }
                         </td>
                         <td>
                             @group.ApplicabilityText
                         </td>
                         <td>
                             <table>
-                                @foreach(var mod in group.Modifications)
+                                @foreach (var mod in group.Modifications)
                                 {
                                     <tr>
                                         <td>@mod.FullDescription</td>
                                     </tr>
                                 }
-                                @foreach(var pat in group.PatternParts)
+                                @foreach (var pat in group.PatternParts)
                                 {
                                     <tr>
                                         <td>@pat.FullDescription</td>
