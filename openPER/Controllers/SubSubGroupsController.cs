@@ -40,12 +40,15 @@ namespace openPER.Controllers
             if (MVS != "")
             {
                 string sinComPattern = _rep.GetSincomPattern(MVS);
+                string vehiclePattern = _rep.GetVehiclePattern(VIN);
+                var vmkCodes = _rep.GetVmkDataForCatalogue(catalogueCode, language);
+                if (vehiclePattern != "") sinComPattern = vehiclePattern;
                 foreach (var subSubGroup in model.SubSubGroups)
                 {
                     var pattern = subSubGroup.Pattern;
                     if (!string.IsNullOrEmpty(pattern))
                     {
-                        if (!PatternMatchHelper.EvaluateRule(pattern, sinComPattern))
+                        if (!PatternMatchHelper.EvaluateRule(pattern, sinComPattern, vmkCodes))
                             subSubGroup.Visible = false;
                     }
                     var modifications = subSubGroup.Modifications;
@@ -55,7 +58,7 @@ namespace openPER.Controllers
                         foreach (var rule in mod.Activations)
                         {
                             // Does this apply to this vehicle
-                            if (PatternMatchHelper.EvaluateRule(rule.ActivationPattern, sinComPattern))
+                            if (PatternMatchHelper.EvaluateRule(rule.ActivationPattern, sinComPattern, vmkCodes))
                             {
                                 // Does this vehicle have the data needed
                                 if (vehicleModificationFilters.ContainsKey(rule.ActivationCode))

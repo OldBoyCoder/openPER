@@ -23,6 +23,8 @@ namespace openPERRepositories.Interfaces
         List<DrawingKeyModel> GetDrawingKeysForCatalogue(string makeCode, string modelCode, string catalogueCode, string languageCode);
         List<DrawingKeyModel> GetDrawingKeysForGroup(string makeCode, string modelCode, string catalogueCode, int groupCode, string languageCode);
         List<DrawingKeyModel> GetDrawingKeysForSubGroup(string makeCode, string modelCode, string catalogueCode, int groupCode, int subGroupCode, string languageCode);
+        List<VmkModel> GetVmkDataForCatalogue(string catalogueCode, string language);
+        string GetVehiclePattern(string vIN);
         MapImageModel GetMapAndImageForCatalogue(string makeCode, string subMakeCode, string modelCode,
             string catalogueCode);
         string GetImageNameForModel(string makeCode, string subMakeCode, string modelCode);

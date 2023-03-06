@@ -109,12 +109,13 @@ namespace openPER.Controllers
             if (mvs != "")
             {
                 string sinComPattern = _rep.GetSincomPattern(mvs);
+                var vmkCodes = _rep.GetVmkDataForCatalogue(drawing.CatalogueCode, language);
                 foreach (var p in tableData.Parts)
                 {
                     var pattern = p.Compatibility;
                     if (!string.IsNullOrEmpty(pattern))
                     {
-                        if (!PatternMatchHelper.EvaluateRule(pattern, sinComPattern))
+                        if (!PatternMatchHelper.EvaluateRule(pattern, sinComPattern, vmkCodes))
                             p.Visible = false;
                     }
                 }

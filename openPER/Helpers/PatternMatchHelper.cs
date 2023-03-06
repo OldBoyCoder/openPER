@@ -1,6 +1,8 @@
 ﻿using System;
+using System.Linq;
 using System.Collections.Generic;
 using System.Data;
+using openPERModels;
 
 namespace openPER.Helpers
 {
@@ -18,7 +20,7 @@ namespace openPER.Helpers
     /// </summary>
     public class PatternMatchHelper
     {
-        public static bool EvaluateRule(string pattern, string sincomPattern)
+        public static bool EvaluateRule(string pattern, string sincomPattern, List<VmkModel> vmkCodes)
         {
             var p2 = sincomPattern.Split(new[] { '+' }, StringSplitOptions.RemoveEmptyEntries);
             var Values = new Dictionary<string, bool>();
@@ -29,15 +31,16 @@ namespace openPER.Helpers
                 else
                     Values.Add(v, true);
             }
-            return EvaluateRule(pattern, Values);
+            return EvaluateRule(pattern, Values, vmkCodes);
         }
-        public static bool EvaluateRule(string pattern, Dictionary<string, bool> values)
+        public static bool EvaluateRule(string pattern, Dictionary<string, bool> values, List<VmkModel> vmkCodes)
         {
             var dt = new DataTable();
             var Symbol = false;
             var SymbolName = "";
             var AllSymbols = new Dictionary<string, bool>();
             var newPattern = "";
+            bool v;
             foreach (var c in pattern)
             {
                 if (!Symbol)
@@ -76,16 +79,67 @@ namespace openPER.Helpers
                 AllSymbols[SymbolName] = false;
                 newPattern += "|";
             }
+            //foreach (var item in values)
+            //{
+            //    if (AllSymbols.ContainsKey(item.Key))
+            //        AllSymbols[item.Key] = item.Value;
+            //}
             foreach (var item in values)
             {
-                if (AllSymbols.ContainsKey(item.Key))
-                    AllSymbols[item.Key] = item.Value;
-            }
-            foreach (var item in AllSymbols)
-            {
                 newPattern = newPattern.Replace($"|{item.Key}|", item.Value ? " true " : " false ");
+                AllSymbols.Remove(item.Key);
             }
             pattern = newPattern;
+            if (AllSymbols.Count > 0)
+            {
+                // We have symbols for which we have no value.  Try the pattern with them both True and False
+                var comb = (Math.Pow(2, (AllSymbols.Count)));
+                var basePattern = pattern;
+                for (int i = 0; i < comb; i++)
+                {
+                    // i now is the bit pattern for the symbols true/false
+                    for (int j = 0; j < AllSymbols.Count; j++)
+                    {
+                        var key = AllSymbols.ElementAt(j).Key;
+                        var vmkElement = vmkCodes.Where(x => (x.Type + x.Code) == key).FirstOrDefault();
+                        if (vmkElement != null && vmkElement.MultiValue)
+                            AllSymbols[key] = false;
+                        else
+                        {
+                            if ((i & (int)Math.Pow(2, j)) != 0)
+                                AllSymbols[key] = true;
+                            else
+                                AllSymbols[key] = false;
+                        }
+                    }
+                    // Now try the pattern
+                    pattern = basePattern;
+                    foreach (var item in AllSymbols)
+                    {
+                        pattern = pattern.Replace($"|{item.Key}|", item.Value ? " true " : " false ");
+                    }
+                    pattern = pattern.Replace(",", " OR ");
+                    pattern = pattern.Replace("+", " AND ");
+                    pattern = pattern.Replace("!", " NOT ");
+                    pattern = pattern.Replace("(", " ( ");
+                    pattern = pattern.Replace(")", " ) ");
+                    pattern = " " + pattern + " ";
+
+                    try
+                    {
+                        v = (bool)dt.Compute(pattern, "");
+                    }
+                    catch (Exception)
+                    {
+                        // return true if there is an exception as we want to err on
+                        // the side of including items.
+                        return true;
+                    }
+                    if (v) return true;
+
+                }
+                return false;
+            }
             pattern = pattern.Replace(",", " OR ");
             pattern = pattern.Replace("+", " AND ");
             pattern = pattern.Replace("!", " NOT ");
@@ -93,7 +147,6 @@ namespace openPER.Helpers
             pattern = pattern.Replace(")", " ) ");
             pattern = " " + pattern + " ";
 
-            bool v;
             try
             {
                 v = (bool)dt.Compute(pattern, "");

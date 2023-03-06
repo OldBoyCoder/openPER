@@ -1416,5 +1416,41 @@ namespace openPERRepositories.Repositories
             if (!string.IsNullOrEmpty(v.Organization)) rc.Add("VET", $"{v.Organization}");
             return rc;
         }
+
+        public string GetVehiclePattern(string vin)
+        {
+            var rc = "";
+            var @sql = @"SELECT CARATT FROM VIN_DATA_RT WHERE VIN = @p1";
+            using var connection = new MySqlConnection(_pathToDb);
+            connection.RunSqlFirstRowOnly(sql, (reader) =>
+            {
+                rc = reader.IsDBNull(0) ? "" : reader.GetString(0).Replace("|", "");
+
+            }, vin);
+            return rc;
+        }
+
+        public List<VmkModel> GetVmkDataForCatalogue(string catalogueCode, string language)
+        {
+            var rc = new List<VmkModel>();
+            var @sql = @"SELECT VMK_TYPE, VMK_COD, VMK_DSC FROM VMK_DSC WHERE CAT_COD = @p1 and LNG_COD =@p2";
+            using var connection = new MySqlConnection(_pathToDb);
+            connection.RunSqlAllRows(sql, (reader) =>
+            {
+                var v = new VmkModel
+                {
+                    Type = reader.GetString(0),
+                    Code = reader.IsDBNull(1) ? "" : reader.GetString(1),
+                    Description = reader.IsDBNull(2) ? "" : reader.GetString(2)
+                };
+                if (string.IsNullOrEmpty(v.Code))
+                    v.MultiValue = false;
+                else
+                    v.MultiValue = true;
+                rc.Add(v);
+
+            }, catalogueCode, language);
+            return rc;
+        }
     }
 }
