@@ -229,7 +229,10 @@ namespace openPERRepositories.Repositories
                     VariantPattern = reader.GetString(5),
                     Revision = reader.GetInt32(6),
                     RevisionModifications = reader.GetString(7),
-                    Description = reader.GetString(8)
+                    Description = reader.GetString(8),
+                    Modifications = reader.IsDBNull(7) ? new List<ModificationModel>() :
+                        CreateModificationListFromString(catalogueCode, reader.GetString(7), languageCode)
+
                 };
                 var ThumbImagePath = reader.GetString(9);
                 var imageParts = ThumbImagePath.Split(new[] { '.' });
@@ -264,7 +267,10 @@ namespace openPERRepositories.Repositories
                     VariantPattern = reader.GetString(5),
                     Revision = reader.GetInt32(6),
                     RevisionModifications = reader.GetString(7),
-                    Description = reader.GetString(8)
+                    Description = reader.GetString(8),
+                    Modifications = reader.IsDBNull(7) ? new List<ModificationModel>() :
+                        CreateModificationListFromString(catalogueCode, reader.GetString(7), languageCode)
+
                 };
                 var ThumbImagePath = reader.GetString(9);
                 var imageParts = ThumbImagePath.Split(new[] { '.' });
@@ -299,6 +305,9 @@ namespace openPERRepositories.Repositories
                     Revision = reader.GetInt32(6),
                     RevisionModifications = reader.GetString(7),
                     Description = reader.GetString(8),
+                    Modifications = reader.IsDBNull(7) ? new List<ModificationModel>() :
+                        CreateModificationListFromString(catalogueCode, reader.GetString(7), languageCode)
+
                 };
                 var ThumbImagePath = reader.GetString(9);
                 var imageParts = ThumbImagePath.Split(new[] { '.' });
@@ -688,6 +697,7 @@ namespace openPERRepositories.Repositories
         private List<ModificationModel> CreateModificationListFromString(string catalogueCode, string modificationList, string languageCode)
         {
             var modList = new List<ModificationModel>();
+            if (string.IsNullOrEmpty(modificationList)) return modList;
             var parts = modificationList.Split(',');
             var sequence = 1;
             foreach (var part in parts)
@@ -825,7 +835,10 @@ namespace openPERRepositories.Repositories
                     SubSubGroupCode = reader.GetInt32(3),
                     Variant = reader.GetInt32(4),
                     Revision = reader.GetInt32(5),
-                    Description = reader.GetString(6)
+                    Description = reader.GetString(6),
+                    Modifications = reader.IsDBNull(7) ? new List<ModificationModel>() :
+                        CreateModificationListFromString(catalogueCode, reader.GetString(7), languageCode)
+
                 };
                 var ThumbImagePath = reader.GetString(7);
                 var imageParts = ThumbImagePath.Split(new[] { '.' });
