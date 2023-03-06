@@ -110,6 +110,8 @@ namespace openPER.Controllers
             {
                 string sinComPattern = _rep.GetSincomPattern(mvs);
                 var vmkCodes = _rep.GetVmkDataForCatalogue(drawing.CatalogueCode, language);
+                string vehiclePattern = _rep.GetVehiclePattern(vin);
+                if (vehiclePattern != "") sinComPattern = vehiclePattern;
                 foreach (var p in tableData.Parts)
                 {
                     var pattern = p.Compatibility;

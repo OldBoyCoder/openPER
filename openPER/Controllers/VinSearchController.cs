@@ -52,6 +52,7 @@ namespace openPER.Controllers
                 {
                     model.Language = language;
                     var potentialOptions = _rep.GetMvsDetailsForCatalogue(model.CatalogueCode, language);
+
                     var ourOptions = model.Pattern.Split(new[] { '+' });
                     model.Options = new List<System.Tuple<string, string, string, string>>();
 
