@@ -1336,7 +1336,10 @@ namespace openPERRepositories.Repositories
                 rc.Add(p);
 
             }, fullVin);
-            if (rc.Count > 0) return rc;
+            if (rc.Count > 0)
+            {
+                return rc;
+            }
             // Secondly a match on model and chassis number.  First three digits of VIN have to be translated
             // to a model code and there can be more than one
 
@@ -1364,6 +1367,7 @@ namespace openPERRepositories.Repositories
 
             return rc;
         }
+
 
         public List<MvsDataModel> GetMvsDetails(string mvs)
         {

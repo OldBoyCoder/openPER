@@ -46,12 +46,16 @@ namespace openPER.Controllers
             foreach (var result in results)
             {
                 result.Models = _mapper.Map<List<MvsDataModel>, List<MvsDataViewModel>>(_rep.GetMvsDetails(result.Mvs));
+                var vehicleOptions = _rep.GetVehiclePattern(fullVin);
+
                 if (result.Models.Count > 0)
                     result.InteriorColourDescription = _rep.GetInteriorColourDescription(result.Models[0].CatalogueCode, result.InteriorColourCode, language);
                 foreach (var model in result.Models)
                 {
                     model.Language = language;
                     var potentialOptions = _rep.GetMvsDetailsForCatalogue(model.CatalogueCode, language);
+                    if (vehicleOptions != "")
+                        model.Pattern = vehicleOptions;
 
                     var ourOptions = model.Pattern.Split(new[] { '+' });
                     model.Options = new List<System.Tuple<string, string, string, string>>();
@@ -67,12 +71,14 @@ namespace openPER.Controllers
                         }
                         var opt = potentialOptions.FirstOrDefault(x => x.TypeCodePair == key);
                         string sortKey;
-                        if (string.IsNullOrEmpty(opt.TypeDescription))
-                            sortKey = "ZZZ" + opt.CodeDescription;
-                        else
-                            sortKey = "AAA" + opt.TypeDescription;
-                        if (opt != null )
+                        if (opt != null)
+                        {
+                            if (string.IsNullOrEmpty(opt.TypeDescription))
+                                sortKey = "ZZZ" + opt.CodeDescription;
+                            else
+                                sortKey = "AAA" + opt.TypeDescription;
                             model.Options.Add(new System.Tuple<string, string, string, string>(sortKey, opt.CodeDescription, string.IsNullOrEmpty(opt.TypeDescription) ? absent ? "No" : "Yes" : opt.TypeDescription, opt.TypeCodePair));
+                        }
                     }
 
                 }

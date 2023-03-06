@@ -20,7 +20,7 @@ namespace openPER.Helpers
     /// </summary>
     public class PatternMatchHelper
     {
-        public static bool EvaluateRule(string pattern, string sincomPattern, List<VmkModel> vmkCodes)
+        public static bool EvaluateRule(string pattern, string sincomPattern, List<VmkModel> vmkCodes, bool preciseMatch)
         {
             var p2 = sincomPattern.Split(new[] { '+' }, StringSplitOptions.RemoveEmptyEntries);
             var Values = new Dictionary<string, bool>();
@@ -31,9 +31,9 @@ namespace openPER.Helpers
                 else
                     Values.Add(v, true);
             }
-            return EvaluateRule(pattern, Values, vmkCodes);
+            return EvaluateRule(pattern, Values, vmkCodes, preciseMatch);
         }
-        public static bool EvaluateRule(string pattern, Dictionary<string, bool> values, List<VmkModel> vmkCodes)
+        public static bool EvaluateRule(string pattern, Dictionary<string, bool> values, List<VmkModel> vmkCodes, bool preciseMatch)
         {
             var dt = new DataTable();
             var Symbol = false;
@@ -90,7 +90,7 @@ namespace openPER.Helpers
                 AllSymbols.Remove(item.Key);
             }
             pattern = newPattern;
-            if (AllSymbols.Count > 0)
+            if (!preciseMatch && AllSymbols.Count > 0)
             {
                 // We have symbols for which we have no value.  Try the pattern with them both True and False
                 var comb = (Math.Pow(2, (AllSymbols.Count)));
@@ -139,6 +139,10 @@ namespace openPER.Helpers
 
                 }
                 return false;
+            }
+            foreach (var item in AllSymbols)
+            {
+                pattern = pattern.Replace($"|{item.Key}|", " false ");
             }
             pattern = pattern.Replace(",", " OR ");
             pattern = pattern.Replace("+", " AND ");

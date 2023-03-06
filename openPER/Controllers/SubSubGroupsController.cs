@@ -48,7 +48,7 @@ namespace openPER.Controllers
                     var pattern = subSubGroup.Pattern;
                     if (!string.IsNullOrEmpty(pattern))
                     {
-                        if (!PatternMatchHelper.EvaluateRule(pattern, sinComPattern, vmkCodes))
+                        if (!PatternMatchHelper.EvaluateRule(pattern, sinComPattern, vmkCodes,!string.IsNullOrEmpty(vehiclePattern)))
                             subSubGroup.Visible = false;
                     }
                     var modifications = subSubGroup.Modifications;
@@ -58,7 +58,7 @@ namespace openPER.Controllers
                         foreach (var rule in mod.Activations)
                         {
                             // Does this apply to this vehicle
-                            if (PatternMatchHelper.EvaluateRule(rule.ActivationPattern, sinComPattern, vmkCodes))
+                            if (PatternMatchHelper.EvaluateRule(rule.ActivationPattern, sinComPattern, vmkCodes, !string.IsNullOrEmpty(vehiclePattern)))
                             {
                                 // Does this vehicle have the data needed
                                 if (vehicleModificationFilters.ContainsKey(rule.ActivationCode))

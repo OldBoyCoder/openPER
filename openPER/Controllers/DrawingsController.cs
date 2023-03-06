@@ -117,7 +117,7 @@ namespace openPER.Controllers
                     var pattern = p.Compatibility;
                     if (!string.IsNullOrEmpty(pattern))
                     {
-                        if (!PatternMatchHelper.EvaluateRule(pattern, sinComPattern, vmkCodes))
+                        if (!PatternMatchHelper.EvaluateRule(pattern, sinComPattern, vmkCodes, !string.IsNullOrEmpty(vehiclePattern)))
                             p.Visible = false;
                     }
                 }
