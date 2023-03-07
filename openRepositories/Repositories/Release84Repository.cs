@@ -1389,7 +1389,7 @@ namespace openPERRepositories.Repositories
         public List<MvsCatalogueOptionModel> GetMvsDetailsForCatalogue(string catalogueCode, string language)
         {
             var rc = new List<MvsCatalogueOptionModel>();
-            var @sql = @"SELECT CONCAT( IFNULL(V.VMK_TYPE, ''),IFNULL(VMK_COD, '')), C.vmk_dsc, V.VMK_DSC FROM VMK_DSC V
+            var @sql = @"SELECT CONCAT( IFNULL(V.VMK_TYPE, ''),IFNULL(VMK_COD, '')), C.vmk_dsc, V.VMK_DSC, V.VMK_TYPE, V.VMK_COD FROM VMK_DSC V
 	                        LEFT OUTER JOIN carat_dsc C ON C.CAT_COD = V.CAT_COD AND C.LNG_COD = @p2 AND V.VMK_TYPE = C.VMK_TYPE
 	                        WHERE V.CAT_COD = @p1 AND V.LNG_COD = @p2 
                             ORDER BY C.VMK_TYPE, VMK_COD";
@@ -1400,7 +1400,9 @@ namespace openPERRepositories.Repositories
                 {
                     TypeCodePair = reader.GetString(0),
                     TypeDescription = reader.IsDBNull(1) ? "":reader.GetString(1),
-                    CodeDescription = reader.IsDBNull(2)?"": reader.GetString(2)
+                    CodeDescription = reader.IsDBNull(2)?"": reader.GetString(2),
+                    TypeCode = reader.IsDBNull(3)?"": reader.GetString(3),
+                    ValueCode = reader.IsDBNull(4) ? "" : reader.GetString(4)
                 };
                 rc.Add(p);
 
@@ -1450,7 +1452,9 @@ namespace openPERRepositories.Repositories
         public List<VmkModel> GetVmkDataForCatalogue(string catalogueCode, string language)
         {
             var rc = new List<VmkModel>();
-            var @sql = @"SELECT VMK_TYPE, VMK_COD, VMK_DSC FROM VMK_DSC WHERE CAT_COD = @p1 and LNG_COD =@p2";
+            var @sql = @"SELECT VD.VMK_TYPE, VD.VMK_COD, VD.VMK_DSC, CD.VMK_DSC FROM VMK_DSC VD
+                LEFT OUTER JOIN CARAT_DSC CD ON CD.CAT_COD = @p1 AND CD.VMK_TYPE = VD.VMK_TYPE AND CD.LNG_COD = @p2
+                    WHERE VD.CAT_COD = @p1 and VD.LNG_COD =@p2";
             using var connection = new MySqlConnection(_pathToDb);
             connection.RunSqlAllRows(sql, (reader) =>
             {
@@ -1458,7 +1462,8 @@ namespace openPERRepositories.Repositories
                 {
                     Type = reader.GetString(0),
                     Code = reader.IsDBNull(1) ? "" : reader.GetString(1),
-                    Description = reader.IsDBNull(2) ? "" : reader.GetString(2)
+                    CodeDescription = reader.IsDBNull(2) ? "" : reader.GetString(2),
+                    TypeDescription = reader.IsDBNull(3) ? "" : reader.GetString(3)
                 };
                 if (string.IsNullOrEmpty(v.Code))
                     v.MultiValue = false;

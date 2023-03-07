@@ -10,7 +10,8 @@ namespace openPERModels
     {
         public string Type { get; set; }
         public string Code { get; set; }
-        public string Description { get; set; }
+        public string CodeDescription { get; set; }
+        public string TypeDescription { get; set; }
         public bool MultiValue { get; set; }
     }
 }

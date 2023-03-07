@@ -4,6 +4,7 @@ using AutoMapper;
 using System.Collections.Generic;
 using openPERRepositories.Interfaces;
 using System;
+using System.Linq;
 
 namespace openPER.Helpers
 {
@@ -54,6 +55,10 @@ namespace openPER.Helpers
                 MVS = MVS,
                 VIN = VIN
             };
+            if (!string.IsNullOrEmpty(MVS))
+            {
+                model.Filter = PopulateFilterModel(mapper, rep, language, catalogueCode, MVS, VIN);
+            }
 
             return model;
         }
@@ -94,6 +99,56 @@ namespace openPER.Helpers
         internal static NavigationViewModel PopulateNavigationModel(IMapper mapper, IRepository rep, string language)
         {
             return InternalPopulateNavigationModel(mapper, rep, language, null, null, null, null, null, null, null, null, null, null, null, null, null);
+        }
+        public static FilterModel PopulateFilterModel(IMapper mapper, IRepository rep, string language, string catalogueCode, string mvs, string vin)
+        {
+            var rc = new FilterModel();
+            rc.VIN = vin;
+            rc.MVS = mvs;
+            var vehicleDetails = rep.FindMatchesForVin(language, vin);
+            if (vehicleDetails == null) return rc;
+            if (vehicleDetails.Count == 0) return rc;
+            rc.BuildDate = vehicleDetails[0].BuildDate;
+            rc.NumberForParts = vehicleDetails[0].Organization;
+            rc.Engine = vehicleDetails[0].Motor;
+            // vmkData is all the details for this catalogue, not this vehicle.
+            var vmkData = rep.GetVmkDataForCatalogue(catalogueCode, language);
+            // sincom data is just for this specific type in the catalogue
+            string sinComPattern = rep.GetSincomPattern(mvs);
+            var pattern = sinComPattern;
+
+            string vehiclePattern = rep.GetVehiclePattern(vin);
+            if (!string.IsNullOrEmpty(vehiclePattern))
+            {
+                pattern = vehiclePattern;
+            }
+            var potentialOptions = rep.GetMvsDetailsForCatalogue(catalogueCode, language);
+
+
+            var ourOptions = pattern.Split(new[] { '+' });
+            foreach (var ourOption in ourOptions)
+            {
+                var o = new FilterOptions();
+                var key = ourOption;
+                if (key.StartsWith("!"))
+                {
+                    key = key.Substring(1);
+                }
+                var opt = potentialOptions.FirstOrDefault(x => x.TypeCodePair == key);
+                if (opt != null)
+                {
+                    if (string.IsNullOrEmpty(opt.TypeDescription))
+                        o.MultiValue = false;
+                    else
+                        o.MultiValue = true;
+                    o.TypeDescription = opt.TypeDescription;
+                    o.TypeCode = opt.TypeCode;
+                    o.ValueCode = opt.ValueCode;
+                    o.ValueDescription = opt.CodeDescription;
+                    rc.Options.Add(o);
+                }
+            }
+            return rc;
         }
     }
 }

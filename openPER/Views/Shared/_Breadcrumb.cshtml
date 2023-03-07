@@ -49,4 +49,49 @@
             }
         </ol>
     </nav>
+    @if (!string.IsNullOrEmpty(Model.Filter.MVS))
+    {
+        <nav class="navbar">
+            <ul class="navbar-nav">
+                <li>SINCOM: @Model.Filter.MVS</li>
+                <li>VIN: @Model.Filter.VIN</li>
+                <li>N. of parts: @Model.Filter.NumberForParts</li>
+                <li>Engine: @Model.Filter.Engine</li>
+                <li>@Model.Filter.BuildDate</li>
+                @foreach (var item in Model.Filter.Options.Where(x => x.MultiValue))
+                {
+                    <li>@item.TypeCode @item.ValueCode</li>
+                }
+            </ul>
+            <button type="button" data-toggle="modal" data-target="#filterModal">All</button>
+        </nav>
+        <div class="modal" tabindex="-1" role="dialog" id="filterModal">
+            <div class="modal-dialog" role="document">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title">Filter information</h5>
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                            <span aria-hidden="true">&times;</span>
+                        </button>
+                    </div>
+                    <div class="modal-body">
+                        <table class="table-sm">
+                            @foreach (var item in Model.Filter.Options.Where(x=>x.MultiValue))
+                            {
+                                <tr><td>@item.TypeDescription</td><td>@item.ValueDescription</td><td>(@item.ValueCode)</td></tr>
+                            }
+                            @foreach (var item in Model.Filter.Options.Where(x=>!x.MultiValue).OrderBy(x=>x.ValueDescription))
+                            {
+                                <tr><td>@item.ValueDescription</td><td>Yes</td><td>(@item.TypeCode)</td></tr>
+                            }
+                        </table>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-primary" data-dismiss="modal">Close</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+    }
 </div>
