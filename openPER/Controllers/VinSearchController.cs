@@ -53,11 +53,16 @@ namespace openPER.Controllers
                 foreach (var model in result.Models)
                 {
                     model.Language = language;
+                    model.DataSource = "Model";
                     var potentialOptions = _rep.GetMvsDetailsForCatalogue(model.CatalogueCode, language);
                     if (vehicleOptions != "")
+                    {
                         model.Pattern = vehicleOptions;
+                        model.DataSource = "Vehicle";
+                    }
 
-                    var ourOptions = model.Pattern.Split(new[] { '+' });
+
+                        var ourOptions = model.Pattern.Split(new[] { '+' });
                     model.Options = new List<System.Tuple<string, string, string, string>>();
 
                     foreach (var ourOption in ourOptions)

@@ -27,6 +27,7 @@
                 <tr><td>Engine type</td><td>@r.EngineType</td></tr>
                 <tr><td>SINCOM</td><td>@r.Sincom</td></tr>
                 <tr><td>@Html.ActionLink($"Go to catalogue", "Index", "Groups", new { Language=r.Language, r.MakeCode, r.SubMakeCode, r.ModelCode, CatalogueCode = r.CatalogueCode, VIN=result.VIN, MVS=r.Sincom })</td></tr>
+                <tr><td>Source for option data</td><td>@r.DataSource</td></tr>
                 @foreach (var o in r.Options.OrderBy(x => x.Item1))
                 {
                     <tr><td>@o.Item2</td><td>@o.Item3</td><td>@o.Item4</td></tr>
