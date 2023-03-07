@@ -2,6 +2,12 @@
 
 namespace openPER.ViewModels
 {
+    public enum FilterDataSource
+    {
+        SINCOM,
+        VIN
+
+    }
     public class FilterModel
     {
         public string VIN { get; set; }
@@ -12,13 +18,6 @@ namespace openPER.ViewModels
         public string BuildDate { get; set; }
         public string Pattern { get; set; }
         public List<FilterOptions> Options { get; set; } = new List<FilterOptions>();
-    }
-    public class FilterOptions
-    {
-        public string TypeDescription { get; set; }
-        public string TypeCode { get; set; }
-        public bool MultiValue { get; set; }
-        public string ValueCode { get; set; }
-        public string ValueDescription { get; set; }
+        public FilterDataSource DataSource { get; set; }
     }
 }

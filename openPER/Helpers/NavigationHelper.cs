@@ -111,16 +111,16 @@ namespace openPER.Helpers
             rc.BuildDate = vehicleDetails[0].BuildDate;
             rc.NumberForParts = vehicleDetails[0].Organization;
             rc.Engine = vehicleDetails[0].Motor;
-            // vmkData is all the details for this catalogue, not this vehicle.
-            var vmkData = rep.GetVmkDataForCatalogue(catalogueCode, language);
             // sincom data is just for this specific type in the catalogue
             string sinComPattern = rep.GetSincomPattern(mvs);
             var pattern = sinComPattern;
 
             string vehiclePattern = rep.GetVehiclePattern(vin);
+            rc.DataSource = FilterDataSource.SINCOM;
             if (!string.IsNullOrEmpty(vehiclePattern))
             {
                 pattern = vehiclePattern;
+                rc.DataSource = FilterDataSource.VIN;
             }
             var potentialOptions = rep.GetMvsDetailsForCatalogue(catalogueCode, language);
 
@@ -130,9 +130,11 @@ namespace openPER.Helpers
             {
                 var o = new FilterOptions();
                 var key = ourOption;
+                o.Present = true;
                 if (key.StartsWith("!"))
                 {
                     key = key.Substring(1);
+                    o.Present = false;
                 }
                 var opt = potentialOptions.FirstOrDefault(x => x.TypeCodePair == key);
                 if (opt != null)

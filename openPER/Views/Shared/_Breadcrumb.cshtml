@@ -51,39 +51,49 @@
     </nav>
     @if (!string.IsNullOrEmpty(Model.Filter.MVS))
     {
-        <nav class="navbar">
-            <ul class="navbar-nav">
-                <li>SINCOM: @Model.Filter.MVS</li>
-                <li>VIN: @Model.Filter.VIN</li>
-                <li>N. of parts: @Model.Filter.NumberForParts</li>
-                <li>Engine: @Model.Filter.Engine</li>
-                <li>@Model.Filter.BuildDate</li>
-                @foreach (var item in Model.Filter.Options.Where(x => x.MultiValue))
+        <nav class="navbar navbar-expand-lg navbar-light bg-light">
+                <span class="nav-text px-1">Active filters:</span>
+                <span class="nav-text px-1">SINCOM: @Model.Filter.MVS</span>
+                <span class="nav-text px-1">VIN: @Model.Filter.VIN</span>
+                <span class="nav-text px-1">N. of parts: @Model.Filter.NumberForParts</span>
+                <span class="nav-text px-1">Engine: @Model.Filter.Engine</span>
+                <span class="nav-text px-1">@Model.Filter.BuildDate</span>
+                @foreach (var item in Model.Filter.Options.Where(x => x.MultiValue).Take(5))
                 {
-                    <li>@item.TypeCode @item.ValueCode</li>
+                    <span class="nav-text px-1" title="@item.ValueDescription">@item.TypeCode@item.ValueCode</span>
                 }
-            </ul>
-            <button type="button" data-toggle="modal" data-target="#filterModal">All</button>
+                <span class="nav-text px-1">
+                    <button type="button" data-toggle="modal" data-target="#filterModal">All</button>
+                </span class="nav-item">
         </nav>
         <div class="modal" tabindex="-1" role="dialog" id="filterModal">
             <div class="modal-dialog" role="document">
                 <div class="modal-content">
                     <div class="modal-header">
-                        <h5 class="modal-title">Filter information</h5>
+                        @if (Model.Filter.DataSource == FilterDataSource.SINCOM)
+                        {
+                            <h5 class="modal-title">SINCOM code configuration @Model.Filter.MVS</h5>
+                        }
+                        else
+                        {
+                            <h5 class="modal-title">VIN configuration @Model.Filter.VIN</h5>
+                        }
                         <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                             <span aria-hidden="true">&times;</span>
                         </button>
                     </div>
                     <div class="modal-body">
                         <table class="table-sm">
-                            @foreach (var item in Model.Filter.Options.Where(x=>x.MultiValue))
+                            @foreach (var item in Model.Filter.Options.Where(x => x.MultiValue))
                             {
-                                <tr><td>@item.TypeDescription</td><td>@item.ValueDescription</td><td>(@item.ValueCode)</td></tr>
+                                <tr><td>@item.TypeDescription</td><td>@item.ValueDescription</td><td>(@item.TypeCode+@item.ValueCode)</td></tr>
                             }
-                            @foreach (var item in Model.Filter.Options.Where(x=>!x.MultiValue).OrderBy(x=>x.ValueDescription))
+                            @foreach (var item in Model.Filter.Options.Where(x => !x.MultiValue).OrderBy(x => x.ValueDescription))
                             {
-                                <tr><td>@item.ValueDescription</td><td>Yes</td><td>(@item.TypeCode)</td></tr>
+                                <tr><td>@item.ValueDescription</td><td>@(item.Present?"Yes":"No")</td><td>(@item.TypeCode)</td></tr>
                             }
+
+
                         </table>
                     </div>
                     <div class="modal-footer">
