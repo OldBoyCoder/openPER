@@ -22,7 +22,7 @@
                     <ul class="navbar-nav flex-grow-1">
                         <li class="nav-item dropdown">
                             <a class="nav-link dropdown-toggle" href="#" id="languageDropdownMenuLink" role="button" data-toggle="dropdown" aria-expanded="false">
-                                Language</a>
+                                @Resources.FrontEnd.LanguageDropdown</a>
                             <ul class="dropdown-menu" aria-labelledby="languageDropdownMenuLink">
                                 <vc:language-choice-widget language="@ViewData["Language"]"></vc:language-choice-widget>
                             </ul>
@@ -30,7 +30,7 @@
                         <li class="nav-item">
                             <div class="dropdown">
                                 <a class="nav-link dropdown-toggle" href="#" id="searchDropdownMenuLink" role="button" data-toggle="dropdown" aria-expanded="false">
-                                    Search</a>
+                                    @Resources.FrontEnd.SearchDropdown</a>
                                 <ul class="dropdown-menu" aria-labelledby="searchDropdownMenuLink">
                                 <vc:search-widget language="@ViewData["Language"]"></vc:search-widget>
                                 </ul>

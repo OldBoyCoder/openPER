@@ -88,6 +88,15 @@ namespace Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Language.
+        /// </summary>
+        public static string LanguageDropdown {
+            get {
+                return ResourceManager.GetString("LanguageDropdown", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Catalogues.
         /// </summary>
         public static string MenuItemCatalogues {
@@ -138,6 +147,33 @@ namespace Resources {
         public static string MenuItemSubSubGroups {
             get {
                 return ResourceManager.GetString("MenuItemSubSubGroups", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Part number.
+        /// </summary>
+        public static string SearchByPart {
+            get {
+                return ResourceManager.GetString("SearchByPart", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to VIN.
+        /// </summary>
+        public static string SearchByVin {
+            get {
+                return ResourceManager.GetString("SearchByVin", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Search.
+        /// </summary>
+        public static string SearchDropdown {
+            get {
+                return ResourceManager.GetString("SearchDropdown", resourceCulture);
             }
         }
         

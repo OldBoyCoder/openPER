@@ -8,7 +8,7 @@
         {
             <div class="input-group m-1">
                 <input id="languageId" name="language" hidden value="@Model.Language"/>
-                <label for="searchByVIN">Search by full VIN</label>
+                <label for="searchByVIN">@Resources.FrontEnd.SearchByVin</label>
                 @Html.TextBoxFor(m=>m.FullVin, new {@class="form-control-sm", type="search", placeholder="Full VIN", id="searchByVIN"})
                 <span class="input-group-append">
                     <button type="submit" class="btn-sm btn-outline-primary"><i class="fa fa-search"></i></button>
@@ -24,7 +24,7 @@
         {
             <div class="input-group m-1">
                 <input id="languageId" name="language" hidden value="@Model.Language"/>
-                <label for="searchByPart">Search for part number</label>
+                <label for="searchByPart">@Resources.FrontEnd.SearchByPart</label>
                 @Html.TextBoxFor(m=>m.PartNumber, new {@class="form-control-sm", type="search", placeholder="Part number", id="searchByPart"})
                 <span class="input-group-append">
                     <button type="submit" class="btn-sm btn-outline-primary"><i class="fa fa-search"></i></button>

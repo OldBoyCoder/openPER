@@ -127,6 +127,9 @@
     <value>Hello and welcome to openPER.  This is an open source project to recreate the functonality of the FIAT ePER system.  The project is currently hosted at https://github.com/OldBoyCoder/openPER</value>
     <comment>Main index page welcome text</comment>
   </data>
+  <data name="LanguageDropdown" xml:space="preserve">
+    <value>Language</value>
+  </data>
   <data name="MenuItemCatalogues" xml:space="preserve">
     <value>Catalogues</value>
   </data>
@@ -144,6 +147,15 @@
   </data>
   <data name="MenuItemSubSubGroups" xml:space="preserve">
     <value>Tables</value>
+  </data>
+  <data name="SearchByPart" xml:space="preserve">
+    <value>Part number</value>
+  </data>
+  <data name="SearchByVin" xml:space="preserve">
+    <value>VIN</value>
+  </data>
+  <data name="SearchDropdown" xml:space="preserve">
+    <value>Search</value>
   </data>
   <data name="VinNotFound" xml:space="preserve">
     <value>No vehicle was found matching the VIN.  If you feel your VIN should have been found and do not mind sharing that data then please contact us and we'll look into why it wasn't found</value>
