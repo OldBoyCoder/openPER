@@ -5,6 +5,8 @@ using Microsoft.Extensions.Configuration;
 using openPERModels;
 using openPERRepositories.Interfaces;
 using System;
+using VinSearcher;
+using Microsoft.Extensions.Caching.Memory;
 
 // ReSharper disable StringLiteralTypo
 
@@ -15,7 +17,10 @@ namespace openPERRepositories.Repositories
         internal IConfiguration _config;
         internal string _pathToDb;
         internal string _pathToCdn;
-        public Release84Repository(IConfiguration config)
+        internal string _pathToVindataCH;
+        internal string _pathToVindataRT;
+        private readonly IMemoryCache _cache;
+        public Release84Repository(IConfiguration config, IMemoryCache cache)
         {
             _config = config;
             var s = config.GetSection("Releases").Get<ReleaseModel[]>();
@@ -24,7 +29,10 @@ namespace openPERRepositories.Repositories
             {
                 _pathToDb = release.DbName;
                 _pathToCdn = release.CDNRoot;
+                _pathToVindataCH = release.VinDataCH;
+                _pathToVindataRT = release.VinDataRT;
             }
+            _cache = cache;
         }
 
         public MapImageModel GetMapAndImageForCatalogue(string makeCode, string subMakeCode, string modelCode,
@@ -177,10 +185,10 @@ namespace openPERRepositories.Repositories
                     Code = reader.GetInt32(0),
                     Description = reader.GetString(1),
                     Pattern = reader.IsDBNull(2) ? "" : reader.GetString(2),
-                    Modifications = reader.IsDBNull(3) ? new List<ModificationModel>():
+                    Modifications = reader.IsDBNull(3) ? new List<ModificationModel>() :
                         CreateModificationListFromString(catalogueCode, reader.GetString(3), languageCode)
                 };
-                
+
                 // Create list of pattern codes.  Very quick and dirty
                 var p = m.Pattern;
                 p = p.Replace('(', ',').Replace(')', ',').Replace('+', ',').Replace('!', ',');
@@ -194,9 +202,9 @@ namespace openPERRepositories.Repositories
                         FullCode = part
                     };
                     var d = allPatternParts.FirstOrDefault(x => x.TypeCodePair == part);
-                    if (d!=null)
+                    if (d != null)
                     {
-                        pattern.CodeDescription = d.CodeDescription ;
+                        pattern.CodeDescription = d.CodeDescription;
                         pattern.TypeDescription = d.TypeDescription;
                     }
                     m.PatternParts.Add(pattern);
@@ -556,25 +564,7 @@ namespace openPERRepositories.Repositories
             }, subMakeCode, modelCode);
             return rc;
         }
-        public List<ModelModel> GetAllModels()
-        {
-            var rc = new List<ModelModel>();
-            using var connection = new MySqlConnection(_pathToDb);
-            //            var sql = @"SELECT MOD_COD, MOD_DSC, MK_COD FROM MODELS ORDER BY MOD_SORT_KEY ";
-            var sql = @"SELECT CMG_COD, CMG_DSC, MK2_COD FROM COMM_MODGRP ORDER BY CMG_SORT_KEY ";
-            connection.RunSqlAllRows(sql, (reader) =>
-            {
-                var m = new ModelModel
-                {
-                    Code = reader.GetString(0),
-                    Description = reader.GetString(1),
-                    MakeCode = reader.GetString(2)
-                };
-                rc.Add(m);
-            });
-            return rc;
 
-        }
         public List<ModelModel> GetAllModelsForMake(string makeCode, string subMake)
         {
             var rc = new List<ModelModel>();
@@ -1278,55 +1268,92 @@ namespace openPERRepositories.Repositories
             return rc;
         }
 
-        public string GetOptionCodeDescription(string catCode, string code, string language)
-        {
-            using var connection = new MySqlConnection(_pathToDb);
-            var rc = code;
-            var sql = @"SELECT VMK_DSC
-                            FROM CARAT_DSC
-                            WHERE CAT_COD = @p1 AND VMK_TYPE = @p2 AND LNG_COD = @p3";
-            connection.RunSqlFirstRowOnly(sql, (reader) =>
-            {
-                rc = reader.GetString(0);
-            }, catCode, code, language);
-
-            return rc;
-        }
-        public string GetOptionValueDescription(string catCode, string code, string value, string language)
-        {
-            using var connection = new MySqlConnection(_pathToDb);
-            var rc = value;
-            var sql = @"SELECT VMK_DSC
-                            FROM VMK_DSC
-                            WHERE CAT_COD = @p1 AND VMK_TYPE = @p2 AND LNG_COD = @p3 AND VMK_COD = @p4";
-            connection.RunSqlFirstRowOnly(sql, (reader) =>
-            {
-                rc = reader.GetString(0);
-            }, catCode, code, language, value);
-
-            return rc;
-        }
-        public string GetOptionValueDescription(string catCode, string code, string language)
-        {
-            using var connection = new MySqlConnection(_pathToDb);
-            var rc = code;
-            var sql = @"SELECT VMK_DSC
-                            FROM VMK_DSC
-                            WHERE CAT_COD = @p1 AND VMK_TYPE = @p2 AND LNG_COD = @p3 AND VMK_COD IS NULL";
-            connection.RunSqlFirstRowOnly(sql, (reader) =>
-            {
-                rc = reader.GetString(0);
-            }, catCode, code, language);
-
-            return rc;
-        }
-
         public string GetImageNameForModel(string makeCode, string subMakeCode, string modelCode)
         {
             return _pathToCdn + $"ModelImages{subMakeCode}/{modelCode.ToUpper()}.jpg";
         }
 
         public List<VinSearchResultModel> FindMatchesForVin(string language, string fullVin)
+        {
+            if (_cache.TryGetValue((language, fullVin), out List<VinSearchResultModel> cacheValue))
+            {
+                return cacheValue;
+            }
+            var rc = new List<VinSearchResultModel>();
+            var x = new Release84VinSearch(_pathToVindataCH, _pathToVindataRT);
+
+            if (string.IsNullOrEmpty(fullVin) || fullVin.Length != 17)
+                return null;
+
+            using var connection = new MySqlConnection(_pathToDb);
+            var sql = @"SELECT MOD_COD FROM VIN WHERE VIN_COD = @p1";
+            connection.RunSqlAllRows(sql, (reader) =>
+            {
+                var modelCode = reader.GetString(0);
+                var searchResult = x.FindVehicleByModelAndChassis(modelCode, fullVin.Substring(9, 8));
+                if (searchResult != null)
+                {
+                    var v = new VinSearchResultModel
+                    {
+                        BuildDate = searchResult.Date,
+                        Chassis = searchResult.Chassis,
+                        Motor = searchResult.Motor,
+                        Caratt = searchResult.Caratt,
+                        InteriorColourCode = searchResult.InteriorColour,
+                        VIN = searchResult.VIN,
+                        Mvs = searchResult.Mvs,
+                        Organization = searchResult.Organization
+                    };
+                    if (v.VIN == "") v.VIN = fullVin;
+                    rc.Add(v);
+                }
+
+            }, fullVin[3..6]);
+            var options = new MemoryCacheEntryOptions();
+            options.SetSlidingExpiration(TimeSpan.FromSeconds(300));
+            _cache.Set((language, fullVin), rc, options);
+
+            return rc;
+        }
+        public List<VinSearchResultModel> FindMatchesForMvsAndVin(string language, string mvs, string fullVin)
+        {
+            if (_cache.TryGetValue((language, mvs, fullVin), out List<VinSearchResultModel> cacheValue))
+            {
+                return cacheValue;
+            }
+            var rc = new List<VinSearchResultModel>();
+            var x = new Release84VinSearch(_pathToVindataCH, _pathToVindataRT);
+
+            if (string.IsNullOrEmpty(fullVin) || fullVin.Length != 17)
+                return null;
+
+            var modelCode = mvs.Substring(0, 3);
+            var searchResult = x.FindVehicleByModelAndChassis(modelCode, fullVin.Substring(9, 8));
+            if (searchResult != null)
+            {
+                var v = new VinSearchResultModel
+                {
+                    BuildDate = searchResult.Date,
+                    Chassis = searchResult.Chassis,
+                    Motor = searchResult.Motor,
+                    Caratt = searchResult.Caratt,
+                    InteriorColourCode = searchResult.InteriorColour,
+                    VIN = searchResult.VIN,
+                    Mvs = searchResult.Mvs,
+                    Organization = searchResult.Organization
+                };
+                if (v.VIN == "") v.VIN = fullVin;
+                rc.Add(v);
+            }
+
+            var options = new MemoryCacheEntryOptions();
+            options.SetSlidingExpiration(TimeSpan.FromSeconds(300));
+            _cache.Set((language, mvs, fullVin), rc, options);
+
+            return rc;
+        }
+
+        public List<VinSearchResultModel> FindMatchesForVinOld(string language, string fullVin)
         {
             var rc = new List<VinSearchResultModel>();
             // There are two ways to find the vehicle.  Firstly a match on VIN directly
@@ -1357,7 +1384,7 @@ namespace openPERRepositories.Repositories
             // to a model code and there can be more than one
 
             // There are two ways to find the vehicle.  Firstly a match on VIN directly
-            @sql = @"SELECT MVS, CHASSY, ORGANIZATION, MOTOR, DATE, INT_COLOR, CONCAT('XXX' ,V.VIN_COD ,'000' , C.CHASSY)
+            @sql = @"SELECT MVS, CHASSY, ORGANIZATION, MOTOR, DATE, INT_COLOR
                             FROM VIN_DATA_CH C
                             JOIN VIN V ON V.MOD_COD = C.MODEL AND V.VIN_COD = @p1
                             WHERE CHASSY = @p2";
@@ -1399,9 +1426,9 @@ namespace openPERRepositories.Repositories
                 var p = new MvsCatalogueOptionModel
                 {
                     TypeCodePair = reader.GetString(0),
-                    TypeDescription = reader.IsDBNull(1) ? "":reader.GetString(1),
-                    CodeDescription = reader.IsDBNull(2)?"": reader.GetString(2),
-                    TypeCode = reader.IsDBNull(3)?"": reader.GetString(3),
+                    TypeDescription = reader.IsDBNull(1) ? "" : reader.GetString(1),
+                    CodeDescription = reader.IsDBNull(2) ? "" : reader.GetString(2),
+                    TypeCode = reader.IsDBNull(3) ? "" : reader.GetString(3),
                     ValueCode = reader.IsDBNull(4) ? "" : reader.GetString(4)
                 };
                 rc.Add(p);
@@ -1423,7 +1450,7 @@ namespace openPERRepositories.Repositories
             return rc;
         }
 
-        public Dictionary<string, string> GetFiltersforVehicle(string language,string vin, string mvs)
+        public Dictionary<string, string> GetFiltersforVehicle(string language, string vin, string mvs)
         {
             var vehicles = FindMatchesForVin(language, vin);
             if (vehicles.Count == 0) return null;
@@ -1436,16 +1463,17 @@ namespace openPERRepositories.Repositories
             return rc;
         }
 
-        public string GetVehiclePattern(string vin)
+        public string GetVehiclePattern(string language, string vin)
         {
             var rc = "";
-            var @sql = @"SELECT CARATT FROM VIN_DATA_RT WHERE VIN = @p1";
-            using var connection = new MySqlConnection(_pathToDb);
-            connection.RunSqlFirstRowOnly(sql, (reader) =>
+            var vehicles = FindMatchesForVin(language, vin);
+            foreach (var v in vehicles)
             {
-                rc = reader.IsDBNull(0) ? "" : reader.GetString(0).Replace("|", "");
-
-            }, vin);
+                if (v.VIN == vin)
+                {
+                    return (v.Caratt == null) ? "" : v.Caratt;
+                }
+            }
             return rc;
         }
 

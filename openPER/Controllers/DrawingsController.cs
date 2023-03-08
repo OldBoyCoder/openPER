@@ -106,7 +106,7 @@ namespace openPER.Controllers
         {
             var rc = new List<DrawingKeyModel>();
             string sinComPattern = _rep.GetSincomPattern(mvs);
-            string vehiclePattern = _rep.GetVehiclePattern(vin);
+            string vehiclePattern = _rep.GetVehiclePattern(language, vin);
             var vmkCodes = _rep.GetVmkDataForCatalogue(catalogueCode, language);
             if (vehiclePattern != "") sinComPattern = vehiclePattern;
             foreach (var d in drawings)
@@ -170,7 +170,7 @@ namespace openPER.Controllers
             {
                 string sinComPattern = _rep.GetSincomPattern(mvs);
                 var vmkCodes = _rep.GetVmkDataForCatalogue(drawing.CatalogueCode, language);
-                string vehiclePattern = _rep.GetVehiclePattern(vin);
+                string vehiclePattern = _rep.GetVehiclePattern(language, vin);
                 if (vehiclePattern != "") sinComPattern = vehiclePattern;
                 foreach (var p in tableData.Parts)
                 {

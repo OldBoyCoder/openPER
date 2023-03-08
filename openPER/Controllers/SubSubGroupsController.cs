@@ -40,7 +40,7 @@ namespace openPER.Controllers
             if (MVS != "")
             {
                 string sinComPattern = _rep.GetSincomPattern(MVS);
-                string vehiclePattern = _rep.GetVehiclePattern(VIN);
+                string vehiclePattern = _rep.GetVehiclePattern(language, VIN);
                 var vmkCodes = _rep.GetVmkDataForCatalogue(catalogueCode, language);
                 if (vehiclePattern != "") sinComPattern = vehiclePattern;
                 foreach (var subSubGroup in model.SubSubGroups)

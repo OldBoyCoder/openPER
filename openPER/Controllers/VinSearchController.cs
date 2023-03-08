@@ -47,7 +47,7 @@ namespace openPER.Controllers
             foreach (var result in results)
             {
                 result.Models = _mapper.Map<List<MvsDataModel>, List<MvsDataViewModel>>(_rep.GetMvsDetails(result.Mvs));
-                var vehicleOptions = _rep.GetVehiclePattern(fullVin);
+                var vehicleOptions = result.Caratt;
 
                 if (result.Models.Count > 0)
                     result.InteriorColourDescription = _rep.GetInteriorColourDescription(result.Models[0].CatalogueCode, result.InteriorColourCode, language);

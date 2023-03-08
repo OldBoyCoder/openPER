@@ -32,6 +32,7 @@ namespace openPER.ViewModels
         //{
         //    get { return Mvs.Substring(6, 1); }
         //}
+        public string Caratt { get; set; }
 
     }
 }

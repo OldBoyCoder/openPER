@@ -87,4 +87,13 @@
     <Folder Include="wwwroot\SiteImages\" />
   </ItemGroup>
 
+  <ItemGroup>
+    <None Update="Data\Release84\SP.CH.04210.FCTLR">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Update="Data\Release84\SP.RT.04210.FCTLR">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+  </ItemGroup>
+
 </Project>

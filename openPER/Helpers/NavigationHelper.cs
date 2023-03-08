@@ -12,9 +12,9 @@ namespace openPER.Helpers
     {
         private static NavigationViewModel InternalPopulateNavigationModel(IMapper mapper, IRepository rep,
             string language, string makeCode, string subMakeCode,
-            string modelCode , string catalogueCode, int? groupCode ,
-            int? subGroupCode , int? subSubGroupCode, int? drawingNumber,
-            string scope , string clichePartNumber, int? clicheDrawingNumber, string VIN , string MVS )
+            string modelCode, string catalogueCode, int? groupCode,
+            int? subGroupCode, int? subSubGroupCode, int? drawingNumber,
+            string scope, string clichePartNumber, int? clicheDrawingNumber, string VIN, string MVS)
         {
             var breadcrumb = new BreadcrumbModel
             {
@@ -63,7 +63,7 @@ namespace openPER.Helpers
             return model;
         }
 
-        internal static NavigationViewModel PopulateNavigationModel(IMapper mapper, IRepository rep, string language, string makeCode, string subMakeCode, string modelCode, string catalogueCode, int groupCode, int subGroupCode, int subSubGroupCode, int drawingNumber,string scope,  string clichePartNumber, int clicheDrawingNumber, string vin, string mvs)
+        internal static NavigationViewModel PopulateNavigationModel(IMapper mapper, IRepository rep, string language, string makeCode, string subMakeCode, string modelCode, string catalogueCode, int groupCode, int subGroupCode, int subSubGroupCode, int drawingNumber, string scope, string clichePartNumber, int clicheDrawingNumber, string vin, string mvs)
         {
             return InternalPopulateNavigationModel(mapper, rep, language, makeCode, subMakeCode, modelCode, catalogueCode, groupCode, subGroupCode, subSubGroupCode, drawingNumber, scope, clichePartNumber, clicheDrawingNumber, vin, mvs);
         }
@@ -105,7 +105,8 @@ namespace openPER.Helpers
             var rc = new FilterModel();
             rc.VIN = vin;
             rc.MVS = mvs;
-            var vehicleDetails = rep.FindMatchesForVin(language, vin);
+            //            var vehicleDetails = rep.FindMatchesForVin(language, vin);
+            var vehicleDetails = rep.FindMatchesForMvsAndVin(language, mvs, vin);
             if (vehicleDetails == null) return rc;
             if (vehicleDetails.Count == 0) return rc;
             rc.BuildDate = vehicleDetails[0].BuildDate;
@@ -115,7 +116,7 @@ namespace openPER.Helpers
             string sinComPattern = rep.GetSincomPattern(mvs);
             var pattern = sinComPattern;
 
-            string vehiclePattern = rep.GetVehiclePattern(vin);
+            string vehiclePattern = vehicleDetails[0].Caratt;
             rc.DataSource = FilterDataSource.SINCOM;
             if (!string.IsNullOrEmpty(vehiclePattern))
             {
