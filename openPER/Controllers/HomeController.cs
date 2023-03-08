@@ -11,6 +11,7 @@ using Microsoft.AspNetCore.Http;
 using openPERModels;
 using openPERRepositories.Interfaces;
 using openPER.Helpers;
+using Microsoft.AspNetCore.Diagnostics;
 
 namespace openPER.Controllers
 {
@@ -55,7 +56,10 @@ namespace openPER.Controllers
         [ApiExplorerSettings(IgnoreApi = true)]
         public IActionResult Error()
         {
-            return View(new ErrorViewModel { RequestId = Activity.Current?.Id ?? HttpContext.TraceIdentifier });
+            var ehpf = HttpContext.Features.Get<IExceptionHandlerPathFeature>();
+            var e = new ErrorViewModel { RequestId = Activity.Current?.Id ?? HttpContext.TraceIdentifier };
+            e.Path = ehpf.Path;
+            return View(e);
         }
         [HttpPost]
         [ApiExplorerSettings(IgnoreApi = true)]
