@@ -86,5 +86,68 @@ namespace Resources {
                 return ResourceManager.GetString("IntroParagraph", resourceCulture);
             }
         }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Catalogues.
+        /// </summary>
+        public static string MenuItemCatalogues {
+            get {
+                return ResourceManager.GetString("MenuItemCatalogues", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Categories.
+        /// </summary>
+        public static string MenuItemGroups {
+            get {
+                return ResourceManager.GetString("MenuItemGroups", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Makes.
+        /// </summary>
+        public static string MenuItemMakes {
+            get {
+                return ResourceManager.GetString("MenuItemMakes", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Models.
+        /// </summary>
+        public static string MenuItemModels {
+            get {
+                return ResourceManager.GetString("MenuItemModels", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Subcategories.
+        /// </summary>
+        public static string MenuItemSubGroups {
+            get {
+                return ResourceManager.GetString("MenuItemSubGroups", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Tables.
+        /// </summary>
+        public static string MenuItemSubSubGroups {
+            get {
+                return ResourceManager.GetString("MenuItemSubSubGroups", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to No vehicle was found matching the VIN.  If you feel your VIN should have been found and do not mind sharing that data then please contact us and we&apos;ll look into why it wasn&apos;t found.
+        /// </summary>
+        public static string VinNotFound {
+            get {
+                return ResourceManager.GetString("VinNotFound", resourceCulture);
+            }
+        }
     }
 }
