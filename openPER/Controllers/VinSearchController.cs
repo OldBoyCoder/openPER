@@ -4,6 +4,7 @@ using AutoMapper;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Logging;
+using openPER.Helpers;
 using openPER.ViewModels;
 using openPERModels;
 using openPERRepositories.Interfaces;
@@ -53,42 +54,11 @@ namespace openPER.Controllers
                 foreach (var model in result.Models)
                 {
                     model.Language = language;
-                    model.DataSource = "Model";
-                    var potentialOptions = _rep.GetMvsDetailsForCatalogue(model.CatalogueCode, language);
-                    if (vehicleOptions != "")
-                    {
-                        model.Pattern = vehicleOptions;
-                        model.DataSource = "Vehicle";
-                    }
-
-
-                    var ourOptions = model.Pattern.Split(new[] { '+' });
-                    model.Options = new List<System.Tuple<string, string, string, string>>();
-
-                    foreach (var ourOption in ourOptions)
-                    {
-                        var key = ourOption;
-                        var absent = false;
-                        if (key.StartsWith("!"))
-                        {
-                            key = key.Substring(1);
-                            absent = true;
-                        }
-                        var opt = potentialOptions.FirstOrDefault(x => x.TypeCodePair == key);
-                        string sortKey;
-                        if (opt != null)
-                        {
-                            if (string.IsNullOrEmpty(opt.TypeDescription))
-                                sortKey = "ZZZ" + opt.CodeDescription;
-                            else
-                                sortKey = "AAA" + opt.TypeDescription;
-                            model.Options.Add(new System.Tuple<string, string, string, string>(sortKey, opt.CodeDescription, string.IsNullOrEmpty(opt.TypeDescription) ? absent ? "No" : "Yes" : opt.TypeDescription, opt.TypeCodePair));
-                        }
-                    }
-
+                    var f = NavigationHelper.PopulateFilterModel(_mapper, _rep, language, model.CatalogueCode, model.Sincom, fullVin);
+                    model.FilterOptions = f;
                 }
             }
-            return View("Debug", results);
+            return View("Index", results);
         }
     }
 }

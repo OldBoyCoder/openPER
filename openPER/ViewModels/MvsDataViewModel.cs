@@ -31,6 +31,6 @@ namespace openPER.ViewModels
         public string SubMakeCode { get; set; }
         public List<Tuple<string, string, string, string>> Options { get; set; }
         public string Language { get; internal set; }
-        public string DataSource { get; internal set; }
+        public FilterModel FilterOptions { get; internal set; }
     }
 }
