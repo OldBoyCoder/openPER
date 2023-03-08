@@ -4,49 +4,55 @@
 @{
     ViewData["Title"] = "VinSearchView Debug";
 }
-@foreach (var result in Model)
+@if (Model.Count == 0)
 {
-
-    <caption>List of vehicle details</caption>
-    <table class="table-sm">
-        <tr><td>MVS</td><td>@Html.DisplayTextFor(m=>result.Mvs)</td></tr>
-        <tr><td>Chassis</td><td>@Html.DisplayTextFor(m=>result.Chassis)</td></tr>
-        <tr><td>Org</td><td>@Html.DisplayTextFor(m=>result.Organization)</td></tr>
-        <tr><td>Motor</td><td>@Html.DisplayTextFor(m=>result.Motor)</td></tr>
-        <tr><td>Date</td><td>@Html.DisplayTextFor(m=>result.BuildDate)</td></tr>
-        <tr><td>Interior colour</td><td>@Html.DisplayTextFor(m=>result.InteriorColourCode) - @result.InteriorColourDescription</td></tr>
-        <tr><td>VIN</td><td>@Html.DisplayTextFor(m=>result.VIN)</td></tr>
-    </table>
-    @foreach (var r in result.Models)
+<p>No vehicle was found matching the VIN.  If you feel your VIN should have been found and do not mind sharing that data then please contact us and we'll look into why it wasn't found</p>
+}
+else
+{
+    @foreach (var result in Model)
     {
-        <details>
-            <summary>@r.Description</summary>
-            <table class="table-sm">
-                <tr><td>Catalogue</td><td>@r.CatalogueCode - @r.CatalogueDescription</td></tr>
-                <tr><td>Model</td><td>@r.Description</td></tr>
-                <tr><td>Engine type</td><td>@r.EngineType</td></tr>
-                <tr><td>SINCOM</td><td>@r.Sincom</td></tr>
-                <tr><td>@Html.ActionLink($"Go to catalogue", "Index", "Groups", new { Language=r.Language, r.MakeCode, r.SubMakeCode, r.ModelCode, CatalogueCode = r.CatalogueCode, VIN=result.VIN, MVS=r.Sincom })</td></tr>
 
-                @if (r.FilterOptions.DataSource == FilterDataSource.SINCOM)
-                {
-                    <tr><td>Source for option data</td><td>SINCOM code configuration @r.FilterOptions.MVS</td></tr>
-                }
-                else
-                {
-                    <tr><td>Source for option data</td><td>VIN configuration @r.FilterOptions.VIN</td></tr>
-                }
-                @foreach (var item in r.FilterOptions.Options.Where(x => x.MultiValue))
-                {
-                    <tr><td>@item.TypeDescription</td><td>@item.ValueDescription</td><td>(@item.TypeCode+@item.ValueCode)</td></tr>
-                }
-                @foreach (var item in r.FilterOptions.Options.Where(x => !x.MultiValue).OrderBy(x => x.ValueDescription))
-                {
-                    <tr><td>@item.ValueDescription</td><td>@(item.Present?"Yes":"No")</td><td>(@item.TypeCode)</td></tr>
-                }
+        <caption>List of vehicle details</caption>
+        <table class="table-sm">
+            <tr><td>MVS</td><td>@Html.DisplayTextFor(m=>result.Mvs)</td></tr>
+            <tr><td>Chassis</td><td>@Html.DisplayTextFor(m=>result.Chassis)</td></tr>
+            <tr><td>Org</td><td>@Html.DisplayTextFor(m=>result.Organization)</td></tr>
+            <tr><td>Motor</td><td>@Html.DisplayTextFor(m=>result.Motor)</td></tr>
+            <tr><td>Date</td><td>@Html.DisplayTextFor(m=>result.BuildDate)</td></tr>
+            <tr><td>Interior colour</td><td>@Html.DisplayTextFor(m=>result.InteriorColourCode) - @result.InteriorColourDescription</td></tr>
+            <tr><td>VIN</td><td>@Html.DisplayTextFor(m=>result.VIN)</td></tr>
+        </table>
+        @foreach (var r in result.Models)
+        {
+            <details>
+                <summary>@r.Description</summary>
+                <table class="table-sm">
+                    <tr><td>Catalogue</td><td>@r.CatalogueCode - @r.CatalogueDescription</td></tr>
+                    <tr><td>Model</td><td>@r.Description</td></tr>
+                    <tr><td>Engine type</td><td>@r.EngineType</td></tr>
+                    <tr><td>SINCOM</td><td>@r.Sincom</td></tr>
+                    <tr><td>@Html.ActionLink($"Go to catalogue", "Index", "Groups", new { Language=r.Language, r.MakeCode, r.SubMakeCode, r.ModelCode, CatalogueCode = r.CatalogueCode, VIN=result.VIN, MVS=r.Sincom })</td></tr>
 
-            </table>
-        </details>
+                    @if (r.FilterOptions.DataSource == FilterDataSource.SINCOM)
+                    {
+                        <tr><td>Source for option data</td><td>SINCOM code configuration @r.FilterOptions.MVS</td></tr>
+                    }
+                    else
+                    {
+                        <tr><td>Source for option data</td><td>VIN configuration @r.FilterOptions.VIN</td></tr>
+                    }
+                    @foreach (var item in r.FilterOptions.Options.Where(x => x.MultiValue))
+                    {
+                        <tr><td>@item.TypeDescription</td><td>@item.ValueDescription</td><td>(@item.TypeCode+@item.ValueCode)</td></tr>
+                    }
+                    @foreach (var item in r.FilterOptions.Options.Where(x => !x.MultiValue).OrderBy(x => x.ValueDescription))
+                    {
+                        <tr><td>@item.ValueDescription</td><td>@(item.Present?"Yes":"No")</td><td>(@item.TypeCode)</td></tr>
+                    }
+
+                </table>
+            </details>
+        }
     }
 }
-

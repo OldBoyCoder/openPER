@@ -41,7 +41,7 @@ namespace openPER.Controllers
             ViewData["Language"] = language;
 
             if (string.IsNullOrEmpty(fullVin) || fullVin.Length != 17)
-                return View("Error", null);
+                return View("Index", new List<VinSearchResultViewModel>());
             var searchResults = _rep.FindMatchesForVin(language, fullVin);
             var results = _mapper.Map<List<VinSearchResultModel>, List<VinSearchResultViewModel>>(searchResults);
             foreach (var result in results)
