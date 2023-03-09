@@ -444,7 +444,6 @@ namespace openPERRepositories.Repositories
                 }
                 else
                 {
-                    mod.ActivationSpec = ("0000000000" + mod.ActivationSpec)[..10];
                     modifications.Add(mod);
                 }
 
@@ -1342,6 +1341,8 @@ namespace openPERRepositories.Repositories
                     Mvs = searchResult.Mvs,
                     Organization = searchResult.Organization
                 };
+                if (!string.IsNullOrEmpty(v.Caratt))
+                    v.Caratt = v.Caratt.Replace("|", "");
                 if (v.VIN == "") v.VIN = fullVin;
                 rc.Add(v);
             }

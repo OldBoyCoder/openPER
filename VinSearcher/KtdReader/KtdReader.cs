@@ -27,7 +27,7 @@ namespace VinSearcher.KtdReader
         {
             var indexBlock = FindIndexBlockForKey(pathToDataFile, searchKey);
             if (indexBlock == null) return null;
-            using var fileAccessor = new BinaryReader(new FileStream(pathToDataFile, FileMode.Open));
+            using var fileAccessor = new BinaryReader(new FileStream(pathToDataFile, FileMode.Open, FileAccess.Read, FileShare.Read));
             var uc = UnpackBlock(fileAccessor, indexBlock.Block);
             var record = GetAllRecordsInBlock(searchKey,uc, lineLengthInBytes, dataHandler.ProcessRow);
             return record;
@@ -37,7 +37,7 @@ namespace VinSearcher.KtdReader
             List<IndexBlock> indexBlocks;
             try
             {
-                using var fileAccessor = new BinaryReader(new FileStream(pathToDataFile, FileMode.Open));
+                using var fileAccessor = new BinaryReader(new FileStream(pathToDataFile, FileMode.Open, FileAccess.Read, FileShare.Read));
                 _header = new DbTableHeader(fileAccessor);
                 if (_header.GetDatabaseVersion() != "F3")
                 {
@@ -66,7 +66,7 @@ namespace VinSearcher.KtdReader
         {
             try
             {
-                using var fileAccessor = new BinaryReader(new FileStream(pathToDataFile, FileMode.Open));
+                using var fileAccessor = new BinaryReader(new FileStream(pathToDataFile, FileMode.Open, FileAccess.Read, FileShare.Read));
                 _header = new DbTableHeader(fileAccessor);
                 if (_header.GetDatabaseVersion() != "F3")
                 {
@@ -121,7 +121,7 @@ namespace VinSearcher.KtdReader
         {
             try
             {
-                using var fileAccessor = new BinaryReader(new FileStream(filename, FileMode.Open));
+                using var fileAccessor = new BinaryReader(new FileStream(filename, FileMode.Open, FileAccess.Read, FileShare.Read));
                 _header = new DbTableHeader(fileAccessor);
                 if (_header.GetDatabaseVersion() != "F3")
                 {

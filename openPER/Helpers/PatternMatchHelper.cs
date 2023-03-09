@@ -23,6 +23,7 @@ namespace openPER.Helpers
         public static bool EvaluateRule(string pattern, string sincomPattern, List<VmkModel> vmkCodes, bool preciseMatch)
         {
             sincomPattern = sincomPattern.Replace("|", "");
+            pattern = pattern.Replace("\r", "").Replace("\n", "");
             var p2 = sincomPattern.Split(new[] { '+' }, StringSplitOptions.RemoveEmptyEntries);
             var Values = new Dictionary<string, bool>();
             foreach (var v in p2)
