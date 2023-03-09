@@ -27,8 +27,7 @@ namespace VinSearcher.KtdReader
         {
             var indexBlock = FindIndexBlockForKey(pathToDataFile, searchKey);
             if (indexBlock == null) return null;
-            var ms = new MemoryStream(File.ReadAllBytes(pathToDataFile));
-            using var fileAccessor = new BinaryReader(ms);
+            using var fileAccessor = new BinaryReader(new FileStream(pathToDataFile, FileMode.Open));
             var uc = UnpackBlock(fileAccessor, indexBlock.Block);
             var record = GetAllRecordsInBlock(searchKey,uc, lineLengthInBytes, dataHandler.ProcessRow);
             return record;
@@ -38,8 +37,7 @@ namespace VinSearcher.KtdReader
             List<IndexBlock> indexBlocks;
             try
             {
-                var ms = new MemoryStream(File.ReadAllBytes(pathToDataFile));
-                using var fileAccessor = new BinaryReader(ms);
+                using var fileAccessor = new BinaryReader(new FileStream(pathToDataFile, FileMode.Open));
                 _header = new DbTableHeader(fileAccessor);
                 if (_header.GetDatabaseVersion() != "F3")
                 {
@@ -68,8 +66,7 @@ namespace VinSearcher.KtdReader
         {
             try
             {
-                var ms = new MemoryStream(File.ReadAllBytes(pathToDataFile));
-                using var fileAccessor = new BinaryReader(ms);
+                using var fileAccessor = new BinaryReader(new FileStream(pathToDataFile, FileMode.Open));
                 _header = new DbTableHeader(fileAccessor);
                 if (_header.GetDatabaseVersion() != "F3")
                 {
@@ -124,8 +121,7 @@ namespace VinSearcher.KtdReader
         {
             try
             {
-                var ms = new MemoryStream(File.ReadAllBytes(filename));
-                using var fileAccessor = new BinaryReader(ms);
+                using var fileAccessor = new BinaryReader(new FileStream(filename, FileMode.Open));
                 _header = new DbTableHeader(fileAccessor);
                 if (_header.GetDatabaseVersion() != "F3")
                 {
