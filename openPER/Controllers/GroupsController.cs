@@ -36,6 +36,7 @@ namespace openPER.Controllers
                 CatalogueCode = catalogueCode,
                 ImagePath = mapAndImage.ImageName,
                 Navigation = NavigationHelper.PopulateNavigationModel(_mapper, _rep, language, makeCode, subMakeCode, modelCode, catalogueCode, VIN, MVS),
+                ModelVariants = _mapper.Map<List<CatalogueVariantsModel>, List<CatalogueVariantsViewModel>>( _rep.GetCatalogueVariants(catalogueCode))
             };
 
             return View(model);

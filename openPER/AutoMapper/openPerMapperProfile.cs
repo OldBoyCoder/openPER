@@ -27,7 +27,7 @@ namespace openPER.AutoMapper
             CreateMap<VinSearchResultModel, VinSearchResultViewModel>();
             CreateMap<MvsDataModel, MvsDataViewModel>();
             CreateMap<PatternModel, PatternViewModel>();
-
+            CreateMap<CatalogueVariantsModel, CatalogueVariantsViewModel>();
 
         }
     }

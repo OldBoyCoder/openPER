@@ -45,6 +45,7 @@ namespace openPERRepositories.Interfaces
         string GetExteriorColourDescription(string catCode, string exteriorColourCode, string language);
         public List<MvsCatalogueOptionModel> GetMvsDetailsForCatalogue(string catalogueCode, string language);
         public List<VinSearchResultModel> FindMatchesForMvsAndVin(string language, string mvs, string fullVin);
+        public List<CatalogueVariantsModel> GetCatalogueVariants(string catalogueCode);
 
     }
 

@@ -12,6 +12,7 @@ namespace openPER.ViewModels
         public string ImagePath { get; internal set; }
         public List<GroupImageMapEntryViewModel> MapEntries { get; set; }
         public NavigationViewModel Navigation { get; set; }
+        public List<CatalogueVariantsViewModel> ModelVariants { get; set; }
 
     }
 }

@@ -7,4 +7,5 @@
         public string ActivationSpec { get; set; }
         public string ActivationPattern { get; set; }
     }
+
 }

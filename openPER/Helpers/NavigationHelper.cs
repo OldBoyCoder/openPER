@@ -103,20 +103,22 @@ namespace openPER.Helpers
         public static FilterModel PopulateFilterModel(IMapper mapper, IRepository rep, string language, string catalogueCode, string mvs, string vin)
         {
             var rc = new FilterModel();
+            string vehiclePattern = "";
             rc.VIN = vin;
             rc.MVS = mvs;
             //            var vehicleDetails = rep.FindMatchesForVin(language, vin);
             var vehicleDetails = rep.FindMatchesForMvsAndVin(language, mvs, vin);
-            if (vehicleDetails == null) return rc;
-            if (vehicleDetails.Count == 0) return rc;
-            rc.BuildDate = vehicleDetails[0].BuildDate;
-            rc.NumberForParts = vehicleDetails[0].Organization;
-            rc.Engine = vehicleDetails[0].Motor;
+            if (vehicleDetails != null && vehicleDetails.Count > 0)
+            {
+                rc.BuildDate = vehicleDetails[0].BuildDate;
+                rc.NumberForParts = vehicleDetails[0].Organization;
+                rc.Engine = vehicleDetails[0].Motor;
+                vehiclePattern = vehicleDetails[0].Caratt;
+            }
             // sincom data is just for this specific type in the catalogue
             string sinComPattern = rep.GetSincomPattern(mvs);
             var pattern = sinComPattern;
 
-            string vehiclePattern = vehicleDetails[0].Caratt;
             rc.DataSource = FilterDataSource.SINCOM;
             if (!string.IsNullOrEmpty(vehiclePattern))
             {

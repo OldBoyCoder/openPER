@@ -1454,8 +1454,8 @@ namespace openPERRepositories.Repositories
         public Dictionary<string, string> GetFiltersforVehicle(string language, string vin, string mvs)
         {
             var vehicles = FindMatchesForVin(language, vin);
-            if (vehicles.Count == 0) return null;
             var rc = new Dictionary<string, string>();
+            if (vehicles == null || vehicles.Count == 0) return rc;
             var v = vehicles[0];
             if (!string.IsNullOrEmpty(v.Chassis)) rc.Add("TEL", $"{v.Chassis}");
             if (!string.IsNullOrEmpty(v.Motor)) rc.Add("MOT", $"{v.Motor}");
@@ -1467,7 +1467,9 @@ namespace openPERRepositories.Repositories
         public string GetVehiclePattern(string language, string vin)
         {
             var rc = "";
+            if (string.IsNullOrEmpty(vin)) return "";
             var vehicles = FindMatchesForVin(language, vin);
+            if (vehicles.Count == 0) return "";
             foreach (var v in vehicles)
             {
                 if (v.VIN == vin)
@@ -1501,6 +1503,24 @@ namespace openPERRepositories.Repositories
                 rc.Add(v);
 
             }, catalogueCode, language);
+            return rc;
+        }
+        public List<CatalogueVariantsModel> GetCatalogueVariants(string catalogueCode)
+        {
+            var rc = new List<CatalogueVariantsModel>();
+            var @sql = @"SELECT MVS_DSC, SINCOM, Pattern FROM MVS WHERE CAT_COD = @p1";
+            using var connection = new MySqlConnection(_pathToDb);
+            connection.RunSqlAllRows(sql, (reader) =>
+            {
+                var v = new CatalogueVariantsModel
+                {
+                    Description = reader.IsDBNull(0) ? "" : reader.GetString(0),
+                    SINCOM = reader.IsDBNull(1) ? "" : reader.GetString(1),
+                    Pattern = reader.IsDBNull(2) ? "" : reader.GetString(2)
+                };
+                rc.Add(v);
+
+            }, catalogueCode);
             return rc;
         }
     }
