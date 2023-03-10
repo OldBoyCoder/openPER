@@ -23,7 +23,7 @@ namespace openPER.Controllers
                 var subSubGroupCode = HttpContext.Request.Query["SGS_COD"][0];
                 var drawingNumber = "0";
                 if (HttpContext.Request.Query.ContainsKey("DRW_NUM"))
-                    drawingNumber = (int.Parse(HttpContext.Request.Query["DRW_NUM"][0]) - 1).ToString();
+                    drawingNumber = (int.Parse(HttpContext.Request.Query["DRW_NUM"][0] ?? string.Empty) - 1).ToString();
                 var scope = "SubSubGroup";
                 return RedirectToAction("Detail", "Drawings", new { Language = language, MakeCode = makeCode, SubMakeCode = subMakeCode, ModelCode = modelCode, CatalogueCode = catalogueCode, GroupCode = groupCode, SubGroupCode = subGroupCode, SubSubGroupCode = subSubGroupCode, DrawingNumber = drawingNumber, Scope = scope });
             }

@@ -31,6 +31,7 @@ namespace openPER.Helpers
                 return CultureInfo.GetCultureInfo(Cultures.Find(x => x.ePerCode == languageCode).culture);
             return culture;
         }
+        // ReSharper disable once UnusedMember.Global
         public static string ConvertCultureToLanguageCode(CultureInfo culture)
         {
             if (Cultures.Exists(x => x.culture == culture.TwoLetterISOLanguageName))

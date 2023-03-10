@@ -7,9 +7,7 @@ namespace openPER.ViewModels
     {
         public string Type { get; set; }
         public int Code { get; set; }
-        public string Sequence { get; set; }
         public string Description { get; set; }
-        public int Progression { get; set; }
 
         public List<ActivationViewModel> Activations { get; set; }
         public string FullDescription

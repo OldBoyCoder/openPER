@@ -10,7 +10,6 @@
         public int? SubGroupCode { get; set; }
         public int? SubSubGroupCode { get; set; }
         public int? DrawingNumber { get; set; }
-        public int? Revision { get; set; }
 
         public string ClichePartNumber { get; set; }
         public int? ClicheDrawingNumber { get; set; }

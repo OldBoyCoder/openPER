@@ -16,7 +16,6 @@ namespace openPER.ViewModels
         public string NumberForParts { get; set; }
         public string Engine { get; set; }
         public string BuildDate { get; set; }
-        public string Pattern { get; set; }
         public List<FilterOptions> Options { get; set; } = new();
         public FilterDataSource DataSource { get; set; }
     }

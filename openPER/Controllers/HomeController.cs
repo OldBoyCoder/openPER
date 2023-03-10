@@ -1,6 +1,4 @@
-﻿using Microsoft.Extensions.Configuration;
-using Microsoft.AspNetCore.Mvc;
-using Microsoft.Extensions.Logging;
+﻿using Microsoft.AspNetCore.Mvc;
 using openPER.ViewModels;
 using System.Collections.Generic;
 using System.Diagnostics;
@@ -16,17 +14,12 @@ namespace openPER.Controllers
 {
     public class HomeController : Controller
     {
-        private readonly ILogger<HomeController> _logger;
         private readonly IRepository _rep;
-        private readonly IConfiguration _config;
         private readonly IMapper _mapper;
 
-        public HomeController(ILogger<HomeController> logger, IRepository repository, IConfiguration config,
-            IMapper mapper)
+        public HomeController(IRepository repository, IMapper mapper)
         {
-            _logger = logger;
             _rep = repository;
-            _config = config;
             _mapper = mapper;
         }
 
@@ -59,7 +52,7 @@ namespace openPER.Controllers
             var e = new ErrorViewModel
             {
                 RequestId = Activity.Current?.Id ?? HttpContext.TraceIdentifier,
-                Path = ehpf.Path
+                Path = ehpf == null ? "" : ehpf.Path
             };
             return View(e);
         }

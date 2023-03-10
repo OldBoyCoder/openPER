@@ -9,7 +9,6 @@ namespace openPER.ViewModels
         public string Description { get; set; }
         public List<ModificationViewModel> Modifications { get; set; }
         public List<VariationViewModel> Variations { get; set; }
-        public List<OptionViewModel> Options { get; set; }
         public bool Visible { get; set; } = true;
         public string Pattern { get; set; }
         public List<PatternViewModel> PatternParts { get; set; }

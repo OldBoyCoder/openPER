@@ -1,5 +1,4 @@
 ﻿using System.Collections.Generic;
-using AutoMapper;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using openPER.ViewModels;
@@ -12,12 +11,10 @@ namespace openPER.Controllers.API
     public class PartApiController : ControllerBase
     {
         readonly IRepository _rep;
-        readonly IMapper _mapper;
 
-        public PartApiController(IRepository rep, IMapper mapper)
+        public PartApiController(IRepository rep)
         {
             _rep = rep;
-            _mapper = mapper;
         }
         [HttpGet("{language}/{partCode}")]
         [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(PartSearchViewModel))]

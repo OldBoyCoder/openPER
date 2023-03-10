@@ -22,14 +22,12 @@ namespace openPERRepositories.Repositories
         {
             Config = config;
             var s = config.GetSection("Releases").Get<ReleaseModel[]>();
-            var release = s.FirstOrDefault(x => x.Release == 84);
-            if (release != null)
-            {
-                PathToDb = release.DbName;
-                PathToCdn = release.CdnRoot;
-                PathToVindataCh = release.VinDataCh;
-                PathToVindataRt = release.VinDataRt;
-            }
+            var release = s?.FirstOrDefault(x => x.Release == 84);
+            if (release == null) return;
+            PathToDb = release.DbName;
+            PathToCdn = release.CdnRoot;
+            PathToVindataCh = release.VinDataCh;
+            PathToVindataRt = release.VinDataRt;
         }
 
         public MapImageModel GetMapAndImageForCatalogue(string makeCode, string subMakeCode, string modelCode,
@@ -1173,7 +1171,7 @@ namespace openPERRepositories.Repositories
             {
                 if (v.Vin == vin)
                 {
-                    return (v.Caratt == null) ? "" : v.Caratt;
+                    return v.Caratt ?? "";
                 }
             }
             return rc;

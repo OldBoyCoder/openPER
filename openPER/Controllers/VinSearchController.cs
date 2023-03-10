@@ -1,7 +1,6 @@
 ﻿using System.Collections.Generic;
 using AutoMapper;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.Extensions.Logging;
 using openPER.Helpers;
 using openPER.ViewModels;
 using openPERModels;
@@ -11,25 +10,15 @@ namespace openPER.Controllers
 {
     public class VinSearchController : Controller
     {
-        private readonly ILogger<VinSearchController> _logger;
         private readonly IRepository _rep;
         private readonly IMapper _mapper;
 
-        public VinSearchController(ILogger<VinSearchController> logger, IRepository repository, IMapper mapper)
+        public VinSearchController(IRepository repository, IMapper mapper)
         {
-            _logger = logger;
             _rep = repository;
             _mapper = mapper;
         }
 
-        public IActionResult Index()
-        {
-            var model = new VinSearchViewModel
-            {
-                Models = _rep.GetAllVinModels()
-            };
-            return View(model);
-        }
 
         [HttpGet]
         public IActionResult SearchByFullVin(string language, string fullVin)

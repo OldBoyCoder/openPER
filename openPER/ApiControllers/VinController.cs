@@ -15,13 +15,10 @@ namespace openPER.ApiControllers
         public VinController(IConfiguration config)
         {
             var s = config.GetSection("Releases").Get<ReleaseModel[]>();
-            var release = s.FirstOrDefault(x => x.Release == 84);
-            if (release != null)
-            {
-                _pathToVindataCh = release.VinDataCh;
-                _pathToVindataRt = release.VinDataRt;
-            }
-
+            var release = s?.FirstOrDefault(x => x.Release == 84);
+            if (release == null) return;
+            _pathToVindataCh = release.VinDataCh;
+            _pathToVindataRt = release.VinDataRt;
         }
 
         [Route("api/Vin/FindVehiclesByFullVin/{FullVin}")]
