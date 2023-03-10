@@ -1,6 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-namespace openPER.ViewModels
+﻿namespace openPER.ViewModels
 {
     public class MvsDataViewModel
     {

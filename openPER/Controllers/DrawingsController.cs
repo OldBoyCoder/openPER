@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
 using AutoMapper;
 using Microsoft.AspNetCore.Mvc;
 using openPER.Helpers;
@@ -26,7 +25,7 @@ namespace openPER.Controllers
         {
             var model = BuildDrawingViewModel(language, makeCode, subMakeCode, modelCode, 
                     catalogueCode, groupCode, subGroupCode, subSubGroupCode, 
-                     scope, vin, mvs, list => drawingNumber);
+                     scope, vin, mvs, _ => drawingNumber);
 
             return View(model);
         }
@@ -53,20 +52,17 @@ namespace openPER.Controllers
             LanguageSupport.SetCultureBasedOnRoute(language);
             ViewData["Language"] = language;
 
-            var model = new DrawingsViewModel
-            {
-            };
+            var model = new DrawingsViewModel();
 
             // We need to get all of the drawing keys for this sub sub group
-            List<DrawingKeyModel> drawings;
-            if (scope == "SubSubGroup")
-                drawings = _rep.GetDrawingKeysForSubSubGroup(makeCode, modelCode,
-                    catalogueCode, groupCode, subGroupCode, subSubGroupCode, language);
-            else if (scope == "SubGroup")
-                drawings = _rep.GetDrawingKeysForSubGroup(makeCode, modelCode,
-                    catalogueCode, groupCode, subGroupCode, language);
-            else
-                drawings = _rep.GetDrawingKeysForGroup(makeCode, modelCode, catalogueCode, groupCode, language);
+            var drawings = scope switch
+            {
+                "SubSubGroup" => _rep.GetDrawingKeysForSubSubGroup(makeCode, modelCode, catalogueCode, groupCode,
+                    subGroupCode, subSubGroupCode, language),
+                "SubGroup" => _rep.GetDrawingKeysForSubGroup(makeCode, modelCode, catalogueCode, groupCode,
+                    subGroupCode, language),
+                _ => _rep.GetDrawingKeysForGroup(makeCode, modelCode, catalogueCode, groupCode, language)
+            };
 
             model.Drawings = _mapper.Map<List<DrawingKeyModel>, List<DrawingKeyViewModel>>(drawings);
             if (mvs != "")

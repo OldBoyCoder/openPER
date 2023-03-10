@@ -171,10 +171,9 @@ namespace openPER.Helpers
         public static bool ApplyPatternAndModificationRules(string pattern, string sinComPattern, List<VmkModel> vmkCodes,
             string vehiclePattern, List<ModificationViewModel> modifications, Dictionary<string, string> vehicleModificationFilters)
         {
-            DrawingKeyModel d;
             if (!string.IsNullOrEmpty(pattern))
             {
-                if (!PatternMatchHelper.EvaluateRule(pattern, sinComPattern, vmkCodes, !string.IsNullOrEmpty(vehiclePattern)))
+                if (!EvaluateRule(pattern, sinComPattern, vmkCodes, !string.IsNullOrEmpty(vehiclePattern)))
                     return false;
             }
 
@@ -183,7 +182,7 @@ namespace openPER.Helpers
                 foreach (var rule in mod.Activations)
                 {
                     // Does this apply to this vehicle
-                    if (PatternMatchHelper.EvaluateRule(rule.ActivationPattern, sinComPattern, vmkCodes,
+                    if (EvaluateRule(rule.ActivationPattern, sinComPattern, vmkCodes,
                             !string.IsNullOrEmpty(vehiclePattern)))
                     {
                         // Does this vehicle have the data needed
