@@ -31,7 +31,6 @@ namespace openPER.Controllers
             {
                 SubGroups = _mapper.Map<List<SubGroupModel>, List<SubGroupViewModel>>(_rep.GetSubGroupsForCatalogueGroup(catalogueCode, groupCode, language)),
                 MapEntries = _mapper.Map<List<SubGroupImageMapEntryModel>, List<SubGroupImageMapEntryViewModel>>(_rep.GetSubGroupMapEntriesForCatalogueGroup(catalogueCode, groupCode, language)),
-
                 MakeCode = makeCode,
                 ModelCode = modelCode,
                 SubMakeCode = subMakeCode,

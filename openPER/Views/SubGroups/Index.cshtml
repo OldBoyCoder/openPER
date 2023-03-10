@@ -13,12 +13,14 @@
             <p>Select a subcategory from the side menu or directly from the map.</p>
             <div style="position: relative; left: 0; right: 0;">
                 <img src="@Model.ImagePath">
-                
+
                 @foreach (var mapEntry in Model.MapEntries)
                 {
-                    <a title="@($"{mapEntry.GroupCode:000}{mapEntry.SubGroupCode:00} {mapEntry.Description}")"   href="@Url.Action("Index", "SubSubGroups", new {Model.Navigation.Language, Model.MakeCode,Model.SubMakeCode, Model.ModelCode, Model.CatalogueCode, mapEntry.GroupCode, mapEntry.SubGroupCode, MVS=Model.Navigation.Filter.Mvs, VIN=Model.Navigation.Filter.Vin})">
+                    <a title="@($"{mapEntry.GroupCode:000}{mapEntry.SubGroupCode:00} {mapEntry.Description}")" href="@Url.Action("Index", "SubSubGroups", new {Model.Navigation.Language, Model.MakeCode,Model.SubMakeCode, Model.ModelCode, Model.CatalogueCode, mapEntry.GroupCode, mapEntry.SubGroupCode, MVS=Model.Navigation.Filter.Mvs, VIN=Model.Navigation.Filter.Vin})">
                         <div style="position: absolute; top: @(mapEntry.Y+"px"); left: @(mapEntry.X+"px"); width: 24px;height:24px">
-                            <img src="~/SiteImages/SelectCircle.png"/></div></a>
+                            <img src="~/SiteImages/SelectCircle.png" />
+                        </div>
+                    </a>
 
                 }
             </div>

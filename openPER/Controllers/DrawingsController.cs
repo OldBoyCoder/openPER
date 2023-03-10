@@ -1,4 +1,6 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
 using AutoMapper;
 using Microsoft.AspNetCore.Mvc;
 using openPER.Helpers;
@@ -22,37 +24,9 @@ namespace openPER.Controllers
         [ApiExplorerSettings(IgnoreApi = true)]
         public IActionResult Detail(string language, string makeCode, string subMakeCode, string modelCode, string catalogueCode, int groupCode, int subGroupCode, int subSubGroupCode, int drawingNumber, string scope, string vin = "", string mvs = "")
         {
-            // Standard prologue
-            LanguageSupport.SetCultureBasedOnRoute(language);
-            ViewData["Language"] = language;
-
-            var model = new DrawingsViewModel
-            {
-                Navigation = NavigationHelper.PopulateNavigationModel(_mapper, _rep, language, makeCode, subMakeCode, modelCode, catalogueCode, groupCode, subGroupCode, subSubGroupCode, drawingNumber, scope, vin, mvs)
-            };
-
-            // We need to get all of the drawing keys for this sub sub group
-            List<DrawingKeyModel> drawings;
-            if (scope == "SubSubGroup")
-                drawings = _rep.GetDrawingKeysForSubSubGroup(makeCode, modelCode,
-                catalogueCode, groupCode, subGroupCode, subSubGroupCode, language);
-            else if (scope == "SubGroup")
-                drawings = _rep.GetDrawingKeysForSubGroup(makeCode, modelCode,
-                catalogueCode, groupCode, subGroupCode, language);
-            else
-                drawings = _rep.GetDrawingKeysForGroup(makeCode, modelCode, catalogueCode, groupCode, language);
-            if (mvs != "")
-                drawings = RemoveUnwantedDrawings(catalogueCode, language, drawings, vin, mvs);
-
-            model.Drawings = _mapper.Map<List<DrawingKeyModel>, List<DrawingKeyViewModel>>(drawings);
-
-            model.Drawings.ForEach(x => x.SubMakeCode = subMakeCode);
-            model.Scope = scope;
-            // Now we get the rest of the details for the drawing we're interested in
-            var drawing = model.Drawings[drawingNumber];
-            // Get the table for this drawing
-            model.TableData = PopulateTableViewModelFromDrawing(drawing, language, mvs, vin);
-            model.TableData.CurrentDrawing = drawingNumber;
+            var model = BuildDrawingViewModel(language, makeCode, subMakeCode, modelCode, 
+                    catalogueCode, groupCode, subGroupCode, subSubGroupCode, 
+                     scope, vin, mvs, list => drawingNumber);
 
             return View(model);
         }
@@ -60,23 +34,39 @@ namespace openPER.Controllers
         [ApiExplorerSettings(IgnoreApi = true)]
         public IActionResult Detail(string language, string makeCode, string subMakeCode, string modelCode, string catalogueCode, int groupCode, int subGroupCode, int subSubGroupCode, int variant, int revision, string scope, string highlightPart = "~", string vin = "", string mvs = "")
         {
+            var model = BuildDrawingViewModel(language, makeCode, subMakeCode, modelCode,
+                catalogueCode, groupCode, subGroupCode, subSubGroupCode,
+                scope, vin, mvs, list =>
+                {
+                    return list.FindIndex(x => x.Variant == variant && x.Revision == revision);
+                });
+            model.TableData.HighlightPart = highlightPart;
+
+            return View(model);
+        }
+
+        private DrawingsViewModel BuildDrawingViewModel(string language, string makeCode, string subMakeCode, string modelCode,
+            string catalogueCode, int groupCode, int subGroupCode, int subSubGroupCode,  string scope,
+            string vin, string mvs, Func<List<DrawingKeyViewModel>, int> getCurrentDrawing)
+        {
             // Standard prologue
             LanguageSupport.SetCultureBasedOnRoute(language);
             ViewData["Language"] = language;
 
+            var model = new DrawingsViewModel
+            {
+            };
 
-            var model = new DrawingsViewModel();
             // We need to get all of the drawing keys for this sub sub group
             List<DrawingKeyModel> drawings;
             if (scope == "SubSubGroup")
                 drawings = _rep.GetDrawingKeysForSubSubGroup(makeCode, modelCode,
-                catalogueCode, groupCode, subGroupCode, subSubGroupCode, language);
+                    catalogueCode, groupCode, subGroupCode, subSubGroupCode, language);
             else if (scope == "SubGroup")
                 drawings = _rep.GetDrawingKeysForSubGroup(makeCode, modelCode,
-                catalogueCode, groupCode, subGroupCode, language);
+                    catalogueCode, groupCode, subGroupCode, language);
             else
                 drawings = _rep.GetDrawingKeysForGroup(makeCode, modelCode, catalogueCode, groupCode, language);
-
             if (mvs != "")
                 drawings = RemoveUnwantedDrawings(catalogueCode, language, drawings, vin, mvs);
 
@@ -85,22 +75,17 @@ namespace openPER.Controllers
             model.Drawings.ForEach(x => x.SubMakeCode = subMakeCode);
             model.Scope = scope;
             // Now we get the rest of the details for the drawing we're interested in
-            var drawingNumber = 0;
-            foreach (var d in model.Drawings)
-            {
-                if (d.Variant == variant && d.Revision == revision)
-                    break;
-                drawingNumber++;
-            }
-            var drawing = model.Drawings[drawingNumber];
+            var drawingNumber = getCurrentDrawing(model.Drawings);
             // Get the table for this drawing
-            model.TableData = PopulateTableViewModelFromDrawing(drawing, language, mvs, vin);
+            model.TableData = PopulateTableViewModelFromDrawing(model.Drawings[drawingNumber], language, mvs, vin);
             model.TableData.CurrentDrawing = drawingNumber;
-            model.TableData.HighlightPart = highlightPart;
+            model.Navigation = NavigationHelper.PopulateNavigationModel(_mapper, _rep, language, makeCode, subMakeCode,
+                modelCode,
+                catalogueCode, groupCode, subGroupCode, subSubGroupCode, drawingNumber, scope, vin, mvs);
 
-            model.Navigation = NavigationHelper.PopulateNavigationModel(_mapper, _rep, language, makeCode, subMakeCode, modelCode, catalogueCode, groupCode, subGroupCode, subSubGroupCode, drawingNumber, scope, vin, mvs);
-            return View(model);
+            return model;
         }
+
 
         private List<DrawingKeyModel> RemoveUnwantedDrawings(string catalogueCode, string language, List<DrawingKeyModel> drawings, string vin, string mvs)
         {

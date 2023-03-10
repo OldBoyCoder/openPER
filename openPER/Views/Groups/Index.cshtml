@@ -13,8 +13,7 @@
             <strong>@Resources.FrontEnd.CategorySelectTitle</strong>
             <p>@Resources.FrontEnd.CategorySelectBody</p>
             <div style="position: relative; left: 0; right: 0;">
-                <img src="@Model.ImagePath">
-
+                <img src="@Model.ImagePath" alt="Image of car model">
                 @foreach (var mapEntry in Model.MapEntries)
                 {
                     <a title="@($"{mapEntry.GroupCode:000} {mapEntry.Description}")" href="@Url.Action("Index", "SubGroups", new {Model.Navigation.Language, Model.MakeCode,Model.SubMakeCode, Model.ModelCode, Model.CatalogueCode, mapEntry.GroupCode, MVS=Model.Navigation.Filter.Mvs, VIN=Model.Navigation.Filter.Vin})">
