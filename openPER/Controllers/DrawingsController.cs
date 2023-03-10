@@ -23,8 +23,8 @@ namespace openPER.Controllers
         [ApiExplorerSettings(IgnoreApi = true)]
         public IActionResult Detail(string language, string makeCode, string subMakeCode, string modelCode, string catalogueCode, int groupCode, int subGroupCode, int subSubGroupCode, int drawingNumber, string scope, string vin = "", string mvs = "")
         {
-            var model = BuildDrawingViewModel(language, makeCode, subMakeCode, modelCode, 
-                    catalogueCode, groupCode, subGroupCode, subSubGroupCode, 
+            var model = BuildDrawingViewModel(language, makeCode, subMakeCode, modelCode,
+                    catalogueCode, groupCode, subGroupCode, subSubGroupCode,
                      scope, vin, mvs, _ => drawingNumber);
 
             return View(model);
@@ -45,7 +45,7 @@ namespace openPER.Controllers
         }
 
         private DrawingsViewModel BuildDrawingViewModel(string language, string makeCode, string subMakeCode, string modelCode,
-            string catalogueCode, int groupCode, int subGroupCode, int subSubGroupCode,  string scope,
+            string catalogueCode, int groupCode, int subGroupCode, int subSubGroupCode, string scope,
             string vin, string mvs, Func<List<DrawingKeyViewModel>, int> getCurrentDrawing)
         {
             // Standard prologue
@@ -103,7 +103,6 @@ namespace openPER.Controllers
             return rc;
         }
 
-
         private TableViewModel PopulateTableViewModelFromDrawing(DrawingKeyViewModel drawing, string language, string mvs, string vin)
         {
             var tableData = _mapper.Map<TableModel, TableViewModel>(
@@ -114,57 +113,49 @@ namespace openPER.Controllers
             tableData.ModelCode = drawing.ModelCode;
             tableData.Revision = drawing.Revision;
             tableData.Variant = drawing.Variant;
-            if (mvs != "")
+            if (mvs == "") return tableData;
+            var sinComPattern = _rep.GetSincomPattern(mvs);
+            var vmkCodes = _rep.GetVmkDataForCatalogue(drawing.CatalogueCode, language);
+            var vehiclePattern = _rep.GetVehiclePattern(language, vin);
+            if (vehiclePattern != "") sinComPattern = vehiclePattern;
+            var vehicleModificationFilters = _rep.GetFiltersForVehicle(language, vin, mvs);
+            foreach (var p in tableData.Parts)
             {
-                string sinComPattern = _rep.GetSincomPattern(mvs);
-                var vmkCodes = _rep.GetVmkDataForCatalogue(drawing.CatalogueCode, language);
-                string vehiclePattern = _rep.GetVehiclePattern(language, vin);
-                if (vehiclePattern != "") sinComPattern = vehiclePattern;
-                var vehicleModificationFilters = _rep.GetFiltersForVehicle(language, vin, mvs);
-                foreach (var p in tableData.Parts)
+                var pattern = p.Compatibility;
+                if (!string.IsNullOrEmpty(pattern))
                 {
-                    var pattern = p.Compatibility;
-                    if (!string.IsNullOrEmpty(pattern))
+                    if (!PatternMatchHelper.EvaluateRule(pattern, sinComPattern, vmkCodes, !string.IsNullOrEmpty(vehiclePattern)))
+                        p.Visible = false;
+                }
+                var modifications = p.Modifications;
+                foreach (var mod in modifications)
+                {
+                    foreach (var rule in mod.Activations)
                     {
-                        if (!PatternMatchHelper.EvaluateRule(pattern, sinComPattern, vmkCodes, !string.IsNullOrEmpty(vehiclePattern)))
-                            p.Visible = false;
-                    }
-                    var modifications = p.Modifications;
-                    foreach (var mod in modifications)
-                    {
-                        foreach (var rule in mod.Activations)
+                        // Does this apply to this vehicle
+                        if (PatternMatchHelper.EvaluateRule(rule.ActivationPattern, sinComPattern, vmkCodes, !string.IsNullOrEmpty(vehiclePattern)))
                         {
-                            // Does this apply to this vehicle
-                            if (PatternMatchHelper.EvaluateRule(rule.ActivationPattern, sinComPattern, vmkCodes, !string.IsNullOrEmpty(vehiclePattern)))
+                            // Does this vehicle have the data needed
+                            if (vehicleModificationFilters.ContainsKey(rule.ActivationCode))
                             {
-                                // Does this vehicle have the data needed
-                                if (vehicleModificationFilters.ContainsKey(rule.ActivationCode))
+                                // Before or after rule?
+                                if (mod.Type == "C" &&
+                                    int.Parse(rule.ActivationSpec) <= int.Parse(vehicleModificationFilters[rule.ActivationCode]))
                                 {
-                                    // Before or after rule?
-                                    if (mod.Type == "C")
-                                    {
-                                        // C means stops at so if data is past this then it is invisible
-                                        if (int.Parse(rule.ActivationSpec) <= int.Parse(vehicleModificationFilters[rule.ActivationCode]))
-                                        {
-                                            p.Visible = false;
-                                        }
-                                    }
-                                    if (mod.Type == "D")
-                                    {
-                                        // C means after a date if data is before this then it is invisible
-                                        if (int.Parse(rule.ActivationSpec) > int.Parse(vehicleModificationFilters[rule.ActivationCode]))
-                                        {
-                                            p.Visible = false;
-                                        }
-                                    }
+                                    // C means stops at so if data is past this then it is invisible
+                                    p.Visible = false;
+                                }
+                                if (mod.Type == "D" &&
+                                    int.Parse(rule.ActivationSpec) > int.Parse(vehicleModificationFilters[rule.ActivationCode]))
+                                {
+                                    // D means after a date if data is before this then it is invisible
+                                    p.Visible = false;
                                 }
                             }
                         }
                     }
-
                 }
             }
-
             return tableData;
         }
     }

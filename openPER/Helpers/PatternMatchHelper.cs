@@ -82,11 +82,6 @@ namespace openPER.Helpers
                 allSymbols[symbolName] = false;
                 newPattern += "|";
             }
-            //foreach (var item in values)
-            //{
-            //    if (AllSymbols.ContainsKey(item.Key))
-            //        AllSymbols[item.Key] = item.Value;
-            //}
             foreach (var item in values)
             {
                 newPattern = newPattern.Replace($"|{item.Key}|", item.Value ? " true " : " false ");
