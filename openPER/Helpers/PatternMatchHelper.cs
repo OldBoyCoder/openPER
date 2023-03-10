@@ -25,27 +25,27 @@ namespace openPER.Helpers
             sincomPattern = sincomPattern.Replace("|", "");
             pattern = pattern.Replace("\r", "").Replace("\n", "");
             var p2 = sincomPattern.Split(new[] { '+' }, StringSplitOptions.RemoveEmptyEntries);
-            var Values = new Dictionary<string, bool>();
+            var values = new Dictionary<string, bool>();
             foreach (var v in p2)
             {
                 if (v.StartsWith('!'))
-                    Values.Add(v[1..], false);
+                    values.Add(v[1..], false);
                 else
-                    Values.Add(v, true);
+                    values.Add(v, true);
             }
-            return EvaluateRule(pattern, Values, vmkCodes, preciseMatch);
+            return EvaluateRule(pattern, values, vmkCodes, preciseMatch);
         }
         public static bool EvaluateRule(string pattern, Dictionary<string, bool> values, List<VmkModel> vmkCodes, bool preciseMatch)
         {
             var dt = new DataTable();
-            var Symbol = false;
-            var SymbolName = "";
-            var AllSymbols = new Dictionary<string, bool>();
+            var symbol = false;
+            var symbolName = "";
+            var allSymbols = new Dictionary<string, bool>();
             var newPattern = "";
             bool v;
             foreach (var c in pattern)
             {
-                if (!Symbol)
+                if (!symbol)
                 {
                     if (c == '(' || c == ')' || c == '+' || c == ',' || c == '!')
                     {
@@ -53,8 +53,8 @@ namespace openPER.Helpers
                     }
                     else
                     {
-                        Symbol = true;
-                        SymbolName += c;
+                        symbol = true;
+                        symbolName += c;
                         newPattern += ("|" + c);
                     }
                 }
@@ -63,22 +63,22 @@ namespace openPER.Helpers
                     if (c == '(' || c == ')' || c == '+' || c == ',' || c == '!')
                     {
                         newPattern += ("|" + c);
-                        AllSymbols[SymbolName] = false;
-                        SymbolName = "";
-                        Symbol = false;
+                        allSymbols[symbolName] = false;
+                        symbolName = "";
+                        symbol = false;
                     }
                     else
                     {
-                        SymbolName += c;
+                        symbolName += c;
                         newPattern += c;
                     }
                 }
             }
             // We might still be handling a symbol at the end of the pattern
             // so make sure we don't miss it
-            if (Symbol)
+            if (symbol)
             {
-                AllSymbols[SymbolName] = false;
+                allSymbols[symbolName] = false;
                 newPattern += "|";
             }
             //foreach (var item in values)
@@ -89,34 +89,34 @@ namespace openPER.Helpers
             foreach (var item in values)
             {
                 newPattern = newPattern.Replace($"|{item.Key}|", item.Value ? " true " : " false ");
-                AllSymbols.Remove(item.Key);
+                allSymbols.Remove(item.Key);
             }
             pattern = newPattern;
-            if (!preciseMatch && AllSymbols.Count > 0)
+            if (!preciseMatch && allSymbols.Count > 0)
             {
                 // We have symbols for which we have no value.  Try the pattern with them both True and False
-                var comb = (Math.Pow(2, (AllSymbols.Count)));
+                var comb = (Math.Pow(2, (allSymbols.Count)));
                 var basePattern = pattern;
                 for (int i = 0; i < comb; i++)
                 {
                     // i now is the bit pattern for the symbols true/false
-                    for (int j = 0; j < AllSymbols.Count; j++)
+                    for (int j = 0; j < allSymbols.Count; j++)
                     {
-                        var key = AllSymbols.ElementAt(j).Key;
-                        var vmkElement = vmkCodes.Where(x => (x.Type + x.Code) == key).FirstOrDefault();
+                        var key = allSymbols.ElementAt(j).Key;
+                        var vmkElement = vmkCodes.FirstOrDefault(x => (x.Type + x.Code) == key);
                         if (vmkElement != null && vmkElement.MultiValue)
-                            AllSymbols[key] = false;
+                            allSymbols[key] = false;
                         else
                         {
                             if ((i & (int)Math.Pow(2, j)) != 0)
-                                AllSymbols[key] = true;
+                                allSymbols[key] = true;
                             else
-                                AllSymbols[key] = false;
+                                allSymbols[key] = false;
                         }
                     }
                     // Now try the pattern
                     pattern = basePattern;
-                    foreach (var item in AllSymbols)
+                    foreach (var item in allSymbols)
                     {
                         pattern = pattern.Replace($"|{item.Key}|", item.Value ? " true " : " false ");
                     }
@@ -142,7 +142,7 @@ namespace openPER.Helpers
                 }
                 return false;
             }
-            foreach (var item in AllSymbols)
+            foreach (var item in allSymbols)
             {
                 pattern = pattern.Replace($"|{item.Key}|", " false ");
             }

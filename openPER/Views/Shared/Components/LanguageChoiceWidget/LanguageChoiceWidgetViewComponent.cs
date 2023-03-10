@@ -16,12 +16,12 @@ namespace openPER.Views.Shared.Components.LanguageChoiceWidget
         {
             var model = new SessionOptionsViewModel
             {
-                Languages = _rep.GetAllLanguages()
+                Languages = _rep.GetAllLanguages(),
+                CurrentLanguage = language,
+                Action = RouteData.Values["action"],
+                Controller = RouteData.Values["controller"],
+                RouteData = new Microsoft.AspNetCore.Routing.RouteValueDictionary()
             };
-            model.CurrentLanguage = language;
-            model.Action = RouteData.Values["action"];
-            model.Controller = RouteData.Values["controller"];
-            model.RouteData = new Microsoft.AspNetCore.Routing.RouteValueDictionary(); ;
             foreach (var item in RouteData.Values)
             {
                 model.RouteData.Add(item.Key, item.Value);

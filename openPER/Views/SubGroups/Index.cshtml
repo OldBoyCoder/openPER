@@ -16,14 +16,14 @@
                 
                 @foreach (var mapEntry in Model.MapEntries)
                 {
-                    <a title="@($"{mapEntry.GroupCode:000}{mapEntry.SubGroupCode:00} {mapEntry.Description}")"   href="@Url.Action("Index", "SubSubGroups", new {Model.Navigation.Language, Model.MakeCode,Model.SubMakeCode, Model.ModelCode, Model.CatalogueCode, mapEntry.GroupCode, mapEntry.SubGroupCode, MVS=Model.Navigation.Filter.MVS, VIN=Model.Navigation.Filter.VIN})">
+                    <a title="@($"{mapEntry.GroupCode:000}{mapEntry.SubGroupCode:00} {mapEntry.Description}")"   href="@Url.Action("Index", "SubSubGroups", new {Model.Navigation.Language, Model.MakeCode,Model.SubMakeCode, Model.ModelCode, Model.CatalogueCode, mapEntry.GroupCode, mapEntry.SubGroupCode, MVS=Model.Navigation.Filter.Mvs, VIN=Model.Navigation.Filter.Vin})">
                         <div style="position: absolute; top: @(mapEntry.Y+"px"); left: @(mapEntry.X+"px"); width: 24px;height:24px">
                             <img src="~/SiteImages/SelectCircle.png"/></div></a>
 
                 }
             </div>
             <p>
-                @Html.ActionLink($"All drawings", "Detail", "Drawings", new {Model.Navigation.Language, Model.MakeCode, Model.SubMakeCode, Model.ModelCode, Model.CatalogueCode, Model.GroupCode,SubGroupCode="ALL", SubSubGroupCode="ALL", DrawingNumber = 0, Scope="Group", MVS=Model.Navigation.Filter.MVS, VIN=Model.Navigation.Filter.VIN})
+                @Html.ActionLink("All drawings", "Detail", "Drawings", new {Model.Navigation.Language, Model.MakeCode, Model.SubMakeCode, Model.ModelCode, Model.CatalogueCode, Model.GroupCode,SubGroupCode="ALL", SubSubGroupCode="ALL", DrawingNumber = 0, Scope="Group", MVS=Model.Navigation.Filter.Mvs, VIN=Model.Navigation.Filter.Vin})
 
             </p>
         </div>

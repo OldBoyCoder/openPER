@@ -21,16 +21,15 @@ namespace openPERRepositories.Interfaces
         List<DrawingKeyModel> GetDrawingKeysForGroup(string makeCode, string modelCode, string catalogueCode, int groupCode, string languageCode);
         List<DrawingKeyModel> GetDrawingKeysForSubGroup(string makeCode, string modelCode, string catalogueCode, int groupCode, int subGroupCode, string languageCode);
         List<VmkModel> GetVmkDataForCatalogue(string catalogueCode, string language);
-        string GetVehiclePattern(string language, string vIN);
+        string GetVehiclePattern(string language, string vIn);
         MapImageModel GetMapAndImageForCatalogue(string makeCode, string subMakeCode, string modelCode,
             string catalogueCode);
         string GetImageNameForModel(string makeCode, string subMakeCode, string modelCode);
         void PopulateBreadcrumbDescriptions(BreadcrumbModel breadcrumb, string languageCode);
         List<GroupImageMapEntryModel> GetGroupMapEntriesForCatalogue(string catalogueCode, string languageCode);
-        Dictionary<string, string> GetFiltersforVehicle(string language,string vIN, string mVS);
+        Dictionary<string, string> GetFiltersforVehicle(string language,string vIn, string mVs);
         MapImageModel GetMapForCatalogueGroup(string make, string subMake, string model, string catalogue, int group);
         List<SubGroupImageMapEntryModel> GetSubGroupMapEntriesForCatalogueGroup(string catalogueCode, int groupCode, string languageCode);
-        string GetImageNameForDrawing( string catalogue, int group, int subgroup, int subSubGroup, int variant, int revision);
         List<DrawingKeyModel> GetDrawingKeysForCliche(string makeCode, string subMakeCode, string modelCode,
             string catalogueCode, int groupCode, int subGroupCode, int subSubGroupCode, string clichePartNumber);
         List<TablePartModel> GetPartsForCliche(string catalogueCode, string clichePartNumber, int clicheDrawingNumber,
@@ -38,7 +37,7 @@ namespace openPERRepositories.Interfaces
 
         List<ModelModel> GetAllVinModels();
         string GetInteriorColourDescription(string catCode, string interiorColourCode, string language);
-        string GetSincomPattern(string mVS);
+        string GetSincomPattern(string mVs);
         string GetExteriorColourDescription(string catCode, string exteriorColourCode, string language);
         public List<MvsCatalogueOptionModel> GetMvsDetailsForCatalogue(string catalogueCode, string language);
         public List<VinSearchResultModel> FindMatchesForMvsAndVin(string language, string mvs, string fullVin);

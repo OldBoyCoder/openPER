@@ -22,7 +22,7 @@ namespace openPER.Controllers
         public IActionResult Index(string language, string makeCode, string subMakeCode)
         {
             // Standard prologue
-            Helpers.LanguageSupport.SetCultureBasedOnRoute(language);
+            LanguageSupport.SetCultureBasedOnRoute(language);
             ViewData["Language"] = language;
 
             var model = new ModelsViewModel

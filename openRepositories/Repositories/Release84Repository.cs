@@ -6,7 +6,6 @@ using openPERModels;
 using openPERRepositories.Interfaces;
 using System;
 using VinSearcher;
-using Microsoft.Extensions.Caching.Memory;
 
 // ReSharper disable StringLiteralTypo
 
@@ -14,46 +13,44 @@ namespace openPERRepositories.Repositories
 {
     public class Release84Repository : IRepository
     {
-        internal IConfiguration _config;
-        internal string _pathToDb;
-        internal string _pathToCdn;
-        internal string _pathToVindataCH;
-        internal string _pathToVindataRT;
-        private readonly IMemoryCache _cache;
-        public Release84Repository(IConfiguration config, IMemoryCache cache)
+        internal IConfiguration Config;
+        internal string PathToDb;
+        internal string PathToCdn;
+        internal string PathToVindataCh;
+        internal string PathToVindataRt;
+        public Release84Repository(IConfiguration config)
         {
-            _config = config;
+            Config = config;
             var s = config.GetSection("Releases").Get<ReleaseModel[]>();
             var release = s.FirstOrDefault(x => x.Release == 84);
             if (release != null)
             {
-                _pathToDb = release.DbName;
-                _pathToCdn = release.CDNRoot;
-                _pathToVindataCH = release.VinDataCH;
-                _pathToVindataRT = release.VinDataRT;
+                PathToDb = release.DbName;
+                PathToCdn = release.CdnRoot;
+                PathToVindataCh = release.VinDataCh;
+                PathToVindataRt = release.VinDataRt;
             }
-            _cache = cache;
         }
 
         public MapImageModel GetMapAndImageForCatalogue(string makeCode, string subMakeCode, string modelCode,
             string catalogueCode)
         {
             var model = new MapImageModel();
-            using var connection = new MySqlConnection(_pathToDb);
+            using var connection = new MySqlConnection(PathToDb);
             var sql = @"SELECT DISTINCT MAP_NAME, IMG_NAME
                             FROM CATALOGUES
                             WHERE MK_COD = @p1 AND MK2_COD = @p2 AND CAT_COD = @p3";
             connection.RunSqlAllRows(sql, (reader) =>
             {
                 model.MapName = (reader.IsDBNull(0)) ? "" : reader.GetString(0);
-                model.ImageName = _pathToCdn + "L_EPERFIG/" + reader.GetString(1);
+                model.ImageName = PathToCdn + "L_EPERFIG/" + reader.GetString(1);
             }, makeCode, subMakeCode, catalogueCode);
             return model;
         }
         public List<GroupImageMapEntryModel> GetGroupMapEntriesForCatalogue(string catalogueCode, string languageCode)
         {
             var map = new List<GroupImageMapEntryModel>();
-            using var connection = new MySqlConnection(_pathToDb);
+            using var connection = new MySqlConnection(PathToDb);
             var sql = @"select MPG_TX, MPG_TY, MPG_INDEX, M.GRP_COD, GRP_DSC from CATALOGUES C
                         JOIN MAP_GRP M ON M.MAP_NAME = C.MAP_NAME
                         JOIN MAP_INFO MI ON MI.MAP_NAME = C.MAP_NAME
@@ -80,7 +77,7 @@ namespace openPERRepositories.Repositories
         public MapImageModel GetMapForCatalogueGroup(string make, string subMake, string model, string catalogue, int group)
         {
             var map = new MapImageModel();
-            using var connection = new MySqlConnection(_pathToDb);
+            using var connection = new MySqlConnection(PathToDb);
             var sql = @"SELECT DISTINCT MAP_SGRP
                             FROM MAP_VET
                             WHERE CAT_COD = @p1 AND GRP_COD = @p2";
@@ -98,7 +95,7 @@ namespace openPERRepositories.Repositories
             sql = @"SELECT DISTINCT IMG_NAME
                         FROM GROUPS
                         WHERE GRP_COD = @p1 AND CAT_COD = @p2";
-            connection.RunSqlFirstRowOnly(sql, (reader) => { map.ImageName = _pathToCdn + "L_EPERFIG/" + reader.GetString(0); }, group, catalogue);
+            connection.RunSqlFirstRowOnly(sql, (reader) => { map.ImageName = PathToCdn + "L_EPERFIG/" + reader.GetString(0); }, group, catalogue);
 
             return map;
         }
@@ -106,7 +103,7 @@ namespace openPERRepositories.Repositories
         public List<SubGroupImageMapEntryModel> GetSubGroupMapEntriesForCatalogueGroup(string catalogueCode, int groupCode, string languageCode)
         {
             var map = new List<SubGroupImageMapEntryModel>();
-            using var connection = new MySqlConnection(_pathToDb);
+            using var connection = new MySqlConnection(PathToDb);
             // sloppy should pass this down
             var mapDetails = GetMapForCatalogueGroup(null, null, null, catalogueCode, groupCode);
             var sql = @"select POINT_X, POINT_Y, M.SGRP_COD, SGRP_DSC from MAP_SGRP M
@@ -129,11 +126,11 @@ namespace openPERRepositories.Repositories
             return map;
         }
 
-        public string GetImageNameForDrawing(string catalogue, int group, int subgroup, int subSubGroup,
+        private string GetImageNameForDrawing(string catalogue, int group, int subgroup, int subSubGroup,
             int drawing, int revision)
         {
             string rc = "";
-            using var connection = new MySqlConnection(_pathToDb);
+            using var connection = new MySqlConnection(PathToDb);
             var sql = @"SELECT DISTINCT IMG_PATH
                             FROM DRAWINGS
                             WHERE CAT_COD = @p1 AND GRP_COD = @p2 AND SGRP_COD  = @p3 AND SGS_COD = @p4 AND VARIANTE = @p5 AND REVISIONE = @p6";
@@ -162,7 +159,7 @@ namespace openPERRepositories.Repositories
         {
             var rc = "";
             var sql = @"SELECT MK_DSC FROM MAKES WHERE MK_COD = @p1";
-            using var connection = new MySqlConnection(_pathToDb);
+            using var connection = new MySqlConnection(PathToDb);
             connection.RunSqlFirstRowOnly(sql, (reader) =>
             {
                 rc = reader.GetString(0);
@@ -173,7 +170,7 @@ namespace openPERRepositories.Repositories
         public List<SubSubGroupModel> GetSubSubGroupsForCatalogueGroupSubGroup(string catalogueCode, int groupCode, int subGroupCode, string languageCode)
         {
             var rc = new List<SubSubGroupModel>();
-            using var connection = new MySqlConnection(_pathToDb);
+            using var connection = new MySqlConnection(PathToDb);
             var sql = @"select distinct T.SGS_COD, TD.DSC, PATTERN, MODIF FROM DRAWINGS T
                             JOIN TABLES_DSC TD ON TD.LNG_COD = @p4 AND TD.COD = T.TABLE_DSC_COD
                             WHERE CAT_COD = @p1 AND T.GRP_COD = @p2 AND T.SGRP_COD = @p3
@@ -217,7 +214,7 @@ namespace openPERRepositories.Repositories
             int subGroupCode, int subSubGroupCode, string languageCode)
         {
             var drawings = new List<DrawingKeyModel>();
-            using var connection = new MySqlConnection(_pathToDb);
+            using var connection = new MySqlConnection(PathToDb);
             var sql = @"SELECT DISTINCT CAT_COD, GRP_COD, SGRP_COD, SGS_COD, VARIANTE, IFNULL( PATTERN, ''), REVISIONE, IFNULL(MODIF, ''), DSC, IMG_PATH
                             FROM DRAWINGS
                             JOIN TABLES_DSC TD ON TD.LNG_COD = @p5 AND TD.COD = TABLE_DSC_COD
@@ -242,9 +239,9 @@ namespace openPERRepositories.Repositories
                         CreateModificationListFromString(catalogueCode, reader.GetString(7), languageCode)
 
                 };
-                var ThumbImagePath = reader.GetString(9);
-                var imageParts = ThumbImagePath.Split(new[] { '.' });
-                drawing.ThumbImagePath = _pathToCdn + imageParts[0] + ".th." + imageParts[1];
+                var thumbImagePath = reader.GetString(9);
+                var imageParts = thumbImagePath.Split(new[] { '.' });
+                drawing.ThumbImagePath = PathToCdn + imageParts[0] + ".th." + imageParts[1];
 
                 drawings.Add(drawing);
             }, catalogueCode, groupCode, subGroupCode, subSubGroupCode, languageCode);
@@ -255,7 +252,7 @@ namespace openPERRepositories.Repositories
             int subGroupCode, string languageCode)
         {
             var drawings = new List<DrawingKeyModel>();
-            using var connection = new MySqlConnection(_pathToDb);
+            using var connection = new MySqlConnection(PathToDb);
             var sql = @"SELECT DISTINCT CAT_COD, GRP_COD, SGRP_COD, SGS_COD, VARIANTE, IFNULL( PATTERN, ''), REVISIONE, IFNULL(MODIF, ''), DSC, IMG_PATH
                             FROM DRAWINGS
                             JOIN TABLES_DSC TD ON TD.LNG_COD = @p4 AND TD.COD = TABLE_DSC_COD
@@ -280,9 +277,9 @@ namespace openPERRepositories.Repositories
                         CreateModificationListFromString(catalogueCode, reader.GetString(7), languageCode)
 
                 };
-                var ThumbImagePath = reader.GetString(9);
-                var imageParts = ThumbImagePath.Split(new[] { '.' });
-                drawing.ThumbImagePath = _pathToCdn + imageParts[0] + ".th." + imageParts[1];
+                var thumbImagePath = reader.GetString(9);
+                var imageParts = thumbImagePath.Split(new[] { '.' });
+                drawing.ThumbImagePath = PathToCdn + imageParts[0] + ".th." + imageParts[1];
 
                 drawings.Add(drawing);
             }, catalogueCode, groupCode, subGroupCode, languageCode);
@@ -292,7 +289,7 @@ namespace openPERRepositories.Repositories
         public List<DrawingKeyModel> GetDrawingKeysForGroup(string makeCode, string modelCode, string catalogueCode, int groupCode, string languageCode)
         {
             var drawings = new List<DrawingKeyModel>();
-            using var connection = new MySqlConnection(_pathToDb);
+            using var connection = new MySqlConnection(PathToDb);
             var sql = @"SELECT DISTINCT CAT_COD, GRP_COD, SGRP_COD, SGS_COD, VARIANTE, IFNULL( PATTERN, ''), REVISIONE, IFNULL(MODIF, ''), DSC, IMG_PATH
                             FROM DRAWINGS
                             JOIN TABLES_DSC TD ON TD.LNG_COD = @p3 AND TD.COD = TABLE_DSC_COD
@@ -317,9 +314,9 @@ namespace openPERRepositories.Repositories
                         CreateModificationListFromString(catalogueCode, reader.GetString(7), languageCode)
 
                 };
-                var ThumbImagePath = reader.GetString(9);
-                var imageParts = ThumbImagePath.Split(new[] { '.' });
-                drawing.ThumbImagePath = _pathToCdn + imageParts[0] + ".th." + imageParts[1];
+                var thumbImagePath = reader.GetString(9);
+                var imageParts = thumbImagePath.Split(new[] { '.' });
+                drawing.ThumbImagePath = PathToCdn + imageParts[0] + ".th." + imageParts[1];
                 drawings.Add(drawing);
             }, catalogueCode, groupCode, languageCode);
 
@@ -328,23 +325,18 @@ namespace openPERRepositories.Repositories
         public TableModel GetTable(string catalogueCode, int groupCode, int subGroupCode, int sgsCode, int drawingNumber, int revision, string languageCode)
         {
             var t = new TableModel();
-            using var connection = new MySqlConnection(_pathToDb);
+            using var connection = new MySqlConnection(PathToDb);
             t.CatalogueCode = catalogueCode;
             t.GroupCode = groupCode;
             t.SubGroupCode = subGroupCode;
             t.SubSubGroupCode = sgsCode;
-            //            t.MakeDesc = GetMakeDescription(makeCode, connection);
-            //          t.ModelDesc = GetModelDescription(makeCode, modelCode, connection);
-            //        t.CatalogueDesc = GetCatalogueDescription(makeCode, modelCode, catalogueCode, connection);
             t.GroupDesc = GetGroupDescription(groupCode, languageCode);
             t.SubGroupDesc = GetSubGroupDescription(groupCode, subGroupCode, languageCode);
-            // TODO Add variant information to sgs description
-            t.SgsDesc = GetSubGroupDescription(groupCode, subGroupCode, languageCode);
+            t.SgsDesc = GetSubSubGroupDescription(catalogueCode, groupCode, subGroupCode,sgsCode, languageCode);
             t.Parts = GetTableParts(catalogueCode, groupCode, subGroupCode, sgsCode, drawingNumber, revision, languageCode);
             t.DrawingNumbers = GetDrawingNumbers(catalogueCode, groupCode, subGroupCode, sgsCode, revision);
-            // t.Narratives = GetSgsNarrative(catalogueCode, groupCode, subGroupCode, sgsCode, languageCode);
             t.CurrentDrawing = drawingNumber;
-            t.ImagePath = _pathToCdn + GetImageNameForDrawing(catalogueCode, groupCode, subGroupCode, sgsCode, drawingNumber, revision);
+            t.ImagePath = PathToCdn + GetImageNameForDrawing(catalogueCode, groupCode, subGroupCode, sgsCode, drawingNumber, revision);
             return t;
         }
         private List<TablePartModel> GetTableParts(string catalogueCode, int groupCode, int subGroupCode, int sgsCode, int drawingNumber, int revision, string languageCode)
@@ -358,7 +350,7 @@ namespace openPERRepositories.Repositories
                                         LEFT OUTER JOIN DESC_AGG_DSC DAD ON DAD.COD = TBD_AGG_DSC AND DAD.LNG_COD = @p1
                                         WHERE VARIANTE = @p2 AND SGS_COD = @p3 AND SGRP_COD = @p4 AND GRP_COD = @p5 AND CAT_COD = @p6 AND REVISIONE = @p7
                                         ORDER BY TBD_RIF,TBD_SEQ";
-            using var connection = new MySqlConnection(_pathToDb);
+            using var connection = new MySqlConnection(PathToDb);
             connection.RunSqlAllRows(sql, (reader) =>
             {
                 var part = new TablePartModel
@@ -393,7 +385,7 @@ namespace openPERRepositories.Repositories
             if (string.IsNullOrEmpty(modifString)) return modifications;
             var mods = modifString.Split(',');
             var sequence = 1;
-            using var connection = new MySqlConnection(_pathToDb);
+            using var connection = new MySqlConnection(PathToDb);
 
             foreach (var mod in mods)
             {
@@ -422,7 +414,7 @@ namespace openPERRepositories.Repositories
             var sql = @"SELECT IFNULL(ACT_COD, ''),IFNULL(M.MDFACT_SPEC, ''), IFNULL(M.ACT_COD, ''), MDFACT_SPEC, IFNULL(PATTERN, '')
                     FROM MDF_ACT M
                     WHERE M.CAT_COD = @p2 AND M.MDF_COD = @p1";
-            using var connection = new MySqlConnection(_pathToDb);
+            using var connection = new MySqlConnection(PathToDb);
 
             connection.RunSqlAllRows(sql, (reader) =>
             {
@@ -454,8 +446,7 @@ namespace openPERRepositories.Repositories
         public List<ModelModel> GetAllVinModels()
         {
             var rc = new List<ModelModel>();
-            using var connection = new MySqlConnection(_pathToDb);
-            //            var sql = @"SELECT MOD_COD, MOD_DSC, MK_COD FROM MODELS ORDER BY MOD_SORT_KEY ";
+            using var connection = new MySqlConnection(PathToDb);
             var sql = @"SELECT CMG_COD, CMG_DSC, MK2_COD FROM COMM_MODGRP ORDER BY CMG_DSC ";
             connection.RunSqlAllRows(sql, (reader) =>
             {
@@ -474,7 +465,7 @@ namespace openPERRepositories.Repositories
         private List<int> GetDrawingNumbers(string catalogueCode, int groupCode, int subGroupCode, int sgsCode, int revision)
         {
             var rc = new List<int>();
-            using var connection = new MySqlConnection(_pathToDb);
+            using var connection = new MySqlConnection(PathToDb);
             var sql = @"SELECT DISTINCT VARIANTE 
                             FROM DRAWINGS  
                             WHERE SGS_COD = @p1 AND SGRP_COD = @p2 AND GRP_COD = @p3 AND CAT_COD = @p4 AND REVISIONE = @p5";
@@ -487,7 +478,7 @@ namespace openPERRepositories.Repositories
 
         private bool IsPartAComponent(TablePartModel part)
         {
-            using var connection = new MySqlConnection(_pathToDb);
+            using var connection = new MySqlConnection(PathToDb);
             var rc = false;
             var sql = @"SELECT DISTINCT CPLX_PRT_COD FROM CLICHE WHERE CPLX_PRT_COD = @p1";
             connection.RunSqlFirstRowOnly(sql, (reader) =>
@@ -500,7 +491,7 @@ namespace openPERRepositories.Repositories
         private string GetCatalogueDescription(string makeCode, string subMakeCode, string catalogueCode)
         {
             string rc = "";
-            using var connection = new MySqlConnection(_pathToDb);
+            using var connection = new MySqlConnection(PathToDb);
 
             var sql = @"SELECT CAT_DSC FROM CATALOGUES WHERE MK_COD = @p1 AND MK2_COD = @p2 AND CAT_COD = @p3";
             connection.RunSqlFirstRowOnly(sql, (reader) =>
@@ -513,7 +504,7 @@ namespace openPERRepositories.Repositories
 
         protected string GetGroupDescription(int groupCode, string languageCode)
         {
-            using var connection = new MySqlConnection(_pathToDb);
+            using var connection = new MySqlConnection(PathToDb);
             string rc = "";
             var sql = @"SELECT GRP_DSC FROM GROUPS_DSC WHERE GRP_COD = @p1 AND LNG_COD = @p2 ";
 
@@ -526,7 +517,7 @@ namespace openPERRepositories.Repositories
 
         private string GetSubGroupDescription(int groupCode, int subGroupCode, string languageCode)
         {
-            using var connection = new MySqlConnection(_pathToDb);
+            using var connection = new MySqlConnection(PathToDb);
             var rc = "";
             var sql = @"SELECT SGRP_DSC FROM SUBGROUPS_DSC WHERE SGRP_COD = @p2 AND GRP_COD = @p1 AND LNG_COD = @p3 ";
             connection.RunSqlFirstRowOnly(sql, (reader) =>
@@ -537,7 +528,7 @@ namespace openPERRepositories.Repositories
         }
         private string GetSubSubGroupDescription(string catalogCode, int groupCode, int subGroupCode, int subSubGroupCode, string languageCode)
         {
-            using var connection = new MySqlConnection(_pathToDb);
+            using var connection = new MySqlConnection(PathToDb);
             var rc = "";
             var sql = @"select distinct TD.DSC FROM DRAWINGS T
                             JOIN TABLES_DSC TD ON TD.LNG_COD = @p5 AND TD.COD = T.TABLE_DSC_COD
@@ -556,7 +547,7 @@ namespace openPERRepositories.Repositories
         {
             var rc = "";
             var sql = @"SELECT CMG_DSC FROM COMM_MODGRP WHERE MK2_COD = @p1 AND CMG_COD = @p2";
-            using var connection = new MySqlConnection(_pathToDb);
+            using var connection = new MySqlConnection(PathToDb);
             connection.RunSqlFirstRowOnly(sql, (reader) =>
             {
                 rc = reader.GetString(0);
@@ -567,7 +558,7 @@ namespace openPERRepositories.Repositories
         public List<ModelModel> GetAllModelsForMake(string makeCode, string subMake)
         {
             var rc = new List<ModelModel>();
-            using var connection = new MySqlConnection(_pathToDb);
+            using var connection = new MySqlConnection(PathToDb);
             var sql = @"SELECT CMG_COD, CMG_DSC FROM COMM_MODGRP WHERE MK2_COD = @p1  ORDER BY CMG_SORT_KEY ";
             connection.RunSqlAllRows(sql, (reader) =>
             {
@@ -578,7 +569,7 @@ namespace openPERRepositories.Repositories
                     Description = reader.GetString(1),
                     MakeCode = makeCode,
                     SubMakeCode = subMake,
-                    ImagePath = _pathToCdn + $"SmallModelImages{subMake}/{reader.GetString(0).ToUpper()}.jpg"
+                    ImagePath = PathToCdn + $"SmallModelImages{subMake}/{reader.GetString(0).ToUpper()}.jpg"
 
                 };
                 rc.Add(m);
@@ -589,7 +580,7 @@ namespace openPERRepositories.Repositories
         public List<CatalogueModel> GetAllCatalogues(string makeCode, string subMakeCode, string modelCode, string languageCode)
         {
             var rc = new List<CatalogueModel>();
-            using var connection = new MySqlConnection(_pathToDb);
+            using var connection = new MySqlConnection(PathToDb);
             var sql = @"SELECT CAT_COD, CAT_DSC FROM CATALOGUES WHERE MK2_COD = @p2 AND MK_COD =@p1 AND CMG_COD = @p3  ORDER BY CAT_SORT_KEY ";
             connection.RunSqlAllRows(sql, (reader) =>
             {
@@ -609,7 +600,7 @@ namespace openPERRepositories.Repositories
         public List<GroupModel> GetGroupsForCatalogue(string catalogueCode, string languageCode)
         {
             var rc = new List<GroupModel>();
-            using var connection = new MySqlConnection(_pathToDb);
+            using var connection = new MySqlConnection(PathToDb);
             var sql = @"select distinct T.GRP_COD, GRP_DSC FROM DRAWINGS T
                             JOIN GROUPS_DSC G ON G.GRP_COD = T.GRP_COD AND G.LNG_COD = @p2
                             WHERE CAT_COD = @p1
@@ -633,7 +624,7 @@ namespace openPERRepositories.Repositories
         public List<SubGroupModel> GetSubGroupsForCatalogueGroup(string catalogueCode, int groupCode, string languageCode)
         {
             var rc = new List<SubGroupModel>();
-            using var connection = new MySqlConnection(_pathToDb);
+            using var connection = new MySqlConnection(PathToDb);
             var sql = @"select distinct T.SGRP_COD, SGRP_DSC FROM DRAWINGS T
                             JOIN SUBGROUPS_DSC G ON G.GRP_COD = T.GRP_COD AND G.SGRP_COD = T.SGRP_COD AND G.LNG_COD = @p1
                             WHERE CAT_COD = @p2 AND T.GRP_COD = @p3
@@ -658,12 +649,14 @@ namespace openPERRepositories.Repositories
             var sequence = 1;
             foreach (var part in parts)
             {
-                var mod = new ModificationModel();
-                mod.Type = part.Substring(0, 1);
-                mod.Code = int.Parse(part.Substring(1));
-                mod.Progression = sequence++;
+                var mod = new ModificationModel
+                {
+                    Type = part.Substring(0, 1),
+                    Code = int.Parse(part.Substring(1)),
+                    Progression = sequence++
+                };
                 var sql = "SELECT MDF_DSC FROM MODIF_DSC WHERE CAT_COD = @p1 AND MDF_COD = @p2 AND LNG_COD = @p3";
-                using var connection = new MySqlConnection(_pathToDb);
+                using var connection = new MySqlConnection(PathToDb);
                 connection.RunSqlFirstRowOnly(sql, (reader) =>
                 {
                     mod.Description = reader.GetString(0);
@@ -678,7 +671,7 @@ namespace openPERRepositories.Repositories
         public List<LanguageModel> GetAllLanguages()
         {
             var languages = new List<LanguageModel>();
-            using var connection = new MySqlConnection(_pathToDb);
+            using var connection = new MySqlConnection(PathToDb);
             var sql = @"SELECT LNG_COD, LNG_DSC FROM LANG ORDER BY LNG_COD";
             connection.RunSqlAllRows(sql, (reader) =>
             {
@@ -693,7 +686,7 @@ namespace openPERRepositories.Repositories
         }
         public void PopulateBreadcrumbDescriptions(BreadcrumbModel breadcrumb, string languageCode)
         {
-            using var connection = new MySqlConnection(_pathToDb);
+            using var connection = new MySqlConnection(PathToDb);
             breadcrumb.Language = languageCode;
             if (breadcrumb.MakeCode != null) breadcrumb.MakeDescription = GetMakeDescription(breadcrumb.MakeCode);
             if (breadcrumb.SubMakeCode != null) breadcrumb.SubMakeDescription = GetSubMakeDescription(breadcrumb.MakeCode, breadcrumb.SubMakeCode);
@@ -710,7 +703,7 @@ namespace openPERRepositories.Repositories
             int subGroupCode, int subSubGroupCode, string clichePartNumber)
         {
             var drawings = new List<DrawingKeyModel>();
-            using var connection = new MySqlConnection(_pathToDb);
+            using var connection = new MySqlConnection(PathToDb);
             var sql = @"SELECT DISTINCT CPD_NUM, CLH_COD, IMG_PATH
                             FROM CLICHE
                             WHERE CPLX_PRT_COD = @p1
@@ -729,10 +722,10 @@ namespace openPERRepositories.Repositories
                     ClichePartDrawingNumber = reader.GetInt32(0),
                     ClichePartCode = reader.GetString(1)
                 };
-                var ThumbImagePath = reader.GetString(2);
-                var imageParts = ThumbImagePath.Split(new[] { '.' });
-                drawing.ThumbImagePath = _pathToCdn + imageParts[0] + ".th." + imageParts[1];
-                drawing.ImagePath = _pathToCdn + ThumbImagePath;
+                var thumbImagePath = reader.GetString(2);
+                var imageParts = thumbImagePath.Split(new[] { '.' });
+                drawing.ThumbImagePath = PathToCdn + imageParts[0] + ".th." + imageParts[1];
+                drawing.ImagePath = PathToCdn + thumbImagePath;
 
                 drawings.Add(drawing);
             }, clichePartNumber);
@@ -742,7 +735,7 @@ namespace openPERRepositories.Repositories
         public List<TablePartModel> GetPartsForCliche(string catalogueCode, string clichePartNumber,
             int clicheDrawingNumber, string languageCode)
         {
-            using var connection = new MySqlConnection(_pathToDb);
+            using var connection = new MySqlConnection(PathToDb);
             var rc = new List<TablePartModel>();
             var sql = @"SELECT C.PRT_COD, CLH_COD, CPD_RIF, CPD_QTY, IFNULL(CPD_AGG_DSC, ''), CDS_DSC
                         FROM CPXDATA C 
@@ -764,9 +757,9 @@ namespace openPERRepositories.Repositories
                 });
             }, clichePartNumber, clicheDrawingNumber, languageCode);
 
-            var maxRIF = 1;
+            var maxRif = 1;
             if (rc.Count > 0)
-                maxRIF = rc.Max(x => x.TableOrder) + 1;
+                maxRif = rc.Max(x => x.TableOrder) + 1;
             // Now get any kits
             sql = @"SELECT K.PRT_COD, CDS_DSC
                         FROM KIT K
@@ -780,7 +773,7 @@ namespace openPERRepositories.Repositories
                 rc.Add(new TablePartModel
                 {
                     PartNumber = reader.GetString(0),
-                    TableOrder = maxRIF++,
+                    TableOrder = maxRif++,
                     Quantity = "01",
                     FurtherDescription = "",
                     Description = reader.GetString(1)
@@ -799,7 +792,7 @@ namespace openPERRepositories.Repositories
         public PartModel GetPartDetails(string partNumberSearch, string languageCode)
         {
             PartModel p = null;
-            using (var connection = new MySqlConnection(_pathToDb))
+            using (var connection = new MySqlConnection(PathToDb))
             {
                 var sql = @"select P.PRT_COD, C.CDS_COD, C.CDS_DSC,F.FAM_COD, F.FAM_DSC, U.UM_COD, U.UM_DSC, PRT_WEIGHT  from PARTS P 
                                 JOIN CODES_DSC C ON C.CDS_COD = P.CDS_COD AND C.LNG_COD = @p2
@@ -833,64 +826,57 @@ namespace openPERRepositories.Repositories
         private List<PartReplacementModel> GetReplacedByForPartNumber(string partNumber, string languageCode)
         {
             var rc = new List<PartReplacementModel>();
-            using (var connection = new MySqlConnection(_pathToDb))
-            {
-                var sql = @"SELECT RPL_DATE, RPL_COD, RPL_GRPDSC, C.CDS_DSC
+            using var connection = new MySqlConnection(PathToDb);
+            var sql = @"SELECT RPL_DATE, RPL_COD, RPL_GRPDSC, C.CDS_DSC
                                  FROM rplnt R
                                  JOIN parts P ON R.RPL_COD = P.PRT_COD
                                  JOIN codes_dsc C ON C.CDS_COD = P.CDS_COD AND C.LNG_COD = @p2
                                  LEFT OUTER  JOIN rplnt_grp G ON G.RPL_GRPNUM = R.RPL_GRPNUM AND G.LNG_COD = @p2 AND G.PRT_COD = R.PRT_COD
                                  WHERE R.prt_cod = @p1 ORDER BY R.RPL_COD";
-                connection.RunSqlAllRows(sql, (reader) =>
+            connection.RunSqlAllRows(sql, (reader) =>
+            {
+                var p = new PartReplacementModel
                 {
-                    var p = new PartReplacementModel
-                    {
-                        ReplacementDate = reader.GetString(0),
-                        NewPartCode = reader.GetString(1),
-                        OldPartCode = partNumber,
-                        GroupDescription = reader.IsDBNull(2) ? "" : reader.GetString(3),
-                        PartDescription = reader.GetString(3)
-                    };
-                    rc.Add(p);
-                }, partNumber, languageCode);
-
-            }
+                    ReplacementDate = reader.GetString(0),
+                    NewPartCode = reader.GetString(1),
+                    OldPartCode = partNumber,
+                    GroupDescription = reader.IsDBNull(2) ? "" : reader.GetString(3),
+                    PartDescription = reader.GetString(3)
+                };
+                rc.Add(p);
+            }, partNumber, languageCode);
             return rc;
         }
         private List<PartReplacementModel> GetReplacesForPartNumber(string partNumber, string languageCode)
         {
             var rc = new List<PartReplacementModel>();
-            using (var connection = new MySqlConnection(_pathToDb))
-            {
-                var sql = @"SELECT RPL_DATE, R.PRT_COD, RPL_GRPDSC, C.CDS_DSC
+            using var connection = new MySqlConnection(PathToDb);
+            var sql = @"SELECT RPL_DATE, R.PRT_COD, RPL_GRPDSC, C.CDS_DSC
                                  FROM rplnt R
                                  JOIN parts P ON R.RPL_COD = P.PRT_COD
                                  JOIN codes_dsc C ON C.CDS_COD = P.CDS_COD AND C.LNG_COD = @p2
                                  LEFT OUTER  JOIN rplnt_grp G ON G.RPL_GRPNUM = R.RPL_GRPNUM AND G.LNG_COD = @p2 AND G.PRT_COD = R.PRT_COD
                                  WHERE R.RPL_COD = @p1 ORDER BY R.RPL_COD";
-                connection.RunSqlAllRows(sql, (reader) =>
+            connection.RunSqlAllRows(sql, (reader) =>
+            {
+                var p = new PartReplacementModel
                 {
-                    var p = new PartReplacementModel
-                    {
-                        ReplacementDate = reader.GetString(0),
-                        OldPartCode = reader.GetString(1),
-                        NewPartCode = partNumber,
-                        GroupDescription = reader.IsDBNull(2) ? "" : reader.GetString(3),
-                        PartDescription = reader.GetString(3)
-                    };
-                    rc.Add(p);
-                }, partNumber, languageCode);
-
-            }
+                    ReplacementDate = reader.GetString(0),
+                    OldPartCode = reader.GetString(1),
+                    NewPartCode = partNumber,
+                    GroupDescription = reader.IsDBNull(2) ? "" : reader.GetString(3),
+                    PartDescription = reader.GetString(3)
+                };
+                rc.Add(p);
+            }, partNumber, languageCode);
             return rc;
         }
 
         public List<PartModel> GetPartSearch(string modelName, string partDescription, string languageCode)
         {
             var rc = new List<PartModel>();
-            using (var connection = new MySqlConnection(_pathToDb))
-            {
-                var sql = @"select P.PRT_COD, C.CDS_COD, C.CDS_DSC,F.FAM_COD, F.FAM_DSC, U.UM_COD, U.UM_DSC, PRT_WEIGHT  from PARTS P 
+            using var connection = new MySqlConnection(PathToDb);
+            var sql = @"select P.PRT_COD, C.CDS_COD, C.CDS_DSC,F.FAM_COD, F.FAM_DSC, U.UM_COD, U.UM_DSC, PRT_WEIGHT  from PARTS P 
                                 JOIN CODES_DSC C ON C.CDS_COD = P.CDS_COD AND C.LNG_COD = @p1
                                 JOIN FAM_DSC F ON F.FAM_COD = P.PRT_FAM_COD AND F.LNG_COD = @p1
                                 JOIN APPLICABILITY A ON A.PRT_COD = P.PRT_COD 
@@ -898,22 +884,20 @@ namespace openPERRepositories.Repositories
                                 LEFT OUTER  JOIN UN_OF_MEAS U ON U.UM_COD = P.UM_COD
                                 LEFT OUTER JOIN RPLNT R ON R.RPL_COD = P.PRT_COD
                                 where C.CDS_DSC LIKE '%" + partDescription + "%' AND CT.CAT_DSC LIKE '%" + modelName + "%'";
-                connection.RunSqlAllRows(sql, (reader) =>
+            connection.RunSqlAllRows(sql, (reader) =>
+            {
+                var p = new PartModel
                 {
-                    var p = new PartModel
-                    {
-                        PartNumber = reader.GetString(0),
-                        Description = reader.GetString(2),
-                        FamilyCode = reader.GetString(3),
-                        FamilyDescription = reader.GetString(4),
-                        UnitOfSale = reader.GetString(5),
-                        Weight = reader.GetInt32(6)
-                    };
-                    p.Drawings = GetDrawingsForPartNumber(p.PartNumber, languageCode);
-                    rc.Add(p);
-                }, languageCode);
-
-            }
+                    PartNumber = reader.GetString(0),
+                    Description = reader.GetString(2),
+                    FamilyCode = reader.GetString(3),
+                    FamilyDescription = reader.GetString(4),
+                    UnitOfSale = reader.GetString(5),
+                    Weight = reader.GetInt32(6)
+                };
+                p.Drawings = GetDrawingsForPartNumber(p.PartNumber, languageCode);
+                rc.Add(p);
+            }, languageCode);
             return rc;
         }
 
@@ -921,7 +905,7 @@ namespace openPERRepositories.Repositories
         private List<PartDrawing> GetDrawingsForPartNumber(string partNumber, string languageCode)
         {
             var drawings = new List<PartDrawing>();
-            using var connection = new MySqlConnection(_pathToDb);
+            using var connection = new MySqlConnection(PathToDb);
             var sql = @"select A.CAT_COD, C.CAT_DSC, A.GRP_COD, A.SGRP_COD, T.SGS_COD, T.VARIANTE, SGRP_DSC, MK_COD, CMG_COD, MK2_COD, REVISIONE  
                             FROM APPLICABILITY A
 							JOIN CATALOGUES C ON C.CAT_COD = A.CAT_COD
@@ -988,7 +972,7 @@ namespace openPERRepositories.Repositories
 
         private List<MvsDataModel> GetMvsDataWithVagueMvsCode(string mvsMarque, string mvsModel, string mvsVersion)
         {
-            using var connection = new MySqlConnection(_pathToDb);
+            using var connection = new MySqlConnection(PathToDb);
             var rc = new List<MvsDataModel>();
             var sql = @"SELECT M.CAT_COD, MVS_DSC, VMK_TYPE_M, VMK_COD_M, VMK_TYPE_V, VMK_COD_V, VMK_TYPE_R, 
                             VMK_COD_R, MVS_ENGINE_TYPE, MVS_DOORS_NUM, SINCOM, PATTERN,
@@ -1025,7 +1009,7 @@ namespace openPERRepositories.Repositories
 
         public string GetInteriorColourDescription(string catCode, string interiorColourCode, string language)
         {
-            using var connection = new MySqlConnection(_pathToDb);
+            using var connection = new MySqlConnection(PathToDb);
             var rc = "Unknown";
             var sql = @"SELECT DSC_COLORE_INT_VET
                             FROM INTERNAL_COLOURS_DSC
@@ -1039,7 +1023,7 @@ namespace openPERRepositories.Repositories
         }
         public string GetExteriorColourDescription(string catCode, string exteriorColourCode, string language)
         {
-            using var connection = new MySqlConnection(_pathToDb);
+            using var connection = new MySqlConnection(PathToDb);
             var rc = "Unknown";
             var sql = @"SELECT DSC_COLORE_EXT_VET
                             FROM EXTERNAL_COLOURS_DSC
@@ -1054,22 +1038,18 @@ namespace openPERRepositories.Repositories
 
         public string GetImageNameForModel(string makeCode, string subMakeCode, string modelCode)
         {
-            return _pathToCdn + $"ModelImages{subMakeCode}/{modelCode.ToUpper()}.jpg";
+            return PathToCdn + $"ModelImages{subMakeCode}/{modelCode.ToUpper()}.jpg";
         }
 
         public List<VinSearchResultModel> FindMatchesForVin(string language, string fullVin)
         {
-            if (_cache.TryGetValue((language, fullVin), out List<VinSearchResultModel> cacheValue))
-            {
-                return cacheValue;
-            }
             var rc = new List<VinSearchResultModel>();
-            var x = new Release84VinSearch(_pathToVindataCH, _pathToVindataRT);
+            var x = new Release84VinSearch(PathToVindataCh, PathToVindataRt);
 
             if (string.IsNullOrEmpty(fullVin) || fullVin.Length != 17)
                 return null;
 
-            using var connection = new MySqlConnection(_pathToDb);
+            using var connection = new MySqlConnection(PathToDb);
             var sql = @"SELECT MOD_COD FROM VIN WHERE VIN_COD = @p1";
             connection.RunSqlAllRows(sql, (reader) =>
             {
@@ -1084,29 +1064,22 @@ namespace openPERRepositories.Repositories
                         Motor = searchResult.Motor,
                         Caratt = searchResult.Caratt,
                         InteriorColourCode = searchResult.InteriorColour,
-                        VIN = searchResult.VIN,
+                        Vin = searchResult.Vin,
                         Mvs = searchResult.Mvs,
                         Organization = searchResult.Organization
                     };
-                    if (v.VIN == "") v.VIN = fullVin;
+                    if (v.Vin == "") v.Vin = fullVin;
                     rc.Add(v);
                 }
 
             }, fullVin[3..6]);
-            var options = new MemoryCacheEntryOptions();
-            options.SetSlidingExpiration(TimeSpan.FromSeconds(300));
-            _cache.Set((language, fullVin), rc, options);
 
             return rc;
         }
         public List<VinSearchResultModel> FindMatchesForMvsAndVin(string language, string mvs, string fullVin)
         {
-            if (_cache.TryGetValue((language, mvs, fullVin), out List<VinSearchResultModel> cacheValue))
-            {
-                return cacheValue;
-            }
             var rc = new List<VinSearchResultModel>();
-            var x = new Release84VinSearch(_pathToVindataCH, _pathToVindataRT);
+            var x = new Release84VinSearch(PathToVindataCh, PathToVindataRt);
 
             if (string.IsNullOrEmpty(fullVin) || fullVin.Length != 17)
                 return null;
@@ -1122,19 +1095,16 @@ namespace openPERRepositories.Repositories
                     Motor = searchResult.Motor,
                     Caratt = searchResult.Caratt,
                     InteriorColourCode = searchResult.InteriorColour,
-                    VIN = searchResult.VIN,
+                    Vin = searchResult.Vin,
                     Mvs = searchResult.Mvs,
                     Organization = searchResult.Organization
                 };
                 if (!string.IsNullOrEmpty(v.Caratt))
                     v.Caratt = v.Caratt.Replace("|", "");
-                if (v.VIN == "") v.VIN = fullVin;
+                if (v.Vin == "") v.Vin = fullVin;
                 rc.Add(v);
             }
 
-            var options = new MemoryCacheEntryOptions();
-            options.SetSlidingExpiration(TimeSpan.FromSeconds(300));
-            _cache.Set((language, mvs, fullVin), rc, options);
 
             return rc;
         }
@@ -1146,11 +1116,11 @@ namespace openPERRepositories.Repositories
         public List<MvsCatalogueOptionModel> GetMvsDetailsForCatalogue(string catalogueCode, string language)
         {
             var rc = new List<MvsCatalogueOptionModel>();
-            var @sql = @"SELECT CONCAT( IFNULL(V.VMK_TYPE, ''),IFNULL(VMK_COD, '')), C.vmk_dsc, V.VMK_DSC, V.VMK_TYPE, V.VMK_COD FROM VMK_DSC V
+            var sql = @"SELECT CONCAT( IFNULL(V.VMK_TYPE, ''),IFNULL(VMK_COD, '')), C.vmk_dsc, V.VMK_DSC, V.VMK_TYPE, V.VMK_COD FROM VMK_DSC V
 	                        LEFT OUTER JOIN carat_dsc C ON C.CAT_COD = V.CAT_COD AND C.LNG_COD = @p2 AND V.VMK_TYPE = C.VMK_TYPE
 	                        WHERE V.CAT_COD = @p1 AND V.LNG_COD = @p2 
                             ORDER BY C.VMK_TYPE, VMK_COD";
-            using var connection = new MySqlConnection(_pathToDb);
+            using var connection = new MySqlConnection(PathToDb);
             connection.RunSqlAllRows(sql, (reader) =>
             {
                 var p = new MvsCatalogueOptionModel
@@ -1167,16 +1137,16 @@ namespace openPERRepositories.Repositories
             return rc;
         }
 
-        public string GetSincomPattern(string mVS)
+        public string GetSincomPattern(string mVs)
         {
             var rc = "";
-            var @sql = @"SELECT PATTERN FROM MVS WHERE SINCOM = @p1";
-            using var connection = new MySqlConnection(_pathToDb);
+            var sql = @"SELECT PATTERN FROM MVS WHERE SINCOM = @p1";
+            using var connection = new MySqlConnection(PathToDb);
             connection.RunSqlFirstRowOnly(sql, (reader) =>
             {
                 rc = reader.IsDBNull(0) ? "" : reader.GetString(0);
 
-            }, mVS);
+            }, mVs);
             return rc;
         }
 
@@ -1201,7 +1171,7 @@ namespace openPERRepositories.Repositories
             if (vehicles.Count == 0) return "";
             foreach (var v in vehicles)
             {
-                if (v.VIN == vin)
+                if (v.Vin == vin)
                 {
                     return (v.Caratt == null) ? "" : v.Caratt;
                 }
@@ -1212,10 +1182,10 @@ namespace openPERRepositories.Repositories
         public List<VmkModel> GetVmkDataForCatalogue(string catalogueCode, string language)
         {
             var rc = new List<VmkModel>();
-            var @sql = @"SELECT VD.VMK_TYPE, VD.VMK_COD, VD.VMK_DSC, CD.VMK_DSC FROM VMK_DSC VD
+            var sql = @"SELECT VD.VMK_TYPE, VD.VMK_COD, VD.VMK_DSC, CD.VMK_DSC FROM VMK_DSC VD
                 LEFT OUTER JOIN CARAT_DSC CD ON CD.CAT_COD = @p1 AND CD.VMK_TYPE = VD.VMK_TYPE AND CD.LNG_COD = @p2
                     WHERE VD.CAT_COD = @p1 and VD.LNG_COD =@p2";
-            using var connection = new MySqlConnection(_pathToDb);
+            using var connection = new MySqlConnection(PathToDb);
             connection.RunSqlAllRows(sql, (reader) =>
             {
                 var v = new VmkModel
@@ -1225,10 +1195,7 @@ namespace openPERRepositories.Repositories
                     CodeDescription = reader.IsDBNull(2) ? "" : reader.GetString(2),
                     TypeDescription = reader.IsDBNull(3) ? "" : reader.GetString(3)
                 };
-                if (string.IsNullOrEmpty(v.Code))
-                    v.MultiValue = false;
-                else
-                    v.MultiValue = true;
+                v.MultiValue = !string.IsNullOrEmpty(v.Code);
                 rc.Add(v);
 
             }, catalogueCode, language);
@@ -1237,14 +1204,14 @@ namespace openPERRepositories.Repositories
         public List<CatalogueVariantsModel> GetCatalogueVariants(string catalogueCode)
         {
             var rc = new List<CatalogueVariantsModel>();
-            var @sql = @"SELECT MVS_DSC, SINCOM, Pattern FROM MVS WHERE CAT_COD = @p1";
-            using var connection = new MySqlConnection(_pathToDb);
+            var sql = @"SELECT MVS_DSC, SINCOM, Pattern FROM MVS WHERE CAT_COD = @p1";
+            using var connection = new MySqlConnection(PathToDb);
             connection.RunSqlAllRows(sql, (reader) =>
             {
                 var v = new CatalogueVariantsModel
                 {
                     Description = reader.IsDBNull(0) ? "" : reader.GetString(0),
-                    SINCOM = reader.IsDBNull(1) ? "" : reader.GetString(1),
+                    Sincom = reader.IsDBNull(1) ? "" : reader.GetString(1),
                     Pattern = reader.IsDBNull(2) ? "" : reader.GetString(2)
                 };
                 rc.Add(v);

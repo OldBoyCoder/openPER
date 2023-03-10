@@ -4,20 +4,20 @@ namespace openPER.ViewModels
 {
     public enum FilterDataSource
     {
-        SINCOM,
-        VIN
+        Sincom,
+        Vin
 
     }
     public class FilterModel
     {
-        public string VIN { get; set; }
-        public string MVS { get; set; }
+        public string Vin { get; set; }
+        public string Mvs { get; set; }
         //aka ricambio
         public string NumberForParts { get; set; }
         public string Engine { get; set; }
         public string BuildDate { get; set; }
         public string Pattern { get; set; }
-        public List<FilterOptions> Options { get; set; } = new List<FilterOptions>();
+        public List<FilterOptions> Options { get; set; } = new();
         public FilterDataSource DataSource { get; set; }
     }
 }

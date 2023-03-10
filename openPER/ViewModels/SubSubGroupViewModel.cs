@@ -18,8 +18,7 @@ namespace openPER.ViewModels
         {
             get
             {
-                var rc = "";
-                rc = Pattern;
+                var rc = Pattern;
                 if (Modifications != null)
                 {
                     rc += " - " + string.Join(",", Modifications.Select(x => x.Type + x.Code.ToString("")));

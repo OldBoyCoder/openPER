@@ -10,18 +10,16 @@ namespace openPER.ApiControllers
     [ApiController]
     public class VinController : ControllerBase
     {
-        private IConfiguration _config;
-        private string _pathToVindataCH;
-        private string _pathToVindataRT;
+        private readonly string _pathToVindataCh;
+        private readonly string _pathToVindataRt;
         public VinController(IConfiguration config)
         {
-            _config = config;
-            var s = _config.GetSection("Releases").Get<ReleaseModel[]>();
-            var release = s.FirstOrDefault(x => x.Release == 18);
+            var s = config.GetSection("Releases").Get<ReleaseModel[]>();
+            var release = s.FirstOrDefault(x => x.Release == 84);
             if (release != null)
             {
-                _pathToVindataCH = release.VinDataCH;
-                _pathToVindataRT = release.VinDataRT;
+                _pathToVindataCh = release.VinDataCh;
+                _pathToVindataRt = release.VinDataRt;
             }
 
         }
@@ -30,7 +28,7 @@ namespace openPER.ApiControllers
         [HttpGet]
         public ActionResult<IEnumerable<VinResult>> FindVehiclesByFullVin(string fullVin)
         {
-            var x = new Release84VinSearch(_pathToVindataCH, _pathToVindataRT);
+            var x = new Release84VinSearch(_pathToVindataCh, _pathToVindataRt);
 
             if (string.IsNullOrEmpty(fullVin) || fullVin.Length != 17)
                 return NotFound();

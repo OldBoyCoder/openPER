@@ -1,14 +1,11 @@
 ﻿using System.Collections.Generic;
-using System.Linq;
 using AutoMapper;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Logging;
 using openPER.Helpers;
 using openPER.ViewModels;
 using openPERModels;
 using openPERRepositories.Interfaces;
-using VinSearcher;
 
 namespace openPER.Controllers
 {
@@ -47,7 +44,6 @@ namespace openPER.Controllers
             foreach (var result in results)
             {
                 result.Models = _mapper.Map<List<MvsDataModel>, List<MvsDataViewModel>>(_rep.GetMvsDetails(result.Mvs));
-                var vehicleOptions = result.Caratt;
 
                 if (result.Models.Count > 0)
                     result.InteriorColourDescription = _rep.GetInteriorColourDescription(result.Models[0].CatalogueCode, result.InteriorColourCode, language);

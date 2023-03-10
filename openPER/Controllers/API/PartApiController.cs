@@ -7,11 +7,6 @@ using openPERRepositories.Interfaces;
 
 namespace openPER.Controllers.API
 {
-    public class PartDto
-    {
-        public string Number { get; set; }
-        public string Name { get; set; }
-    }
     [Route("api/Part")]
     [ApiController]
     public class PartApiController : ControllerBase

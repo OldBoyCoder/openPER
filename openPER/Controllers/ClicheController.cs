@@ -11,8 +11,8 @@ namespace openPER.Controllers
 {
     public class ClicheController : Controller
     {
-        private IRepository _rep;
-        private IMapper _mapper;
+        private readonly IRepository _rep;
+        private readonly IMapper _mapper;
         public ClicheController(IRepository rep, IMapper mapper)
         {
             _rep = rep;
@@ -23,14 +23,15 @@ namespace openPER.Controllers
         [ApiExplorerSettings(IgnoreApi = true)]
         public IActionResult Detail(string language, string makeCode, string subMakeCode, string modelCode,
             string catalogueCode, int groupCode, int subGroupCode, int subSubGroupCode, int drawingNumber, string scope,
-            string clichePartNumber, int clicheDrawingNumber, string VIN = "", string MVS = "")
+            string clichePartNumber, int clicheDrawingNumber, string vin = "", string mvs = "")
         {
-            Helpers.LanguageSupport.SetCultureBasedOnRoute(language);
+            LanguageSupport.SetCultureBasedOnRoute(language);
             ViewData["Language"] = language;
 
-            var model = new ClicheViewModel();
-
-            model.Navigation = NavigationHelper.PopulateNavigationModel(_mapper, _rep, language, makeCode, subMakeCode, modelCode, catalogueCode, groupCode, subGroupCode, subSubGroupCode, drawingNumber, scope, clichePartNumber, clicheDrawingNumber, VIN, MVS);
+            var model = new ClicheViewModel
+            {
+                Navigation = NavigationHelper.PopulateNavigationModel(_mapper, _rep, language, makeCode, subMakeCode, modelCode, catalogueCode, groupCode, subGroupCode, subSubGroupCode, drawingNumber, scope, clichePartNumber, clicheDrawingNumber, vin, mvs)
+            };
 
             List<DrawingKeyModel> drawings = _rep.GetDrawingKeysForCliche(makeCode, subMakeCode, modelCode,
                 catalogueCode, groupCode, subGroupCode, subSubGroupCode, clichePartNumber);

@@ -17,7 +17,7 @@
 
                 @foreach (var mapEntry in Model.MapEntries)
                 {
-                    <a title="@($"{mapEntry.GroupCode:000} {mapEntry.Description}")" href="@Url.Action("Index", "SubGroups", new {Model.Navigation.Language, Model.MakeCode,Model.SubMakeCode, Model.ModelCode, Model.CatalogueCode, mapEntry.GroupCode, MVS=Model.Navigation.Filter.MVS, VIN=Model.Navigation.Filter.VIN})">
+                    <a title="@($"{mapEntry.GroupCode:000} {mapEntry.Description}")" href="@Url.Action("Index", "SubGroups", new {Model.Navigation.Language, Model.MakeCode,Model.SubMakeCode, Model.ModelCode, Model.CatalogueCode, mapEntry.GroupCode, MVS=Model.Navigation.Filter.Mvs, VIN=Model.Navigation.Filter.Vin})">
                         <div style="position: absolute; top: @(mapEntry.Y+"px"); left: @(mapEntry.X+"px"); width: 24px;height:24px">
                             <img src="~/SiteImages/SelectCircle.png" />
                         </div>
@@ -25,7 +25,7 @@
 
                 }
             </div>
-            @if (string.IsNullOrEmpty(Model.Navigation.Filter.MVS))
+            @if (string.IsNullOrEmpty(Model.Navigation.Filter.Mvs))
             {
                 <h3>All variants</h3>
                 <table class="table-sm">
@@ -33,8 +33,8 @@
                     {
                         <tr>
                             <td>@variant.Description</td>
-                            <td>@variant.SINCOM</td>
-                            <td>@Html.ActionLink($"Go to catalogue", "Index", "Groups", new { Language=Model.Navigation.Language, Model.Navigation.Breadcrumb.MakeCode, Model.Navigation.Breadcrumb.SubMakeCode, Model.Navigation.Breadcrumb.ModelCode, CatalogueCode = Model.Navigation.Breadcrumb.CatalogueCode, VIN="", MVS=variant.SINCOM })
+                            <td>@variant.Sincom</td>
+                            <td>@Html.ActionLink("Go to catalogue", "Index", "Groups", new { Model.Navigation.Language, Model.Navigation.Breadcrumb.MakeCode, Model.Navigation.Breadcrumb.SubMakeCode, Model.Navigation.Breadcrumb.ModelCode, Model.Navigation.Breadcrumb.CatalogueCode, VIN="", MVS=variant.Sincom })
                         </tr>
                     }
                 </table>

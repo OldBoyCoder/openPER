@@ -1,5 +1,4 @@
-﻿using openPERModels;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 
 namespace openPER.ViewModels
 {
@@ -12,7 +11,7 @@ namespace openPER.ViewModels
         public string BuildDate { get; set; }
         public string InteriorColourCode { get; set; }
         public string InteriorColourDescription { get; set; }
-        public string VIN { get; set; }
+        public string Vin { get; set; }
         public string Series { get;  set; }
         public string Guide { get;  set; }
         public string ShopEquipment { get;  set; }

@@ -21,7 +21,7 @@ else
             <tr><td>Motor</td><td>@Html.DisplayTextFor(m=>result.Motor)</td></tr>
             <tr><td>Date</td><td>@Html.DisplayTextFor(m=>result.BuildDate)</td></tr>
             <tr><td>Interior colour</td><td>@Html.DisplayTextFor(m=>result.InteriorColourCode) - @result.InteriorColourDescription</td></tr>
-            <tr><td>VIN</td><td>@Html.DisplayTextFor(m=>result.VIN)</td></tr>
+            <tr><td>VIN</td><td>@Html.DisplayTextFor(m=>result.Vin)</td></tr>
         </table>
         @foreach (var r in result.Models)
         {
@@ -32,15 +32,15 @@ else
                     <tr><td>Model</td><td>@r.Description</td></tr>
                     <tr><td>Engine type</td><td>@r.EngineType</td></tr>
                     <tr><td>SINCOM</td><td>@r.Sincom</td></tr>
-                    <tr><td>@Html.ActionLink($"Go to catalogue", "Index", "Groups", new { Language=r.Language, r.MakeCode, r.SubMakeCode, r.ModelCode, CatalogueCode = r.CatalogueCode, VIN=result.VIN, MVS=r.Sincom })</td></tr>
+                    <tr><td>@Html.ActionLink("Go to catalogue", "Index", "Groups", new { r.Language, r.MakeCode, r.SubMakeCode, r.ModelCode, r.CatalogueCode, VIN=result.Vin, MVS=r.Sincom })</td></tr>
 
-                    @if (r.FilterOptions.DataSource == FilterDataSource.SINCOM)
+                    @if (r.FilterOptions.DataSource == FilterDataSource.Sincom)
                     {
-                        <tr><td>Source for option data</td><td>SINCOM code configuration @r.FilterOptions.MVS</td></tr>
+                        <tr><td>Source for option data</td><td>SINCOM code configuration @r.FilterOptions.Mvs</td></tr>
                     }
                     else
                     {
-                        <tr><td>Source for option data</td><td>VIN configuration @r.FilterOptions.VIN</td></tr>
+                        <tr><td>Source for option data</td><td>VIN configuration @r.FilterOptions.Vin</td></tr>
                     }
                     @foreach (var item in r.FilterOptions.Options.Where(x => x.MultiValue))
                     {

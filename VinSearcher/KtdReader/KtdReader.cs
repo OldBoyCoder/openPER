@@ -7,7 +7,7 @@ using ICSharpCode.SharpZipLib.BZip2;
 
 namespace VinSearcher.KtdReader
 {
-    public partial class KtdReader
+    public class KtdReader
     {
         private DbTableHeader _header;
         public IndexBlock FindIndexBlockForKey(string pathToDataFile, string searchKey)

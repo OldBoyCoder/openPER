@@ -19,7 +19,7 @@ namespace openPER.Controllers
         }
         [Route("SubGroups/{language}/{MakeCode}/{SubMakeCode}/{ModelCode}/{CatalogueCode}/{GroupCode}")]
         [ApiExplorerSettings(IgnoreApi = true)]
-        public IActionResult Index(string language, string makeCode, string subMakeCode, string modelCode, string catalogueCode, int groupCode, string VIN = "", string MVS = "")
+        public IActionResult Index(string language, string makeCode, string subMakeCode, string modelCode, string catalogueCode, int groupCode, string vin = "", string mvs = "")
         {
             // Standard prologue
             LanguageSupport.SetCultureBasedOnRoute(language);
@@ -38,7 +38,7 @@ namespace openPER.Controllers
                 CatalogueCode = catalogueCode,
                 GroupCode = groupCode,
                 ImagePath = mapDetails.ImageName,
-                Navigation = NavigationHelper.PopulateNavigationModel(_mapper, _rep, language, makeCode, subMakeCode, modelCode, catalogueCode, groupCode, VIN, MVS),
+                Navigation = NavigationHelper.PopulateNavigationModel(_mapper, _rep, language, makeCode, subMakeCode, modelCode, catalogueCode, groupCode, vin, mvs),
 
             };
 

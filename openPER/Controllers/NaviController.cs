@@ -9,7 +9,6 @@ namespace openPER.Controllers
         public IActionResult Index()
         {
             // Examine th query string to work out the routing
-            var x = HttpContext.Request.Query.Count;
             var key = HttpContext.Request.Query["KEY"][0];
             if (key == "PARTDRAWDATA")
             {
@@ -73,7 +72,8 @@ namespace openPER.Controllers
                 var subGroupCode = HttpContext.Request.Query["SGRP_COD"][0];
                 return RedirectToAction("Index", "SubSubGroups", new { Language = language, MakeCode = makeCode, SubMakeCode = subMakeCode, ModelCode = modelCode, CatalogueCode = catalogueCode, GroupCode = groupCode, SubGroupCode = subGroupCode });
             }
-            return View();
+
+            return RedirectToAction("Index", "Home");
         }
         //http://eper.fiatforum.com/eper/navi?MOD_COD=183&COUNTRY=012&GRP_COD=102&CAT_COD=PK&SBMK=F&DRIVE=D&MAKE=F&COMM_MODEL=BAR&ALL_FIG=0&LANGUAGE=3&PREVIOUS_KEY=PARTDRAWDATA&NEW_HTTP=TRUE&ALL_LIST_PART=0&SB_CODE=-1&KEY=PARTDRAWDATA&PRINT_MODE=0&EPER_CAT=SP&GUI_LANG=3&WINDOW_ID=1&SGRP_COD=1&SGS_COD=0&DRW_NUM=3
         //https://localhost:44329/eper/navi?MOD_COD=183&COUNTRY=012&GRP_COD=102&CAT_COD=PK&SBMK=F&DRIVE=D&MAKE=F&COMM_MODEL=BAR&ALL_FIG=0&LANGUAGE=3&PREVIOUS_KEY=PARTDRAWDATA&NEW_HTTP=TRUE&ALL_LIST_PART=0&SB_CODE=-1&KEY=PARTDRAWDATA&PRINT_MODE=0&EPER_CAT=SP&GUI_LANG=3&WINDOW_ID=1&SGRP_COD=1&SGS_COD=0&DRW_NUM=3

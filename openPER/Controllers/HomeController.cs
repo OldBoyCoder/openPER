@@ -4,7 +4,6 @@ using Microsoft.Extensions.Logging;
 using openPER.ViewModels;
 using System.Collections.Generic;
 using System.Diagnostics;
-using System.Linq;
 using System.Threading;
 using AutoMapper;
 using Microsoft.AspNetCore.Http;
@@ -57,8 +56,11 @@ namespace openPER.Controllers
         public IActionResult Error()
         {
             var ehpf = HttpContext.Features.Get<IExceptionHandlerPathFeature>();
-            var e = new ErrorViewModel { RequestId = Activity.Current?.Id ?? HttpContext.TraceIdentifier };
-            e.Path = ehpf.Path;
+            var e = new ErrorViewModel
+            {
+                RequestId = Activity.Current?.Id ?? HttpContext.TraceIdentifier,
+                Path = ehpf.Path
+            };
             return View(e);
         }
         [HttpPost]
@@ -66,7 +68,7 @@ namespace openPER.Controllers
         public IActionResult SetLanguage(SessionOptionsViewModel model)
         {
             //HttpContext.Response.Cookies.Append("Release", model.CurrentVersion.ToString());
-            var newCulture = Helpers.LanguageSupport.ConvertLanguageCodeToCulture(model.CurrentLanguage);
+            var newCulture = LanguageSupport.ConvertLanguageCodeToCulture(model.CurrentLanguage);
             Thread.CurrentThread.CurrentCulture = newCulture;
             Thread.CurrentThread.CurrentUICulture = newCulture;
 
@@ -76,7 +78,7 @@ namespace openPER.Controllers
         [ApiExplorerSettings(IgnoreApi = true)]
         public IActionResult SetLanguage(string languageCode)
         {
-            var newCulture = Helpers.LanguageSupport.ConvertLanguageCodeToCulture(languageCode);
+            var newCulture = LanguageSupport.ConvertLanguageCodeToCulture(languageCode);
             Thread.CurrentThread.CurrentCulture = newCulture;
             Thread.CurrentThread.CurrentUICulture = newCulture;
 
@@ -87,7 +89,7 @@ namespace openPER.Controllers
         [ApiExplorerSettings(IgnoreApi = true)]
         public IActionResult Index(SessionOptionsViewModel model)
         {
-            var newCulture = Helpers.LanguageSupport.ConvertLanguageCodeToCulture(model.CurrentLanguage);
+            var newCulture = LanguageSupport.ConvertLanguageCodeToCulture(model.CurrentLanguage);
             Thread.CurrentThread.CurrentCulture = newCulture;
             Thread.CurrentThread.CurrentUICulture = newCulture;
 

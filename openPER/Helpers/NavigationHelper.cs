@@ -3,7 +3,6 @@ using openPER.ViewModels;
 using AutoMapper;
 using System.Collections.Generic;
 using openPERRepositories.Interfaces;
-using System;
 using System.Linq;
 
 namespace openPER.Helpers
@@ -14,7 +13,7 @@ namespace openPER.Helpers
             string language, string makeCode, string subMakeCode,
             string modelCode, string catalogueCode, int? groupCode,
             int? subGroupCode, int? subSubGroupCode, int? drawingNumber,
-            string scope, string clichePartNumber, int? clicheDrawingNumber, string VIN, string MVS)
+            string scope, string clichePartNumber, int? clicheDrawingNumber, string vin, string mvs)
         {
             var breadcrumb = new BreadcrumbModel
             {
@@ -52,12 +51,12 @@ namespace openPER.Helpers
                 model.SideMenuItems.AllSubGroups = mapper.Map<List<SubGroupModel>, List<SubGroupViewModel>>(rep.GetSubGroupsForCatalogueGroup(catalogueCode, groupCode.Value, language));
             model.Filter = new FilterModel
             {
-                MVS = MVS,
-                VIN = VIN
+                Mvs = mvs,
+                Vin = vin
             };
-            if (!string.IsNullOrEmpty(MVS))
+            if (!string.IsNullOrEmpty(mvs))
             {
-                model.Filter = PopulateFilterModel(mapper, rep, language, catalogueCode, MVS, VIN);
+                model.Filter = PopulateFilterModel(mapper, rep, language, catalogueCode, mvs, vin);
             }
 
             return model;
@@ -104,8 +103,8 @@ namespace openPER.Helpers
         {
             var rc = new FilterModel();
             string vehiclePattern = "";
-            rc.VIN = vin;
-            rc.MVS = mvs;
+            rc.Vin = vin;
+            rc.Mvs = mvs;
             //            var vehicleDetails = rep.FindMatchesForVin(language, vin);
             var vehicleDetails = rep.FindMatchesForMvsAndVin(language, mvs, vin);
             if (vehicleDetails != null && vehicleDetails.Count > 0)
@@ -119,11 +118,11 @@ namespace openPER.Helpers
             string sinComPattern = rep.GetSincomPattern(mvs);
             var pattern = sinComPattern;
 
-            rc.DataSource = FilterDataSource.SINCOM;
+            rc.DataSource = FilterDataSource.Sincom;
             if (!string.IsNullOrEmpty(vehiclePattern))
             {
                 pattern = vehiclePattern;
-                rc.DataSource = FilterDataSource.VIN;
+                rc.DataSource = FilterDataSource.Vin;
             }
             var potentialOptions = rep.GetMvsDetailsForCatalogue(catalogueCode, language);
 
@@ -142,10 +141,7 @@ namespace openPER.Helpers
                 var opt = potentialOptions.FirstOrDefault(x => x.TypeCodePair == key);
                 if (opt != null)
                 {
-                    if (string.IsNullOrEmpty(opt.TypeDescription))
-                        o.MultiValue = false;
-                    else
-                        o.MultiValue = true;
+                    o.MultiValue = !string.IsNullOrEmpty(opt.TypeDescription);
                     o.TypeDescription = opt.TypeDescription;
                     o.TypeCode = opt.TypeCode;
                     o.ValueCode = opt.ValueCode;

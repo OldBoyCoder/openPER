@@ -4,12 +4,12 @@ namespace VinSearcher
 {
     public class Release84VinSearch : IReturnedDataHandler
     {
-        private readonly string _pathToVinDataCH;
-        private readonly string _pathToVinDataRT;
-        public Release84VinSearch(string pathToVinDataCH, string pathToVinDataRT)
+        private readonly string _pathToVinDataCh;
+        private readonly string _pathToVinDataRt;
+        public Release84VinSearch(string pathToVinDataCh, string pathToVinDataRt)
         {
-            _pathToVinDataCH = pathToVinDataCH;
-            _pathToVinDataRT = pathToVinDataRT;
+            _pathToVinDataCh = pathToVinDataCh;
+            _pathToVinDataRt = pathToVinDataRt;
         }
 
         public List<VinResult> FindVehiclesByFullVin(string vinNumber)
@@ -22,7 +22,7 @@ namespace VinSearcher
         {
             var x = new KtdReader.KtdReader();
             var searchKey = modelNumber + chassisNumber.PadLeft(8, '0');
-            var record = x.RecordsForKey(_pathToVinDataCH, searchKey, 1, this);
+            var record = x.RecordsForKey(_pathToVinDataCh, searchKey, 1, this);
             if (record != null)
             {
                 var vehicle = new VinResult
@@ -33,7 +33,7 @@ namespace VinSearcher
                     Motor = record[3],
                     Date = record[4],
                     InteriorColour = record[5],
-                    VIN = record[6]
+                    Vin = record[6]
                 };
                 // Possibly enhance the record
                 GetExtraVehicleData(modelNumber, chassisNumber, vehicle);
@@ -47,7 +47,7 @@ namespace VinSearcher
             if (chassisNumber.Length > 7)
                 chassisNumber = chassisNumber.Substring(chassisNumber.Length - 7);
             var searchKey = modelNumber + chassisNumber.PadLeft(7, '0');
-            var record = x.RecordsForKey(_pathToVinDataRT, searchKey, 2, this);
+            var record = x.RecordsForKey(_pathToVinDataRt, searchKey, 2, this);
             if (record != null)
             {
                 vehicleData.Series = record[9];

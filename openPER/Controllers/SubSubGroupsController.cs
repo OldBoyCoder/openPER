@@ -19,10 +19,10 @@ namespace openPER.Controllers
         }
         [Route("SubSubGroups/{language}/{MakeCode}/{SubMakeCode}/{ModelCode}/{CatalogueCode}/{GroupCode}/{SubGroupCode}")]
         [ApiExplorerSettings(IgnoreApi = true)]
-        public IActionResult Index(string language, string makeCode, string subMakeCode, string modelCode, string catalogueCode, int groupCode, int subGroupCode, string VIN = "", string MVS = "")
+        public IActionResult Index(string language, string makeCode, string subMakeCode, string modelCode, string catalogueCode, int groupCode, int subGroupCode, string vin = "", string mvs = "")
         {
             // Standard prologue
-            Helpers.LanguageSupport.SetCultureBasedOnRoute(language);
+            LanguageSupport.SetCultureBasedOnRoute(language);
             ViewData["Language"] = language;
 
             var model = new SubSubGroupsViewModel
@@ -35,14 +35,14 @@ namespace openPER.Controllers
                 CatalogueCode = catalogueCode,
                 GroupCode = groupCode,
                 SubGroupCode = subGroupCode,
-                Navigation = NavigationHelper.PopulateNavigationModel(_mapper, _rep, language, makeCode, subMakeCode, modelCode, catalogueCode, groupCode, subGroupCode, VIN, MVS)
+                Navigation = NavigationHelper.PopulateNavigationModel(_mapper, _rep, language, makeCode, subMakeCode, modelCode, catalogueCode, groupCode, subGroupCode, vin, mvs)
             };
-            if (MVS != "")
+            if (mvs != "")
             {
-                string sinComPattern = _rep.GetSincomPattern(MVS);
+                string sinComPattern = _rep.GetSincomPattern(mvs);
                 string vehiclePattern= "";
-                if (!string.IsNullOrEmpty(VIN))
-                    vehiclePattern= _rep.GetVehiclePattern(language, VIN);
+                if (!string.IsNullOrEmpty(vin))
+                    vehiclePattern= _rep.GetVehiclePattern(language, vin);
                 var vmkCodes = _rep.GetVmkDataForCatalogue(catalogueCode, language);
                 if (vehiclePattern != "") sinComPattern = vehiclePattern;
                 foreach (var subSubGroup in model.SubSubGroups)
@@ -56,7 +56,7 @@ namespace openPER.Controllers
                     var modifications = subSubGroup.Modifications;
                     var vehicleModificationFilters = new Dictionary<string, string>();
                     if (vehiclePattern != "")
-                        vehicleModificationFilters = _rep.GetFiltersforVehicle(language, VIN, MVS);
+                        vehicleModificationFilters = _rep.GetFiltersforVehicle(language, vin, mvs);
                     foreach (var mod in modifications)
                     {
                         foreach (var rule in mod.Activations)

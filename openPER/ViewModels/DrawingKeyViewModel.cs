@@ -1,6 +1,4 @@
-﻿using System.Security.AccessControl;
-
-namespace openPER.ViewModels
+﻿namespace openPER.ViewModels
 {
     public class DrawingKeyViewModel
     {
