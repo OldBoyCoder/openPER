@@ -26,7 +26,7 @@ else
         @foreach (var r in result.Models)
         {
             <details>
-                <summary>@r.Description</summary>
+                <summary>@Html.ActionLink(r.Description, "Index", "Groups", new { r.Language, r.MakeCode, r.SubMakeCode, r.ModelCode, r.CatalogueCode, VIN=result.Vin, MVS=r.Sincom })</summary>
                 <table class="table-sm">
                     <tr><td>Catalogue</td><td>@r.CatalogueCode - @r.CatalogueDescription</td></tr>
                     <tr><td>Model</td><td>@r.Description</td></tr>
