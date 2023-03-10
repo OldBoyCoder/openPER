@@ -57,10 +57,10 @@
                 <span class="nav-text px-1">VIN: @Model.Filter.Vin</span>
                 <span class="nav-text px-1">N. of parts: @Model.Filter.NumberForParts</span>
                 <span class="nav-text px-1">Engine: @Model.Filter.Engine</span>
-                <span class="nav-text px-1">@Model.Filter.BuildDate</span>
+                <span class="nav-text px-1">Build date: @Model.Filter.BuildDate</span>
                 @foreach (var item in Model.Filter.Options.Where(x => x.MultiValue).Take(5))
                 {
-                    <span class="nav-text px-1" title="@item.ValueDescription">@item.TypeCode@item.ValueCode</span>
+                    <span class="nav-text px-1" title="@item.TypeDescription @item.ValueDescription">@item.TypeCode@item.ValueCode</span>
                 }
                 <span class="nav-text px-1">
                     <button type="button" data-toggle="modal" data-target="#filterModal">All</button>
