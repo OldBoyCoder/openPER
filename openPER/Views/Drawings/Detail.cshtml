@@ -109,16 +109,10 @@
                 <tr><th>code</th><th>Prod. code</th><th>Description</th><th>Compat.</th><th>Modif.</th><th>Qty</th><th>Notes</th><th>Components</th></tr>
                 @{
 
-                    //int lastOrder = 999;
                     var cls = "table-secondary";
                     var lastCode = 0;
                     @foreach (var item in Model.TableData.Parts)
                     {
-                        //if (item.TableOrder != lastOrder)
-                        //{
-                        //    <tr><td>@Html.DisplayFor(model => item.TableOrder)</td><td colspan="7">@Html.DisplayFor(model => item.Description)</td></tr>
-                        //    lastOrder = item.TableOrder;
-                        //}
                         @if (lastCode != item.TableOrder)
                         {
                             cls = cls == "table-secondary" ? "table-default" : "table-secondary";

@@ -107,7 +107,7 @@ namespace openPER.Helpers
             rc.Mvs = mvs;
             //            var vehicleDetails = rep.FindMatchesForVin(language, vin);
             var vehicleDetails = rep.FindMatchesForMvsAndVin(language, mvs, vin);
-            if (vehicleDetails != null && vehicleDetails.Count > 0)
+            if (vehicleDetails is { Count: > 0 })
             {
                 rc.BuildDate = vehicleDetails[0].BuildDate;
                 rc.NumberForParts = vehicleDetails[0].Organization;

@@ -104,7 +104,7 @@ namespace openPER.Helpers
                     {
                         var key = allSymbols.ElementAt(j).Key;
                         var vmkElement = vmkCodes.FirstOrDefault(x => (x.Type + x.Code) == key);
-                        if (vmkElement != null && vmkElement.MultiValue)
+                        if (vmkElement is { MultiValue: true })
                             allSymbols[key] = false;
                         else
                         {

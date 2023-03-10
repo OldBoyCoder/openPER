@@ -404,11 +404,11 @@ namespace openPERRepositories.Repositories
             }
             foreach (var mod in modifications)
             {
-                mod.Activations = GetActivationsForModification(catalogueCode, mod.Code, languageCode);
+                mod.Activations = GetActivationsForModification(catalogueCode, mod.Code);
             }
             return modifications;
         }
-        private List<ActivationModel> GetActivationsForModification(string catalogueCode, int modCode, string languageCode)
+        private List<ActivationModel> GetActivationsForModification(string catalogueCode, int modCode)
         {
             var modifications = new List<ActivationModel>();
             var sql = @"SELECT IFNULL(ACT_COD, ''),IFNULL(M.MDFACT_SPEC, ''), IFNULL(M.ACT_COD, ''), MDFACT_SPEC, IFNULL(PATTERN, '')
@@ -481,7 +481,7 @@ namespace openPERRepositories.Repositories
             using var connection = new MySqlConnection(PathToDb);
             var rc = false;
             var sql = @"SELECT DISTINCT CPLX_PRT_COD FROM CLICHE WHERE CPLX_PRT_COD = @p1";
-            connection.RunSqlFirstRowOnly(sql, (reader) =>
+            connection.RunSqlFirstRowOnly(sql, (_) =>
             {
                 rc = true;
 
@@ -543,7 +543,7 @@ namespace openPERRepositories.Repositories
         }
 
 
-        private string GetModelDescription(string makeCode, string subMakeCode, string modelCode)
+        private string GetModelDescription(string subMakeCode, string modelCode)
         {
             var rc = "";
             var sql = @"SELECT CMG_DSC FROM COMM_MODGRP WHERE MK2_COD = @p1 AND CMG_COD = @p2";
@@ -661,7 +661,7 @@ namespace openPERRepositories.Repositories
                 {
                     mod.Description = reader.GetString(0);
                 }, catalogueCode, mod.Code, languageCode);
-                mod.Activations = GetActivationsForModification(catalogueCode, mod.Code, languageCode);
+                mod.Activations = GetActivationsForModification(catalogueCode, mod.Code);
                 modList.Add(mod);
             }
             return modList;
@@ -689,8 +689,8 @@ namespace openPERRepositories.Repositories
             using var connection = new MySqlConnection(PathToDb);
             breadcrumb.Language = languageCode;
             if (breadcrumb.MakeCode != null) breadcrumb.MakeDescription = GetMakeDescription(breadcrumb.MakeCode);
-            if (breadcrumb.SubMakeCode != null) breadcrumb.SubMakeDescription = GetSubMakeDescription(breadcrumb.MakeCode, breadcrumb.SubMakeCode);
-            if (breadcrumb.ModelCode != null) breadcrumb.ModelDescription = GetModelDescription(breadcrumb.MakeCode, breadcrumb.SubMakeCode, breadcrumb.ModelCode);
+            if (breadcrumb.SubMakeCode != null) breadcrumb.SubMakeDescription = GetSubMakeDescription(breadcrumb.SubMakeCode);
+            if (breadcrumb.ModelCode != null) breadcrumb.ModelDescription = GetModelDescription(breadcrumb.SubMakeCode, breadcrumb.ModelCode);
 
             if (breadcrumb.CatalogueCode != null) breadcrumb.CatalogueDescription = GetCatalogueDescription(breadcrumb.MakeCode, breadcrumb.SubMakeCode,
                 breadcrumb.CatalogueCode);
@@ -783,7 +783,7 @@ namespace openPERRepositories.Repositories
 
             return rc;
         }
-        private string GetSubMakeDescription(string makeCode, string subMakeCode)
+        private string GetSubMakeDescription(string subMakeCode)
         {
             var allMakes = GetAllMakes();
             return allMakes.FirstOrDefault(x => x.SubCode == subMakeCode)?.Description;
