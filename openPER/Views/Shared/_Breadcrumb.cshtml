@@ -86,7 +86,7 @@
                         <table class="table-sm">
                             @foreach (var item in Model.Filter.Options.Where(x => x.MultiValue))
                             {
-                                <tr><td>@item.TypeDescription</td><td>@item.ValueDescription</td><td>(@item.TypeCode+@item.ValueCode)</td></tr>
+                                <tr><td>@item.TypeDescription</td><td>@item.ValueDescription</td><td>@(@item.TypeCode+@item.ValueCode)</td></tr>
                             }
                             @foreach (var item in Model.Filter.Options.Where(x => !x.MultiValue).OrderBy(x => x.ValueDescription))
                             {

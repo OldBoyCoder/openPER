@@ -648,40 +648,7 @@ namespace openPERRepositories.Repositories
                 };
                 rc.Add(m);
             }, languageCode, catalogueCode, groupCode);
-            //foreach (var item in rc)
-            //{
-            //    item.SubSubGroups = GetSubSubGroupsForCatalogueGroup(catalogueCode, groupCode, item.Code, languageCode);
-            //}
             return rc;
-        }
-        private List<string> GetSgsNarrative(string catalogueCode, int groupCode, int subGroupCode, int sgsCode, string languageCode)
-        {
-            var rc = new List<string>();
-            var sql = @"select V.VMK_TYPE,V.VMK_COD,VMK_DSC from SGS_VAL S
-                        JOIN VMK_DSC V ON S.VMK_TYPE = V.VMK_TYPE AND S.VMK_COD = V.VMK_COD AND S.CAT_COD = V.CAT_COD
-                        where S.CAT_COD = @p1 AND GRP_COD = @p2 AND SGRP_COD = @p3 AND SGS_COD = @p4 AND LNG_COD = @p5
-                        ";
-            AddSgsNarratives(catalogueCode, groupCode, subGroupCode, sgsCode, languageCode, sql, rc);
-            sql = @"select SGSMOD_CD,S.MDF_COD,MDF_DSC from SGS_MOD S
-                        JOIN MODIF_DSC M ON M.MDF_COD = S.MDF_COD 
-                        where S.CAT_COD = @p1 AND GRP_COD = @p2 AND SGRP_COD = @p3 AND SGS_COD = @p4 AND LNG_COD = @p5
-                        ";
-            AddSgsNarratives(catalogueCode, groupCode, subGroupCode, sgsCode, languageCode, sql, rc);
-            sql = @"select O.OPTK_TYPE,O.OPTK_COD,OPTK_DSC from SGS_OPT S
-                        JOIN OPTKEYS_DSC O ON O.OPTK_TYPE = S.OPTK_TYPE AND O.OPTK_COD = S.OPTK_COD 
-                        where S.CAT_COD = @p1 AND GRP_COD = @p2 AND SGRP_COD = @p3 AND SGS_COD = @p4 AND LNG_COD = @p5
-                        ";
-            AddSgsNarratives(catalogueCode, groupCode, subGroupCode, sgsCode, languageCode, sql, rc);
-
-            return rc;
-        }
-        private void AddSgsNarratives(string catalogueCode, int groupCode, int subGroupCode, int sgsCode, string languageCode, string sql, List<string> narratives)
-        {
-            using var connection = new MySqlConnection(_pathToDb);
-            connection.RunSqlAllRows(sql, (reader) =>
-            {
-                narratives.Add(reader.GetString(0) + reader.GetString(1) + " " + reader.GetString(2));
-            }, catalogueCode, groupCode, subGroupCode, sgsCode, languageCode);
         }
         private List<ModificationModel> CreateModificationListFromString(string catalogueCode, string modificationList, string languageCode)
         {
@@ -707,85 +674,6 @@ namespace openPERRepositories.Repositories
             return modList;
         }
 
-        private List<OptionModel> AddSgsOptions(string catalogueCode, int groupCode, int subGroupCode, int sgsCode, string languageCode)
-        {
-            var sql = @"select O.OPTK_TYPE,O.OPTK_COD,OPTK_DSC from SGS_OPT S
-                        JOIN OPTKEYS_DSC O ON O.OPTK_TYPE = S.OPTK_TYPE AND O.OPTK_COD = S.OPTK_COD 
-                        where S.CAT_COD = @p1 AND GRP_COD = @p2 AND SGRP_COD = @p3 AND SGS_COD = @p4 AND LNG_COD = @p5
-                        ";
-            using var connection = new MySqlConnection(_pathToDb);
-            var rc = new List<OptionModel>();
-            connection.RunSqlAllRows(sql, (reader) =>
-            {
-                var mod = new OptionModel()
-                {
-                    OptionType = reader.GetString(0),
-                    OptionCode = reader.GetString(1),
-                    OptionDescription = reader.GetString(2)
-                };
-                rc.Add(mod);
-            }, catalogueCode, groupCode, subGroupCode, sgsCode, languageCode);
-            return rc;
-        }
-
-        private List<VariationModel> AddSgsVariations(string catalogueCode, int groupCode, int subGroupCode, int sgsCode, string languageCode)
-        {
-            var sql = @"select V.VMK_TYPE,V.VMK_COD,VMK_DSC from SGS_VAL S
-                        JOIN VMK_DSC V ON S.VMK_TYPE = V.VMK_TYPE AND S.VMK_COD = V.VMK_COD AND S.CAT_COD = V.CAT_COD
-                        where S.CAT_COD = @p1 AND GRP_COD = @p2 AND SGRP_COD = @p3 AND SGS_COD = @p4 AND LNG_COD = @p5
-                        ";
-            var rc = new List<VariationModel>();
-            using var connection = new MySqlConnection(_pathToDb);
-            connection.RunSqlAllRows(sql, (reader) =>
-            {
-                var mod = new VariationModel()
-                {
-                    VariationType = reader.GetString(0),
-                    VariationCode = reader.GetString(1),
-                    VariationDescription = reader.GetString(2)
-                };
-                rc.Add(mod);
-            }, catalogueCode, groupCode, subGroupCode, sgsCode, languageCode);
-            return rc;
-        }
-
-        public MvsDataModel GetMvsDetails(string mvsCode, string mvsVersion, string mvsSeries, string colourCode, string languageCode)
-        {
-            var m = new MvsDataModel();
-            using var connection = new MySqlConnection(_pathToDb);
-            var sql = @"select M.MOD_COD, M.MVS_VERSION, M.MVS_SERIE, MVS_DSC, MVS_SINCOM_VERS,MVS_ENGINE_TYPE, MV.VMK_DSC, VV.VMK_DSC,
-                        M.VMK_TYPE_M||VMK_COD_M, M.VMK_TYPE_V||VMK_COD_V,
-                        CT.CAT_COD, CT.CAT_DSC, IFNULL(COL.DSC_COLORE_INT_VET, ''), MM.MOD_DSC, CT.MK_COD, CT.MK2_COD, CT.CMG_COD 
-                        from MVS M 
-                        JOIN MODELS MM ON MM.MOD_COD = M.MOD_COD
-                        JOIN CATALOGUES CT ON CT.CAT_COD = M.CAT_COD
-						LEFT OUTER JOIN VMK_DSC MV ON MV.CAT_COD = M.CAT_COD AND MV.VMK_TYPE = M.VMK_TYPE_M AND MV.VMK_COD = M.VMK_COD_M AND MV.LNG_COD = @p1
-						LEFT OUTER JOIN VMK_DSC VV ON VV.CAT_COD = M.CAT_COD AND VV.VMK_TYPE = M.VMK_TYPE_V AND VV.VMK_COD = M.VMK_COD_V AND VV.LNG_COD = @p1
-                        LEFT OUTER JOIN INTERNAL_COLOURS_DSC COL ON COL.CAT_COD = CT.CAT_COD AND COD_COLORE_INT_VET = @p5 AND COL.LNG_COD = @p1
-					where M.MOD_COD = @p2 AND MVS_VERSION = @p3 AND MVS_SERIE = @p4";
-            connection.RunSqlFirstRowOnly(sql, (reader) =>
-            {
-                m.MvsMark = reader.GetString(0);
-                m.MvsModel = reader.GetString(1);
-                m.MvsVersion = reader.GetString(2);
-                m.Description = reader.GetString(3);
-                //m.Sincom = reader.GetString(4);
-                m.EngineType = reader.GetString(5);
-                m.EngineDescription = reader.GetString(6);
-                m.VariantDescription = reader.GetString(7);
-                m.EngineCode = reader.GetString(8);
-                m.VariantCode = reader.GetString(9);
-                m.CatalogueCode = reader.GetString(10);
-                m.CatalogueDescription = reader.GetString(11);
-                m.ColourCode = colourCode;
-                m.ColourDescription = reader.GetString(12);
-                m.ModelDescription = reader.GetString(13);
-                m.MakeCode = reader.GetString(14);
-                m.SubMakeCode = reader.GetString(15);
-                m.ModelCode = reader.GetString(16);
-            }, languageCode, mvsCode, mvsVersion, mvsSeries, colourCode);
-            return m;
-        }
 
         public List<LanguageModel> GetAllLanguages()
         {
@@ -802,39 +690,6 @@ namespace openPERRepositories.Repositories
                 languages.Add(language);
             });
             return languages;
-        }
-        public List<DrawingKeyModel> GetDrawingKeysForCatalogue(string makeCode, string modelCode, string catalogueCode, string languageCode)
-        {
-            var drawings = new List<DrawingKeyModel>();
-            using var connection = new MySqlConnection(_pathToDb);
-            var sql = @"SELECT DISTINCT CAT_COD, GRP_COD, SGRP_COD, SGS_COD, VARIANTE, REVISIONE, DSC, IMG_PATH
-                            FROM DRAWINGS
-                            JOIN TABLES_DSC TD ON TD.LNG_COD = @p2 AND TD.COD = TABLE_DSC_COD
-                            WHERE CAT_COD = @p1
-                            ORDER BY GRP_COD, SGRP_COD, SGS_COD, VARIANTE, REVISIONE";
-            connection.RunSqlAllRows(sql, (reader) =>
-            {
-                var drawing = new DrawingKeyModel()
-                {
-                    MakeCode = makeCode,
-                    ModelCode = modelCode,
-                    CatalogueCode = reader.GetString(0),
-                    GroupCode = reader.GetInt32(1),
-                    SubGroupCode = reader.GetInt32(2),
-                    SubSubGroupCode = reader.GetInt32(3),
-                    Variant = reader.GetInt32(4),
-                    Revision = reader.GetInt32(5),
-                    Description = reader.GetString(6),
-                    Modifications = reader.IsDBNull(7) ? new List<ModificationModel>() :
-                        CreateModificationListFromString(catalogueCode, reader.GetString(7), languageCode)
-
-                };
-                var ThumbImagePath = reader.GetString(7);
-                var imageParts = ThumbImagePath.Split(new[] { '.' });
-                drawing.ThumbImagePath = _pathToCdn + imageParts[0] + ".th." + imageParts[1];
-                drawings.Add(drawing);
-            }, catalogueCode, languageCode);
-            return drawings;
         }
         public void PopulateBreadcrumbDescriptions(BreadcrumbModel breadcrumb, string languageCode)
         {
@@ -882,20 +737,6 @@ namespace openPERRepositories.Repositories
                 drawings.Add(drawing);
             }, clichePartNumber);
             return drawings;
-        }
-
-        public string GetImageNameForClicheDrawing(string clichePartNumber, int clichePartDrawingNumber)
-        {
-            using var connection = new MySqlConnection(_pathToDb);
-            var sql = @"select DISTINCT IMG_PATH FROM CLICHE
-                        where CPLX_PRT_COD = @p1 and CPD_NUM = @p2
-                        ";
-            var rc = "";
-            connection.RunSqlFirstRowOnly(sql, (reader) =>
-            {
-                rc = reader.GetString(0);
-            }, clichePartNumber, clichePartDrawingNumber);
-            return rc;
         }
 
         public List<TablePartModel> GetPartsForCliche(string catalogueCode, string clichePartNumber,
@@ -1145,62 +986,6 @@ namespace openPERRepositories.Repositories
             return drawings;
         }
 
-        public List<MvsDataModel> GetMvsDetails(string mvsMarque, string mvsModel, string mvsVersion, string mvsSeries, string mvsGuide, string mvsShopEquipment, string colourCode, string languageCode)
-        {
-            using var connection = new MySqlConnection(_pathToDb);
-            List<MvsDataModel> rc;
-            if (!string.IsNullOrEmpty(mvsSeries))
-            {
-                rc = GetMvsDataWithDetailedMvsCode(mvsMarque, mvsModel, mvsVersion, mvsSeries, mvsGuide, mvsShopEquipment, colourCode, languageCode);
-                if (rc.Count == 0)
-                    rc = GetMvsDataWithVagueMvsCode(mvsMarque, mvsModel, mvsVersion);
-            }
-            else
-            {
-                rc = GetMvsDataWithVagueMvsCode(mvsMarque, mvsModel, mvsVersion);
-            }
-
-
-            return rc;
-        }
-        private List<MvsDataModel> GetMvsDataWithDetailedMvsCode(string mvsMarque, string mvsModel, string mvsVersion, string mvsSeries, string mvsGuide, string mvsShopEquipment, string colourCode, string languageCode)
-        {
-            using var connection = new MySqlConnection(_pathToDb);
-            var rc = new List<MvsDataModel>();
-            var sincom = mvsMarque + mvsModel + mvsVersion + mvsGuide + mvsShopEquipment;
-            var sql = @"SELECT M.CAT_COD, MVS_DSC, VMK_TYPE_M, VMK_COD_M, VMK_TYPE_V, VMK_COD_V, VMK_TYPE_R, 
-                            VMK_COD_R, MVS_ENGINE_TYPE, MVS_DOORS_NUM, SINCOM, PATTERN,
-                            C.CAT_DSC, C.MK_COD, C.MK2_COD,
-                            MOD.CMG_DSC
-                            FROM MVS M
-                            JOIN CATALOGUES C ON C.CAT_COD = M.CAT_COD
-                            JOIN COMM_MODGRP MOD ON MOD.MK2_COD = C.MK2_COD AND MOD.CMG_COD = C.CMG_COD
-                            WHERE SINCOM = @p1";
-            connection.RunSqlAllRows(sql, (reader) =>
-            {
-                var p = new MvsDataModel
-                {
-                    MvsMark = mvsMarque,
-                    MvsModel = mvsModel,
-                    MvsVersion = mvsVersion,
-                    MvsSeries = mvsSeries,
-                    MvsGuide = mvsGuide,
-                    MvsShopEquipment = mvsShopEquipment,
-                    CatalogueCode = reader.GetString(0),
-                    Description = reader.IsDBNull(1) ? "" : reader.GetString(1),
-                    EngineType = reader.IsDBNull(8) ? "" : reader.GetString(8),
-                    Sincom = reader.IsDBNull(10) ? "" : reader.GetString(10),
-                    CatalogueDescription = reader.IsDBNull(12) ? "" : reader.GetString(12),
-                    MakeCode = reader.IsDBNull(13) ? "" : reader.GetString(13),
-                    SubMakeCode = reader.IsDBNull(14) ? "" : reader.GetString(14),
-                    ModelDescription = reader.IsDBNull(15) ? "" : reader.GetString(15)
-                };
-                rc.Add(p);
-            }, sincom);
-
-            return rc;
-
-        }
         private List<MvsDataModel> GetMvsDataWithVagueMvsCode(string mvsMarque, string mvsModel, string mvsVersion)
         {
             using var connection = new MySqlConnection(_pathToDb);
@@ -1353,62 +1138,6 @@ namespace openPERRepositories.Repositories
 
             return rc;
         }
-
-        public List<VinSearchResultModel> FindMatchesForVinOld(string language, string fullVin)
-        {
-            var rc = new List<VinSearchResultModel>();
-            // There are two ways to find the vehicle.  Firstly a match on VIN directly
-            var @sql = @"SELECT MVS, CHASSY, ORGANIZATION, MOTOR, DATE, INT_COLOR, VIN
-                            FROM VIN_DATA_CH
-                            WHERE VIN = @p1";
-            using var connection = new MySqlConnection(_pathToDb);
-            connection.RunSqlAllRows(sql, (reader) =>
-            {
-                var p = new VinSearchResultModel
-                {
-                    Mvs = reader.GetString(0),
-                    Chassis = reader.GetString(1),
-                    Organization = reader.GetString(2),
-                    Motor = reader.GetString(3),
-                    BuildDate = reader.GetString(4),
-                    InteriorColourCode = reader.GetString(5),
-                    VIN = reader.GetString(6)
-                };
-                rc.Add(p);
-
-            }, fullVin);
-            if (rc.Count > 0)
-            {
-                return rc;
-            }
-            // Secondly a match on model and chassis number.  First three digits of VIN have to be translated
-            // to a model code and there can be more than one
-
-            // There are two ways to find the vehicle.  Firstly a match on VIN directly
-            @sql = @"SELECT MVS, CHASSY, ORGANIZATION, MOTOR, DATE, INT_COLOR
-                            FROM VIN_DATA_CH C
-                            JOIN VIN V ON V.MOD_COD = C.MODEL AND V.VIN_COD = @p1
-                            WHERE CHASSY = @p2";
-            connection.RunSqlAllRows(sql, (reader) =>
-            {
-                var p = new VinSearchResultModel
-                {
-                    Mvs = reader.GetString(0),
-                    Chassis = reader.GetString(1),
-                    Organization = reader.GetString(2),
-                    Motor = reader.GetString(3),
-                    BuildDate = reader.GetString(4),
-                    InteriorColourCode = reader.GetString(5),
-                    VIN = fullVin
-                };
-                rc.Add(p);
-
-            }, fullVin[3..6], fullVin[^8..]);
-
-
-            return rc;
-        }
-
 
         public List<MvsDataModel> GetMvsDetails(string mvs)
         {

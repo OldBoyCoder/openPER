@@ -14,12 +14,10 @@ namespace openPERRepositories.Interfaces
         List<SubSubGroupModel> GetSubSubGroupsForCatalogueGroupSubGroup(string catalogueCode, int groupCode, int subGroupCode, string languageCode);
         PartModel GetPartDetails(string partNumberSearch, string languageCode);
         List<PartModel> GetPartSearch(string modelName, string partDescription, string languageCode);
-        List<MvsDataModel> GetMvsDetails(string mvsMarque, string mvsModel, string mvsVersion, string mvsSeries, string mvsGuide, string mvsShopEquipment,string colourCode, string languageCode);
         List<VinSearchResultModel> FindMatchesForVin(string language, string fullVin);
         List<LanguageModel> GetAllLanguages();
         List<DrawingKeyModel> GetDrawingKeysForSubSubGroup( string makeCode, string modelCode, string catalogueCode, int groupCode, int subGroupCode, int subSubGroupCode, string languageCode);
         List<MvsDataModel> GetMvsDetails(string mvs);
-        List<DrawingKeyModel> GetDrawingKeysForCatalogue(string makeCode, string modelCode, string catalogueCode, string languageCode);
         List<DrawingKeyModel> GetDrawingKeysForGroup(string makeCode, string modelCode, string catalogueCode, int groupCode, string languageCode);
         List<DrawingKeyModel> GetDrawingKeysForSubGroup(string makeCode, string modelCode, string catalogueCode, int groupCode, int subGroupCode, string languageCode);
         List<VmkModel> GetVmkDataForCatalogue(string catalogueCode, string language);
@@ -35,7 +33,6 @@ namespace openPERRepositories.Interfaces
         string GetImageNameForDrawing( string catalogue, int group, int subgroup, int subSubGroup, int variant, int revision);
         List<DrawingKeyModel> GetDrawingKeysForCliche(string makeCode, string subMakeCode, string modelCode,
             string catalogueCode, int groupCode, int subGroupCode, int subSubGroupCode, string clichePartNumber);
-        string GetImageNameForClicheDrawing(string clichePartNumber, int clichePartDrawingNumber);
         List<TablePartModel> GetPartsForCliche(string catalogueCode, string clichePartNumber, int clicheDrawingNumber,
             string languageCode);
 
