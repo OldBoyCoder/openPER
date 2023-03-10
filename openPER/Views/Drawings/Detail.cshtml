@@ -55,7 +55,7 @@
                         <div class="dropdown-menu" aria-labelledby="variantMenuLink">
                             @{
                                 var currentDrawing = Model.Drawings[Model.TableData.CurrentDrawing];
-                                ix = 0;
+                                var ix = 0;
                                 var usedVariants = new List<int>();
                                 @foreach (var drawing in Model.Drawings)
                                 {
