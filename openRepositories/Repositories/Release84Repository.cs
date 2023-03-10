@@ -1150,7 +1150,7 @@ namespace openPERRepositories.Repositories
             return rc;
         }
 
-        public Dictionary<string, string> GetFiltersforVehicle(string language, string vin, string mvs)
+        public Dictionary<string, string> GetFiltersForVehicle(string language, string vin, string mvs)
         {
             var vehicles = FindMatchesForVin(language, vin);
             var rc = new Dictionary<string, string>();

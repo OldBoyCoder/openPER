@@ -109,6 +109,7 @@ namespace openPER.Controllers
             string vehiclePattern = _rep.GetVehiclePattern(language, vin);
             var vmkCodes = _rep.GetVmkDataForCatalogue(catalogueCode, language);
             if (vehiclePattern != "") sinComPattern = vehiclePattern;
+            var vehicleModificationFilters = _rep.GetFiltersForVehicle(language, vin, mvs);
             foreach (var d in drawings)
             {
                 var pattern = d.VariantPattern;
@@ -118,7 +119,6 @@ namespace openPER.Controllers
                         d.Visible = false;
                 }
                 var modifications = d.Modifications;
-                var vehicleModificationFilters = _rep.GetFiltersforVehicle(language, vin, mvs);
                 foreach (var mod in modifications)
                 {
                     foreach (var rule in mod.Activations)
@@ -172,6 +172,7 @@ namespace openPER.Controllers
                 var vmkCodes = _rep.GetVmkDataForCatalogue(drawing.CatalogueCode, language);
                 string vehiclePattern = _rep.GetVehiclePattern(language, vin);
                 if (vehiclePattern != "") sinComPattern = vehiclePattern;
+                var vehicleModificationFilters = _rep.GetFiltersForVehicle(language, vin, mvs);
                 foreach (var p in tableData.Parts)
                 {
                     var pattern = p.Compatibility;
@@ -181,7 +182,6 @@ namespace openPER.Controllers
                             p.Visible = false;
                     }
                     var modifications = p.Modifications;
-                    var vehicleModificationFilters = _rep.GetFiltersforVehicle(language, vin, mvs);
                     foreach (var mod in modifications)
                     {
                         foreach (var rule in mod.Activations)

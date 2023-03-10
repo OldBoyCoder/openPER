@@ -56,7 +56,7 @@ namespace openPER.Controllers
                     var modifications = subSubGroup.Modifications;
                     var vehicleModificationFilters = new Dictionary<string, string>();
                     if (vehiclePattern != "")
-                        vehicleModificationFilters = _rep.GetFiltersforVehicle(language, vin, mvs);
+                        vehicleModificationFilters = _rep.GetFiltersForVehicle(language, vin, mvs);
                     foreach (var mod in modifications)
                     {
                         foreach (var rule in mod.Activations)
