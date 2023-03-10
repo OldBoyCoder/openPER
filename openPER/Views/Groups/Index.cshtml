@@ -25,17 +25,20 @@
 
                 }
             </div>
-            <h3>All variants</h3>
-            <table class="table-sm">
-                @foreach (var variant in Model.ModelVariants.OrderBy(x=>x.Description))
-                {
-                    <tr>
-                        <td>@variant.Description</td>
-                        <td>@variant.SINCOM</td>
-                        <td>@Html.ActionLink($"Go to catalogue", "Index", "Groups", new { Language=Model.Navigation.Language, Model.Navigation.Breadcrumb.MakeCode, Model.Navigation.Breadcrumb.SubMakeCode, Model.Navigation.Breadcrumb.ModelCode, CatalogueCode = Model.Navigation.Breadcrumb.CatalogueCode, VIN="", MVS=variant.SINCOM })
-                    </tr>
-                }
-            </table>
+            @if (string.IsNullOrEmpty(Model.Navigation.Filter.MVS))
+            {
+                <h3>All variants</h3>
+                <table class="table-sm">
+                    @foreach (var variant in Model.ModelVariants.OrderBy(x => x.Description))
+                    {
+                        <tr>
+                            <td>@variant.Description</td>
+                            <td>@variant.SINCOM</td>
+                            <td>@Html.ActionLink($"Go to catalogue", "Index", "Groups", new { Language=Model.Navigation.Language, Model.Navigation.Breadcrumb.MakeCode, Model.Navigation.Breadcrumb.SubMakeCode, Model.Navigation.Breadcrumb.ModelCode, CatalogueCode = Model.Navigation.Breadcrumb.CatalogueCode, VIN="", MVS=variant.SINCOM })
+                        </tr>
+                    }
+                </table>
+            }
         </div>
     </div>
 
