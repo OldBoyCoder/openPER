@@ -2,6 +2,7 @@
 using System.Linq;
 using System.Collections.Generic;
 using System.Data;
+using openPER.ViewModels;
 using openPERModels;
 
 namespace openPER.Helpers
@@ -165,6 +166,54 @@ namespace openPER.Helpers
             }
             return v;
 
+        }
+
+        public static bool ApplyPatternAndModificationRules(string pattern, string sinComPattern, List<VmkModel> vmkCodes,
+            string vehiclePattern, List<ModificationViewModel> modifications, Dictionary<string, string> vehicleModificationFilters)
+        {
+            DrawingKeyModel d;
+            if (!string.IsNullOrEmpty(pattern))
+            {
+                if (!PatternMatchHelper.EvaluateRule(pattern, sinComPattern, vmkCodes, !string.IsNullOrEmpty(vehiclePattern)))
+                    return false;
+            }
+
+            foreach (var mod in modifications)
+            {
+                foreach (var rule in mod.Activations)
+                {
+                    // Does this apply to this vehicle
+                    if (PatternMatchHelper.EvaluateRule(rule.ActivationPattern, sinComPattern, vmkCodes,
+                            !string.IsNullOrEmpty(vehiclePattern)))
+                    {
+                        // Does this vehicle have the data needed
+                        if (vehicleModificationFilters.ContainsKey(rule.ActivationCode))
+                        {
+                            // Before or after rule?
+                            if (mod.Type == "C")
+                            {
+                                // C means stops at so if data is past this then it is invisible
+                                if (int.Parse(rule.ActivationSpec) <=
+                                    int.Parse(vehicleModificationFilters[rule.ActivationCode]))
+                                {
+                                    return false;
+                                }
+                            }
+
+                            if (mod.Type == "D")
+                            {
+                                // C means after a date if data is before this then it is invisible
+                                if (int.Parse(rule.ActivationSpec) > int.Parse(vehicleModificationFilters[rule.ActivationCode]))
+                                {
+                                    return false;
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+
+            return true;
         }
     }
 }

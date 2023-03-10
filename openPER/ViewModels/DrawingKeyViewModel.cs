@@ -1,4 +1,7 @@
-﻿namespace openPER.ViewModels
+﻿using System.Collections.Generic;
+using Microsoft.AspNetCore.Authentication;
+
+namespace openPER.ViewModels
 {
     public class DrawingKeyViewModel
     {
@@ -18,6 +21,9 @@
         public string Description { get; set; }
         public string ThumbImagePath { get; set; }
         public string ImagePath { get; set; }
+        public bool Visible { get; set; }
+        public List<ModificationViewModel> Modifications { get; set; }
+
 
     }
 }

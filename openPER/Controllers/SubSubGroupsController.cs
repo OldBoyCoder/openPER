@@ -44,50 +44,19 @@ namespace openPER.Controllers
                 if (!string.IsNullOrEmpty(vin))
                     vehiclePattern= _rep.GetVehiclePattern(language, vin);
                 var vmkCodes = _rep.GetVmkDataForCatalogue(catalogueCode, language);
-                if (vehiclePattern != "") sinComPattern = vehiclePattern;
-                foreach (var subSubGroup in model.SubSubGroups)
+                var vehicleModificationFilters = new Dictionary<string, string>();
+                if (vehiclePattern != "")
                 {
-                    var pattern = subSubGroup.Pattern;
-                    if (!string.IsNullOrEmpty(pattern))
-                    {
-                        if (!PatternMatchHelper.EvaluateRule(pattern, sinComPattern, vmkCodes,!string.IsNullOrEmpty(vehiclePattern)))
-                            subSubGroup.Visible = false;
-                    }
-                    var modifications = subSubGroup.Modifications;
-                    var vehicleModificationFilters = new Dictionary<string, string>();
-                    if (vehiclePattern != "")
-                        vehicleModificationFilters = _rep.GetFiltersForVehicle(language, vin, mvs);
-                    foreach (var mod in modifications)
-                    {
-                        foreach (var rule in mod.Activations)
-                        {
-                            // Does this apply to this vehicle
-                            if (PatternMatchHelper.EvaluateRule(rule.ActivationPattern, sinComPattern, vmkCodes, !string.IsNullOrEmpty(vehiclePattern)))
-                            {
-                                // Does this vehicle have the data needed
-                                if (vehicleModificationFilters.ContainsKey(rule.ActivationCode))
-                                {
-                                    // Before or after rule?
-                                    if (mod.Type == "C")
-                                    {
-                                        // C means stops at so if data is past this then it is invisible
-                                        if (int.Parse(rule.ActivationSpec) <= int.Parse(vehicleModificationFilters[rule.ActivationCode]))
-                                        {
-                                            subSubGroup.Visible = false;
-                                        }
-                                    }
-                                    if (mod.Type == "D")
-                                    {
-                                        // C means after a date if data is before this then it is invisible
-                                        if (int.Parse(rule.ActivationSpec) > int.Parse(vehicleModificationFilters[rule.ActivationCode]))
-                                        {
-                                            subSubGroup.Visible = false;
-                                        }
-                                    }
-                                }
-                            }
-                        }
-                    }
+                    sinComPattern = vehiclePattern;
+                }
+                if (!string.IsNullOrEmpty(vin))
+                    vehicleModificationFilters = _rep.GetFiltersForVehicle(language, vin, mvs);
+                foreach (var d in model.SubSubGroups)
+                {
+                    var pattern = d.Pattern;
+                    var modifications = d.Modifications;
+                    d.Visible = PatternMatchHelper.ApplyPatternAndModificationRules(pattern, sinComPattern, vmkCodes,
+                        vehiclePattern, modifications, vehicleModificationFilters);
                 }
             }
             return View(model);
