@@ -17,5 +17,6 @@ namespace openPERModels
         public List<ModificationModel> Modifications { get; set; }
         public string Compatibility { get; set; }
         public bool IsAComponent { get; set; }
+        public string Colour { get; set; }
     }
 }

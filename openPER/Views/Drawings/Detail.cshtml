@@ -106,7 +106,7 @@
         </div>
         <div class="col-lg-7 col-md-12 col-sm-12 col-12">
             <table class="table table-sm">
-                <tr><th>code</th><th>Prod. code</th><th>Description</th><th>Compat.</th><th>Modif.</th><th>Qty</th><th>Notes</th><th>Components</th></tr>
+                <tr><th>code</th><th>Prod. code</th><th>Description</th><th>Compat.</th><th>Modif.</th><th>Qty</th><th>Notes</th><th>Components</th><th>Colour</th></tr>
                 @{
 
                     var cls = "table-secondary";
@@ -167,6 +167,7 @@
                                     @Html.ActionLink("Go", "Detail", "Cliche", new {Model.Navigation.Language, Model.TableData.MakeCode, Model.TableData.SubMakeCode, Model.TableData.ModelCode, Model.TableData.CatalogueCode, Model.TableData.GroupCode, Model.TableData.SubGroupCode, Model.TableData.SubSubGroupCode, DrawingNumber = Model.TableData.CurrentDrawing, Model.Scope, ClichePartNumber = item.PartNumber, ClicheDrawingNumber = 1, VIN=Model.Navigation.Filter.Vin, MVS=Model.Navigation.Filter.Mvs })
                                 }
                             </td>
+                            <td>@Html.DisplayFor(model => item.Colour)</td>
 
                         </tr>
                     }

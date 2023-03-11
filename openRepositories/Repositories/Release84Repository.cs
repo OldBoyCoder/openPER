@@ -341,7 +341,7 @@ namespace openPERRepositories.Repositories
         {
             var parts = new List<TablePartModel>();
             var sql = @"SELECT TBD_RIF, PRT_COD, TBD_QTY, CDS_DSC, TBD_NOTE1, TBD_NOTE2, TBD_NOTE3,
-                                        TBD_SEQ, NTS_DSC, TBD_VAL_FORMULA, DAD.DSC, MODIF
+                                        TBD_SEQ, NTS_DSC, TBD_VAL_FORMULA, DAD.DSC, MODIF, COL_COD
                                         FROM TBDATA
                                         JOIN CODES_DSC ON TBDATA.CDS_COD = CODES_DSC.CDS_COD AND CODES_DSC.LNG_COD = @p1
                                         LEFT OUTER JOIN NOTES_DSC ON NOTES_DSC.NTS_COD = TBDATA.NTS_COD AND NOTES_DSC.LNG_COD = @p1
@@ -364,6 +364,7 @@ namespace openPERRepositories.Repositories
                     Notes = reader.IsDBNull(8) ? "" : reader.GetString(8),
                     Compatibility = reader.IsDBNull(9) ? "" : reader.GetString(9),
                     FurtherDescription = reader.IsDBNull(10) ? "" : reader.GetString(10).ToString(),
+                    Colour = reader.IsDBNull(12)?"":reader.GetString(12).Replace(",", " ")
                 };
                 if (!reader.IsDBNull(11))
                     part.Modifications = GetPartModifications(catalogueCode, reader.GetString(11), languageCode);
