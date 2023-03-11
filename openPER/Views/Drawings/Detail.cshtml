@@ -167,7 +167,19 @@
                                     @Html.ActionLink("Go", "Detail", "Cliche", new {Model.Navigation.Language, Model.TableData.MakeCode, Model.TableData.SubMakeCode, Model.TableData.ModelCode, Model.TableData.CatalogueCode, Model.TableData.GroupCode, Model.TableData.SubGroupCode, Model.TableData.SubSubGroupCode, DrawingNumber = Model.TableData.CurrentDrawing, Model.Scope, ClichePartNumber = item.PartNumber, ClicheDrawingNumber = 1, VIN=Model.Navigation.Filter.Vin, MVS=Model.Navigation.Filter.Mvs })
                                 }
                             </td>
-                            <td>@Html.DisplayFor(model => item.Colour)</td>
+                            <td data-placement="bottom">
+                                @foreach (var colour in item.Colours)
+                                {
+                                    if (@colour.ImagePath != "")
+                                    {
+                                        <span data-toggle="tooltip" data-placement="auto" data-html="true" title="<img src='@colour.ImagePath'/><em>@colour.Code</em> - @colour.Description">@colour.Code</span><br/>
+                                    }
+                                    else
+                                    {
+                                        <span data-toggle="tooltip" data-placement="auto" data-html="true" title="<em>@colour.Code</em> - @colour.Description">@colour.Code</span><br/>
+                                    }
+                                }
+                            </td>
 
                         </tr>
                     }

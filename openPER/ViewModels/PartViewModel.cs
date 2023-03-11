@@ -22,6 +22,7 @@ namespace openPER.ViewModels
         public List<PartReplacementViewModel> ReplacedBy { get; set; }
         public bool Visible { get; set; } = true;
         public string Colour { get; set; }
+        public List<ColourViewModel> Colours { get; set; } = new();
 
 
     }

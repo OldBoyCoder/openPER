@@ -368,6 +368,10 @@ namespace openPERRepositories.Repositories
                 };
                 if (!reader.IsDBNull(11))
                     part.Modifications = GetPartModifications(catalogueCode, reader.GetString(11), languageCode);
+                if (part.Colour != "")
+                {
+                    part.Colours = CreateColourCollection(catalogueCode, languageCode, part.Colour);
+                }
                 parts.Add(part);
 
             }, languageCode, drawingNumber, sgsCode, subGroupCode, groupCode, catalogueCode, revision);
@@ -378,6 +382,35 @@ namespace openPERRepositories.Repositories
             }
             return parts;
         }
+
+        private List<ColourModel> CreateColourCollection(string catalogueCode, string languageCode, string partColour)
+        {
+            var colours = partColour.Split(" ", StringSplitOptions.RemoveEmptyEntries );
+            var rc = new List<ColourModel>();
+            using var connection = new MySqlConnection(PathToDb);
+            foreach (var colour in colours)
+            {
+
+                var sql = @"SELECT COL_DSC, IMG_PATH FROM COLOURS_DSC CD 
+                        LEFT OUTER JOIN COLOURS_PATH CP ON CD.CAT_COD = CP.CAT_COD AND CD.COL_COD = CP.COL_COD
+                        WHERE CD.CAT_COD = @p1 AND CD.LNG_COD = @p2 and CD.COL_COD  = @p3";
+                connection.RunSqlAllRows(sql, (reader) =>
+                {
+                    var c = new ColourModel
+                    {
+                        Code = colour,
+                        Description = reader.GetString(0),
+                        ImagePath = reader.IsDBNull(1) ? "" : PathToCdn+ "L_EPERTESSUTI/"+reader.GetString(1)
+                    };
+                    rc.Add(c);
+
+                }, catalogueCode, languageCode, colour);
+
+            }
+
+            return rc;
+        }
+
         private List<ModificationModel> GetPartModifications(string catalogueCode, string modifString, string languageCode)
         {
             var modifications = new List<ModificationModel>();

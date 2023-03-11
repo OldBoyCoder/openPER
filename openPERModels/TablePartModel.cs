@@ -18,5 +18,6 @@ namespace openPERModels
         public string Compatibility { get; set; }
         public bool IsAComponent { get; set; }
         public string Colour { get; set; }
+        public List<ColourModel> Colours { get; set; }
     }
 }
