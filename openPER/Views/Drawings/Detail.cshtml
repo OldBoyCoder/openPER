@@ -1,4 +1,6 @@
-﻿@model openPER.ViewModels.DrawingsViewModel
+﻿@using openPER.ViewModels
+@using System.Drawing
+@model openPER.ViewModels.DrawingsViewModel
 
 @{
     ViewData["Title"] = "Index";
@@ -167,17 +169,12 @@
                                     @Html.ActionLink("Go", "Detail", "Cliche", new {Model.Navigation.Language, Model.TableData.MakeCode, Model.TableData.SubMakeCode, Model.TableData.ModelCode, Model.TableData.CatalogueCode, Model.TableData.GroupCode, Model.TableData.SubGroupCode, Model.TableData.SubSubGroupCode, DrawingNumber = Model.TableData.CurrentDrawing, Model.Scope, ClichePartNumber = item.PartNumber, ClicheDrawingNumber = 1, VIN=Model.Navigation.Filter.Vin, MVS=Model.Navigation.Filter.Mvs })
                                 }
                             </td>
-                            <td data-placement="bottom">
+                            <td >
+
                                 @foreach (var colour in item.Colours)
                                 {
-                                    if (@colour.ImagePath != "")
-                                    {
-                                        <span data-toggle="tooltip" data-placement="auto" data-html="true" title="<img src='@colour.ImagePath'/><em>@colour.Code</em> - @colour.Description">@colour.Code</span><br/>
-                                    }
-                                    else
-                                    {
-                                        <span data-toggle="tooltip" data-placement="auto" data-html="true" title="<em>@colour.Code</em> - @colour.Description">@colour.Code</span><br/>
-                                    }
+                                    var code = colour.Code.Replace("/", "-");
+                                    <button type="button" data-toggle="modal" data-target="#colour@(code)">@colour.Code </button>
                                 }
                             </td>
 
@@ -205,6 +202,45 @@
             </div>
         </div>
     </div>
+    @{
+        var allColours = new Dictionary<string, ColourViewModel>();
+        foreach (var part in Model.TableData.Parts)
+        {
+            foreach (var colour in part.Colours)
+            {
+                if (!allColours.ContainsKey(colour.Code))
+                {
+                    allColours.Add(colour.Code, colour);
+                    var code = colour.Code.Replace("/", "-");
+                    <div class="modal" tabindex="-1" role="dialog" id="colour@(code)">
+                        <div class="modal-dialog" role="document">
+                            <div class="modal-content">
+                                <div class="modal-header">
+                                    <h5 class="modal-title">Colour information @colour.Code</h5>
+                                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                        <span aria-hidden="true">&times;</span>
+                                    </button>
+                                </div>
+                                <div class="modal-body">
+                                    <p>@colour.Code</p>
+                                    <p>@colour.Description</p>
+                                    @if (colour.ImagePath != "")
+                                    {
+                                        <img alt = "Illustration of colour @colour.Description" src="@colour.ImagePath"/>
+                                    }
+                                </div>
+                                <div class="modal-footer">
+                                    <button type="button" class="btn btn-primary" data-dismiss="modal">Close</button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                }
+            }
+        }
+
+    }
 </div>
 
 

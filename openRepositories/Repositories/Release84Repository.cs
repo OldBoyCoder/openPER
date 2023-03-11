@@ -1251,5 +1251,24 @@ namespace openPERRepositories.Repositories
             }, catalogueCode);
             return rc;
         }
+
+        public List<ModificationModel> GetCatalogueModifications(string catalogueCode, string language)
+        {
+            var rc = new List<ModificationModel>();
+            var sql = @"SELECT MDF_COD, MDF_DSC FROM MODIF_DSC WHERE CAT_COD = @p1 AND LNG_COD = @p2";
+            using var connection = new MySqlConnection(PathToDb);
+            connection.RunSqlAllRows(sql, (reader) =>
+            {
+                var m = new ModificationModel()
+                {
+                    Code =  reader.GetInt32(0),
+                    Description = reader.IsDBNull(1) ? "" : reader.GetString(1),
+                };
+                m.Activations = GetActivationsForModification(catalogueCode, m.Code);
+                rc.Add(m);
+
+            }, catalogueCode, language);
+            return rc;
+        }
     }
 }

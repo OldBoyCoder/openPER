@@ -108,6 +108,20 @@ namespace openPERRepositories.Repositories
             return rc;
         }
 
+        public List<ModificationModel> GetCatalogueModifications(string catalogueCode, string language)
+        {
+            var key = ("GetCatalogueModifications", catalogueCode, language);
+            if (_cache.TryGetValue(key, out List<ModificationModel> cacheValue))
+            {
+                return cacheValue;
+            }
+
+            var rc = _rep.GetCatalogueModifications(catalogueCode, language);
+            _cache.Set(key, rc, _options);
+            return rc;
+
+        }
+
         public List<DrawingKeyModel> GetDrawingKeysForCliche(string makeCode, string subMakeCode, string modelCode, string catalogueCode, int groupCode, int subGroupCode, int subSubGroupCode, string clichePartNumber)
         {
             var key = ("GetDrawingKeysForCliche", makeCode, subMakeCode, modelCode, catalogueCode, groupCode, subGroupCode, subSubGroupCode, clichePartNumber);

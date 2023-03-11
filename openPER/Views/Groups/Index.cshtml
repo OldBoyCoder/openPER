@@ -26,18 +26,40 @@
             </div>
             @if (string.IsNullOrEmpty(Model.Navigation.Filter.Mvs))
             {
-                <h3>All variants</h3>
+                <details>
+                    <summary>All variants</summary>
+                    <table class="table-sm">
+                        @foreach (var variant in Model.ModelVariants.OrderBy(x => x.Description))
+                        {
+                            <tr>
+                                <td>@variant.Description</td>
+                                <td>@variant.Sincom</td>
+                                <td>@Html.ActionLink("Go to catalogue", "Index", "Groups", new { Model.Navigation.Language, Model.Navigation.Breadcrumb.MakeCode, Model.Navigation.Breadcrumb.SubMakeCode, Model.Navigation.Breadcrumb.ModelCode, Model.Navigation.Breadcrumb.CatalogueCode, VIN="", MVS=variant.Sincom })
+                            </tr>
+                        }
+                    </table>
+                </details>
+            }
+            <details>
+                <summary>Modification History</summary>
                 <table class="table-sm">
-                    @foreach (var variant in Model.ModelVariants.OrderBy(x => x.Description))
+                    <tr><th>Modification</th><th>Description</th><th>Activations</th></tr>
+                    @foreach (var mod in Model.Modifications.OrderBy(x => x.Code))
                     {
                         <tr>
-                            <td>@variant.Description</td>
-                            <td>@variant.Sincom</td>
-                            <td>@Html.ActionLink("Go to catalogue", "Index", "Groups", new { Model.Navigation.Language, Model.Navigation.Breadcrumb.MakeCode, Model.Navigation.Breadcrumb.SubMakeCode, Model.Navigation.Breadcrumb.ModelCode, Model.Navigation.Breadcrumb.CatalogueCode, VIN="", MVS=variant.Sincom })
+                            <td>@mod.Code</td>
+                            <td>@mod.Description</td>
+                            <td>
+                                @foreach (var act in mod.Activations)
+                                {
+                                    <span>@act.ActivationDescription </span>
+                                }
+                            </td>
                         </tr>
                     }
                 </table>
-            }
+            </details>
+
         </div>
     </div>
 

@@ -1,5 +1,6 @@
 ﻿using AutoMapper;
 using System.Collections.Generic;
+using System.ComponentModel;
 using openPER.ViewModels;
 using Microsoft.AspNetCore.Mvc;
 using openPERModels;
@@ -36,7 +37,8 @@ namespace openPER.Controllers
                 CatalogueCode = catalogueCode,
                 ImagePath = mapAndImage.ImageName,
                 Navigation = NavigationHelper.PopulateNavigationModel(_mapper, _rep, language, makeCode, subMakeCode, modelCode, catalogueCode, vin, mvs),
-                ModelVariants = _mapper.Map<List<CatalogueVariantsModel>, List<CatalogueVariantsViewModel>>( _rep.GetCatalogueVariants(catalogueCode))
+                ModelVariants = _mapper.Map<List<CatalogueVariantsModel>, List<CatalogueVariantsViewModel>>( _rep.GetCatalogueVariants(catalogueCode)),
+                Modifications = _mapper.Map<List<ModificationModel>, List<ModificationViewModel>>(_rep.GetCatalogueModifications(catalogueCode, language))
             };
 
             return View(model);

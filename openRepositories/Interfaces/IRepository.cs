@@ -42,6 +42,7 @@ namespace openPERRepositories.Interfaces
         public List<MvsCatalogueOptionModel> GetMvsDetailsForCatalogue(string catalogueCode, string language);
         public List<VinSearchResultModel> FindMatchesForMvsAndVin(string language, string mvs, string fullVin);
         public List<CatalogueVariantsModel> GetCatalogueVariants(string catalogueCode);
+        public List<ModificationModel> GetCatalogueModifications(string catalogueCode, string language);
 
     }
 

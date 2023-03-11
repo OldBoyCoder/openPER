@@ -13,6 +13,6 @@ namespace openPER.ViewModels
         public List<GroupImageMapEntryViewModel> MapEntries { get; set; }
         public NavigationViewModel Navigation { get; set; }
         public List<CatalogueVariantsViewModel> ModelVariants { get; set; }
-
+        public List<ModificationViewModel> Modifications { get; set; }
     }
 }
