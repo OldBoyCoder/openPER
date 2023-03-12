@@ -151,6 +151,12 @@
   <data name="SearchByPart" xml:space="preserve">
     <value>Part number</value>
   </data>
+  <data name="SearchByPartModelName" xml:space="preserve">
+    <value>Model</value>
+  </data>
+  <data name="SearchByPartPartDescription" xml:space="preserve">
+    <value>Part name</value>
+  </data>
   <data name="SearchByVin" xml:space="preserve">
     <value>VIN</value>
   </data>

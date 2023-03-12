@@ -1,0 +1,39 @@
+﻿@using openPER.ViewModels
+@model PartSearchResultsViewModel
+
+@{
+    ViewData["Title"] = "PartView";
+}
+
+<h1>Part search results</h1>
+<table class="table-sm">
+    @foreach (var p in Model.Results.OrderBy(x=>x.CatalogueDescription).ThenBy(x=>x.PartNumber))
+    {
+        <tr>
+            <td>@p.CatalogueDescription</td>
+            <td>@p.CatalogueCode</td>
+            <td>@p.PartNumber</td>
+            <td>@p.Description</td>
+            <td>@p.FamilyCode - @p.FamilyDescription</td>
+            <td>
+                @foreach (var drawing in p.Drawings)
+                {
+                        @if (drawing.ClichePart)
+                        {
+                            <a href="@Url.Action("Detail", "Cliche", new {Model.Language, MakeCode = drawing.Make, SubMakeCode = drawing.SubMake, ModelCode = drawing.Model, drawing.CatalogueCode, drawing.GroupCode, drawing.SubGroupCode, drawing.SubSubGroupCode, DrawingNumber=drawing.Variant,Scope="SubSubGroup", drawing.ClichePartNumber, ClicheDrawingNumber=drawing.ClichePartDrawingNumber  })">
+                                @drawing.GroupCode.ToString("000")@drawing.SubGroupCode.ToString("00")/@drawing.SubSubGroupCode.ToString("00") - @drawing.SubGroupDescription/@drawing.ClichePartNumber/@drawing.ClichePartDrawingNumber
+                            </a>
+
+                        }
+                        else
+                        {
+                            <a href="@Url.Action("Detail", "Drawings", new {Model.Language, MakeCode = drawing.Make, SubMakeCode = drawing.SubMake, ModelCode = drawing.Model, drawing.CatalogueCode, drawing.GroupCode, drawing.SubGroupCode, drawing.SubSubGroupCode, drawing.Variant, drawing.Revision, Scope="SubSubGroup", HighlightPart=p.PartNumber })">
+                                @drawing.GroupCode.ToString("000")@drawing.SubGroupCode.ToString("00")/@drawing.SubSubGroupCode.ToString("00") - @drawing.SubGroupDescription
+                            </a>
+                        }
+                    <br/>
+                }
+            </td>
+        </tr>
+    }
+</table>

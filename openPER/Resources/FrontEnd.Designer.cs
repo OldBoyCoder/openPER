@@ -160,6 +160,24 @@ namespace Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Model.
+        /// </summary>
+        public static string SearchByPartModelName {
+            get {
+                return ResourceManager.GetString("SearchByPartModelName", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Part name.
+        /// </summary>
+        public static string SearchByPartPartDescription {
+            get {
+                return ResourceManager.GetString("SearchByPartPartDescription", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to VIN.
         /// </summary>
         public static string SearchByVin {

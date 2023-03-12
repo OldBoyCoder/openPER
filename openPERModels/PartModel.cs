@@ -13,5 +13,7 @@ namespace openPERModels
         public List<PartDrawing> Drawings { get; set; }
         public List<PartReplacementModel> Replaces { get; set; }
         public List<PartReplacementModel> ReplacedBy { get; set; }
+        public string CatalogueDescription { get; set; }
+        public string CatalogueCode { get; set; }
     }
 }

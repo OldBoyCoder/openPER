@@ -414,5 +414,11 @@ namespace openPERRepositories.Repositories
         {
             _rep.PopulateBreadcrumbDescriptions(breadcrumb, languageCode);
         }
+
+        public List<PartModel> GetBasicPartSearch(string modelName, string partDescription, string languageCode)
+        {
+            return _rep.GetBasicPartSearch(modelName, partDescription, languageCode);
+        }
+
     }
 }

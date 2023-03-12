@@ -31,4 +31,20 @@
             </div>
         }
     </div>
+<li>
+    <div class="form-group">
+        @using (Html.BeginForm("SearchPartByModelAndName", "Part", FormMethod.Get))
+        {
+            <div class="input-group m-1">
+                <input id="languageId" name="language" hidden value="@Model.Language"/>
+                <label for="searchByPartModel">@Resources.FrontEnd.SearchByPartModelName</label>
+                @Html.TextBoxFor(m=>m.PartModelName, new {@class="form-control-sm", type="search", placeholder="Part number", id="searchByPartModel"})
+                <label for="searchByPartName">@Resources.FrontEnd.SearchByPartPartDescription</label>
+                @Html.TextBoxFor(m=>m.PartName, new {@class="form-control-sm", type="search", placeholder="Part number", id="searchByPartName"})
+                <span class="input-group-append">
+                    <button type="submit" class="btn-sm btn-outline-primary"><i class="fa fa-search"></i></button>
+                </span>
+            </div>
+        }
+    </div>
 </li>
