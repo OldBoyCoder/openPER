@@ -36,7 +36,7 @@
                 </div>
                 <div class="btn-group mr-2" role="group">
                     <div class="dropdown show">
-                        <a class="btn btn-secondary dropdown-toggle" href="#" role="button" id="subGroupMenuLink" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                        <a class="btn btn-secondary dropdown-toggle" href="#" role="button" id="subGroupMenuLink" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                             @($"{Model.Drawings[Model.TableData.CurrentDrawing].GroupCode:000}{Model.Drawings[Model.TableData.CurrentDrawing].SubGroupCode:00}/{Model.Drawings[Model.TableData.CurrentDrawing].SubSubGroupCode:00} - {Model.Drawings[Model.TableData.CurrentDrawing].Description}")
                         </a>
                         <div class="dropdown-menu" aria-labelledby="subGroupMenuLink">
@@ -51,7 +51,7 @@
                         </div>
                     </div>
                     <div class="dropdown show">
-                        <a class="btn btn-secondary dropdown-toggle" href="#" role="button" id="variantMenuLink" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                        <a class="btn btn-secondary dropdown-toggle" href="#" role="button" id="variantMenuLink" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                             @($"{Model.Drawings[Model.TableData.CurrentDrawing].Variant} {Model.Drawings[Model.TableData.CurrentDrawing].VariantPattern}")
                         </a>
                         <div class="dropdown-menu" aria-labelledby="variantMenuLink">
@@ -76,7 +76,7 @@
                         </div>
                     </div>
                     <div class="dropdown show">
-                        <a class="btn btn-secondary dropdown-toggle" href="#" role="button" id="revisionMenuLink" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                        <a class="btn btn-secondary dropdown-toggle" href="#" role="button" id="revisionMenuLink" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                             @($"{Model.Drawings[Model.TableData.CurrentDrawing].Revision} ({Model.Drawings[Model.TableData.CurrentDrawing].RevisionModifications})")
                         </a>
                         <div class="dropdown-menu" aria-labelledby="revisionMenuLink">
@@ -174,7 +174,7 @@
                                 @foreach (var colour in item.Colours)
                                 {
                                     var code = colour.Code.Replace("/", "-");
-                                    <button type="button" data-toggle="modal" data-target="#colour@(code)">@colour.Code </button>
+                                    <button type="button" data-bs-toggle="modal" data-bs-target="#colour@(code)">@colour.Code </button>
                                 }
                             </td>
 

@@ -14,7 +14,7 @@
 
             <h1>Part search results</h1>
             <table class="table-sm">
-                <tr><th>Catalogue</th><th>Part number</th><th>Description</th><th>Family</th><th><Drawings</th></tr>
+                <tr><th>Catalogue</th><th>Part number</th><th>Description</th><th>Family</th><th>Drawings</th></tr>
                 @foreach (var p in Model.Results.OrderBy(x => x.CatalogueDescription).ThenBy(x => x.PartNumber))
                 {
                     <tr>
