@@ -50,47 +50,47 @@
                             }
                         </div>
                     </div>
-                    <div class="dropdown show">
-                        <a class="btn btn-secondary dropdown-toggle" href="#" role="button" id="variantMenuLink" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                            @($"{Model.Drawings[Model.TableData.CurrentDrawing].Variant} {Model.Drawings[Model.TableData.CurrentDrawing].VariantPattern}")
-                        </a>
-                        <div class="dropdown-menu" aria-labelledby="variantMenuLink">
-                            @{
-                                var currentDrawing = Model.Drawings[Model.TableData.CurrentDrawing];
-                                var ix = 0;
-                                var usedVariants = new List<int>();
-                                @foreach (var drawing in Model.Drawings)
+                </div>
+                <div class="dropdown show">
+                    <a class="btn btn-secondary dropdown-toggle" href="#" role="button" id="variantMenuLink" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                        @($"{Model.Drawings[Model.TableData.CurrentDrawing].Variant} {Model.Drawings[Model.TableData.CurrentDrawing].VariantPattern}")
+                    </a>
+                    <div class="dropdown-menu" aria-labelledby="variantMenuLink">
+                        @{
+                            var currentDrawing = Model.Drawings[Model.TableData.CurrentDrawing];
+                            var ix = 0;
+                            var usedVariants = new List<int>();
+                            @foreach (var drawing in Model.Drawings)
+                            {
+                                // Only include variants for current sub sub group
+                                if (drawing.GroupCode == currentDrawing.GroupCode && drawing.SubGroupCode == currentDrawing.SubGroupCode && drawing.SubSubGroupCode == currentDrawing.SubSubGroupCode)
                                 {
-                                    // Only include variants for current sub sub group
-                                    if (drawing.GroupCode == currentDrawing.GroupCode && drawing.SubGroupCode == currentDrawing.SubGroupCode && drawing.SubSubGroupCode == currentDrawing.SubSubGroupCode)
+                                    if (!usedVariants.Contains(drawing.Variant))
                                     {
-                                        if (!usedVariants.Contains(drawing.Variant))
-                                        {
-                                            @Html.ActionLink($"{drawing.Variant} {drawing.VariantPattern}", "Detail", "Drawings", new {drawing.MakeCode, drawing.SubMakeCode, drawing.ModelCode, drawing.CatalogueCode, drawing.GroupCode, drawing.SubGroupCode, drawing.SubSubGroupCode, DrawingNumber = ix, Model.Scope, MVS=Model.Navigation.Filter.Mvs, VIN=Model.Navigation.Filter.Vin }, new {@class="dropdown-item"})
-                                            usedVariants.Add(drawing.Variant);
-                                        }
+                                        @Html.ActionLink($"{drawing.Variant} {drawing.VariantPattern}", "Detail", "Drawings", new {drawing.MakeCode, drawing.SubMakeCode, drawing.ModelCode, drawing.CatalogueCode, drawing.GroupCode, drawing.SubGroupCode, drawing.SubSubGroupCode, DrawingNumber = ix, Model.Scope, MVS=Model.Navigation.Filter.Mvs, VIN=Model.Navigation.Filter.Vin }, new {@class="dropdown-item"})
+                                        usedVariants.Add(drawing.Variant);
                                     }
-                                    ix++;
                                 }
+                                ix++;
                             }
-                        </div>
+                        }
                     </div>
-                    <div class="dropdown show">
-                        <a class="btn btn-secondary dropdown-toggle" href="#" role="button" id="revisionMenuLink" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                            @($"{Model.Drawings[Model.TableData.CurrentDrawing].Revision} ({Model.Drawings[Model.TableData.CurrentDrawing].RevisionModifications})")
-                        </a>
-                        <div class="dropdown-menu" aria-labelledby="revisionMenuLink">
-                            @{
-                                ix = 0;
-                                @foreach (var drawing in Model.Drawings)
-                                {
-                                    // Only include revisions for current sub sub group and variant
-                                    if (drawing.GroupCode == currentDrawing.GroupCode && drawing.SubGroupCode == currentDrawing.SubGroupCode && drawing.SubSubGroupCode == currentDrawing.SubSubGroupCode && drawing.Variant == currentDrawing.Variant)
-                                        @Html.ActionLink($"{drawing.Revision} ({drawing.RevisionModifications})", "Detail", "Drawings", new {drawing.MakeCode, drawing.SubMakeCode, drawing.ModelCode, drawing.CatalogueCode, drawing.GroupCode, drawing.SubGroupCode, drawing.SubSubGroupCode, DrawingNumber = ix, Model.Scope }, new {@class="dropdown-item"})
-                                    ix++;
-                                }
+                </div>
+                <div class="dropdown show">
+                    <a class="btn btn-secondary dropdown-toggle" href="#" role="button" id="revisionMenuLink" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                        @($"{Model.Drawings[Model.TableData.CurrentDrawing].Revision} ({Model.Drawings[Model.TableData.CurrentDrawing].RevisionModifications})")
+                    </a>
+                    <div class="dropdown-menu" aria-labelledby="revisionMenuLink">
+                        @{
+                            ix = 0;
+                            @foreach (var drawing in Model.Drawings)
+                            {
+                                // Only include revisions for current sub sub group and variant
+                                if (drawing.GroupCode == currentDrawing.GroupCode && drawing.SubGroupCode == currentDrawing.SubGroupCode && drawing.SubSubGroupCode == currentDrawing.SubSubGroupCode && drawing.Variant == currentDrawing.Variant)
+                                    @Html.ActionLink($"{drawing.Revision} ({drawing.RevisionModifications})", "Detail", "Drawings", new {drawing.MakeCode, drawing.SubMakeCode, drawing.ModelCode, drawing.CatalogueCode, drawing.GroupCode, drawing.SubGroupCode, drawing.SubSubGroupCode, DrawingNumber = ix, Model.Scope }, new {@class="dropdown-item"})
+                                ix++;
                             }
-                        </div>
+                        }
                     </div>
                 </div>
             </div>
@@ -169,7 +169,7 @@
                                     @Html.ActionLink("Go", "Detail", "Cliche", new {Model.Navigation.Language, Model.TableData.MakeCode, Model.TableData.SubMakeCode, Model.TableData.ModelCode, Model.TableData.CatalogueCode, Model.TableData.GroupCode, Model.TableData.SubGroupCode, Model.TableData.SubSubGroupCode, DrawingNumber = Model.TableData.CurrentDrawing, Model.Scope, ClichePartNumber = item.PartNumber, ClicheDrawingNumber = 1, VIN=Model.Navigation.Filter.Vin, MVS=Model.Navigation.Filter.Mvs })
                                 }
                             </td>
-                            <td >
+                            <td>
 
                                 @foreach (var colour in item.Colours)
                                 {
@@ -186,15 +186,19 @@
     </div>
     <div class="row">
         <div class="col-12">
-            <div class="container-flex horizontal-scrollable">
-                <div class="row text-center">
+            <div class="container-fluid horizontal-scrollable">
+                <div class="row flex-nowrap text-center">
                     @{
                         ix = 0;
                         @foreach (var drawing in Model.Drawings)
                         {
-                            <div class="col-xs-4 @(Model.TableData.CurrentDrawing == ix?"border":"")">
-                                <img class="img-fluid" src="@drawing.ThumbImagePath"><br />
-                                @Html.ActionLink($"{drawing.GroupCode:000}{drawing.SubGroupCode:00}/{drawing.SubSubGroupCode:00} - {drawing.Description} (Var.:{drawing.Variant}/Rev.:{drawing.Revision})", "Detail", "Drawings", new {drawing.MakeCode, drawing.SubMakeCode, drawing.ModelCode, drawing.CatalogueCode, drawing.GroupCode, drawing.SubGroupCode, drawing.SubSubGroupCode, DrawingNumber = ix++, Model.Scope, MVS=Model.Navigation.Filter.Mvs, VIN=Model.Navigation.Filter.Vin })
+                            <div class="col-xs-4 @(Model.TableData.CurrentDrawing == ix ? "border" : "")">
+                                <figure class="figure">
+                                    <img alt="An image of parts" class="figure-img img-fluid" src="@drawing.ThumbImagePath">
+                                    <figcaption class="figure-caption">
+                                        @Html.ActionLink($"{drawing.GroupCode:000}{drawing.SubGroupCode:00}/{drawing.SubSubGroupCode:00} - {drawing.Description} (Var.:{drawing.Variant}/Rev.:{drawing.Revision})", "Detail", "Drawings", new { drawing.MakeCode, drawing.SubMakeCode, drawing.ModelCode, drawing.CatalogueCode, drawing.GroupCode, drawing.SubGroupCode, drawing.SubSubGroupCode, DrawingNumber = ix++, Model.Scope, MVS = Model.Navigation.Filter.Mvs, VIN = Model.Navigation.Filter.Vin })
+                                    </figcaption>
+                                </figure>
                             </div>
                         }
                     }
@@ -226,7 +230,7 @@
                                     <p>@colour.Description</p>
                                     @if (colour.ImagePath != "")
                                     {
-                                        <img alt = "Illustration of colour @colour.Description" src="@colour.ImagePath"/>
+                                        <img alt="Illustration of colour @colour.Description" src="@colour.ImagePath" />
                                     }
                                 </div>
                                 <div class="modal-footer">
