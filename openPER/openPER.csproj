@@ -96,12 +96,4 @@
     </None>
   </ItemGroup>
 
-  <ItemGroup>
-    <UpToDateCheckInput Remove="Views\Part\SearchResults.cshtml" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <_ContentIncludedByDefault Remove="Views\Part\SearchResults.cshtml" />
-  </ItemGroup>
-
 </Project>

@@ -4,36 +4,49 @@
 @{
     ViewData["Title"] = "PartView";
 }
+@await Html.PartialAsync("_Breadcrumb", Model.Navigation)
+<div class="container-fluid">
+    <div class="row">
+        <div class="col-lg-4 col-md-4 col-sm-12 col-12">
+            @await Html.PartialAsync("_SidebarMenu", Model.Navigation)
+        </div>
+        <div class="col-lg-8 col-md-8 col-sm-12 col-12">
 
-<h1>Part search results</h1>
-<table class="table-sm">
-    @foreach (var p in Model.Results.OrderBy(x=>x.CatalogueDescription).ThenBy(x=>x.PartNumber))
-    {
-        <tr>
-            <td>@p.CatalogueDescription</td>
-            <td>@p.CatalogueCode</td>
-            <td>@p.PartNumber</td>
-            <td>@p.Description</td>
-            <td>@p.FamilyCode - @p.FamilyDescription</td>
-            <td>
-                @foreach (var drawing in p.Drawings)
+            <h1>Part search results</h1>
+            <table class="table-sm">
+                <tr><th>Catalogue</th><th>Part number</th><th>Description</th><th>Family</th><th><Drawings</th></tr>
+                @foreach (var p in Model.Results.OrderBy(x => x.CatalogueDescription).ThenBy(x => x.PartNumber))
                 {
-                        @if (drawing.ClichePart)
-                        {
-                            <a href="@Url.Action("Detail", "Cliche", new {Model.Language, MakeCode = drawing.Make, SubMakeCode = drawing.SubMake, ModelCode = drawing.Model, drawing.CatalogueCode, drawing.GroupCode, drawing.SubGroupCode, drawing.SubSubGroupCode, DrawingNumber=drawing.Variant,Scope="SubSubGroup", drawing.ClichePartNumber, ClicheDrawingNumber=drawing.ClichePartDrawingNumber  })">
-                                @drawing.GroupCode.ToString("000")@drawing.SubGroupCode.ToString("00")/@drawing.SubSubGroupCode.ToString("00") - @drawing.SubGroupDescription/@drawing.ClichePartNumber/@drawing.ClichePartDrawingNumber
-                            </a>
+                    <tr>
+                        <td>@p.CatalogueCode - @p.CatalogueDescription</td>
+                        <td>
+                            <a href="@Url.Action("SearchPartByPartNumber", "Part", new {Model.Language,@p.PartNumber })">@p.PartNumber</a>
+                        </td>
+                        <td>@p.Description</td>
+                        <td>@p.FamilyCode - @p.FamilyDescription</td>
+                        <td>
+                            @foreach (var drawing in p.Drawings)
+                            {
+                                @if (drawing.ClichePart)
+                                {
+                                    <a href="@Url.Action("Detail", "Cliche", new {Model.Language, MakeCode = drawing.Make, SubMakeCode = drawing.SubMake, ModelCode = drawing.Model, drawing.CatalogueCode, drawing.GroupCode, drawing.SubGroupCode, drawing.SubSubGroupCode, DrawingNumber=drawing.Variant,Scope="SubSubGroup", drawing.ClichePartNumber, ClicheDrawingNumber=drawing.ClichePartDrawingNumber  })">
+                                        @drawing.GroupCode.ToString("000")@drawing.SubGroupCode.ToString("00")/@drawing.SubSubGroupCode.ToString("00") - @drawing.SubGroupDescription/@drawing.ClichePartNumber/@drawing.ClichePartDrawingNumber
+                                    </a>
 
-                        }
-                        else
-                        {
-                            <a href="@Url.Action("Detail", "Drawings", new {Model.Language, MakeCode = drawing.Make, SubMakeCode = drawing.SubMake, ModelCode = drawing.Model, drawing.CatalogueCode, drawing.GroupCode, drawing.SubGroupCode, drawing.SubSubGroupCode, drawing.Variant, drawing.Revision, Scope="SubSubGroup", HighlightPart=p.PartNumber })">
-                                @drawing.GroupCode.ToString("000")@drawing.SubGroupCode.ToString("00")/@drawing.SubSubGroupCode.ToString("00") - @drawing.SubGroupDescription
-                            </a>
-                        }
-                    <br/>
+                                }
+                                else
+                                {
+                                    <a href="@Url.Action("Detail", "Drawings", new {Model.Language, MakeCode = drawing.Make, SubMakeCode = drawing.SubMake, ModelCode = drawing.Model, drawing.CatalogueCode, drawing.GroupCode, drawing.SubGroupCode, drawing.SubSubGroupCode, drawing.Variant, drawing.Revision, Scope="SubSubGroup", HighlightPart=p.PartNumber })">
+                                        @drawing.GroupCode.ToString("000")@drawing.SubGroupCode.ToString("00")/@drawing.SubSubGroupCode.ToString("00") - @drawing.SubGroupDescription
+                                    </a>
+                                }
+                                <br />
+                            }
+                        </td>
+                    </tr>
                 }
-            </td>
-        </tr>
-    }
-</table>
+            </table>
+        </div>
+    </div>
+</div>
+

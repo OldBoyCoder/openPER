@@ -5,77 +5,87 @@
     ViewData["Title"] = "PartView";
 }
 
-<h1>Part search results</h1>
+@await Html.PartialAsync("_Breadcrumb", Model.Navigation)
+<div class="container-fluid">
+    <div class="row">
+        <div class="col-lg-4 col-md-4 col-sm-12 col-12">
+            @await Html.PartialAsync("_SidebarMenu", Model.Navigation)
+        </div>
+        <div class="col-lg-8 col-md-8 col-sm-12 col-12">
+            <h1>Part search results</h1>
 
-<div>
-    <hr />
-    @if (Model != null && Model.Result != null)
-    {
-        <table class="table">
-            <tr><th>@Model.Result.PartNumber</th><th>@Model.Result.Description</th><th></th><th></th></tr>
-            <tr><td>Family</td><td>@Model.Result.FamilyCode - @Model.Result.FamilyDescription</td><td></td><td></td></tr>
-            <tr><td>Weight (grams)</td><td>@Model.Result.Weight</td><td></td><td></td></tr>
-            <tr><td>Measurement unit</td><td>@Model.Result.UnitOfSale</td><td></td><td></td></tr>
-        </table>
-        <h3>Replacements</h3>
-        <table class="table">
-            <tr><th>Repl. date</th><th>Replaced</th><th>Replacing</th><th>Description</th><th>Applicability</th></tr>
-            @foreach (var r in Model.Result.ReplacedBy)
-            {
-                <tr>
-                    <td>@r.ReplacementDate</td>
-                    <td><a href="@Url.Action("SearchResults", "Part", new {Model.Language, PartNumber=r.OldPartCode})">@Html.DisplayFor(model => r.OldPartCode)</a></td>
-                    <td><a href="@Url.Action("SearchResults", "Part", new {Model.Language, PartNumber=r.NewPartCode})">@Html.DisplayFor(model => r.NewPartCode)</a></td>
-                    <td>@r.PartDescription</td>
-                    <td>@r.GroupDescription</td>
-                </tr>
-            }
-        </table>
-        <h3>Product previously in use</h3>
-        <table class="table">
-            <tr><th>Repl. date</th><th>Replacing</th><th>Replaced</th><th>Description</th></tr>
-            @foreach (var r in Model.Result.Replaces)
-            {
-                <tr>
-                    <td>@r.ReplacementDate</td>
-                    <td><a href="@Url.Action("SearchResults", "Part", new {Model.Language, PartNumber=r.NewPartCode})">@Html.DisplayFor(model => r.NewPartCode)</a></td>
-                    <td><a href="@Url.Action("SearchResults", "Part", new {Model.Language, PartNumber=r.OldPartCode})">@Html.DisplayFor(model => r.OldPartCode)</a></td>
-                    <td>@r.PartDescription</td>
-                </tr>
-            }
-        </table>
-        <h3>Drawings</h3>
-        <table class="table">
-            @foreach (var drawing in Model.Result.Drawings)
-            {
-                <tr>
-                    <td>@drawing.CatalogueCode @drawing.CatalogueDescription</td>
-                    <td>
-                        @if (drawing.ClichePart)
+            <div>
+                <hr />
+                @if (Model != null && Model.Result != null)
+                {
+                    <table class="table">
+                        <tr><th>@Model.Result.PartNumber</th><th>@Model.Result.Description</th><th></th><th></th></tr>
+                        <tr><td>Family</td><td>@Model.Result.FamilyCode - @Model.Result.FamilyDescription</td><td></td><td></td></tr>
+                        <tr><td>Weight (grams)</td><td>@Model.Result.Weight</td><td></td><td></td></tr>
+                        <tr><td>Measurement unit</td><td>@Model.Result.UnitOfSale</td><td></td><td></td></tr>
+                    </table>
+                    <h3>Replacements</h3>
+                    <table class="table">
+                        <tr><th>Repl. date</th><th>Replaced</th><th>Replacing</th><th>Description</th><th>Applicability</th></tr>
+                        @foreach (var r in Model.Result.ReplacedBy)
                         {
-                            <a href="@Url.Action("Detail", "Cliche", new {Model.Language, MakeCode = drawing.Make, SubMakeCode = drawing.SubMake, ModelCode = drawing.Model, drawing.CatalogueCode, drawing.GroupCode, drawing.SubGroupCode, drawing.SubSubGroupCode, DrawingNumber=drawing.Variant,Scope="SubSubGroup", drawing.ClichePartNumber, ClicheDrawingNumber=drawing.ClichePartDrawingNumber  })">
-                                @drawing.GroupCode.ToString("000")@drawing.SubGroupCode.ToString("00")/@drawing.SubSubGroupCode.ToString("00") - @drawing.SubGroupDescription/@drawing.ClichePartNumber/@drawing.ClichePartDrawingNumber
-                            </a>
+                            <tr>
+                                <td>@r.ReplacementDate</td>
+                                <td><a href="@Url.Action("SearchPartByPartNumber", "Part", new {Model.Language, PartNumber=r.OldPartCode})">@Html.DisplayFor(model => r.OldPartCode)</a></td>
+                                <td><a href="@Url.Action("SearchPartByPartNumber", "Part", new {Model.Language, PartNumber=r.NewPartCode})">@Html.DisplayFor(model => r.NewPartCode)</a></td>
+                                <td>@r.PartDescription</td>
+                                <td>@r.GroupDescription</td>
+                            </tr>
+                        }
+                    </table>
+                    <h3>Product previously in use</h3>
+                    <table class="table">
+                        <tr><th>Repl. date</th><th>Replacing</th><th>Replaced</th><th>Description</th></tr>
+                        @foreach (var r in Model.Result.Replaces)
+                        {
+                            <tr>
+                                <td>@r.ReplacementDate</td>
+                                <td><a href="@Url.Action("SearchPartByPartNumber", "Part", new {Model.Language, PartNumber=r.NewPartCode})">@Html.DisplayFor(model => r.NewPartCode)</a></td>
+                                <td><a href="@Url.Action("SearchPartByPartNumber", "Part", new {Model.Language, PartNumber=r.OldPartCode})">@Html.DisplayFor(model => r.OldPartCode)</a></td>
+                                <td>@r.PartDescription</td>
+                            </tr>
+                        }
+                    </table>
+                    <h3>Drawings</h3>
+                    <table class="table">
+                        @foreach (var drawing in Model.Result.Drawings)
+                        {
+                            <tr>
+                                <td>@drawing.CatalogueCode @drawing.CatalogueDescription</td>
+                                <td>
+                                    @if (drawing.ClichePart)
+                                    {
+                                        <a href="@Url.Action("Detail", "Cliche", new {Model.Language, MakeCode = drawing.Make, SubMakeCode = drawing.SubMake, ModelCode = drawing.Model, drawing.CatalogueCode, drawing.GroupCode, drawing.SubGroupCode, drawing.SubSubGroupCode, DrawingNumber=drawing.Variant,Scope="SubSubGroup", drawing.ClichePartNumber, ClicheDrawingNumber=drawing.ClichePartDrawingNumber  })">
+                                            @drawing.GroupCode.ToString("000")@drawing.SubGroupCode.ToString("00")/@drawing.SubSubGroupCode.ToString("00") - @drawing.SubGroupDescription/@drawing.ClichePartNumber/@drawing.ClichePartDrawingNumber
+                                        </a>
+
+                                    }
+                                    else
+                                    {
+                                        <a href="@Url.Action("Detail", "Drawings", new {Model.Language, MakeCode = drawing.Make, SubMakeCode = drawing.SubMake, ModelCode = drawing.Model, drawing.CatalogueCode, drawing.GroupCode, drawing.SubGroupCode, drawing.SubSubGroupCode, drawing.Variant, drawing.Revision, Scope="SubSubGroup", HighlightPart=Model.Result.PartNumber })">
+                                            @drawing.GroupCode.ToString("000")@drawing.SubGroupCode.ToString("00")/@drawing.SubSubGroupCode.ToString("00") - @drawing.SubGroupDescription
+                                        </a>
+                                    }
+                                </td>
+                            </tr>
 
                         }
-                        else
-                        {
-                            <a href="@Url.Action("Detail", "Drawings", new {Model.Language, MakeCode = drawing.Make, SubMakeCode = drawing.SubMake, ModelCode = drawing.Model, drawing.CatalogueCode, drawing.GroupCode, drawing.SubGroupCode, drawing.SubSubGroupCode, drawing.Variant, drawing.Revision, Scope="SubSubGroup", HighlightPart=Model.Result.PartNumber })">
-                                @drawing.GroupCode.ToString("000")@drawing.SubGroupCode.ToString("00")/@drawing.SubSubGroupCode.ToString("00") - @drawing.SubGroupDescription
-                            </a>
-                        }
-                    </td>
-                </tr>
+                    </table>
+                }
+                else
+                {
+                    <p>Part not found</p>
+                }
+            </div>
 
-            }
-        </table>
-    }
-    else
-    {
-        <p>Part not found</p>
-    }
-</div>
-
-<div>
-    <a asp-action="Index">Back to List</a>
+            <div>
+                <a asp-action="Index">Back to List</a>
+            </div>
+        </div>
+    </div>
 </div>

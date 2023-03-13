@@ -130,12 +130,12 @@
                                 @if (!item.Visible)
                                 {
                                     <del>
-                                        <a href="@Url.Action("SearchResults", "Part", new {Model.Navigation.Language, item.PartNumber })">@Html.DisplayFor(model => item.PartNumber)</a> <a href="https://www.google.com/search?q=@Model.Navigation.Breadcrumb.MakeDescription+@item.PartNumber" target="_blank" class="bi bi-search"></a>
+                                        <a href="@Url.Action("SearchPartByPartNumber", "Part", new {Model.Navigation.Language, item.PartNumber })">@Html.DisplayFor(model => item.PartNumber)</a> <a href="https://www.google.com/search?q=@Model.Navigation.Breadcrumb.MakeDescription+@item.PartNumber" target="_blank" class="bi bi-search"></a>
                                     </del>
                                 }
                                 else
                                 {
-                                    <a href="@Url.Action("SearchResults", "Part", new {Model.Navigation.Language, item.PartNumber })">@Html.DisplayFor(model => item.PartNumber)</a> <a href="https://www.google.com/search?q=@Model.Navigation.Breadcrumb.MakeDescription+@item.PartNumber" target="_blank" class="bi bi-search"></a>
+                                    <a href="@Url.Action("SearchPartByPartNumber", "Part", new {Model.Navigation.Language, item.PartNumber })">@Html.DisplayFor(model => item.PartNumber)</a> <a href="https://www.google.com/search?q=@Model.Navigation.Breadcrumb.MakeDescription+@item.PartNumber" target="_blank" class="bi bi-search"></a>
                                 }
 
                             </td>

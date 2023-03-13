@@ -19,7 +19,7 @@
 </li>
 <li>
     <div class="form-group">
-        @using (Html.BeginForm("SearchResults", "Part", FormMethod.Get))
+        @using (Html.BeginForm("SearchPartByPartNumber", "Part", FormMethod.Get))
         {
             <div class="input-group m-1">
                 <input id="languageId" name="language" hidden value="@Model.Language"/>
