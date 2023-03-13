@@ -67,7 +67,7 @@
                 </span>
         </nav>
         <div class="modal" tabindex="-1" role="dialog" id="filterModal">
-            <div class="modal-dialog" role="document">
+            <div class="modal-dialog">
                 <div class="modal-content">
                     <div class="modal-header">
                         @if (Model.Filter.DataSource == FilterDataSource.Sincom)
@@ -78,7 +78,7 @@
                         {
                             <h5 class="modal-title">VIN configuration @Model.Filter.Vin</h5>
                         }
-                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <button type="button" class="close" data-bs-dismiss="modal" aria-label="Close">
                             <span aria-hidden="true">&times;</span>
                         </button>
                     </div>
@@ -97,7 +97,7 @@
                         </table>
                     </div>
                     <div class="modal-footer">
-                        <button type="button" class="btn btn-primary" data-dismiss="modal">Close</button>
+                        <button type="button" class="btn btn-primary" data-bs-dismiss="modal">Close</button>
                     </div>
                 </div>
             </div>
