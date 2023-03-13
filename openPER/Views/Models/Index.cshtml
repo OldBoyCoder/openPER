@@ -16,8 +16,11 @@
                         foreach (var model in Model.Models)
                         {
                             <div class="col-lg-4 col-md-4 col-sm-12 col-12">
-                                <a href="@Url.Action("Index", "Catalogues", new {Model.Navigation.Language, Model.Navigation.Breadcrumb.MakeCode, Model.Navigation.Breadcrumb.SubMakeCode, ModelCode = model.Code })">
-                                    <img title="@(model.Description)" src="@(model.ImagePath)" alt="@(model.Description)">
+                                <a href="@Url.Action("Index", "Catalogues", new { Model.Navigation.Language, Model.Navigation.Breadcrumb.MakeCode, Model.Navigation.Breadcrumb.SubMakeCode, ModelCode = model.Code })">
+                                    <figure class="figure">
+                                        <img class="figure-img img-fluid rounded" title="@(model.Description)" src="@(model.ImagePath)" alt="@(model.Description)">
+                                        <figcaption class="figure-caption">@(model.Description)</figcaption>
+                                    </figure>
                                 </a>
                             </div>
                         }

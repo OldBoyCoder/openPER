@@ -2,49 +2,74 @@
 @model SearchViewModel
 
 <li>
-    <div class="form-group">
-        @using (Html.BeginForm("SearchByFullVin", "VinSearch", FormMethod.Get, new { @class = "form-horizontal", role = "form" }))
-        {
-            <div class="input-group m-1">
-                <input id="languageId" name="language" hidden value="@Model.Language"/>
+    @using (Html.BeginForm("SearchByFullVin", "VinSearch", FormMethod.Get, new { @class = " p-4", role = "form" }))
+    {
+        <div class="row">
+            <input id="languageId" name="language" hidden value="@Model.Language" />
+            <div class=col-3>
                 <label for="searchByVIN">@Resources.FrontEnd.SearchByVin</label>
-                @Html.TextBoxFor(m=>m.FullVin, new {@class="form-control-sm", type="search", placeholder="Full VIN", id="searchByVIN"})
-                <span class="input-group-append">
-                    <button type="submit" class="btn-sm btn-outline-primary"><i class="fa fa-search"></i></button>
-                </span>
             </div>
+            <div class=col-8>
+                <div class="form-floating">
+                    @Html.TextBoxFor(m => m.FullVin, new { @class = "form-control", type = "search", placeholder = "Full VIN", id = "searchByVIN" })
+                    <label for="searchByVIN">@Resources.FrontEnd.SearchByVin</label>
+                </div>
+            </div>
+            <div class=col-1>
+                <button type="submit" class="btn btn-outline-primary"><i class="fa fa-search"></i></button>
+            </div>
+        </div>
+
+    }
+</li>
+<li><hr class="dropdown-divider"></li>
+<li>
+    @using (Html.BeginForm("SearchPartByPartNumber", "Part", FormMethod.Get, new { @class = " p-4", role = "form" }))
+    {
+        <div class="row">
+            <input id="languageId" name="language" hidden value="@Model.Language" />
+            <div class=col-3>
+                <label>Find part by code</label>
+            </div>
+            <div class="col-8">
+                <div class="form-floating">
+                    @Html.TextBoxFor(m => m.PartNumber, new { @class = "form-control", type = "search", placeholder = "Part number", id = "searchByPart" })
+                    <label for="searchByPart">@Resources.FrontEnd.SearchByPart</label>
+                </div>
+            </div>
+            <div class="col-1">
+                <button type="submit" class="btn btn-outline-primary"><i class="fa fa-search"></i></button>
+            </div>
+        </div>
+    }
+</li>
+<li><hr class="dropdown-divider"></li>
+<li>
+        @using (Html.BeginForm("SearchPartByModelAndName", "Part", FormMethod.Get, new { @class = " p-4", role = "form" }))
+        {
+        <div class="row">
+            <input id="languageId" name="language" hidden value="@Model.Language" />
+            <div class="col-3">
+                <label>Find part by name</label>
+            </div>
+            <div class="col-4">
+                <div class="form-floating">
+                        @Html.TextBoxFor(m=>m.PartModelName, new {@class="form-control", type="search", placeholder="Model name", id="searchByPartModel"})
+                    <label for="searchByPartModel">@Resources.FrontEnd.SearchByPartModelName</label>
+                </div>
+            </div>
+            <div class="col-4">
+                <div class="form-floating ">
+                        @Html.TextBoxFor(m=>m.PartName, new {@class="form-control", type="search", placeholder="Part name", id="searchByPartName"})
+                    <label for="searchByPartName">@Resources.FrontEnd.SearchByPartPartDescription</label>
+                </div>
+            </div>
+            <div class="col-1">
+                <div class="form-floating ">
+                    <button type="submit" class="btn btn-outline-primary"><i class="fa fa-search"></i></button>
+                </div>
+            </div>
+        </div>
 
         }
-    </div>
-</li>
-<li>
-    <div class="form-group">
-        @using (Html.BeginForm("SearchPartByPartNumber", "Part", FormMethod.Get))
-        {
-            <div class="input-group m-1">
-                <input id="languageId" name="language" hidden value="@Model.Language"/>
-                <label for="searchByPart">@Resources.FrontEnd.SearchByPart</label>
-                @Html.TextBoxFor(m=>m.PartNumber, new {@class="form-control-sm", type="search", placeholder="Part number", id="searchByPart"})
-                <span class="input-group-append">
-                    <button type="submit" class="btn-sm btn-outline-primary"><i class="fa fa-search"></i></button>
-                </span>
-            </div>
-        }
-    </div>
-<li>
-    <div class="form-group">
-        @using (Html.BeginForm("SearchPartByModelAndName", "Part", FormMethod.Get))
-        {
-            <div class="input-group m-1">
-                <input id="languageId" name="language" hidden value="@Model.Language"/>
-                <label for="searchByPartModel">@Resources.FrontEnd.SearchByPartModelName</label>
-                @Html.TextBoxFor(m=>m.PartModelName, new {@class="form-control-sm", type="search", placeholder="Part number", id="searchByPartModel"})
-                <label for="searchByPartName">@Resources.FrontEnd.SearchByPartPartDescription</label>
-                @Html.TextBoxFor(m=>m.PartName, new {@class="form-control-sm", type="search", placeholder="Part number", id="searchByPartName"})
-                <span class="input-group-append">
-                    <button type="submit" class="btn-sm btn-outline-primary"><i class="fa fa-search"></i></button>
-                </span>
-            </div>
-        }
-    </div>
 </li>

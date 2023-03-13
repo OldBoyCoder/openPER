@@ -18,14 +18,14 @@
                 <hr />
                 @if (Model != null && Model.Result != null)
                 {
-                    <table class="table">
-                        <tr><th>@Model.Result.PartNumber</th><th>@Model.Result.Description</th><th></th><th></th></tr>
+                    <table class="table table-sm">
+                        <tr><td>@Model.Result.PartNumber</td><td>@Model.Result.Description</td><th></th><th></th></tr>
                         <tr><td>Family</td><td>@Model.Result.FamilyCode - @Model.Result.FamilyDescription</td><td></td><td></td></tr>
                         <tr><td>Weight (grams)</td><td>@Model.Result.Weight</td><td></td><td></td></tr>
                         <tr><td>Measurement unit</td><td>@Model.Result.UnitOfSale</td><td></td><td></td></tr>
                     </table>
                     <h3>Replacements</h3>
-                    <table class="table">
+                    <table class="table table-sm">
                         <tr><th>Repl. date</th><th>Replaced</th><th>Replacing</th><th>Description</th><th>Applicability</th></tr>
                         @foreach (var r in Model.Result.ReplacedBy)
                         {
@@ -39,7 +39,7 @@
                         }
                     </table>
                     <h3>Product previously in use</h3>
-                    <table class="table">
+                    <table class="table table-sm">
                         <tr><th>Repl. date</th><th>Replacing</th><th>Replaced</th><th>Description</th></tr>
                         @foreach (var r in Model.Result.Replaces)
                         {
