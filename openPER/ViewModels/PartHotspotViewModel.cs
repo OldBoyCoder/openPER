@@ -1,4 +1,6 @@
-﻿namespace openPER.ViewModels
+﻿using System.Security.AccessControl;
+
+namespace openPER.ViewModels
 {
     public class PartHotspotViewModel
     {
@@ -10,8 +12,8 @@
         public double YPercent { get; set; }
         public double WidthPercent { get; set; }
         public double HeightPercent { get; set; }
-        public int TableOrder { get; set; }
-        public string PartNumber { get; set; }
+
+        public string Link;
         //left: @(h.XPercent)%; top: @(h.YPercent)%; width: @(h.WidthPercent)%; height:@(h.HeightPercent)% display: block; position: absolute
         public string PositionHtml
         {

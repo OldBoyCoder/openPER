@@ -25,5 +25,6 @@ namespace openPERModels
         public string ImagePath { get; set; }
 
         public  string Path => $"{MakeCode}/{ModelCode}/{CatalogueCode}/{GroupCode:00}/{SubGroupCode:000}/{SubSubGroupCode:00}";
+        public List<PartHotspotModel> Links { get; set; }
     }
 }

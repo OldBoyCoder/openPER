@@ -124,17 +124,18 @@ namespace openPERRepositories.Repositories
             return map;
         }
 
-        private string GetImageNameForDrawing(string catalogue, int group, int subgroup, int subSubGroup,
+        private (string ImageName, string Hotspots) GetDrawingInfo(string catalogue, int group, int subgroup, int subSubGroup,
             int drawing, int revision)
         {
-            string rc = "";
+            (string ImageName, string Hotspots) rc = (null, null);
             using var connection = new MySqlConnection(PathToDb);
-            var sql = @"SELECT DISTINCT IMG_PATH
+            var sql = @"SELECT IMG_PATH, HOTSPOTS
                             FROM DRAWINGS
                             WHERE CAT_COD = @p1 AND GRP_COD = @p2 AND SGRP_COD  = @p3 AND SGS_COD = @p4 AND VARIANTE = @p5 AND REVISIONE = @p6";
             connection.RunSqlFirstRowOnly(sql, (reader) =>
             {
-                rc = reader.GetString(0);
+                rc.ImageName = reader.GetString(0);
+                rc.Hotspots = reader.GetString(1);
             }, catalogue, group, subgroup, subSubGroup, drawing, revision);
             return rc;
         }
@@ -327,19 +328,43 @@ namespace openPERRepositories.Repositories
         }
         public TableModel GetTable(string catalogueCode, int groupCode, int subGroupCode, int sgsCode, int drawingNumber, int revision, string languageCode)
         {
-            var t = new TableModel();
-            using var connection = new MySqlConnection(PathToDb);
-            t.CatalogueCode = catalogueCode;
-            t.GroupCode = groupCode;
-            t.SubGroupCode = subGroupCode;
-            t.SubSubGroupCode = sgsCode;
-            t.GroupDesc = GetGroupDescription(groupCode, languageCode);
-            t.SubGroupDesc = GetSubGroupDescription(groupCode, subGroupCode, languageCode);
-            t.SgsDesc = GetSubSubGroupDescription(catalogueCode, groupCode, subGroupCode,sgsCode, languageCode);
-            t.Parts = GetTableParts(catalogueCode, groupCode, subGroupCode, sgsCode, drawingNumber, revision, languageCode);
-            t.DrawingNumbers = GetDrawingNumbers(catalogueCode, groupCode, subGroupCode, sgsCode, revision);
-            t.CurrentDrawing = drawingNumber;
-            t.ImagePath = PathToCdn + GetImageNameForDrawing(catalogueCode, groupCode, subGroupCode, sgsCode, drawingNumber, revision);
+            var (imageName, hotspots) = GetDrawingInfo(catalogueCode, groupCode, subGroupCode, sgsCode, drawingNumber, revision);
+            var t = new TableModel
+            {
+                CatalogueCode = catalogueCode,
+                GroupCode = groupCode,
+                SubGroupCode = subGroupCode,
+                SubSubGroupCode = sgsCode,
+                GroupDesc = GetGroupDescription(groupCode, languageCode),
+                SubGroupDesc = GetSubGroupDescription(groupCode, subGroupCode, languageCode),
+                SgsDesc = GetSubSubGroupDescription(catalogueCode, groupCode, subGroupCode,sgsCode, languageCode),
+                Parts = GetTableParts(catalogueCode, groupCode, subGroupCode, sgsCode, drawingNumber, revision, languageCode),
+                DrawingNumbers = GetDrawingNumbers(catalogueCode, groupCode, subGroupCode, sgsCode, revision),
+                CurrentDrawing = drawingNumber,
+                ImagePath = PathToCdn + imageName,
+                Links = new List<PartHotspotModel>()
+            };
+            if (!string.IsNullOrEmpty(hotspots))
+            {
+                hotspots = hotspots.Replace("L->", "");
+                var links = hotspots.Split(";");
+                foreach (var link in links)
+                {
+                    var coords = link.Split(",");
+                    if (coords.Length == 5)
+                    {
+                        var h = new PartHotspotModel
+                        {
+                            X = int.Parse(coords[1]),
+                            Y = int.Parse(coords[2])
+                        };
+                        h.Width = int.Parse(coords[3]) - h.X + 1;
+                        h.Height = int.Parse(coords[4]) - h.Y + 1;
+                        h.Link = coords[0];
+                        t.Links.Add(h);
+                    }
+                }
+            }
             return t;
         }
         private List<TablePartModel> GetTableParts(string catalogueCode, int groupCode, int subGroupCode, int sgsCode, int drawingNumber, int revision, string languageCode)

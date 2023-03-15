@@ -144,6 +144,15 @@ namespace openPER.Controllers
                 h.WidthPercent = (double)h.Width * hFactor;
                 h.HeightPercent = (double)h.Height * vFactor;
             }
+            foreach (var h in tableData.Links)
+            {
+                double hFactor = 100.0 / (double)drawing.Width;
+                double vFactor = 100.0 / (double)drawing.Height;
+                h.XPercent = (double)h.X * hFactor;
+                h.YPercent = (double)h.Y * vFactor;
+                h.WidthPercent = (double)h.Width * hFactor;
+                h.HeightPercent = (double)h.Height * vFactor;
+            }
 
             tableData.MakeCode = drawing.MakeCode;
             tableData.SubMakeCode = drawing.SubMakeCode;

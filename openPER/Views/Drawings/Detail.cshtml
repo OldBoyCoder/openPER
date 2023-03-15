@@ -108,6 +108,12 @@
 
                                 <img src="~/SiteImages/HotSpot1x1.png" data-bs-toggle="tooltip" data-bs-placement="auto" data-bs-html="true" data-bs-title="@(h.TooltipText)" style="@(h.PositionHtml)">
                             }
+                            @foreach (var h in Model.TableData.Links)
+                            {
+                                <a href="@Url.Action("Detail", "Drawings", new { language=Model.Navigation.Language,Model.Navigation.Breadcrumb.MakeCode, Model.Navigation.Breadcrumb.SubMakeCode, Model.Navigation.Breadcrumb.ModelCode, Model.Navigation.Breadcrumb.CatalogueCode, GroupCode=h.Link.Substring(0,3), SubGroupCode=h.Link.Substring(3, 2), SubSubGroupCode=h.Link.Substring(6,3), DrawingNumber=0, Scope="SubSubGroup", VIN=Model.Navigation.Filter.Vin, MVS=Model.Navigation.Filter.Mvs  })">
+                                    <img src="~/SiteImages/HotSpot1x1.png" data-bs-toggle="tooltip" data-bs-placement="auto" data-bs-html="true" data-bs-title="@(h.TooltipText)" style="@(h.PositionHtml)">
+                                </a>
+                            }
                         </div>
                     </div>
                 </div>

@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using Microsoft.AspNetCore.Authentication;
 
 namespace openPER.ViewModels
 {
@@ -27,5 +28,6 @@ namespace openPER.ViewModels
         public string ImagePath { get; set; }
         public string Path => $"{MakeCode}/{ModelCode}/{CatalogueCode}/{GroupCode:00}/{SubGroupCode:000}/{SubSubGroupCode:00}";
         public Dictionary<string, PartHotspotViewModel> HotSpots { get; set; }
+        public List<PartHotspotViewModel> Links { get; set; }
     }
 }

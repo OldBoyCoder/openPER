@@ -14,5 +14,6 @@ namespace openPERModels
         public int Height { get; set; }
         public int TableOrder { get; set; }
         public string PartNumber { get; set; }
+        public string Link { get; set; }
     }
 }
