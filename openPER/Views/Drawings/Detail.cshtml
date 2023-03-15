@@ -101,7 +101,16 @@
             <div class="container-fluid">
                 <div class="row">
                     <div class="col-12">
-                        <img class="img-fluid" src="@Model.TableData.ImagePath">
+                        <div style="position: relative">
+                            <img class="img-fluid" src="@Model.TableData.ImagePath" alt="">
+                            @foreach (var p in Model.TableData.Parts)
+                            {
+                                @foreach (var h in p.Hotspots)
+                                {
+                                    <img src="~/SiteImages/HotSpot1x1.png" data-bs-toggle="tooltip" data-bs-placement="auto" data-bs-html="true" data-bs-title="@(p.TooltipText(Model.Navigation.Breadcrumb.MakeDescription))" style="@(h.PositionHtml)">
+                                }
+                            }
+                        </div>
                     </div>
                 </div>
             </div>
@@ -130,12 +139,12 @@
                                 @if (!item.Visible)
                                 {
                                     <del>
-                                        <a href="@Url.Action("SearchPartByPartNumber", "Part", new {Model.Navigation.Language, item.PartNumber })">@Html.DisplayFor(model => item.PartNumber)</a> <a href="https://www.google.com/search?q=@Model.Navigation.Breadcrumb.MakeDescription+@item.PartNumber" target="_blank" class="bi bi-search"></a>
+                                        <a href="@Url.Action("SearchPartByPartNumber", "Part", new {Model.Navigation.Language, item.PartNumber })">@Html.DisplayFor(model => item.PartNumber)</a> @Html.Raw(item.SearchLink(Model.Navigation.Breadcrumb.MakeDescription))
                                     </del>
                                 }
                                 else
                                 {
-                                    <a href="@Url.Action("SearchPartByPartNumber", "Part", new {Model.Navigation.Language, item.PartNumber })">@Html.DisplayFor(model => item.PartNumber)</a> <a href="https://www.google.com/search?q=@Model.Navigation.Breadcrumb.MakeDescription+@item.PartNumber" target="_blank" class="bi bi-search"></a>
+                                    <a href="@Url.Action("SearchPartByPartNumber", "Part", new {Model.Navigation.Language, item.PartNumber })">@Html.DisplayFor(model => item.PartNumber)</a> @Html.Raw(item.SearchLink(Model.Navigation.Breadcrumb.MakeDescription))
                                 }
 
                             </td>
@@ -143,12 +152,12 @@
                                 @if (!item.Visible)
                                 {
                                     <del>
-                                        @Html.DisplayFor(model => item.Description) @Html.DisplayFor(model => item.FurtherDescription)
+                                        @Html.DisplayFor(model => item.FullDescription)
                                     </del>
                                 }
                                 else
                                 {
-                                    @Html.DisplayFor(model => item.Description) @Html.DisplayFor(model => item.FurtherDescription)
+                                    @Html.DisplayFor(model => item.FullDescription)
                                 }
                             </td>
 

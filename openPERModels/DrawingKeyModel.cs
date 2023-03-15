@@ -28,6 +28,9 @@ namespace openPERModels
         public string ImagePath { get; set; }
         public bool Visible { get; set; } = true;
         public List<ModificationModel> Modifications { get; set; }
+        public int Width { get; set; }
+        public int Height { get; set; }
+
 
     }
 }

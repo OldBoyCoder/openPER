@@ -213,7 +213,7 @@ namespace openPERRepositories.Repositories
         {
             var drawings = new List<DrawingKeyModel>();
             using var connection = new MySqlConnection(PathToDb);
-            var sql = @"SELECT DISTINCT CAT_COD, GRP_COD, SGRP_COD, SGS_COD, VARIANTE, IFNULL( PATTERN, ''), REVISIONE, IFNULL(MODIF, ''), DSC, IMG_PATH
+            var sql = @"SELECT DISTINCT CAT_COD, GRP_COD, SGRP_COD, SGS_COD, VARIANTE, IFNULL( PATTERN, ''), REVISIONE, IFNULL(MODIF, ''), DSC, IMG_PATH, WIDTH, HEIGHT
                             FROM DRAWINGS
                             JOIN TABLES_DSC TD ON TD.LNG_COD = @p5 AND TD.COD = TABLE_DSC_COD
                             WHERE CAT_COD = @p1 AND GRP_COD = @p2 AND SGRP_COD = @p3 AND SGS_COD = @p4
@@ -234,8 +234,9 @@ namespace openPERRepositories.Repositories
                     RevisionModifications = reader.GetString(7),
                     Description = reader.GetString(8),
                     Modifications = reader.IsDBNull(7) ? new List<ModificationModel>() :
-                        CreateModificationListFromString(catalogueCode, reader.GetString(7), languageCode)
-
+                        CreateModificationListFromString(catalogueCode, reader.GetString(7), languageCode),
+                    Width = reader.GetInt32(10),
+                    Height = reader.GetInt32(11)
                 };
                 var thumbImagePath = reader.GetString(9);
                 var imageParts = thumbImagePath.Split(new[] { '.' });
@@ -251,7 +252,7 @@ namespace openPERRepositories.Repositories
         {
             var drawings = new List<DrawingKeyModel>();
             using var connection = new MySqlConnection(PathToDb);
-            var sql = @"SELECT DISTINCT CAT_COD, GRP_COD, SGRP_COD, SGS_COD, VARIANTE, IFNULL( PATTERN, ''), REVISIONE, IFNULL(MODIF, ''), DSC, IMG_PATH
+            var sql = @"SELECT DISTINCT CAT_COD, GRP_COD, SGRP_COD, SGS_COD, VARIANTE, IFNULL( PATTERN, ''), REVISIONE, IFNULL(MODIF, ''), DSC, IMG_PATH, WIDTH, HEIGHT
                             FROM DRAWINGS
                             JOIN TABLES_DSC TD ON TD.LNG_COD = @p4 AND TD.COD = TABLE_DSC_COD
                             WHERE CAT_COD = @p1 AND GRP_COD = @p2 AND SGRP_COD = @p3
@@ -272,7 +273,9 @@ namespace openPERRepositories.Repositories
                     RevisionModifications = reader.GetString(7),
                     Description = reader.GetString(8),
                     Modifications = reader.IsDBNull(7) ? new List<ModificationModel>() :
-                        CreateModificationListFromString(catalogueCode, reader.GetString(7), languageCode)
+                        CreateModificationListFromString(catalogueCode, reader.GetString(7), languageCode),
+                    Width = reader.GetInt32(10),
+                    Height = reader.GetInt32(11),
 
                 };
                 var thumbImagePath = reader.GetString(9);
@@ -288,7 +291,7 @@ namespace openPERRepositories.Repositories
         {
             var drawings = new List<DrawingKeyModel>();
             using var connection = new MySqlConnection(PathToDb);
-            var sql = @"SELECT DISTINCT CAT_COD, GRP_COD, SGRP_COD, SGS_COD, VARIANTE, IFNULL( PATTERN, ''), REVISIONE, IFNULL(MODIF, ''), DSC, IMG_PATH
+            var sql = @"SELECT DISTINCT CAT_COD, GRP_COD, SGRP_COD, SGS_COD, VARIANTE, IFNULL( PATTERN, ''), REVISIONE, IFNULL(MODIF, ''), DSC, IMG_PATH, WIDTH, HEIGHT
                             FROM DRAWINGS
                             JOIN TABLES_DSC TD ON TD.LNG_COD = @p3 AND TD.COD = TABLE_DSC_COD
                             WHERE CAT_COD = @p1 AND GRP_COD = @p2 
@@ -309,7 +312,9 @@ namespace openPERRepositories.Repositories
                     RevisionModifications = reader.GetString(7),
                     Description = reader.GetString(8),
                     Modifications = reader.IsDBNull(7) ? new List<ModificationModel>() :
-                        CreateModificationListFromString(catalogueCode, reader.GetString(7), languageCode)
+                        CreateModificationListFromString(catalogueCode, reader.GetString(7), languageCode),
+                    Width = reader.GetInt32(10),
+                    Height = reader.GetInt32(11),
 
                 };
                 var thumbImagePath = reader.GetString(9);
@@ -341,7 +346,7 @@ namespace openPERRepositories.Repositories
         {
             var parts = new List<TablePartModel>();
             var sql = @"SELECT TBD_RIF, PRT_COD, TBD_QTY, CDS_DSC, TBD_NOTE1, TBD_NOTE2, TBD_NOTE3,
-                                        TBD_SEQ, NTS_DSC, TBD_VAL_FORMULA, DAD.DSC, MODIF, COL_COD
+                                        TBD_SEQ, NTS_DSC, TBD_VAL_FORMULA, DAD.DSC, MODIF, COL_COD, HOTSPOTS
                                         FROM TBDATA
                                         JOIN CODES_DSC ON TBDATA.CDS_COD = CODES_DSC.CDS_COD AND CODES_DSC.LNG_COD = @p1
                                         LEFT OUTER JOIN NOTES_DSC ON NOTES_DSC.NTS_COD = TBDATA.NTS_COD AND NOTES_DSC.LNG_COD = @p1
@@ -372,6 +377,14 @@ namespace openPERRepositories.Repositories
                 {
                     part.Colours = CreateColourCollection(catalogueCode, languageCode, part.Colour);
                 }
+
+                if (!reader.IsDBNull(13))
+                {
+                    // We have hotspots
+                    var hotspotText = reader.GetString(13);
+                    // Hotspots are sets of coordinate x1, y1, x2, y2 separated by semicolons;
+                    part.Hotspots = ParseHotspotsFromString(hotspotText, part.TableOrder, part.PartNumber);
+                }
                 parts.Add(part);
 
             }, languageCode, drawingNumber, sgsCode, subGroupCode, groupCode, catalogueCode, revision);
@@ -381,6 +394,36 @@ namespace openPERRepositories.Repositories
                 part.IsAComponent = IsPartAComponent(part);
             }
             return parts;
+        }
+
+        private static List<PartHotspotModel> ParseHotspotsFromString(string hotspotText, int tableOrder, string partNumber)
+        {
+            var rc = new List<PartHotspotModel>();  
+            try
+            {
+                var sets = hotspotText.Split(";");
+                foreach (var set in sets)
+                {
+                    var coords = set.Split(",");
+                    if (coords.Length != 4) break;
+                    var h = new PartHotspotModel();
+                    h.X = int.Parse(coords[0]);
+                    h.Y = int.Parse(coords[1]);
+                    var X2 = int.Parse(coords[2]);
+                    var Y2 = int.Parse(coords[3]);
+                    h.Width = X2 - h.X + 1;
+                    h.Height = Y2 - h.Y + 1;
+                    h.PartNumber = partNumber;
+                    h.TableOrder = tableOrder;
+                    rc.Add(h);
+                }
+            }
+            catch (Exception)
+            {
+                return rc;
+            }
+
+            return rc;
         }
 
         private List<ColourModel> CreateColourCollection(string catalogueCode, string languageCode, string partColour)

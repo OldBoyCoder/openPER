@@ -25,6 +25,7 @@ namespace openPER.ViewModels
         public List<string> Narratives { get; set; }
         public string HighlightPart { get; set; }
         public string ImagePath { get; set; }
-        public  string Path => $"{MakeCode}/{ModelCode}/{CatalogueCode}/{GroupCode:00}/{SubGroupCode:000}/{SubSubGroupCode:00}";
+        public string Path => $"{MakeCode}/{ModelCode}/{CatalogueCode}/{GroupCode:00}/{SubGroupCode:000}/{SubSubGroupCode:00}";
+
     }
 }

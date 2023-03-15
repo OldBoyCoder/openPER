@@ -22,6 +22,8 @@ namespace openPER.ViewModels
         public string ImagePath { get; set; }
         public bool Visible { get; set; }
         public List<ModificationViewModel> Modifications { get; set; }
+        public int Width { get; set; }
+        public int Height { get; set; }
 
 
     }

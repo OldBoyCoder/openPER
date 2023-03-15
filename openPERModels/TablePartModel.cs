@@ -19,5 +19,6 @@ namespace openPERModels
         public bool IsAComponent { get; set; }
         public string Colour { get; set; }
         public List<ColourModel> Colours { get; set; }
+        public List<PartHotspotModel> Hotspots { get; set; }
     }
 }

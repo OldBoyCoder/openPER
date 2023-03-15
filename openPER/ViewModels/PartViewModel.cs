@@ -1,4 +1,6 @@
 ﻿using System.Collections.Generic;
+using System.Security.AccessControl;
+using Microsoft.AspNetCore.Html;
 
 namespace openPER.ViewModels
 {
@@ -24,6 +26,24 @@ namespace openPER.ViewModels
         public string Colour { get; set; }
         public List<ColourViewModel> Colours { get; set; } = new();
 
+        public List<PartHotspotViewModel> Hotspots { get; set; }
 
+        public string FullDescription => $"{Description} {FurtherDescription}";
+        public string TooltipText(string makeDescription)
+        {
+            var rc =
+                $"{PartNumber}<br/>{FullDescription}";
+            //rc += SearchLink(makeDescription);
+
+            return rc;
+        }
+        public string SearchLink(string makeDescription)
+        {
+            var rc =
+                $"<a href=\"https://www.google.com/search?q={makeDescription}+{PartNumber}\" target=\"_blank\" class=\"bi bi-search\"></a>";
+
+            return rc;
+        }
     }
+
 }

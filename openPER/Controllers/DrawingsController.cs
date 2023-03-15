@@ -108,6 +108,20 @@ namespace openPER.Controllers
             var tableData = _mapper.Map<TableModel, TableViewModel>(
                 _rep.GetTable(drawing.CatalogueCode, drawing.GroupCode, drawing.SubGroupCode,
                     drawing.SubSubGroupCode, drawing.Variant, drawing.Revision, language));
+            //Calculate hotspot as percentages to aid drawing
+            foreach (var p in tableData.Parts)
+            {
+                foreach (var h in p.Hotspots)
+                {
+                    double hFactor = 100.0 / (double)drawing.Width;
+                    double vFactor = 100.0 / (double)drawing.Height;
+                    h.XPercent = (double)h.X * hFactor ;
+                    h.YPercent = (double)h.Y * vFactor ;
+                    h.WidthPercent = (double)h.Width * hFactor ;
+                    h.HeightPercent = (double)h.Height * vFactor ;
+                }
+
+            }
             tableData.MakeCode = drawing.MakeCode;
             tableData.SubMakeCode = drawing.SubMakeCode;
             tableData.ModelCode = drawing.ModelCode;

@@ -84,7 +84,6 @@
   <ItemGroup>
     <Folder Include="Data\Release84\VinData\" />
     <Folder Include="Interfaces\" />
-    <Folder Include="wwwroot\SiteImages\" />
   </ItemGroup>
 
   <ItemGroup>
