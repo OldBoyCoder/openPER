@@ -24,5 +24,7 @@
             }
         }
 
+        public string Key => $"{X}:{Y}:{Width}:{Height}";
+        public string TooltipText { get; set; }
     }
 }

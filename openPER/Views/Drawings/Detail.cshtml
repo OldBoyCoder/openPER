@@ -103,12 +103,10 @@
                     <div class="col-12">
                         <div style="position: relative">
                             <img class="img-fluid" src="@Model.TableData.ImagePath" alt="">
-                            @foreach (var p in Model.TableData.Parts)
+                            @foreach (var h in Model.TableData.HotSpots.Values)
                             {
-                                @foreach (var h in p.Hotspots)
-                                {
-                                    <img src="~/SiteImages/HotSpot1x1.png" data-bs-toggle="tooltip" data-bs-placement="auto" data-bs-html="true" data-bs-title="@(p.TooltipText(Model.Navigation.Breadcrumb.MakeDescription))" style="@(h.PositionHtml)">
-                                }
+
+                                <img src="~/SiteImages/HotSpot1x1.png" data-bs-toggle="tooltip" data-bs-placement="auto" data-bs-html="true" data-bs-title="@(h.TooltipText)" style="@(h.PositionHtml)">
                             }
                         </div>
                     </div>

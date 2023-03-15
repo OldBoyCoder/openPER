@@ -105,23 +105,46 @@ namespace openPER.Controllers
 
         private TableViewModel PopulateTableViewModelFromDrawing(DrawingKeyViewModel drawing, string language, string mvs, string vin)
         {
-            var tableData = _mapper.Map<TableModel, TableViewModel>(
-                _rep.GetTable(drawing.CatalogueCode, drawing.GroupCode, drawing.SubGroupCode,
-                    drawing.SubSubGroupCode, drawing.Variant, drawing.Revision, language));
-            //Calculate hotspot as percentages to aid drawing
+            var data = _rep.GetTable(drawing.CatalogueCode, drawing.GroupCode, drawing.SubGroupCode,
+                drawing.SubSubGroupCode, drawing.Variant, drawing.Revision, language);
+            var tableData = _mapper.Map<TableModel, TableViewModel>(data);
+            // Hotspots are held at individual part in the table level
+            // however we want to unify them so that one tooltip shows all parts for that tooltip
+            tableData.HotSpots = new Dictionary<string, PartHotspotViewModel>();
             foreach (var p in tableData.Parts)
             {
                 foreach (var h in p.Hotspots)
                 {
-                    double hFactor = 100.0 / (double)drawing.Width;
-                    double vFactor = 100.0 / (double)drawing.Height;
-                    h.XPercent = (double)h.X * hFactor ;
-                    h.YPercent = (double)h.Y * vFactor ;
-                    h.WidthPercent = (double)h.Width * hFactor ;
-                    h.HeightPercent = (double)h.Height * vFactor ;
-                }
+                    PartHotspotViewModel newHotspot;
+                    if (tableData.HotSpots.ContainsKey(h.Key))
+                        newHotspot = tableData.HotSpots[h.Key];
+                    else
+                    {
+                        newHotspot = new PartHotspotViewModel
+                        {
+                            TooltipText = "",
+                            X = h.X,
+                            Y = h.Y,
+                            Width = h.Width,
+                            Height = h.Height
+                        };
+                        tableData.HotSpots.Add(h.Key, newHotspot);
 
+                    }
+                    newHotspot.TooltipText += $"{p.PartNumber} - {p.FullDescription}<br/>";
+                }
             }
+            //Calculate hotspot as percentages to aid drawing
+            foreach (var h in tableData.HotSpots.Values)
+            {
+                double hFactor = 100.0 / (double)drawing.Width;
+                double vFactor = 100.0 / (double)drawing.Height;
+                h.XPercent = (double)h.X * hFactor;
+                h.YPercent = (double)h.Y * vFactor;
+                h.WidthPercent = (double)h.Width * hFactor;
+                h.HeightPercent = (double)h.Height * vFactor;
+            }
+
             tableData.MakeCode = drawing.MakeCode;
             tableData.SubMakeCode = drawing.SubMakeCode;
             tableData.ModelCode = drawing.ModelCode;

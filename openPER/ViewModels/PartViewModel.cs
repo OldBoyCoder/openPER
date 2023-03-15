@@ -29,14 +29,7 @@ namespace openPER.ViewModels
         public List<PartHotspotViewModel> Hotspots { get; set; }
 
         public string FullDescription => $"{Description} {FurtherDescription}";
-        public string TooltipText(string makeDescription)
-        {
-            var rc =
-                $"{PartNumber}<br/>{FullDescription}";
-            //rc += SearchLink(makeDescription);
 
-            return rc;
-        }
         public string SearchLink(string makeDescription)
         {
             var rc =
