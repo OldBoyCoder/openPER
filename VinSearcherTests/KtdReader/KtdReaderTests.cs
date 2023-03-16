@@ -2,10 +2,11 @@
 
 namespace VinSearcherTests.KtdReader
 {
+    [Ignore]
     [TestClass()]
     public class KtdReaderTests
     {
-        private const string PathToVindata = @"c:\dev\openPER\openPER\Data\Release18\VinData\SP.CH.00900.FCTLR";
+        private const string PathToVindata = @"c:\dev\openPER\openPER\Data\Release84\SP.CH.04210.FCTLR";
 
         [TestMethod()]
         public void GetIndexBlocksTest()

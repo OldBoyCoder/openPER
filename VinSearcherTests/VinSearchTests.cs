@@ -6,8 +6,8 @@ namespace VinSearcherTests
     [TestClass()]
     public class VinSearchTests
     {
-        private const string PathToVindataCh = @"c:\dev\openPER\openPER\Data\Release84\VinData\SP.CH.04210.FCTLR";
-        private const string PathToVindataRt = @"c:\dev\openPER\openPER\Data\Release84\VinData\SP.RT.04210.FCTLR";
+        private const string PathToVindataCh = @"c:\dev\openPER\openPER\Data\Release84\SP.CH.04210.FCTLR";
+        private const string PathToVindataRt = @"c:\dev\openPER\openPER\Data\Release84\SP.RT.04210.FCTLR";
         [TestMethod()]
         public void FindVehiclesByFullVinTest()
         {
