@@ -87,8 +87,8 @@ namespace openPER.Controllers
         private List<DrawingKeyViewModel> RemoveUnwantedDrawings(string catalogueCode, string language, List<DrawingKeyViewModel> drawings, string vin, string mvs)
         {
             var rc = new List<DrawingKeyViewModel>();
-            string sinComPattern = _rep.GetSincomPattern(mvs);
-            string vehiclePattern = _rep.GetVehiclePattern(language, vin);
+            var sinComPattern = _rep.GetSincomPattern(mvs);
+            var vehiclePattern = _rep.GetVehiclePattern(language, vin);
             var vmkCodes = _rep.GetVmkDataForCatalogue(catalogueCode, language);
             if (vehiclePattern != "") sinComPattern = vehiclePattern;
             var vehicleModificationFilters = _rep.GetFiltersForVehicle(language, vin, mvs);
@@ -139,7 +139,7 @@ namespace openPER.Controllers
                 p.CompatibilityTooltip = "";
                 if (!string.IsNullOrEmpty(p.Compatibility))
                 {
-                    var symbols = PatternMatchHelper.GetSymbolsFromPattern(p.Compatibility, out var newPattern);
+                    var symbols = PatternMatchHelper.GetSymbolsFromPattern(p.Compatibility, out _);
                     foreach (var symbol in symbols.OrderBy(x=>x.Key))
                     {
                         var o = options.FirstOrDefault(x => (x.TypeCode + x.ValueCode).Trim() == symbol.Key);
@@ -153,21 +153,21 @@ namespace openPER.Controllers
             //Calculate hotspot as percentages to aid drawing
             foreach (var h in tableData.HotSpots.Values)
             {
-                double hFactor = 100.0 / (double)drawing.Width;
-                double vFactor = 100.0 / (double)drawing.Height;
-                h.XPercent = (double)h.X * hFactor;
-                h.YPercent = (double)h.Y * vFactor;
-                h.WidthPercent = (double)h.Width * hFactor;
-                h.HeightPercent = (double)h.Height * vFactor;
+                var hFactor = 100.0 / drawing.Width;
+                var vFactor = 100.0 / drawing.Height;
+                h.XPercent = h.X * hFactor;
+                h.YPercent = h.Y * vFactor;
+                h.WidthPercent = h.Width * hFactor;
+                h.HeightPercent = h.Height * vFactor;
             }
             foreach (var h in tableData.Links)
             {
-                double hFactor = 100.0 / (double)drawing.Width;
-                double vFactor = 100.0 / (double)drawing.Height;
-                h.XPercent = (double)h.X * hFactor;
-                h.YPercent = (double)h.Y * vFactor;
-                h.WidthPercent = (double)h.Width * hFactor;
-                h.HeightPercent = (double)h.Height * vFactor;
+                var hFactor = 100.0 / drawing.Width;
+                var vFactor = 100.0 / drawing.Height;
+                h.XPercent = h.X * hFactor;
+                h.YPercent = h.Y * vFactor;
+                h.WidthPercent = h.Width * hFactor;
+                h.HeightPercent = h.Height * vFactor;
                 h.LinkDescription = _rep.GetGroupDescription(int.Parse(h.LinkGroupCode), language) + " - " +
                                     _rep.GetSubGroupDescription(int.Parse(h.LinkGroupCode),
                                         int.Parse(h.LinkSubGroupCode), language) + " - " +
