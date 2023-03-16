@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using AutoMapper;
 using Microsoft.AspNetCore.Mvc;
 using openPER.Helpers;
@@ -111,6 +112,8 @@ namespace openPER.Controllers
             // Hotspots are held at individual part in the table level
             // however we want to unify them so that one tooltip shows all parts for that tooltip
             tableData.HotSpots = new Dictionary<string, PartHotspotViewModel>();
+            var options = _rep.GetMvsDetailsForCatalogue(drawing.CatalogueCode, language);
+
             foreach (var p in tableData.Parts)
             {
                 foreach (var h in p.Hotspots)
@@ -132,6 +135,19 @@ namespace openPER.Controllers
 
                     }
                     newHotspot.TooltipText += $"{p.PartNumber} - {p.FullDescription}<br/>";
+                }
+                p.CompatibilityTooltip = "";
+                if (!string.IsNullOrEmpty(p.Compatibility))
+                {
+                    var symbols = PatternMatchHelper.GetSymbolsFromPattern(p.Compatibility, out var newPattern);
+                    foreach (var symbol in symbols.OrderBy(x=>x.Key))
+                    {
+                        var o = options.FirstOrDefault(x => (x.TypeCode + x.ValueCode).Trim() == symbol.Key);
+                        if (o != null)
+                            p.CompatibilityTooltip += $"<em>{symbol.Key}</em>&nbsp;-&nbsp;{o.TypeDescription} {o.CodeDescription}<br/>";
+                        else
+                            p.CompatibilityTooltip += $"<em>{symbol.Key}<br/>";
+                    }
                 }
             }
             //Calculate hotspot as percentages to aid drawing
@@ -165,6 +181,7 @@ namespace openPER.Controllers
             tableData.Revision = drawing.Revision;
             tableData.Variant = drawing.Variant;
             if (mvs == "") return tableData;
+
             var sinComPattern = _rep.GetSincomPattern(mvs);
             var vmkCodes = _rep.GetVmkDataForCatalogue(drawing.CatalogueCode, language);
             var vehiclePattern = _rep.GetVehiclePattern(language, vin);
@@ -178,6 +195,7 @@ namespace openPER.Controllers
                     if (!PatternMatchHelper.EvaluateRule(pattern, sinComPattern, vmkCodes, !string.IsNullOrEmpty(vehiclePattern)))
                         p.Visible = false;
                 }
+
                 var modifications = p.Modifications;
                 foreach (var mod in modifications)
                 {

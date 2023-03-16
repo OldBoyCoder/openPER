@@ -165,12 +165,12 @@
                                 }
                             </td>
 
-                            <td>@Html.DisplayFor(model => item.Compatibility)</td>
+                            <td><span data-bs-toggle="tooltip" data-bs-placement="auto" title="@item.CompatibilityTooltip" data-bs-html="true">@item.Compatibility</span></td>
                             <td>
                                 <ul>
                                     @foreach (var mod in item.Modifications)
                                     {
-                                        <li title="@mod.FullDescription">@Html.DisplayFor(model => mod.Type)@Html.DisplayFor(model => mod.Code)</li>
+                                        <li data-bs-toggle="tooltip" data-bs-placement="auto" data-bs-title="@mod.FullDescription">@Html.DisplayFor(model => mod.Type)@Html.DisplayFor(model => mod.Code)</li>
                                     }
                                 </ul>
                             </td>

@@ -16,7 +16,7 @@ namespace openPER.ViewModels
             {
                 var rc = $"{Code} - {Description}";
                 if (Activations.Count > 0) rc += " (";
-                rc += string.Join(',', Activations.Select(x => $"{x.ActivationCode.Trim()} {x.ActivationDescription.Trim()}"));
+                rc += string.Join(',', Activations.Select(x => $"{x.ActivationDescription.Trim()}"));
                 if (Activations.Count > 0) rc += ")";
                 return rc;
             }

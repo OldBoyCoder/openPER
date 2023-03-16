@@ -36,14 +36,12 @@ namespace openPER.Helpers
             }
             return EvaluateRule(pattern, values, vmkCodes, preciseMatch);
         }
-        public static bool EvaluateRule(string pattern, Dictionary<string, bool> values, List<VmkModel> vmkCodes, bool preciseMatch)
+        public static Dictionary<string, bool> GetSymbolsFromPattern(string pattern,out string  newPattern)
         {
-            var dt = new DataTable();
             var symbol = false;
             var symbolName = "";
             var allSymbols = new Dictionary<string, bool>();
-            var newPattern = "";
-            bool v;
+            newPattern = "";
             foreach (var c in pattern)
             {
                 if (!symbol)
@@ -82,6 +80,15 @@ namespace openPER.Helpers
                 allSymbols[symbolName] = false;
                 newPattern += "|";
             }
+
+            return allSymbols;
+
+        }
+        public static bool EvaluateRule(string pattern, Dictionary<string, bool> values, List<VmkModel> vmkCodes, bool preciseMatch)
+        {
+            var dt = new DataTable();
+            bool v;
+            var allSymbols = GetSymbolsFromPattern(pattern, out var newPattern);
             foreach (var item in values)
             {
                 newPattern = newPattern.Replace($"|{item.Key}|", item.Value ? " true " : " false ");
