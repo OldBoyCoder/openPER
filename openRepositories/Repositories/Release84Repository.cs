@@ -54,7 +54,7 @@ namespace openPERRepositories.Repositories
                         JOIN MAP_INFO MI ON MI.MAP_NAME = C.MAP_NAME
                         JOIN GROUPS_DSC GD ON GD.GRP_COD = M.GRP_COD AND LNG_COD = @p2
                         WHERE C.CAT_COD = @p1
-                            AND M.GRP_COD IN (SELECT DISTINCT GRP_COD FROM TBDATA WHERE CAT_COD = @p1)
+                            AND M.GRP_COD IN (SELECT DISTINCT GRP_COD FROM DRAWINGS WHERE CAT_COD = @p1)
                         ORDER BY MPG_TY, MPG_TX, MPG_INDEX";
             connection.RunSqlAllRows(sql, (reader) =>
             {
@@ -107,7 +107,7 @@ namespace openPERRepositories.Repositories
             var sql = @"select POINT_X, POINT_Y, M.SGRP_COD, SGRP_DSC from MAP_SGRP M
                         JOIN SUBGROUPS_DSC S ON S.GRP_COD = @p1 AND S.SGRP_COD = M.SGRP_COD AND S.LNG_COD = @p4
                         WHERE M.GRP_COD = @p1 AND MAP_NAME = @p2 AND M.SGRP_COD IN (
-                            select distinct T.SGRP_COD FROM TBDATA T
+                            select distinct T.SGRP_COD FROM DRAWINGS T
                             WHERE CAT_COD = @p3 AND T.GRP_COD = @p1)";
             connection.RunSqlAllRows(sql, (reader) =>
             {
@@ -370,7 +370,7 @@ namespace openPERRepositories.Repositories
         private List<TablePartModel> GetTableParts(string catalogueCode, int groupCode, int subGroupCode, int sgsCode, int drawingNumber, int revision, string languageCode)
         {
             var parts = new List<TablePartModel>();
-            var sql = @"SELECT TBD_RIF, PRT_COD, TBD_QTY, CDS_DSC, TBD_NOTE1, TBD_NOTE2, TBD_NOTE3,
+            var sql = @"SELECT TBD_RIF, PRT_COD, TBD_QTY, CDS_DSC, 
                                         TBD_SEQ, NTS_DSC, TBD_VAL_FORMULA, DAD.DSC, MODIF, COL_COD, HOTSPOTS
                                         FROM TBDATA
                                         JOIN CODES_DSC ON TBDATA.CDS_COD = CODES_DSC.CDS_COD AND CODES_DSC.LNG_COD = @p1
@@ -387,26 +387,23 @@ namespace openPERRepositories.Repositories
                     TableOrder = reader.GetInt32(0),
                     Quantity = reader.GetString(2),
                     Description = reader.GetString(3),
-                    Notes1 = reader.IsDBNull(4) ? "" : reader.GetString(4),
-                    Notes2 = reader.IsDBNull(5) ? "" : reader.GetString(5),
-                    Notes3 = reader.IsDBNull(6) ? "" : reader.GetString(6),
-                    Sequence = reader.GetInt32(7),
-                    Notes = reader.IsDBNull(8) ? "" : reader.GetString(8),
-                    Compatibility = reader.IsDBNull(9) ? "" : reader.GetString(9),
-                    FurtherDescription = reader.IsDBNull(10) ? "" : reader.GetString(10).ToString(),
-                    Colour = reader.IsDBNull(12)?"":reader.GetString(12).Replace(",", " ")
+                    Sequence = reader.GetInt32(4),
+                    Notes = reader.IsDBNull(5) ? "" : reader.GetString(5),
+                    Compatibility = reader.IsDBNull(6) ? "" : reader.GetString(6),
+                    FurtherDescription = reader.IsDBNull(7) ? "" : reader.GetString(7).ToString(),
+                    Colour = reader.IsDBNull(9)?"":reader.GetString(9).Replace(",", " ")
                 };
-                if (!reader.IsDBNull(11))
-                    part.Modifications = GetPartModifications(catalogueCode, reader.GetString(11), languageCode);
+                if (!reader.IsDBNull(8))
+                    part.Modifications = GetPartModifications(catalogueCode, reader.GetString(8), languageCode);
                 if (part.Colour != "")
                 {
                     part.Colours = CreateColourCollection(catalogueCode, languageCode, part.Colour);
                 }
 
-                if (!reader.IsDBNull(13))
+                if (!reader.IsDBNull(10))
                 {
                     // We have hotspots
-                    var hotspotText = reader.GetString(13);
+                    var hotspotText = reader.GetString(10);
                     // Hotspots are sets of coordinate x1, y1, x2, y2 separated by semicolons;
                     part.Hotspots = ParseHotspotsFromString(hotspotText, part.TableOrder, part.PartNumber);
                 }
@@ -431,13 +428,15 @@ namespace openPERRepositories.Repositories
                 {
                     var coords = set.Split(",");
                     if (coords.Length != 4) break;
-                    var h = new PartHotspotModel();
-                    h.X = int.Parse(coords[0]);
-                    h.Y = int.Parse(coords[1]);
-                    var X2 = int.Parse(coords[2]);
-                    var Y2 = int.Parse(coords[3]);
-                    h.Width = X2 - h.X + 1;
-                    h.Height = Y2 - h.Y + 1;
+                    var h = new PartHotspotModel
+                    {
+                        X = int.Parse(coords[0]),
+                        Y = int.Parse(coords[1])
+                    };
+                    var x2 = int.Parse(coords[2]);
+                    var y2 = int.Parse(coords[3]);
+                    h.Width = x2 - h.X + 1;
+                    h.Height = y2 - h.Y + 1;
                     h.PartNumber = partNumber;
                     h.TableOrder = tableOrder;
                     rc.Add(h);
@@ -986,13 +985,15 @@ namespace openPERRepositories.Repositories
                                 where C.CDS_DSC LIKE '%" + partDescription + "%' AND CT.CAT_DSC LIKE '%" + modelName + "%'";
             connection.RunSqlAllRows(sql, (reader) =>
             {
-                var p = new PartModel();
-                p.PartNumber = reader.GetString(0);
-                p.Description = reader.GetString(2);
-                p.FamilyCode = reader.GetString(3);
-                p.FamilyDescription = reader.GetString(4);
-                p.UnitOfSale = reader.GetString(6);
-                p.Weight = reader.GetInt32(7);
+                var p = new PartModel
+                {
+                    PartNumber = reader.GetString(0),
+                    Description = reader.GetString(2),
+                    FamilyCode = reader.GetString(3),
+                    FamilyDescription = reader.GetString(4),
+                    UnitOfSale = reader.GetString(6),
+                    Weight = reader.GetInt32(7)
+                };
                 p.Drawings = GetDrawingsForPartNumber(p.PartNumber, languageCode);
                 rc.Add(p);
             }, languageCode);

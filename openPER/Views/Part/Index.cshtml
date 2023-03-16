@@ -16,7 +16,7 @@
 
             <div>
                 <hr />
-                @if (Model != null && Model.Result != null)
+                @if (Model is {Result: { } })
                 {
                     <table class="table table-sm">
                         <tr><td>@Model.Result.PartNumber</td><td>@Model.Result.Description</td><th></th><th></th></tr>

@@ -20,7 +20,7 @@
                     <tr>
                         <td>@p.CatalogueCode - @p.CatalogueDescription</td>
                         <td>
-                            <a href="@Url.Action("SearchPartByPartNumber", "Part", new {Model.Language,@p.PartNumber })">@p.PartNumber</a>
+                            <a href="@Url.Action("SearchPartByPartNumber", "Part", new {Model.Language,p.PartNumber })">@p.PartNumber</a>
                         </td>
                         <td>@p.Description</td>
                         <td>@p.FamilyCode - @p.FamilyDescription</td>

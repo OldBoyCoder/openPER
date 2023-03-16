@@ -43,22 +43,26 @@ namespace openPER.Controllers
             if (string.IsNullOrEmpty(partModelName) || string.IsNullOrEmpty(partName)) return NotFound();
 
             var parts = _rep.GetBasicPartSearch(partModelName, partName, language);
-            var model = new PartSearchResultsViewModel();
-            model.Navigation = NavigationHelper.PopulateNavigationModel(_mapper, _rep, language);
+            var model = new PartSearchResultsViewModel
+            {
+                Navigation = NavigationHelper.PopulateNavigationModel(_mapper, _rep, language),
+                Language = language
+            };
 
-            model.Language = language;
             foreach (var p in parts)
             {
-                var v = new PartSearchResultViewModel();
-                v.Description = p.Description;
-                v.FamilyCode = p.FamilyCode;
-                v.FamilyDescription = p.FamilyDescription;
-                v.PartNumber = p.PartNumber;
-                v.UnitOfSale = p.UnitOfSale;
-                v.Weight = p.Weight;
-                v.CatalogueCode = p.CatalogueCode;
-                v.CatalogueDescription = p.CatalogueDescription;
-                v.Drawings = p.Drawings;
+                var v = new PartSearchResultViewModel
+                {
+                    Description = p.Description,
+                    FamilyCode = p.FamilyCode,
+                    FamilyDescription = p.FamilyDescription,
+                    PartNumber = p.PartNumber,
+                    UnitOfSale = p.UnitOfSale,
+                    Weight = p.Weight,
+                    CatalogueCode = p.CatalogueCode,
+                    CatalogueDescription = p.CatalogueDescription,
+                    Drawings = p.Drawings
+                };
                 model.Results.Add(v);
 
             }

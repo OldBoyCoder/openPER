@@ -10,9 +10,6 @@ namespace openPERModels
         public string Quantity { get; set; }
         public int TableOrder { get; set; }
         public string Notes { get; set; }
-        public string Notes1 { get; set; }
-        public string Notes2 { get; set; }
-        public string Notes3 { get; set; }
         public int Sequence { get; set; }
         public List<ModificationModel> Modifications { get; set; }
         public string Compatibility { get; set; }

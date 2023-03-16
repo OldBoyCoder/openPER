@@ -25,8 +25,10 @@ namespace openPER.Controllers
         {
 
             ViewData["Language"] = language;
-            var results = new VinSearchResultsViewModel();
-            results.Navigation = NavigationHelper.PopulateNavigationModel(_mapper, _rep, language);
+            var results = new VinSearchResultsViewModel
+            {
+                Navigation = NavigationHelper.PopulateNavigationModel(_mapper, _rep, language)
+            };
 
             if (string.IsNullOrEmpty(fullVin) || fullVin.Length != 17)
                 return View("Index", results);

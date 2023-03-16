@@ -1,6 +1,4 @@
 ﻿using System.Collections.Generic;
-using System.Security.AccessControl;
-using Microsoft.AspNetCore.Html;
 
 namespace openPER.ViewModels
 {
@@ -13,9 +11,6 @@ namespace openPER.ViewModels
         public string Quantity { get; set; }
         public int TableOrder { get; set; }
         public string Notes { get; set; }
-        public string Notes1 { get; set; }
-        public string Notes2 { get; set; }
-        public string Notes3 { get; set; }
         public string Sequence { get; set; }
         public List<ModificationViewModel> Modifications { get; set; }
         public string Compatibility { get; internal set; }

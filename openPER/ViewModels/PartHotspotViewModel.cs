@@ -1,5 +1,4 @@
-﻿using System.Security.AccessControl;
-
+﻿
 namespace openPER.ViewModels
 {
     public class PartHotspotViewModel

@@ -1,6 +1,4 @@
-﻿using Microsoft.AspNetCore.Authentication;
-
-namespace openPER.ViewModels
+﻿namespace openPER.ViewModels
 {
     public class ColourViewModel
     {
