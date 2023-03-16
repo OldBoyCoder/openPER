@@ -45,6 +45,12 @@ namespace openPERRepositories.Interfaces
         public List<ModificationModel> GetCatalogueModifications(string catalogueCode, string language);
         public List<PartModel> GetBasicPartSearch(string modelName, string partDescription, string languageCode);
 
+        public string GetGroupDescription(int groupCode, string languageCode);
+        public string GetSubGroupDescription(int groupCode,
+            int subSubGroupCode, string languageCode);
+        public string GetSubSubGroupDescription(string catalogCode, int groupCode, int subGroupCode,
+            int subSubGroupCode, string languageCode);
+
     }
 
 }

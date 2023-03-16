@@ -152,6 +152,11 @@ namespace openPER.Controllers
                 h.YPercent = (double)h.Y * vFactor;
                 h.WidthPercent = (double)h.Width * hFactor;
                 h.HeightPercent = (double)h.Height * vFactor;
+                h.LinkDescription = _rep.GetGroupDescription(int.Parse(h.LinkGroupCode), language) + " - " +
+                                    _rep.GetSubGroupDescription(int.Parse(h.LinkGroupCode),
+                                        int.Parse(h.LinkSubGroupCode), language) + " - " +
+                                    _rep.GetSubSubGroupDescription(drawing.CatalogueCode, int.Parse(h.LinkGroupCode),
+                                        int.Parse(h.LinkSubGroupCode), int.Parse(h.LinkSubSubGroupCode), language);
             }
 
             tableData.MakeCode = drawing.MakeCode;

@@ -135,7 +135,7 @@ namespace openPERRepositories.Repositories
             connection.RunSqlFirstRowOnly(sql, (reader) =>
             {
                 rc.ImageName = reader.GetString(0);
-                rc.Hotspots = reader.GetString(1);
+                rc.Hotspots = reader.IsDBNull(1)?"": reader.GetString(1);
             }, catalogue, group, subgroup, subSubGroup, drawing, revision);
             return rc;
         }
@@ -602,7 +602,7 @@ namespace openPERRepositories.Repositories
             return rc;
         }
 
-        protected string GetGroupDescription(int groupCode, string languageCode)
+        public string GetGroupDescription(int groupCode, string languageCode)
         {
             using var connection = new MySqlConnection(PathToDb);
             string rc = "";
@@ -615,7 +615,7 @@ namespace openPERRepositories.Repositories
             return rc;
         }
 
-        private string GetSubGroupDescription(int groupCode, int subGroupCode, string languageCode)
+        public string GetSubGroupDescription(int groupCode, int subGroupCode, string languageCode)
         {
             using var connection = new MySqlConnection(PathToDb);
             var rc = "";
@@ -626,7 +626,7 @@ namespace openPERRepositories.Repositories
             }, groupCode, subGroupCode, languageCode);
             return rc;
         }
-        private string GetSubSubGroupDescription(string catalogCode, int groupCode, int subGroupCode, int subSubGroupCode, string languageCode)
+        public string GetSubSubGroupDescription(string catalogCode, int groupCode, int subGroupCode, int subSubGroupCode, string languageCode)
         {
             using var connection = new MySqlConnection(PathToDb);
             var rc = "";

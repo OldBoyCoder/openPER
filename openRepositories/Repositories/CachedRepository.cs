@@ -420,5 +420,45 @@ namespace openPERRepositories.Repositories
             return _rep.GetBasicPartSearch(modelName, partDescription, languageCode);
         }
 
+        public string GetGroupDescription(int groupCode, string languageCode)
+        {
+            var key = ("GetGroupDescription", groupCode, languageCode);
+            if (_cache.TryGetValue(key, out string cacheValue))
+            {
+                return cacheValue;
+            }
+
+            var rc = _rep.GetGroupDescription(groupCode, languageCode);
+            _cache.Set(key, rc, _options);
+            return rc;
+
+        }
+
+        public string GetSubGroupDescription(int groupCode, int subGroupCode, string languageCode)
+        {
+            var key = ("GetSubGroupDescription", groupCode,subGroupCode, languageCode);
+            if (_cache.TryGetValue(key, out string cacheValue))
+            {
+                return cacheValue;
+            }
+
+            var rc = _rep.GetSubGroupDescription(groupCode,subGroupCode, languageCode);
+            _cache.Set(key, rc, _options);
+            return rc;
+        }
+
+        public string GetSubSubGroupDescription(string catalogCode, int groupCode, int subGroupCode, int subSubGroupCode,
+            string languageCode)
+        {
+            var key = ("GetSubSubGroupDescription",catalogCode, groupCode, subGroupCode, subSubGroupCode, languageCode);
+            if (_cache.TryGetValue(key, out string cacheValue))
+            {
+                return cacheValue;
+            }
+
+            var rc = _rep.GetSubSubGroupDescription(catalogCode, groupCode, subGroupCode,subSubGroupCode, languageCode);
+            _cache.Set(key, rc, _options);
+            return rc;
+        }
     }
 }
