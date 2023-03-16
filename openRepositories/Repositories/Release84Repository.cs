@@ -836,11 +836,11 @@ namespace openPERRepositories.Repositories
         {
             using var connection = new MySqlConnection(PathToDb);
             var rc = new List<TablePartModel>();
-            var sql = @"SELECT C.PRT_COD, CLH_COD, CPD_RIF, CPD_QTY, IFNULL(CPD_AGG_DSC, ''), CDS_DSC
+            var sql = @"SELECT C.PRT_COD, CLH_COD, CPD_RIF, CPD_QTY, IFNULL(DAD.DSC, ''), CDS_DSC
                         FROM CPXDATA C 
                         JOIN PARTS P ON P.PRT_COD = C.PRT_COD
                         JOIN CODES_DSC ON P.CDS_COD = CODES_DSC.CDS_COD AND CODES_DSC.LNG_COD = @p3
-
+                        LEFT OUTER JOIN DESC_AGG_DSC DAD ON DAD.COD = C.CPD_AGG_DSC AND DAD.LNG_COD = @p3
                         WHERE C.CPLX_PRT_COD = @p1 AND C.CPD_NUM = @p2
                         ORDER BY CPD_RIF, CPD_RIF_SEQ";
             connection.RunSqlAllRows(sql, (reader) =>

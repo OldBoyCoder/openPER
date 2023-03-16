@@ -27,7 +27,8 @@
                                     {
                                         <div class="col-xs-4">
                                             <img class="img-fluid" src="@drawing.ThumbImagePath"><br />
-                                            @Html.ActionLink("Go", "Detail", "Cliche", new {Model.Navigation.Language, Model.Navigation.Breadcrumb.MakeCode, Model.Navigation.Breadcrumb.SubMakeCode, Model.Navigation.Breadcrumb.ModelCode, Model.Navigation.Breadcrumb.CatalogueCode, Model.Navigation.Breadcrumb.GroupCode, Model.Navigation.Breadcrumb.SubGroupCode, Model.Navigation.Breadcrumb.SubSubGroupCode, Model.Navigation.Breadcrumb.DrawingNumber,Model.Navigation.Breadcrumb.Scope, drawing.ClichePartNumber, ClicheDrawingNumber=drawing.ClichePartDrawingNumber, MVS=Model.Navigation.Filter.Mvs, VIN=Model.Navigation.Filter.Vin })</div>
+                                            @Html.ActionLink("Go", "Detail", "Cliche", new {Model.Navigation.Language, Model.Navigation.Breadcrumb.MakeCode, Model.Navigation.Breadcrumb.SubMakeCode, Model.Navigation.Breadcrumb.ModelCode, Model.Navigation.Breadcrumb.CatalogueCode, Model.Navigation.Breadcrumb.GroupCode, Model.Navigation.Breadcrumb.SubGroupCode, Model.Navigation.Breadcrumb.SubSubGroupCode, Model.Navigation.Breadcrumb.DrawingNumber,Model.Navigation.Breadcrumb.Scope, drawing.ClichePartNumber, ClicheDrawingNumber=drawing.ClichePartDrawingNumber, MVS=Model.Navigation.Filter.Mvs, VIN=Model.Navigation.Filter.Vin })
+                                        </div>
                                     }
                                 }
                             </div>
@@ -39,22 +40,14 @@
         </div>
         <div class="col-lg-6 col-md-12 col-sm-12 col-12">
             <table class="table table-sm">
-                <tr><th>&nbsp;</th><th>Prod. code</th><th>Fur. Descr.</th><th>Comp.</th><th>Modif.</th><th>Qty</th><th>Notes</th></tr>
+                <tr><th>&nbsp;</th><th>Prod. code</th><th>Descr.</th><th>Comp.</th><th>Modif.</th><th>Qty</th><th>Notes</th></tr>
                 @{
-
-                    int lastOrder = 999; 
                     @foreach (var item in Model.CurrentClicheDrawing.Parts)
                     {
-                        if (item.TableOrder != lastOrder)
-                        {
-                            <tr><td>@Html.DisplayFor(model => item.TableOrder)</td><td colspan="7">@Html.DisplayFor(model => item.Description)</td></tr>
-                            lastOrder = item.TableOrder;
-                        }
                         <tr>
-                            <td>&nbsp;</td>
-                            <td >
-                                @Html.ActionLink(item.PartNumber ,"SearchPartByPartNumber", "Part", new {Model.Navigation.Breadcrumb.Language, item.PartNumber }) <a href="https://www.google.com/search?q=FIAT+@item.PartNumber" target="_blank" class="bi bi-search"></a></td>
-                            <td>@Html.DisplayFor(model => item.FurtherDescription)</td>
+                            <td>@Html.DisplayFor(model => item.TableOrder)</td>
+                            <td>@Html.ActionLink(item.PartNumber ,"SearchPartByPartNumber", "Part", new {Model.Navigation.Breadcrumb.Language, item.PartNumber }) <a href="https://www.google.com/search?q=FIAT+@item.PartNumber" target="_blank" class="bi bi-search"></a></td>
+                            <td>@item.Description @item.FurtherDescription</td>
                             <td>@Html.DisplayFor(model => item.Compatibility)</td>
                             <td>
                                 <ul>
