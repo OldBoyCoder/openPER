@@ -1,4 +1,6 @@
-﻿namespace openPERModels
+﻿using System.Collections.Generic;
+
+namespace openPERModels
 {
     public class CatalogueModel
     {
@@ -7,5 +9,6 @@
         public string MakeCode { get; set; }
         public string SubMakeCode { get; set; }
         public string ModelCode { get; set; }
+        public List<GroupModel> Groups { get; set; }
     }
 }

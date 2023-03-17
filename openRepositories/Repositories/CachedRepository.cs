@@ -436,13 +436,13 @@ namespace openPERRepositories.Repositories
 
         public string GetSubGroupDescription(int groupCode, int subGroupCode, string languageCode)
         {
-            var key = ("GetSubGroupDescription", groupCode,subGroupCode, languageCode);
+            var key = ("GetSubGroupDescription", groupCode, subGroupCode, languageCode);
             if (_cache.TryGetValue(key, out string cacheValue))
             {
                 return cacheValue;
             }
 
-            var rc = _rep.GetSubGroupDescription(groupCode,subGroupCode, languageCode);
+            var rc = _rep.GetSubGroupDescription(groupCode, subGroupCode, languageCode);
             _cache.Set(key, rc, _options);
             return rc;
         }
@@ -450,15 +450,29 @@ namespace openPERRepositories.Repositories
         public string GetSubSubGroupDescription(string catalogCode, int groupCode, int subGroupCode, int subSubGroupCode,
             string languageCode)
         {
-            var key = ("GetSubSubGroupDescription",catalogCode, groupCode, subGroupCode, subSubGroupCode, languageCode);
+            var key = ("GetSubSubGroupDescription", catalogCode, groupCode, subGroupCode, subSubGroupCode, languageCode);
             if (_cache.TryGetValue(key, out string cacheValue))
             {
                 return cacheValue;
             }
 
-            var rc = _rep.GetSubSubGroupDescription(catalogCode, groupCode, subGroupCode,subSubGroupCode, languageCode);
+            var rc = _rep.GetSubSubGroupDescription(catalogCode, groupCode, subGroupCode, subSubGroupCode, languageCode);
             _cache.Set(key, rc, _options);
             return rc;
+        }
+
+        public List<MakeModel> GetCompleteHierarchy(string languageCode)
+        {
+            var key = ("GetCompleteHierarchy", languageCode);
+            if (_cache.TryGetValue(key, out List<MakeModel> cacheValue))
+            {
+                return cacheValue;
+            }
+
+            var rc = _rep.GetCompleteHierarchy(languageCode);
+            _cache.Set(key, rc, _options);
+            return rc;
+
         }
     }
 }

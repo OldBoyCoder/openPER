@@ -135,7 +135,7 @@ namespace openPERRepositories.Repositories
             connection.RunSqlFirstRowOnly(sql, (reader) =>
             {
                 rc.ImageName = reader.GetString(0);
-                rc.Hotspots = reader.IsDBNull(1)?"": reader.GetString(1);
+                rc.Hotspots = reader.IsDBNull(1) ? "" : reader.GetString(1);
             }, catalogue, group, subgroup, subSubGroup, drawing, revision);
             return rc;
         }
@@ -337,7 +337,7 @@ namespace openPERRepositories.Repositories
                 SubSubGroupCode = sgsCode,
                 GroupDesc = GetGroupDescription(groupCode, languageCode),
                 SubGroupDesc = GetSubGroupDescription(groupCode, subGroupCode, languageCode),
-                SgsDesc = GetSubSubGroupDescription(catalogueCode, groupCode, subGroupCode,sgsCode, languageCode),
+                SgsDesc = GetSubSubGroupDescription(catalogueCode, groupCode, subGroupCode, sgsCode, languageCode),
                 Parts = GetTableParts(catalogueCode, groupCode, subGroupCode, sgsCode, drawingNumber, revision, languageCode),
                 DrawingNumbers = GetDrawingNumbers(catalogueCode, groupCode, subGroupCode, sgsCode, revision),
                 CurrentDrawing = drawingNumber,
@@ -391,7 +391,7 @@ namespace openPERRepositories.Repositories
                     Notes = reader.IsDBNull(5) ? "" : reader.GetString(5),
                     Compatibility = reader.IsDBNull(6) ? "" : reader.GetString(6),
                     FurtherDescription = reader.IsDBNull(7) ? "" : reader.GetString(7).ToString(),
-                    Colour = reader.IsDBNull(9)?"":reader.GetString(9).Replace(",", " ")
+                    Colour = reader.IsDBNull(9) ? "" : reader.GetString(9).Replace(",", " ")
                 };
                 if (!reader.IsDBNull(8))
                     part.Modifications = GetPartModifications(catalogueCode, reader.GetString(8), languageCode);
@@ -420,7 +420,7 @@ namespace openPERRepositories.Repositories
 
         private static List<PartHotspotModel> ParseHotspotsFromString(string hotspotText, int tableOrder, string partNumber)
         {
-            var rc = new List<PartHotspotModel>();  
+            var rc = new List<PartHotspotModel>();
             try
             {
                 var sets = hotspotText.Split(";");
@@ -452,7 +452,7 @@ namespace openPERRepositories.Repositories
 
         private List<ColourModel> CreateColourCollection(string catalogueCode, string languageCode, string partColour)
         {
-            var colours = partColour.Split(" ", StringSplitOptions.RemoveEmptyEntries );
+            var colours = partColour.Split(" ", StringSplitOptions.RemoveEmptyEntries);
             var rc = new List<ColourModel>();
             using var connection = new MySqlConnection(PathToDb);
             foreach (var colour in colours)
@@ -467,7 +467,7 @@ namespace openPERRepositories.Repositories
                     {
                         Code = colour,
                         Description = reader.GetString(0),
-                        ImagePath = reader.IsDBNull(1) ? "" : PathToCdn+ "L_EPERTESSUTI/"+reader.GetString(1)
+                        ImagePath = reader.IsDBNull(1) ? "" : PathToCdn + "L_EPERTESSUTI/" + reader.GetString(1)
                     };
                     rc.Add(c);
 
@@ -1422,13 +1422,36 @@ namespace openPERRepositories.Repositories
             {
                 var m = new ModificationModel()
                 {
-                    Code =  reader.GetInt32(0),
+                    Code = reader.GetInt32(0),
                     Description = reader.IsDBNull(1) ? "" : reader.GetString(1),
                 };
                 m.Activations = GetActivationsForModification(catalogueCode, m.Code);
                 rc.Add(m);
 
             }, catalogueCode, language);
+            return rc;
+        }
+
+        public List<MakeModel> GetCompleteHierarchy(string languageCode)
+        {
+
+            var rc = GetAllMakes();
+            foreach (var make in rc)
+            {
+                make.Models = GetAllModelsForMake(make.Code, make.SubCode);
+                foreach (var model in make.Models)
+                {
+                    model.Catalogues = GetAllCatalogues(make.Code, make.SubCode, model.Code, languageCode);
+                    foreach (var cat in model.Catalogues)
+                    {
+                        cat.Groups = GetGroupsForCatalogue(cat.Code, languageCode);
+                        foreach (var group in cat.Groups)
+                        {
+                            group.SubGroups = GetSubGroupsForCatalogueGroup(cat.Code, group.Code, languageCode);
+                        }
+                    }
+                }
+            }
             return rc;
         }
     }

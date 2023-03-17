@@ -1,7 +1,8 @@
 ﻿@using openPER.ViewModels
 @model ModelsViewModel
 @{
-    ViewData["Title"] = "Index";
+    ViewData["Title"] = $"Models for {Model.Navigation.Breadcrumb.MakeDescription}";
+
 }
 @await Html.PartialAsync("_Breadcrumb", Model.Navigation)
 <div class="container-fluid">

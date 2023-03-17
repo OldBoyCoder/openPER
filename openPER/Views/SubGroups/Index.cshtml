@@ -1,6 +1,7 @@
 ﻿@model openPER.ViewModels.SubGroupsViewModel
 @{
-    ViewData["Title"] = "Index";
+    ViewData["Title"] = $"Sub groups for {Model.Navigation.Breadcrumb.MakeDescription} {Model.Navigation.Breadcrumb.ModelDescription} {Model.Navigation.Breadcrumb.CatalogueDescription} {Model.Navigation.Breadcrumb.GroupDescription}";
+
 }
 @await Html.PartialAsync("_Breadcrumb", Model.Navigation)
 <div class="container-fluid">
