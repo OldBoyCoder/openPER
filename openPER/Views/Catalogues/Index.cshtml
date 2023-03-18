@@ -3,6 +3,11 @@
 @{
     ViewData["Title"] = $"Catalogues for {Model.Navigation.Breadcrumb.MakeDescription} {Model.Navigation.Breadcrumb.ModelDescription}";
 }
+@section Navbar
+{
+    @await Html.PartialAsync("_Navbar", Model.Navigation)
+}
+
 @await Html.PartialAsync("_Breadcrumb", Model.Navigation)
 <div class="container-fluid">
     <div class="row">

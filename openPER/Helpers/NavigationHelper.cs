@@ -59,6 +59,8 @@ namespace openPER.Helpers
                 model.Filter = PopulateFilterModel(mapper, rep, language, catalogueCode, mvs, vin);
             }
 
+            model.AllLinks = rep.GetCompleteHierarchy(language);
+
             return model;
         }
 

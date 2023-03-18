@@ -1,7 +1,6 @@
 ﻿@using openPER.ViewModels;
 @model NavigationViewModel
 <div>
-
     <nav aria-label="breadcrumb">
         <ol class="breadcrumb">
             <li class="breadcrumb-item">@Html.ActionLink("HOME", "Index", "Makes", new {Model.Language})</li>
@@ -52,19 +51,19 @@
     @if (!string.IsNullOrEmpty(Model.Filter.Mvs))
     {
         <nav class="navbar navbar-expand-lg navbar-light bg-light">
-                <span class="nav-text px-1">Active filters:</span>
-                <span class="nav-text px-1">SINCOM: @Model.Filter.Mvs</span>
-                <span class="nav-text px-1">VIN: @Model.Filter.Vin</span>
-                <span class="nav-text px-1">N. of parts: @Model.Filter.NumberForParts</span>
-                <span class="nav-text px-1">Engine: @Model.Filter.Engine</span>
-                <span class="nav-text px-1">Build date: @Model.Filter.BuildDate</span>
-                @foreach (var item in Model.Filter.Options.Where(x => x.MultiValue).Take(5))
-                {
-                    <span class="nav-text px-1" title="@item.TypeDescription @item.ValueDescription">@item.TypeCode@item.ValueCode</span>
-                }
-                <span class="nav-text px-1">
-                    <button type="button" data-bs-toggle="modal" data-bs-target="#filterModal">All</button>
-                </span>
+            <span class="nav-text px-1">Active filters:</span>
+            <span class="nav-text px-1">SINCOM: @Model.Filter.Mvs</span>
+            <span class="nav-text px-1">VIN: @Model.Filter.Vin</span>
+            <span class="nav-text px-1">N. of parts: @Model.Filter.NumberForParts</span>
+            <span class="nav-text px-1">Engine: @Model.Filter.Engine</span>
+            <span class="nav-text px-1">Build date: @Model.Filter.BuildDate</span>
+            @foreach (var item in Model.Filter.Options.Where(x => x.MultiValue).Take(5))
+            {
+                <span class="nav-text px-1" title="@item.TypeDescription @item.ValueDescription">@item.TypeCode@item.ValueCode</span>
+            }
+            <span class="nav-text px-1">
+                <button type="button" data-bs-toggle="modal" data-bs-target="#filterModal">All</button>
+            </span>
         </nav>
         <div class="modal" tabindex="-1" role="dialog" id="filterModal">
             <div class="modal-dialog">

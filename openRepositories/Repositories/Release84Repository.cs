@@ -1442,14 +1442,14 @@ namespace openPERRepositories.Repositories
                 foreach (var model in make.Models)
                 {
                     model.Catalogues = GetAllCatalogues(make.Code, make.SubCode, model.Code, languageCode);
-                    foreach (var cat in model.Catalogues)
-                    {
-                        cat.Groups = GetGroupsForCatalogue(cat.Code, languageCode);
-                        foreach (var group in cat.Groups)
-                        {
-                            group.SubGroups = GetSubGroupsForCatalogueGroup(cat.Code, group.Code, languageCode);
-                        }
-                    }
+                    //foreach (var cat in model.Catalogues)
+                    //{
+                    //    cat.Groups = GetGroupsForCatalogue(cat.Code, languageCode);
+                    //    foreach (var group in cat.Groups)
+                    //    {
+                    //        group.SubGroups = GetSubGroupsForCatalogueGroup(cat.Code, group.Code, languageCode);
+                    //    }
+                    //}
                 }
             }
             return rc;

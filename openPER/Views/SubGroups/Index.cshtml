@@ -3,6 +3,11 @@
     ViewData["Title"] = $"Sub groups for {Model.Navigation.Breadcrumb.MakeDescription} {Model.Navigation.Breadcrumb.ModelDescription} {Model.Navigation.Breadcrumb.CatalogueDescription} {Model.Navigation.Breadcrumb.GroupDescription}";
 
 }
+@section Navbar
+{
+    @await Html.PartialAsync("_Navbar", Model.Navigation)
+}
+
 @await Html.PartialAsync("_Breadcrumb", Model.Navigation)
 <div class="container-fluid">
     <div class="row">

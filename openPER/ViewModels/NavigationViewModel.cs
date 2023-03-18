@@ -1,4 +1,7 @@
 ﻿
+using System.Collections.Generic;
+using openPERModels;
+
 namespace openPER.ViewModels
 {
     public class NavigationViewModel
@@ -7,5 +10,6 @@ namespace openPER.ViewModels
         public SideMenuItemsViewModel SideMenuItems { get; set; }
         public string Language { get; set; }
         public FilterModel Filter { get; set; }
+        public List<MakeModel> AllLinks { get; set; }
     }
 }

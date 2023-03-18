@@ -8,40 +8,11 @@
     <link rel="stylesheet" href="~/css/site.css" />
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.8.3/font/bootstrap-icons.css">
+
 </head>
 <body>
     <header>
-        <nav class="navbar navbar-expand-sm navbar-toggleable-sm navbar-light bg-white border-bottom box-shadow mb-3 nav-justified">
-            <div class="container-fluid">
-                <a class="navbar-brand" asp-area="" asp-controller="Home" asp-action="Index">openPER</a>
-                <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target=".navbar-collapse" aria-controls="navbarSupportedContent"
-                        aria-expanded="false" aria-label="Toggle navigation">
-                    <span class="navbar-toggler-icon"></span>
-                </button>
-                <div class="navbar-collapse collapse d-sm-inline-flex justify-content-between">
-                    <ul class="navbar-nav flex-grow-1">
-                        <li class="nav-item dropdown">
-                            <a class="nav-link dropdown-toggle" href="#" id="languageDropdownMenuLink" role="button" data-bs-toggle="dropdown" aria-expanded="false">
-                                @Resources.FrontEnd.LanguageDropdown
-                            </a>
-                            <ul class="dropdown-menu" aria-labelledby="languageDropdownMenuLink">
-                                <vc:language-choice-widget language="@ViewData["Language"]"></vc:language-choice-widget>
-                            </ul>
-                        </li>
-                        <li class="nav-item">
-                            <div class="dropdown">
-                                <a class="nav-link dropdown-toggle" href="#" id="searchDropdownMenuLink" role="button" data-bs-toggle="dropdown" aria-expanded="false">
-                                    @Resources.FrontEnd.SearchDropdown
-                                </a>
-                                <ul class="dropdown-menu" aria-labelledby="searchDropdownMenuLink">
-                                    <vc:search-widget language="@ViewData["Language"]"></vc:search-widget>
-                                </ul>
-                            </div>
-                        </li>
-                    </ul>
-                </div>
-            </div>
-        </nav>
+        @await RenderSectionAsync("Navbar", false)
     </header>
     <div class="container-fluid">
         <main role="main" class="pb-3">
