@@ -28,7 +28,7 @@
                                 @foreach (var cat in mod.Catalogues)
                                 {
                                     <li class="py-0 my-0">
-                                        @Html.ActionLink($"{cat.Description}", "Index", "Groups", new { Model.Language, MakeCode = make.Code, SubMakeCode = make.SubCode, ModelCode = mod.Code, CatalogueCode = cat.Code, VIN = Model.Filter.Vin, MVS = Model.Filter.Mvs }, new { @class = "dropdown-item py-0 my-0" })
+                                        @Html.ActionLink($"{cat.Description}", "Index", "Groups", new { Model.Language, MakeCode = make.Code, SubMakeCode = make.SubCode, ModelCode = mod.Code, CatalogueCode = cat.Code }, new { @class = "dropdown-item py-0 my-0" })
                                     </li>
                                 }
                             }
