@@ -44,7 +44,7 @@ which category a part will be found in but experience will gradually help.
 - Table, a lowest level grouping of drawings within a sub-category, sometimes necessary where a component is very complex or changed radically over time
 - Drawing, an actual parts diagram along with a list of parts for that diagram.  A part on a diagram may change over time and so may have multiple part numbers along with information about when it changed
 - Part, hopefully self-explanatory
-- Cliche, there are times when an individual part on one diagram can be further decomposed.  A diagram showing the parts making up the part is clalled a cliche.  Cliches are often shared between vehicles, brake calipers are a common example
+- Cliche, there are times when an individual part on one diagram can be further decomposed.  A diagram showing the parts making up the part is clalled a cliche.  Cliches are often shared between vehicles, brake calipers are a common example.
 
 
 
