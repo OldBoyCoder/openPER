@@ -19,7 +19,7 @@ namespace openPER.Controllers
         }
         [Route("Groups/{language}/{MakeCode}/{SubMakeCode}/{ModelCode}/{CatalogueCode}")]
         [ApiExplorerSettings(IgnoreApi = true)]
-        public IActionResult Index(string language, string makeCode,string subMakeCode, string modelCode, string catalogueCode, string vin = "", string mvs = "")
+        public IActionResult Index(string language, string makeCode, string subMakeCode, string modelCode, string catalogueCode, string vin = "", string mvs = "")
         {
             // Standard prologue
             LanguageSupport.SetCultureBasedOnRoute(language);
@@ -28,7 +28,7 @@ namespace openPER.Controllers
             var mapAndImage = _rep.GetMapAndImageForCatalogue(makeCode, subMakeCode, modelCode, catalogueCode);
             var model = new GroupsViewModel
             {
-                Groups = _mapper.Map<List<GroupModel>, List<GroupViewModel>>(_rep.GetGroupsForCatalogue(catalogueCode, language)),
+                Groups = _mapper.Map<List<GroupModel>, List<GroupViewModel>>(_rep.GetAllSectionsForCatalogue(language, catalogueCode)),
                 MapEntries = _mapper.Map<List<GroupImageMapEntryModel>, List<GroupImageMapEntryViewModel>>(_rep.GetGroupMapEntriesForCatalogue(catalogueCode, language)),
                 MakeCode = makeCode,
                 ModelCode = modelCode,
@@ -36,7 +36,7 @@ namespace openPER.Controllers
                 CatalogueCode = catalogueCode,
                 ImagePath = mapAndImage.ImageName,
                 Navigation = NavigationHelper.PopulateNavigationModel(_mapper, _rep, language, makeCode, subMakeCode, modelCode, catalogueCode, vin, mvs),
-                ModelVariants = _mapper.Map<List<CatalogueVariantsModel>, List<CatalogueVariantsViewModel>>( _rep.GetCatalogueVariants(catalogueCode)),
+                ModelVariants = _mapper.Map<List<CatalogueVariantsModel>, List<CatalogueVariantsViewModel>>(_rep.GetCatalogueVariants(catalogueCode)),
                 Modifications = _mapper.Map<List<ModificationModel>, List<ModificationViewModel>>(_rep.GetCatalogueModifications(catalogueCode, language))
             };
 

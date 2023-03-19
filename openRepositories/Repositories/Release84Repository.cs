@@ -1432,7 +1432,7 @@ namespace openPERRepositories.Repositories
             return rc;
         }
 
-        public List<MakeModel> GetCompleteHierarchy(string languageCode)
+        public List<MakeModel> GetCatalogueHierarchy(string languageCode)
         {
 
             var rc = GetAllMakes();
@@ -1451,6 +1451,15 @@ namespace openPERRepositories.Repositories
                     //    }
                     //}
                 }
+            }
+            return rc;
+        }
+        public List<GroupModel> GetAllSectionsForCatalogue(string languageCode, string catalogueCode)
+        {
+            var rc = GetGroupsForCatalogue(catalogueCode, languageCode);
+            foreach (var group in rc)
+            {
+                group.SubGroups = GetSubGroupsForCatalogueGroup(catalogueCode, group.Code, languageCode);
             }
             return rc;
         }

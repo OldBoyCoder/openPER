@@ -51,7 +51,8 @@ namespace openPERRepositories.Interfaces
         public string GetSubSubGroupDescription(string catalogCode, int groupCode, int subGroupCode,
             int subSubGroupCode, string languageCode);
 
-        public List<MakeModel> GetCompleteHierarchy(string languageCode);
+        public List<MakeModel> GetCatalogueHierarchy(string languageCode);
+        public List<GroupModel> GetAllSectionsForCatalogue(string languageCode, string catalogueCode);
 
     }
 

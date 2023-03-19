@@ -11,10 +11,10 @@
 @await Html.PartialAsync("_Breadcrumb", Model.Navigation)
 <div class="container-fluid">
     <div class="row">
-        <div class="col-lg-4 col-md-4 col-sm-12 col-12">
+        <div class="col-lg-3 col-md-3 col-sm-12 col-12">
             @await Html.PartialAsync("_SidebarMenu", Model.Navigation)
         </div>
-        <div class="col-lg-8 col-md-8 col-sm-12 col-12">
+        <div class="col-lg-9 col-md-9 col-sm-12 col-12">
             <strong>@Resources.FrontEnd.CategorySelectTitle</strong>
             <p>@Resources.FrontEnd.CategorySelectBody</p>
             <div style="position: relative; left: 0; right: 0;">
@@ -29,6 +29,25 @@
 
                 }
             </div>
+            <details>
+                <summary>All categories</summary>
+                <table class="table-sm">
+                    @foreach (var group in Model.Groups.OrderBy(x => x.Code))
+                    {
+                        <tr>
+                            <td>@group.Code - @group.Description</td>
+                            <td>@Html.ActionLink("Go to group", "Index", "SubGroups", new { Model.Navigation.Language, Model.Navigation.Breadcrumb.MakeCode, Model.Navigation.Breadcrumb.SubMakeCode, Model.Navigation.Breadcrumb.ModelCode, Model.Navigation.Breadcrumb.CatalogueCode,GroupCode=group.Code,VIN="", MVS="" })
+                        </tr>
+                        @foreach (var subgroup in group.SubGroups.OrderBy(x => x.Code))
+                        {
+                            <tr>
+                                <td>@subgroup.FullDisplayCode - @subgroup.Description</td>
+                                <td>@Html.ActionLink("Go to sub group", "Index", "SubSubGroups", new { Model.Navigation.Language, Model.Navigation.Breadcrumb.MakeCode, Model.Navigation.Breadcrumb.SubMakeCode, Model.Navigation.Breadcrumb.ModelCode, Model.Navigation.Breadcrumb.CatalogueCode, GroupCode=group.Code, SubGroupCode=subgroup.Code, VIN="", MVS="" })
+                            </tr>
+                        }
+                    }
+                </table>
+            </details>
             @if (string.IsNullOrEmpty(Model.Navigation.Filter.Mvs))
             {
                 <details>

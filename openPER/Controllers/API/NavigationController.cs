@@ -22,7 +22,7 @@ namespace openPER.Controllers.API
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         public IActionResult GetHierarchy(string language)
         {
-            var rc = _rep.GetCompleteHierarchy(language);
+            var rc = _rep.GetCatalogueHierarchy(language);
             return Ok(rc);
         }
     }

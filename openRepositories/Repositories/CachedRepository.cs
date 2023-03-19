@@ -461,15 +461,29 @@ namespace openPERRepositories.Repositories
             return rc;
         }
 
-        public List<MakeModel> GetCompleteHierarchy(string languageCode)
+        public List<MakeModel> GetCatalogueHierarchy(string languageCode)
         {
-            var key = ("GetCompleteHierarchy", languageCode);
+            var key = ("GetCatalogueHierarchy", languageCode);
             if (_cache.TryGetValue(key, out List<MakeModel> cacheValue))
             {
                 return cacheValue;
             }
 
-            var rc = _rep.GetCompleteHierarchy(languageCode);
+            var rc = _rep.GetCatalogueHierarchy(languageCode);
+            _cache.Set(key, rc, _options);
+            return rc;
+
+        }
+
+        public List<GroupModel> GetAllSectionsForCatalogue(string languageCode, string catalogueCode)
+        {
+            var key = ("GetAllSectionsForCatalogue", languageCode, catalogueCode);
+            if (_cache.TryGetValue(key, out List<GroupModel> cacheValue))
+            {
+                return cacheValue;
+            }
+
+            var rc = _rep.GetAllSectionsForCatalogue(languageCode, catalogueCode);
             _cache.Set(key, rc, _options);
             return rc;
 
