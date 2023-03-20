@@ -5,6 +5,7 @@ using openPER.ViewModels;
 using openPERModels;
 using openPERRepositories.Interfaces;
 using openPER.Helpers;
+using openPERHelpers;
 
 namespace openPER.Controllers
 {
@@ -17,13 +18,13 @@ namespace openPER.Controllers
             _rep = rep;
             _mapper = mapper;
         }
-        [Route("Models/{language}/{MakeCode}/{SubMakeCode}")]
+        [Route("{language}/Models/{MakeCode}/{SubMakeCode}")]
         [ApiExplorerSettings(IgnoreApi = true)]
         public IActionResult Index(string language, string makeCode, string subMakeCode)
         {
-            // Standard prologue
-            LanguageSupport.SetCultureBasedOnRoute(language);
+            language = LanguageSupport.GetIso639CodeFromString(language);
             ViewData["Language"] = language;
+            LanguageSupport.SetCultureBasedOnRoute(language);
 
             var model = new ModelsViewModel
             {

@@ -17,7 +17,7 @@ namespace openPER.Controllers.API
         {
             _rep = rep;
         }
-        [HttpGet("WholeHierarchy/{language}")]
+        [HttpGet("{language}/WholeHierarchy/")]
         [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(List<MakeModel>))]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         public IActionResult GetHierarchy(string language)

@@ -3,6 +3,7 @@ using AutoMapper;
 using Microsoft.AspNetCore.Mvc;
 using openPER.Helpers;
 using openPER.ViewModels;
+using openPERHelpers;
 using openPERModels;
 using openPERRepositories.Interfaces;
 
@@ -19,14 +20,15 @@ namespace openPER.Controllers
             _mapper = mapper;
         }
         [Route(
-            "Cliche/Detail/{language}/{MakeCode}/{SubMakeCode}/{ModelCode}/{CatalogueCode}/{GroupCode}/{SubGroupCode}/{SubSubGroupCode}/{DrawingNumber}/{Scope}/{ClichePartNumber}/{ClicheDrawingNumber}")]
+            "{language}/Cliche/Detail/{MakeCode}/{SubMakeCode}/{ModelCode}/{CatalogueCode}/{GroupCode}/{SubGroupCode}/{SubSubGroupCode}/{DrawingNumber}/{Scope}/{ClichePartNumber}/{ClicheDrawingNumber}")]
         [ApiExplorerSettings(IgnoreApi = true)]
         public IActionResult Detail(string language, string makeCode, string subMakeCode, string modelCode,
             string catalogueCode, int groupCode, int subGroupCode, int subSubGroupCode, int drawingNumber, string scope,
             string clichePartNumber, int clicheDrawingNumber, string vin = "", string mvs = "")
         {
-            LanguageSupport.SetCultureBasedOnRoute(language);
+            language = LanguageSupport.GetIso639CodeFromString(language);
             ViewData["Language"] = language;
+            LanguageSupport.SetCultureBasedOnRoute(language);
 
             var model = new ClicheViewModel
             {

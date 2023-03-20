@@ -12,6 +12,7 @@
   </ItemGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\openPERHelpers\openPERHelpers.csproj" />
     <ProjectReference Include="..\openPERModels\openPERModels.csproj" />
     <ProjectReference Include="..\VinSearcher\VinSearcher.csproj" />
   </ItemGroup>

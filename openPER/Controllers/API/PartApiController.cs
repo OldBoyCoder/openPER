@@ -16,7 +16,7 @@ namespace openPER.Controllers.API
         {
             _rep = rep;
         }
-        [HttpGet("{language}/{partCode}")]
+        [HttpGet("{language}/Part/{partCode}")]
         [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(PartSearchViewModel))]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         public IActionResult GetPart(string language, string partCode)
@@ -29,7 +29,7 @@ namespace openPER.Controllers.API
             p.Result = _rep.GetPartDetails(p.PartNumberSearch, language);
             return p.Result == null ? NotFound() : Ok(p);
         }
-        [HttpGet("{language}/{ModelName}/{PartDescription}")]
+        [HttpGet("{language}/Part/{ModelName}/{PartDescription}")]
         [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(List<PartSearchViewModel>))]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         public IActionResult GetPart(string language, string modelName, string partDescription)

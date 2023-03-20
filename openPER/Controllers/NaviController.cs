@@ -1,4 +1,6 @@
 ﻿using Microsoft.AspNetCore.Mvc;
+using openPER.Helpers;
+using openPERHelpers;
 
 namespace openPER.Controllers
 {
@@ -14,6 +16,8 @@ namespace openPER.Controllers
             {
                 //                [Route("Detail/{language}/{MakeCode}/{SubMakeCode}/{ModelCode}/{CatalogueCode}/{GroupCode}/{SubGroupCode}/{SubSubGroupCode}/{DrawingNumber}/{Scope}")]
                 var language = HttpContext.Request.Query["LANGUAGE"][0];
+                language = LanguageSupport.GetIso639CodeFromString(language);
+
                 var makeCode = HttpContext.Request.Query["MAKE"][0];
                 var subMakeCode = HttpContext.Request.Query["SBMK"][0];
                 var modelCode = HttpContext.Request.Query["COMM_MODEL"][0];
@@ -30,6 +34,7 @@ namespace openPER.Controllers
             if (key == "HOME")
             {
                 var language = HttpContext.Request.Query["LANGUAGE"][0];
+                language = LanguageSupport.GetIso639CodeFromString(language);
                 var makeCode = HttpContext.Request.Query["MAKE"][0];
                 var subMakeCode = HttpContext.Request.Query["SBMK"][0];
                 return RedirectToAction("Index", "Models", new { Language = language, MakeCode = makeCode, SubMakeCode = subMakeCode });
@@ -37,6 +42,7 @@ namespace openPER.Controllers
             if (key == "VERSION")
             {
                 var language = HttpContext.Request.Query["LANGUAGE"][0];
+                language = LanguageSupport.GetIso639CodeFromString(language);
                 var makeCode = HttpContext.Request.Query["MAKE"][0];
                 var subMakeCode = HttpContext.Request.Query["SBMK"][0];
                 var modelCode = HttpContext.Request.Query["COMM_MODEL"][0];
@@ -45,6 +51,7 @@ namespace openPER.Controllers
             if (key == "GROUP")
             {
                 var language = HttpContext.Request.Query["LANGUAGE"][0];
+                language = LanguageSupport.GetIso639CodeFromString(language);
                 var makeCode = HttpContext.Request.Query["MAKE"][0];
                 var subMakeCode = HttpContext.Request.Query["SBMK"][0];
                 var modelCode = HttpContext.Request.Query["COMM_MODEL"][0];
@@ -54,6 +61,7 @@ namespace openPER.Controllers
             if (key == "SUBGROUP")
             {
                 var language = HttpContext.Request.Query["LANGUAGE"][0];
+                language = LanguageSupport.GetIso639CodeFromString(language);
                 var makeCode = HttpContext.Request.Query["MAKE"][0];
                 var subMakeCode = HttpContext.Request.Query["SBMK"][0];
                 var modelCode = HttpContext.Request.Query["COMM_MODEL"][0];
@@ -64,6 +72,7 @@ namespace openPER.Controllers
             if (key == "SUBGROUP_7")
             {
                 var language = HttpContext.Request.Query["LANGUAGE"][0];
+                language = LanguageSupport.GetIso639CodeFromString(language);
                 var makeCode = HttpContext.Request.Query["MAKE"][0];
                 var subMakeCode = HttpContext.Request.Query["SBMK"][0];
                 var modelCode = HttpContext.Request.Query["COMM_MODEL"][0];

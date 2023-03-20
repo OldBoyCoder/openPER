@@ -5,6 +5,7 @@ using Microsoft.AspNetCore.Mvc;
 using openPERModels;
 using openPERRepositories.Interfaces;
 using openPER.Helpers;
+using openPERHelpers;
 
 namespace openPER.Controllers
 {
@@ -17,13 +18,13 @@ namespace openPER.Controllers
             _rep = rep;
             _mapper = mapper;
         }
-        [Route("Groups/{language}/{MakeCode}/{SubMakeCode}/{ModelCode}/{CatalogueCode}")]
+        [Route("{language}/Groups/{MakeCode}/{SubMakeCode}/{ModelCode}/{CatalogueCode}")]
         [ApiExplorerSettings(IgnoreApi = true)]
         public IActionResult Index(string language, string makeCode, string subMakeCode, string modelCode, string catalogueCode, string vin = "", string mvs = "")
         {
-            // Standard prologue
-            LanguageSupport.SetCultureBasedOnRoute(language);
+            language = LanguageSupport.GetIso639CodeFromString(language);
             ViewData["Language"] = language;
+            LanguageSupport.SetCultureBasedOnRoute(language);
 
             var mapAndImage = _rep.GetMapAndImageForCatalogue(makeCode, subMakeCode, modelCode, catalogueCode);
             var model = new GroupsViewModel
