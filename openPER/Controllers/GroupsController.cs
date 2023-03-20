@@ -18,7 +18,7 @@ namespace openPER.Controllers
             _rep = rep;
             _mapper = mapper;
         }
-        [Route("Groups/{language}/{MakeCode}/{SubMakeCode}/{ModelCode}/{CatalogueCode}")]
+        [Route("{language}/Groups/{MakeCode}/{SubMakeCode}/{ModelCode}/{CatalogueCode}")]
         [ApiExplorerSettings(IgnoreApi = true)]
         public IActionResult Index(string language, string makeCode, string subMakeCode, string modelCode, string catalogueCode, string vin = "", string mvs = "")
         {

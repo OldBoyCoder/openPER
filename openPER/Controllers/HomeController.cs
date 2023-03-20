@@ -25,7 +25,13 @@ namespace openPER.Controllers
         }
 
         [ApiExplorerSettings(IgnoreApi = true)]
-        [Route("{language=en}")]
+        public IActionResult Index()
+        {
+            return Index("en");
+        }
+
+        [ApiExplorerSettings(IgnoreApi = true)]
+        [Route("{language=en}/Home/Index")]
         public IActionResult Index(string language)
         {
             language = LanguageSupport.GetIso639CodeFromString(language);

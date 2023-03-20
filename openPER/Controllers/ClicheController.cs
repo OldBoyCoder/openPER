@@ -20,7 +20,7 @@ namespace openPER.Controllers
             _mapper = mapper;
         }
         [Route(
-            "Cliche/Detail/{language}/{MakeCode}/{SubMakeCode}/{ModelCode}/{CatalogueCode}/{GroupCode}/{SubGroupCode}/{SubSubGroupCode}/{DrawingNumber}/{Scope}/{ClichePartNumber}/{ClicheDrawingNumber}")]
+            "{language}/Cliche/Detail/{MakeCode}/{SubMakeCode}/{ModelCode}/{CatalogueCode}/{GroupCode}/{SubGroupCode}/{SubSubGroupCode}/{DrawingNumber}/{Scope}/{ClichePartNumber}/{ClicheDrawingNumber}")]
         [ApiExplorerSettings(IgnoreApi = true)]
         public IActionResult Detail(string language, string makeCode, string subMakeCode, string modelCode,
             string catalogueCode, int groupCode, int subGroupCode, int subSubGroupCode, int drawingNumber, string scope,

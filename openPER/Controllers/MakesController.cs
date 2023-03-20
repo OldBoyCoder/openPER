@@ -18,7 +18,7 @@ namespace openPER.Controllers
             _rep = repository;
             _mapper = mapper;
         }
-        [Route("Makes/{language}")]
+        [Route("{language}/Makes")]
         [ApiExplorerSettings(IgnoreApi = true)]
         public IActionResult Index(string language)
         {
