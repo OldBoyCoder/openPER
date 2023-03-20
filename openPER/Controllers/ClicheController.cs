@@ -3,6 +3,7 @@ using AutoMapper;
 using Microsoft.AspNetCore.Mvc;
 using openPER.Helpers;
 using openPER.ViewModels;
+using openPERHelpers;
 using openPERModels;
 using openPERRepositories.Interfaces;
 
@@ -25,8 +26,9 @@ namespace openPER.Controllers
             string catalogueCode, int groupCode, int subGroupCode, int subSubGroupCode, int drawingNumber, string scope,
             string clichePartNumber, int clicheDrawingNumber, string vin = "", string mvs = "")
         {
-            LanguageSupport.SetCultureBasedOnRoute(language);
+            language = LanguageSupport.GetIso639CodeFromString(language);
             ViewData["Language"] = language;
+            LanguageSupport.SetCultureBasedOnRoute(language);
 
             var model = new ClicheViewModel
             {

@@ -3,6 +3,7 @@
   <PropertyGroup>
     <TargetFramework>net6.0</TargetFramework>
     <StartupObject>openPER.Program</StartupObject>
+    <UserSecretsId>b07f33c0-db46-48a7-8e23-b03b4ed18975</UserSecretsId>
   </PropertyGroup>
 
   <ItemGroup>
@@ -24,6 +25,7 @@
   </ItemGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\openPERHelpers\openPERHelpers.csproj" />
     <ProjectReference Include="..\openPERModels\openPERModels.csproj" />
     <ProjectReference Include="..\openRepositories\openPERRepositories.csproj" />
     <ProjectReference Include="..\VinSearcher\VinSearcher.csproj" />

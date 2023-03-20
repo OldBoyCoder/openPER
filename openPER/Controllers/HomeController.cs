@@ -9,6 +9,7 @@ using openPERModels;
 using openPERRepositories.Interfaces;
 using openPER.Helpers;
 using Microsoft.AspNetCore.Diagnostics;
+using openPERHelpers;
 
 namespace openPER.Controllers
 {
@@ -24,9 +25,10 @@ namespace openPER.Controllers
         }
 
         [ApiExplorerSettings(IgnoreApi = true)]
-        [Route("{language=3}")]
+        [Route("{language=en}")]
         public IActionResult Index(string language)
         {
+            language = LanguageSupport.GetIso639CodeFromString(language);
             ViewData["Language"] = language;
             LanguageSupport.SetCultureBasedOnRoute(language);
             var model = new MakesViewModel

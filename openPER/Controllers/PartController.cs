@@ -2,6 +2,7 @@
 using Microsoft.AspNetCore.Mvc;
 using openPER.Helpers;
 using openPER.ViewModels;
+using openPERHelpers;
 using openPERRepositories.Interfaces;
 
 namespace openPER.Controllers
@@ -26,7 +27,9 @@ namespace openPER.Controllers
         public ActionResult SearchPartByPartNumber(string language, string partNumber)
         {
             var p = new PartSearchViewModel();
+            language = LanguageSupport.GetIso639CodeFromString(language);
             ViewData["Language"] = language;
+            LanguageSupport.SetCultureBasedOnRoute(language);
             p.Navigation = NavigationHelper.PopulateNavigationModel(_mapper, _rep, language);
 
             p.Language = language;
@@ -39,7 +42,9 @@ namespace openPER.Controllers
 
         public IActionResult SearchPartByModelAndName(string language, string partModelName, string partName)
         {
+            language = LanguageSupport.GetIso639CodeFromString(language);
             ViewData["Language"] = language;
+            LanguageSupport.SetCultureBasedOnRoute(language);
             if (string.IsNullOrEmpty(partModelName) || string.IsNullOrEmpty(partName)) return NotFound();
 
             var parts = _rep.GetBasicPartSearch(partModelName, partName, language);

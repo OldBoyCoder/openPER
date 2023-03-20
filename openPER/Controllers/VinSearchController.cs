@@ -3,6 +3,7 @@ using AutoMapper;
 using Microsoft.AspNetCore.Mvc;
 using openPER.Helpers;
 using openPER.ViewModels;
+using openPERHelpers;
 using openPERModels;
 using openPERRepositories.Interfaces;
 
@@ -24,7 +25,9 @@ namespace openPER.Controllers
         public IActionResult SearchByFullVin(string language, string fullVin)
         {
 
+            language = LanguageSupport.GetIso639CodeFromString(language);
             ViewData["Language"] = language;
+            LanguageSupport.SetCultureBasedOnRoute(language);
             var results = new VinSearchResultsViewModel
             {
                 Navigation = NavigationHelper.PopulateNavigationModel(_mapper, _rep, language)

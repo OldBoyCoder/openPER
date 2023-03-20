@@ -47,6 +47,7 @@ namespace openPERRepositories.Repositories
         }
         public List<GroupImageMapEntryModel> GetGroupMapEntriesForCatalogue(string catalogueCode, string languageCode)
         {
+            languageCode = openPERHelpers.LanguageSupport.GetFiatLanguageCodeFromString(languageCode);
             var map = new List<GroupImageMapEntryModel>();
             using var connection = new MySqlConnection(PathToDb);
             var sql = @"select MPG_TX, MPG_TY, MPG_INDEX, M.GRP_COD, GRP_DSC from CATALOGUES C
@@ -100,6 +101,7 @@ namespace openPERRepositories.Repositories
 
         public List<SubGroupImageMapEntryModel> GetSubGroupMapEntriesForCatalogueGroup(string catalogueCode, int groupCode, string languageCode)
         {
+            languageCode = openPERHelpers.LanguageSupport.GetFiatLanguageCodeFromString(languageCode);
             var map = new List<SubGroupImageMapEntryModel>();
             using var connection = new MySqlConnection(PathToDb);
             // sloppy should pass this down
@@ -168,6 +170,7 @@ namespace openPERRepositories.Repositories
 
         public List<SubSubGroupModel> GetSubSubGroupsForCatalogueGroupSubGroup(string catalogueCode, int groupCode, int subGroupCode, string languageCode)
         {
+            languageCode = openPERHelpers.LanguageSupport.GetFiatLanguageCodeFromString(languageCode);
             var rc = new List<SubSubGroupModel>();
             using var connection = new MySqlConnection(PathToDb);
             var sql = @"select distinct T.SGS_COD, TD.DSC, PATTERN, MODIF FROM DRAWINGS T
@@ -212,6 +215,7 @@ namespace openPERRepositories.Repositories
         public List<DrawingKeyModel> GetDrawingKeysForSubSubGroup(string makeCode, string modelCode, string catalogueCode, int groupCode,
             int subGroupCode, int subSubGroupCode, string languageCode)
         {
+            languageCode = openPERHelpers.LanguageSupport.GetFiatLanguageCodeFromString(languageCode);
             var drawings = new List<DrawingKeyModel>();
             using var connection = new MySqlConnection(PathToDb);
             var sql = @"SELECT DISTINCT CAT_COD, GRP_COD, SGRP_COD, SGS_COD, VARIANTE, IFNULL( PATTERN, ''), REVISIONE, IFNULL(MODIF, ''), DSC, IMG_PATH, WIDTH, HEIGHT
@@ -251,6 +255,7 @@ namespace openPERRepositories.Repositories
         public List<DrawingKeyModel> GetDrawingKeysForSubGroup(string makeCode, string modelCode, string catalogueCode, int groupCode,
             int subGroupCode, string languageCode)
         {
+            languageCode = openPERHelpers.LanguageSupport.GetFiatLanguageCodeFromString(languageCode);
             var drawings = new List<DrawingKeyModel>();
             using var connection = new MySqlConnection(PathToDb);
             var sql = @"SELECT DISTINCT CAT_COD, GRP_COD, SGRP_COD, SGS_COD, VARIANTE, IFNULL( PATTERN, ''), REVISIONE, IFNULL(MODIF, ''), DSC, IMG_PATH, WIDTH, HEIGHT
@@ -290,6 +295,7 @@ namespace openPERRepositories.Repositories
         }
         public List<DrawingKeyModel> GetDrawingKeysForGroup(string makeCode, string modelCode, string catalogueCode, int groupCode, string languageCode)
         {
+            languageCode = openPERHelpers.LanguageSupport.GetFiatLanguageCodeFromString(languageCode);
             var drawings = new List<DrawingKeyModel>();
             using var connection = new MySqlConnection(PathToDb);
             var sql = @"SELECT DISTINCT CAT_COD, GRP_COD, SGRP_COD, SGS_COD, VARIANTE, IFNULL( PATTERN, ''), REVISIONE, IFNULL(MODIF, ''), DSC, IMG_PATH, WIDTH, HEIGHT
@@ -328,6 +334,7 @@ namespace openPERRepositories.Repositories
         }
         public TableModel GetTable(string catalogueCode, int groupCode, int subGroupCode, int sgsCode, int drawingNumber, int revision, string languageCode)
         {
+            languageCode = openPERHelpers.LanguageSupport.GetFiatLanguageCodeFromString(languageCode);
             var (imageName, hotspots) = GetDrawingInfo(catalogueCode, groupCode, subGroupCode, sgsCode, drawingNumber, revision);
             var t = new TableModel
             {
@@ -603,6 +610,7 @@ namespace openPERRepositories.Repositories
 
         public string GetGroupDescription(int groupCode, string languageCode)
         {
+            languageCode = openPERHelpers.LanguageSupport.GetFiatLanguageCodeFromString(languageCode);
             using var connection = new MySqlConnection(PathToDb);
             string rc = "";
             var sql = @"SELECT GRP_DSC FROM GROUPS_DSC WHERE GRP_COD = @p1 AND LNG_COD = @p2 ";
@@ -616,6 +624,7 @@ namespace openPERRepositories.Repositories
 
         public string GetSubGroupDescription(int groupCode, int subGroupCode, string languageCode)
         {
+            languageCode = openPERHelpers.LanguageSupport.GetFiatLanguageCodeFromString(languageCode);
             using var connection = new MySqlConnection(PathToDb);
             var rc = "";
             var sql = @"SELECT SGRP_DSC FROM SUBGROUPS_DSC WHERE SGRP_COD = @p2 AND GRP_COD = @p1 AND LNG_COD = @p3 ";
@@ -627,6 +636,7 @@ namespace openPERRepositories.Repositories
         }
         public string GetSubSubGroupDescription(string catalogCode, int groupCode, int subGroupCode, int subSubGroupCode, string languageCode)
         {
+            languageCode = openPERHelpers.LanguageSupport.GetFiatLanguageCodeFromString(languageCode);
             using var connection = new MySqlConnection(PathToDb);
             var rc = "";
             var sql = @"select distinct TD.DSC FROM DRAWINGS T
@@ -678,6 +688,7 @@ namespace openPERRepositories.Repositories
 
         public List<CatalogueModel> GetAllCatalogues(string makeCode, string subMakeCode, string modelCode, string languageCode)
         {
+            languageCode = openPERHelpers.LanguageSupport.GetFiatLanguageCodeFromString(languageCode);
             var rc = new List<CatalogueModel>();
             using var connection = new MySqlConnection(PathToDb);
             var sql = @"SELECT CAT_COD, CAT_DSC FROM CATALOGUES WHERE MK2_COD = @p2 AND MK_COD =@p1 AND CMG_COD = @p3  ORDER BY CAT_SORT_KEY ";
@@ -698,6 +709,7 @@ namespace openPERRepositories.Repositories
 
         public List<GroupModel> GetGroupsForCatalogue(string catalogueCode, string languageCode)
         {
+            languageCode = openPERHelpers.LanguageSupport.GetFiatLanguageCodeFromString(languageCode);
             var rc = new List<GroupModel>();
             using var connection = new MySqlConnection(PathToDb);
             var sql = @"select distinct T.GRP_COD, GRP_DSC FROM DRAWINGS T
@@ -722,6 +734,7 @@ namespace openPERRepositories.Repositories
 
         public List<SubGroupModel> GetSubGroupsForCatalogueGroup(string catalogueCode, int groupCode, string languageCode)
         {
+            languageCode = openPERHelpers.LanguageSupport.GetFiatLanguageCodeFromString(languageCode);
             var rc = new List<SubGroupModel>();
             using var connection = new MySqlConnection(PathToDb);
             var sql = @"select distinct T.SGRP_COD, SGRP_DSC FROM DRAWINGS T
@@ -776,7 +789,7 @@ namespace openPERRepositories.Repositories
             {
                 var language = new LanguageModel
                 {
-                    Code = reader.GetString(0),
+                    Code = openPERHelpers.LanguageSupport.GetIso639CodeFromString(reader.GetString(0)),
                     Description = reader.GetString(1)
                 };
                 languages.Add(language);
@@ -785,6 +798,7 @@ namespace openPERRepositories.Repositories
         }
         public void PopulateBreadcrumbDescriptions(BreadcrumbModel breadcrumb, string languageCode)
         {
+            languageCode = openPERHelpers.LanguageSupport.GetFiatLanguageCodeFromString(languageCode);
             using var connection = new MySqlConnection(PathToDb);
             breadcrumb.Language = languageCode;
             if (breadcrumb.MakeCode != null) breadcrumb.MakeDescription = GetMakeDescription(breadcrumb.MakeCode);
@@ -834,6 +848,7 @@ namespace openPERRepositories.Repositories
         public List<TablePartModel> GetPartsForCliche(string catalogueCode, string clichePartNumber,
             int clicheDrawingNumber, string languageCode)
         {
+            languageCode = openPERHelpers.LanguageSupport.GetFiatLanguageCodeFromString(languageCode);
             using var connection = new MySqlConnection(PathToDb);
             var rc = new List<TablePartModel>();
             var sql = @"SELECT C.PRT_COD, CLH_COD, CPD_RIF, CPD_QTY, IFNULL(DAD.DSC, ''), CDS_DSC
@@ -890,6 +905,7 @@ namespace openPERRepositories.Repositories
 
         public PartModel GetPartDetails(string partNumberSearch, string languageCode)
         {
+            languageCode = openPERHelpers.LanguageSupport.GetFiatLanguageCodeFromString(languageCode);
             PartModel p = null;
             using (var connection = new MySqlConnection(PathToDb))
             {
@@ -973,6 +989,7 @@ namespace openPERRepositories.Repositories
 
         public List<PartModel> GetPartSearch(string modelName, string partDescription, string languageCode)
         {
+            languageCode = openPERHelpers.LanguageSupport.GetFiatLanguageCodeFromString(languageCode);
             var rc = new List<PartModel>();
             using var connection = new MySqlConnection(PathToDb);
             var sql = @"select P.PRT_COD, C.CDS_COD, C.CDS_DSC,F.FAM_COD, F.FAM_DSC, U.UM_COD, U.UM_DSC, PRT_WEIGHT  from PARTS P 
@@ -1001,6 +1018,7 @@ namespace openPERRepositories.Repositories
         }
         public List<PartModel> GetBasicPartSearch(string modelName, string partDescription, string languageCode)
         {
+            languageCode = openPERHelpers.LanguageSupport.GetFiatLanguageCodeFromString(languageCode);
             var rc = new List<PartModel>();
             using var connection = new MySqlConnection(PathToDb);
             var sql = @"select DISTINCT P.PRT_COD, C.CDS_COD, C.CDS_DSC,F.FAM_COD, F.FAM_DSC, CT.CAT_DSC, CT.CAT_COD  from PARTS P 
@@ -1200,8 +1218,9 @@ namespace openPERRepositories.Repositories
 
         }
 
-        public string GetInteriorColourDescription(string catCode, string interiorColourCode, string language)
+        public string GetInteriorColourDescription(string catCode, string interiorColourCode, string languageCode)
         {
+            languageCode = openPERHelpers.LanguageSupport.GetFiatLanguageCodeFromString(languageCode);
             using var connection = new MySqlConnection(PathToDb);
             var rc = "Unknown";
             var sql = @"SELECT DSC_COLORE_INT_VET
@@ -1210,12 +1229,13 @@ namespace openPERRepositories.Repositories
             connection.RunSqlFirstRowOnly(sql, (reader) =>
             {
                 rc = reader.GetString(0);
-            }, catCode, interiorColourCode, language);
+            }, catCode, interiorColourCode, languageCode);
 
             return rc;
         }
-        public string GetExteriorColourDescription(string catCode, string exteriorColourCode, string language)
+        public string GetExteriorColourDescription(string catCode, string exteriorColourCode, string languageCode)
         {
+            languageCode = openPERHelpers.LanguageSupport.GetFiatLanguageCodeFromString(languageCode);
             using var connection = new MySqlConnection(PathToDb);
             var rc = "Unknown";
             var sql = @"SELECT DSC_COLORE_EXT_VET
@@ -1224,7 +1244,7 @@ namespace openPERRepositories.Repositories
             connection.RunSqlFirstRowOnly(sql, (reader) =>
             {
                 rc = reader.GetString(0);
-            }, catCode, exteriorColourCode, language);
+            }, catCode, exteriorColourCode, languageCode);
 
             return rc;
         }
@@ -1234,8 +1254,9 @@ namespace openPERRepositories.Repositories
             return PathToCdn + $"ModelImages{subMakeCode}/{modelCode.ToUpper()}.jpg";
         }
 
-        public List<VinSearchResultModel> FindMatchesForVin(string language, string fullVin)
+        public List<VinSearchResultModel> FindMatchesForVin(string languageCode, string fullVin)
         {
+            languageCode = openPERHelpers.LanguageSupport.GetFiatLanguageCodeFromString(languageCode);
             var rc = new List<VinSearchResultModel>();
             var x = new Release84VinSearch(PathToVindataCh, PathToVindataRt);
 
@@ -1269,8 +1290,10 @@ namespace openPERRepositories.Repositories
 
             return rc;
         }
-        public List<VinSearchResultModel> FindMatchesForMvsAndVin(string language, string mvs, string fullVin)
+        public List<VinSearchResultModel> FindMatchesForMvsAndVin(string languageCode, string mvs, string fullVin)
         {
+            languageCode = openPERHelpers.LanguageSupport.GetFiatLanguageCodeFromString(languageCode);
+
             var rc = new List<VinSearchResultModel>();
             var x = new Release84VinSearch(PathToVindataCh, PathToVindataRt);
 
@@ -1306,8 +1329,9 @@ namespace openPERRepositories.Repositories
         {
             return GetMvsDataWithVagueMvsCode(mvs[..3], mvs.Substring(3, 3), mvs.Substring(6, 1));
         }
-        public List<MvsCatalogueOptionModel> GetMvsDetailsForCatalogue(string catalogueCode, string language)
+        public List<MvsCatalogueOptionModel> GetMvsDetailsForCatalogue(string catalogueCode, string languageCode)
         {
+            languageCode = openPERHelpers.LanguageSupport.GetFiatLanguageCodeFromString(languageCode);
             var rc = new List<MvsCatalogueOptionModel>();
             var sql = @"SELECT CONCAT( IFNULL(V.VMK_TYPE, ''),IFNULL(VMK_COD, '')), C.vmk_dsc, V.VMK_DSC, V.VMK_TYPE, V.VMK_COD FROM VMK_DSC V
 	                        LEFT OUTER JOIN carat_dsc C ON C.CAT_COD = V.CAT_COD AND C.LNG_COD = @p2 AND V.VMK_TYPE = C.VMK_TYPE
@@ -1326,7 +1350,7 @@ namespace openPERRepositories.Repositories
                 };
                 rc.Add(p);
 
-            }, catalogueCode, language);
+            }, catalogueCode, languageCode);
             return rc;
         }
 
@@ -1343,9 +1367,10 @@ namespace openPERRepositories.Repositories
             return rc;
         }
 
-        public Dictionary<string, string> GetFiltersForVehicle(string language, string vin, string mvs)
+        public Dictionary<string, string> GetFiltersForVehicle(string languageCode, string vin, string mvs)
         {
-            var vehicles = FindMatchesForVin(language, vin);
+            languageCode = openPERHelpers.LanguageSupport.GetFiatLanguageCodeFromString(languageCode);
+            var vehicles = FindMatchesForVin(languageCode, vin);
             var rc = new Dictionary<string, string>();
             if (vehicles == null || vehicles.Count == 0) return rc;
             var v = vehicles[0];
@@ -1356,11 +1381,12 @@ namespace openPERRepositories.Repositories
             return rc;
         }
 
-        public string GetVehiclePattern(string language, string vin)
+        public string GetVehiclePattern(string languageCode, string vin)
         {
+            languageCode = openPERHelpers.LanguageSupport.GetFiatLanguageCodeFromString(languageCode);
             var rc = "";
             if (string.IsNullOrEmpty(vin)) return "";
-            var vehicles = FindMatchesForVin(language, vin);
+            var vehicles = FindMatchesForVin(languageCode, vin);
             if (vehicles.Count == 0) return "";
             foreach (var v in vehicles)
             {
@@ -1372,8 +1398,9 @@ namespace openPERRepositories.Repositories
             return rc;
         }
 
-        public List<VmkModel> GetVmkDataForCatalogue(string catalogueCode, string language)
+        public List<VmkModel> GetVmkDataForCatalogue(string catalogueCode, string languageCode)
         {
+            languageCode = openPERHelpers.LanguageSupport.GetFiatLanguageCodeFromString(languageCode);
             var rc = new List<VmkModel>();
             var sql = @"SELECT VD.VMK_TYPE, VD.VMK_COD, VD.VMK_DSC, CD.VMK_DSC FROM VMK_DSC VD
                 LEFT OUTER JOIN CARAT_DSC CD ON CD.CAT_COD = @p1 AND CD.VMK_TYPE = VD.VMK_TYPE AND CD.LNG_COD = @p2
@@ -1391,7 +1418,7 @@ namespace openPERRepositories.Repositories
                 v.MultiValue = !string.IsNullOrEmpty(v.Code);
                 rc.Add(v);
 
-            }, catalogueCode, language);
+            }, catalogueCode, languageCode);
             return rc;
         }
         public List<CatalogueVariantsModel> GetCatalogueVariants(string catalogueCode)
@@ -1413,8 +1440,9 @@ namespace openPERRepositories.Repositories
             return rc;
         }
 
-        public List<ModificationModel> GetCatalogueModifications(string catalogueCode, string language)
+        public List<ModificationModel> GetCatalogueModifications(string catalogueCode, string languageCode)
         {
+            languageCode = openPERHelpers.LanguageSupport.GetFiatLanguageCodeFromString(languageCode);
             var rc = new List<ModificationModel>();
             var sql = @"SELECT MDF_COD, MDF_DSC FROM MODIF_DSC WHERE CAT_COD = @p1 AND LNG_COD = @p2";
             using var connection = new MySqlConnection(PathToDb);
@@ -1428,12 +1456,13 @@ namespace openPERRepositories.Repositories
                 m.Activations = GetActivationsForModification(catalogueCode, m.Code);
                 rc.Add(m);
 
-            }, catalogueCode, language);
+            }, catalogueCode, languageCode);
             return rc;
         }
 
         public List<MakeModel> GetCatalogueHierarchy(string languageCode)
         {
+            languageCode = openPERHelpers.LanguageSupport.GetFiatLanguageCodeFromString(languageCode);
 
             var rc = GetAllMakes();
             foreach (var make in rc)
@@ -1456,6 +1485,7 @@ namespace openPERRepositories.Repositories
         }
         public List<GroupModel> GetAllSectionsForCatalogue(string languageCode, string catalogueCode)
         {
+            languageCode = openPERHelpers.LanguageSupport.GetFiatLanguageCodeFromString(languageCode);
             var rc = GetGroupsForCatalogue(catalogueCode, languageCode);
             foreach (var group in rc)
             {
