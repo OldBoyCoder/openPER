@@ -46,8 +46,18 @@ which category a part will be found in but experience will gradually help.
 - Part, hopefully self-explanatory
 - Cliche, there are times when an individual part on one diagram can be further decomposed.  A diagram showing the parts making up the part is clalled a cliche.  Cliches are often shared between vehicles, brake calipers are a common example.
 
+Sitting alongside this hierarchy is filtering.  When you bought a 2012 Punto, you bought a specific model with particular features.
+The ePer database holds details of the standard features for the sold versions of a vehicle so although the Barchetta only has a single
+model and a single catalogue there are about twenty what you could call variants.  EPer then holds details for that variant such as the engine type and 
+model version.  Depending on the vehicle it may also contain information about what extras were standard for that variant.
 
+Alongside this model specific information, there is also VIN specific information.  For certain vehciles ePer holds the specific features
+for a particular VIN.  So while you may have bought a base model without ABS, you may have paid extra for it so the information held
+against a particular VIN overrides generic model information.  Note that not all (~25%) of vehicles have this greater level of detail.
+Barchettas for instance don't so we can't tell what a particular VINs specification is.
 
+OpenPer uses model (via the SINCOM code) and specific vehicle (via the VIN) data to filter what diagrams and
+what parts on diagrams are shown.
 
 
 
