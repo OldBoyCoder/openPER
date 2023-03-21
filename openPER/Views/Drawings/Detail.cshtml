@@ -1,20 +1,19 @@
 ﻿@using openPER.ViewModels
 @model openPER.ViewModels.DrawingsViewModel
-
 @{
-    ViewData["Title"] = "Index";
+    ViewData["Title"] = Model.Drawings[Model.TableData.CurrentDrawing].Description[..1].ToUpper() + Model.Drawings[Model.TableData.CurrentDrawing].Description[1..].ToLower();
 }
 @section Navbar
-{
+    {
     @await Html.PartialAsync("_Navbar", Model.Navigation)
 }
-@await Html.PartialAsync("_Breadcrumb", Model.Navigation)
-<div class="container-fluid">
-    <div class="row">
-        <div class="col-lg-12 col-md-12 col-sm-12 col-12">
-            <div class="btn-toolbar" role="toolbar">
-                <div class="btn-group mr-2" role="group">
-                    @if (Model.TableData.CurrentDrawing > 0)
+    @await Html.PartialAsync("_Breadcrumb", Model.Navigation)
+    <div class="container-fluid">
+        <div class="row">
+            <div class="col-lg-12 col-md-12 col-sm-12 col-12">
+                <div class="btn-toolbar" role="toolbar">
+                    <div class="btn-group mr-2" role="group">
+                        @if (Model.TableData.CurrentDrawing > 0)
                     {
                         var d = Model.Drawings[Model.TableData.CurrentDrawing - 1];
                         @Html.ActionLink("<<", "Detail", "Drawings", new {d.MakeCode, d.SubMakeCode, d.ModelCode, d.CatalogueCode, d.GroupCode, d.SubGroupCode, d.SubSubGroupCode, DrawingNumber= Model.TableData.CurrentDrawing - 1, Model.Scope, MVS=Model.Navigation.Filter.Mvs, VIN=Model.Navigation.Filter.Vin }, new {@class="btn btn-secondary"})
@@ -113,9 +112,18 @@
                             }
                             @foreach (var h in Model.TableData.Links)
                             {
-                                <a href="@Url.Action("Detail", "Drawings", new { language=Model.Navigation.Language,Model.Navigation.Breadcrumb.MakeCode, Model.Navigation.Breadcrumb.SubMakeCode, Model.Navigation.Breadcrumb.ModelCode, Model.Navigation.Breadcrumb.CatalogueCode, GroupCode=h.LinkGroupCode, SubGroupCode=h.LinkSubGroupCode, SubSubGroupCode=h.LinkSubSubGroupCode, DrawingNumber=0, Scope="SubSubGroup", VIN=Model.Navigation.Filter.Vin, MVS=Model.Navigation.Filter.Mvs  })">
-                                    <img src="~/SiteImages/HotSpot1x1.png" data-bs-toggle="tooltip" data-bs-placement="auto" data-bs-html="true" data-bs-title="@(h.TooltipText)" style="@(h.PositionHtml)">
-                                </a>
+                                @if (h.LinkSubSubGroupCode != "")
+                                {
+                                    <a href="@Url.Action("Detail", "Drawings", new { language = Model.Navigation.Language, Model.Navigation.Breadcrumb.MakeCode, Model.Navigation.Breadcrumb.SubMakeCode, Model.Navigation.Breadcrumb.ModelCode, Model.Navigation.Breadcrumb.CatalogueCode, GroupCode = h.LinkGroupCode, SubGroupCode = h.LinkSubGroupCode, SubSubGroupCode = h.LinkSubSubGroupCode, DrawingNumber = 0, Scope = "SubSubGroup", VIN = Model.Navigation.Filter.Vin, MVS = Model.Navigation.Filter.Mvs })">
+                                        <img src="~/SiteImages/HotSpot1x1.png" data-bs-toggle="tooltip" data-bs-placement="auto" data-bs-html="true" data-bs-title="@(h.TooltipText)" style="@(h.PositionHtml)">
+                                    </a>
+                                }
+                                else
+                                {
+                                    <a href="@Url.Action("Detail", "Drawings", new { language = Model.Navigation.Language, Model.Navigation.Breadcrumb.MakeCode, Model.Navigation.Breadcrumb.SubMakeCode, Model.Navigation.Breadcrumb.ModelCode, Model.Navigation.Breadcrumb.CatalogueCode, GroupCode = h.LinkGroupCode, SubGroupCode = h.LinkSubGroupCode, SubSubGroupCode = "ALL", DrawingNumber = 0, Scope = "SubGroup", VIN = Model.Navigation.Filter.Vin, MVS = Model.Navigation.Filter.Mvs })">
+                                        <img src="~/SiteImages/HotSpot1x1.png" data-bs-toggle="tooltip" data-bs-placement="auto" data-bs-html="true" data-bs-title="@(h.TooltipText)" style="@(h.PositionHtml)">
+                                    </a>
+                                }
                             }
                         </div>
                     </div>
@@ -207,9 +215,19 @@
                     {
                         <tr>
                             <td>
+                            @if (h.LinkSubSubGroupCode != "")
+                            {
                                 <a href="@Url.Action("Detail", "Drawings", new { language = Model.Navigation.Language, Model.Navigation.Breadcrumb.MakeCode, Model.Navigation.Breadcrumb.SubMakeCode, Model.Navigation.Breadcrumb.ModelCode, Model.Navigation.Breadcrumb.CatalogueCode, GroupCode = h.LinkGroupCode, SubGroupCode = h.LinkSubGroupCode, SubSubGroupCode = h.LinkSubSubGroupCode, DrawingNumber = 0, Scope = "SubSubGroup", VIN = Model.Navigation.Filter.Vin, MVS = Model.Navigation.Filter.Mvs })">
                                     <img src="~/SiteImages/HotSpot1x1.png" data-bs-toggle="tooltip" data-bs-placement="auto" data-bs-html="true" data-bs-title="@(h.TooltipText)" style="@(h.PositionHtml)">@h.Link
                                 </a>
+                            }
+                            else
+                            {
+                                <a href="@Url.Action("Detail", "Drawings", new { language = Model.Navigation.Language, Model.Navigation.Breadcrumb.MakeCode, Model.Navigation.Breadcrumb.SubMakeCode, Model.Navigation.Breadcrumb.ModelCode, Model.Navigation.Breadcrumb.CatalogueCode, GroupCode = h.LinkGroupCode, SubGroupCode = h.LinkSubGroupCode, SubSubGroupCode ="ALL", DrawingNumber = 0, Scope = "SubGroup", VIN = Model.Navigation.Filter.Vin, MVS = Model.Navigation.Filter.Mvs })">
+                                    <img src="~/SiteImages/HotSpot1x1.png" data-bs-toggle="tooltip" data-bs-placement="auto" data-bs-html="true" data-bs-title="@(h.TooltipText)" style="@(h.PositionHtml)">@h.Link
+                                </a>
+
+                            }
                             </td>
                             <td>@h.LinkDescription</td>
                         </tr>

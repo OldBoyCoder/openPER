@@ -141,7 +141,7 @@ namespace openPER.Controllers
                 if (!string.IsNullOrEmpty(p.Compatibility))
                 {
                     var symbols = PatternMatchHelper.GetSymbolsFromPattern(p.Compatibility, out _);
-                    foreach (var symbol in symbols.OrderBy(x=>x.Key))
+                    foreach (var symbol in symbols.OrderBy(x => x.Key))
                     {
                         var o = options.FirstOrDefault(x => (x.TypeCode + x.ValueCode).Trim() == symbol.Key);
                         if (o != null)
@@ -171,9 +171,10 @@ namespace openPER.Controllers
                 h.HeightPercent = h.Height * vFactor;
                 h.LinkDescription = _rep.GetGroupDescription(int.Parse(h.LinkGroupCode), language) + " - " +
                                     _rep.GetSubGroupDescription(int.Parse(h.LinkGroupCode),
-                                        int.Parse(h.LinkSubGroupCode), language) + " - " +
-                                    _rep.GetSubSubGroupDescription(drawing.CatalogueCode, int.Parse(h.LinkGroupCode),
-                                        int.Parse(h.LinkSubGroupCode), int.Parse(h.LinkSubSubGroupCode), language);
+                                        int.Parse(h.LinkSubGroupCode), language) +
+                                    ((h.LinkSubSubGroupCode != "") ? (
+                                    " - " + _rep.GetSubSubGroupDescription(drawing.CatalogueCode, int.Parse(h.LinkGroupCode),
+                                        int.Parse(h.LinkSubGroupCode), int.Parse(h.LinkSubSubGroupCode), language)) : "");
             }
 
             tableData.MakeCode = drawing.MakeCode;
