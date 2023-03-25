@@ -27,6 +27,7 @@
   <ItemGroup>
     <ProjectReference Include="..\openPERHelpers\openPERHelpers.csproj" />
     <ProjectReference Include="..\openPERModels\openPERModels.csproj" />
+    <ProjectReference Include="..\openPERPrinting\openPERPrinting.csproj" />
     <ProjectReference Include="..\openRepositories\openPERRepositories.csproj" />
     <ProjectReference Include="..\VinSearcher\VinSearcher.csproj" />
   </ItemGroup>
