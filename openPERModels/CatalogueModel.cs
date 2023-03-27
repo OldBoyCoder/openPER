@@ -9,6 +9,7 @@ namespace openPERModels
         public string MakeCode { get; set; }
         public string SubMakeCode { get; set; }
         public string ModelCode { get; set; }
+        public string ImageName { get; set; }
         public List<GroupModel> Groups { get; set; }
     }
 }

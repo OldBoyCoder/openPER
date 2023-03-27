@@ -29,6 +29,7 @@
 
                 }
             </div>
+            @Html.ActionLink("Print", "Catalogue", "Print", new { Model.Navigation.Language, Model.Navigation.Breadcrumb.MakeCode, Model.Navigation.Breadcrumb.SubMakeCode, Model.Navigation.Breadcrumb.ModelCode, Model.Navigation.Breadcrumb.CatalogueCode, MVS=Model.Navigation.Filter.Mvs, VIN=Model.Navigation.Filter.Vin})
             <details>
                 <summary>All categories</summary>
                 <table class="table-sm">

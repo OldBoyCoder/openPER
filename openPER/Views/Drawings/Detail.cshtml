@@ -8,6 +8,8 @@
     @await Html.PartialAsync("_Navbar", Model.Navigation)
 }
     @await Html.PartialAsync("_Breadcrumb", Model.Navigation)
+@Html.ActionLink("Print", "SubSubGroup", "Print", new { Model.Navigation.Language, Model.Navigation.Breadcrumb.MakeCode, Model.Navigation.Breadcrumb.SubMakeCode, Model.Navigation.Breadcrumb.ModelCode, Model.Navigation.Breadcrumb.CatalogueCode, Model.Navigation.Breadcrumb.GroupCode, Model.Navigation.Breadcrumb.SubGroupCode, Model.Navigation.Breadcrumb.SubSubGroupCode, MVS=Model.Navigation.Filter.Mvs, VIN=Model.Navigation.Filter.Vin})
+
     <div class="container-fluid">
         <div class="row">
             <div class="col-lg-12 col-md-12 col-sm-12 col-12">

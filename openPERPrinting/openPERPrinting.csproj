@@ -16,4 +16,10 @@
     <ProjectReference Include="..\openRepositories\openPERRepositories.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <None Update="Images\ff_logo.png">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+  </ItemGroup>
+
 </Project>

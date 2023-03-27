@@ -9,7 +9,8 @@ namespace openPERRepositories.Interfaces
         List<MakeModel> GetAllMakes();
         List<ModelModel> GetAllModelsForMake(string make, string subMake);
         List<CatalogueModel> GetAllCatalogues(string make,string subMake, string model, string languageCode);
-        List<GroupModel> GetGroupsForCatalogue(string catalogueCode, string languageCode);
+        List<GroupModel> GetGroupsForCatalogue(string catalogueCode, string languageCode, bool getSubGroups);
+
         List<SubGroupModel> GetSubGroupsForCatalogueGroup(string catalogueCode, int groupCode, string languageCode);
         List<SubSubGroupModel> GetSubSubGroupsForCatalogueGroupSubGroup(string catalogueCode, int groupCode, int subGroupCode, string languageCode);
         PartModel GetPartDetails(string partNumberSearch, string languageCode);
@@ -53,6 +54,11 @@ namespace openPERRepositories.Interfaces
 
         public List<MakeModel> GetCatalogueHierarchy(string languageCode);
         public List<GroupModel> GetAllSectionsForCatalogue(string languageCode, string catalogueCode);
+
+
+        // Printing support
+        public CatalogueModel GetCatalogue(string makeCode, string subMakeCode, string modelCode, string catalogueCode,
+            string languageCode);
 
     }
 

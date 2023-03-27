@@ -11,5 +11,6 @@ namespace openPERModels
         public List<OptionModel> Options { get; set; }
         public string Pattern { get; set; }
         public List<PatternModel> PatternParts { get; set; }
+        public List<DrawingKeyModel> Drawings { get; set; }
     }
 }

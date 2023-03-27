@@ -46,7 +46,7 @@ namespace openPER.Helpers
             if (makeCode != null && subMakeCode != null && modelCode != null)
                 model.SideMenuItems.AllCatalogues = mapper.Map<List<CatalogueModel>, List<CatalogueViewModel>>(rep.GetAllCatalogues(makeCode, subMakeCode, modelCode, language));
             if (catalogueCode != null)
-                model.SideMenuItems.AllGroups = mapper.Map<List<GroupModel>, List<GroupViewModel>>(rep.GetGroupsForCatalogue(catalogueCode, language));
+                model.SideMenuItems.AllGroups = mapper.Map<List<GroupModel>, List<GroupViewModel>>(rep.GetGroupsForCatalogue(catalogueCode, language, false));
             if (catalogueCode != null && groupCode != null)
                 model.SideMenuItems.AllSubGroups = mapper.Map<List<SubGroupModel>, List<SubGroupViewModel>>(rep.GetSubGroupsForCatalogueGroup(catalogueCode, groupCode.Value, language));
             model.Filter = new FilterModel

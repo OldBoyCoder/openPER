@@ -206,14 +206,14 @@ namespace openPERRepositories.Repositories
             return rc;
         }
 
-        public List<GroupModel> GetGroupsForCatalogue(string catalogueCode, string languageCode)
+        public List<GroupModel> GetGroupsForCatalogue(string catalogueCode, string languageCode, bool getSubGroups)
         {
-            var key = ("GetGroupsForCatalogue", catalogueCode, languageCode);
+            var key = ("GetGroupsForCatalogue", catalogueCode, languageCode, getSubGroups);
             if (_cache.TryGetValue(key, out List<GroupModel> cacheValue))
             {
                 return cacheValue;
             }
-            var rc = _rep.GetGroupsForCatalogue(catalogueCode, languageCode);
+            var rc = _rep.GetGroupsForCatalogue(catalogueCode, languageCode, getSubGroups);
             _cache.Set(key, rc, _options);
             return rc;
         }
@@ -487,6 +487,20 @@ namespace openPERRepositories.Repositories
             _cache.Set(key, rc, _options);
             return rc;
 
+        }
+
+        public CatalogueModel GetCatalogue(string makeCode, string subMakeCode, string modelCode, string catalogueCode,
+            string languageCode)
+        {
+            var key = ("GetCatalogue", makeCode, subMakeCode, modelCode, catalogueCode, languageCode);
+            if (_cache.TryGetValue(key, out CatalogueModel cacheValue))
+            {
+                return cacheValue;
+            }
+
+            var rc = _rep.GetCatalogue(makeCode, subMakeCode, modelCode, catalogueCode, languageCode);
+            _cache.Set(key, rc, _options);
+            return rc;
         }
     }
 }

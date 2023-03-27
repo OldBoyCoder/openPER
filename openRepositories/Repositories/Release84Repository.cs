@@ -241,7 +241,8 @@ namespace openPERRepositories.Repositories
                     Modifications = reader.IsDBNull(7) ? new List<ModificationModel>() :
                         CreateModificationListFromString(catalogueCode, reader.GetString(7), languageCode),
                     Width = reader.GetInt32(10),
-                    Height = reader.GetInt32(11)
+                    Height = reader.GetInt32(11),
+                    ImagePath = PathToCdn +reader.GetString(9)
                 };
                 var thumbImagePath = reader.GetString(9);
                 var imageParts = thumbImagePath.Split(new[] { '.' });
@@ -686,6 +687,30 @@ namespace openPERRepositories.Repositories
             return rc;
         }
 
+        public CatalogueModel GetCatalogue(string makeCode, string subMakeCode, string modelCode, string catalogueCode,
+            string languageCode)
+        {
+            languageCode = openPERHelpers.LanguageSupport.GetFiatLanguageCodeFromString(languageCode);
+            CatalogueModel rc = null;
+            using var connection = new MySqlConnection(PathToDb);
+            var sql = @"SELECT CAT_COD, CAT_DSC, IMG_NAME FROM CATALOGUES WHERE MK2_COD = @p2 AND MK_COD =@p1 AND CMG_COD = @p3 AND CAT_COD = @p4 ORDER BY CAT_SORT_KEY ";
+            connection.RunSqlFirstRowOnly(sql, (reader) =>
+            {
+                rc = new CatalogueModel
+                {
+                    Code = reader.GetString(0),
+                    Description = reader.GetString(1),
+                    MakeCode = makeCode,
+                    SubMakeCode = subMakeCode,
+                    ModelCode = modelCode,
+                    ImageName = PathToCdn + "L_EPERFIG/" + reader.GetString(2)
+                };
+
+            }, makeCode, subMakeCode, modelCode, catalogueCode);
+            return rc;
+
+        }
+
         public List<CatalogueModel> GetAllCatalogues(string makeCode, string subMakeCode, string modelCode, string languageCode)
         {
             languageCode = openPERHelpers.LanguageSupport.GetFiatLanguageCodeFromString(languageCode);
@@ -707,7 +732,7 @@ namespace openPERRepositories.Repositories
             return rc;
         }
 
-        public List<GroupModel> GetGroupsForCatalogue(string catalogueCode, string languageCode)
+        public List<GroupModel> GetGroupsForCatalogue(string catalogueCode, string languageCode, bool getSubGroups)
         {
             languageCode = openPERHelpers.LanguageSupport.GetFiatLanguageCodeFromString(languageCode);
             var rc = new List<GroupModel>();
@@ -725,10 +750,25 @@ namespace openPERRepositories.Repositories
                 };
                 rc.Add(m);
             }, catalogueCode, languageCode);
-            //foreach (var group in rc)
-            //{
-            //    group.SubSubGroups = GetSubgroupsForCatalogueGroup(catalogueCode, group.Code, languageCode);
-            //}
+            if (getSubGroups)
+            {
+                foreach (var group in rc)
+                {
+                    group.SubGroups = GetSubGroupsForCatalogueGroup(catalogueCode, group.Code, languageCode);
+                    foreach (var subgroup in group.SubGroups)
+                    {
+                        subgroup.SubSubGroups =
+                            GetSubSubGroupsForCatalogueGroupSubGroup(catalogueCode, group.Code, subgroup.Code,
+                                languageCode);
+                        foreach (var subSubGroup in subgroup.SubSubGroups)
+                        {
+                            subSubGroup.Drawings = GetDrawingKeysForSubSubGroup("", "", catalogueCode, group.Code,
+                                subgroup.Code, subSubGroup.Code, languageCode);
+                        }
+                    }
+                }
+            }
+
             return rc;
         }
 
@@ -1486,11 +1526,7 @@ namespace openPERRepositories.Repositories
         public List<GroupModel> GetAllSectionsForCatalogue(string languageCode, string catalogueCode)
         {
             languageCode = openPERHelpers.LanguageSupport.GetFiatLanguageCodeFromString(languageCode);
-            var rc = GetGroupsForCatalogue(catalogueCode, languageCode);
-            foreach (var group in rc)
-            {
-                group.SubGroups = GetSubGroupsForCatalogueGroup(catalogueCode, group.Code, languageCode);
-            }
+            var rc = GetGroupsForCatalogue(catalogueCode, languageCode, true);
             return rc;
         }
     }
