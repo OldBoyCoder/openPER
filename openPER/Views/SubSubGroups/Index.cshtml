@@ -1,4 +1,5 @@
-﻿@model openPER.ViewModels.SubSubGroupsViewModel
+﻿@using openPERModels
+@model openPER.ViewModels.SubSubGroupsViewModel
 
 @{
     ViewData["Title"] = "Index";
@@ -26,12 +27,12 @@
                         <td>
                             @if (group.Visible)
                             {
-                                @Html.ActionLink($"{Model.GroupCode:000}{Model.SubGroupCode:00}/{group.Code:00} {group.Description}", "Detail", "Drawings", new {Model.Navigation.Language, Model.MakeCode,Model.SubMakeCode, Model.ModelCode, Model.CatalogueCode, Model.GroupCode, Model.SubGroupCode, SubSubGroupCode=group.Code, DrawingNumber=0, Scope="SubSubGroup", MVS=Model.Navigation.Filter.Mvs, VIN=Model.Navigation.Filter.Vin})
+                                @Html.ActionLink($"{Model.GroupCode:000}{Model.SubGroupCode:00}/{group.Code:00} {group.Description}", "Detail", "Drawings", new {Model.Navigation.Language, Model.MakeCode,Model.SubMakeCode, Model.ModelCode, Model.CatalogueCode, Model.GroupCode, Model.SubGroupCode, SubSubGroupCode=group.Code, DrawingNumber=0, Scope=DrawingsScope.SubSubGroup, MVS=Model.Navigation.Filter.Mvs, VIN=Model.Navigation.Filter.Vin})
                             }
                             else
                             {
                                 <del>
-                                    @Html.ActionLink($"{Model.GroupCode:000}{Model.SubGroupCode:00}/{group.Code:00} {group.Description}", "Detail", "Drawings", new {Model.Navigation.Language, Model.MakeCode,Model.SubMakeCode, Model.ModelCode, Model.CatalogueCode, Model.GroupCode, Model.SubGroupCode, SubSubGroupCode=group.Code, DrawingNumber=0, Scope="SubSubGroup", MVS=Model.Navigation.Filter.Mvs, VIN=Model.Navigation.Filter.Vin})
+                                    @Html.ActionLink($"{Model.GroupCode:000}{Model.SubGroupCode:00}/{group.Code:00} {group.Description}", "Detail", "Drawings", new {Model.Navigation.Language, Model.MakeCode,Model.SubMakeCode, Model.ModelCode, Model.CatalogueCode, Model.GroupCode, Model.SubGroupCode, SubSubGroupCode=group.Code, DrawingNumber=0, Scope=DrawingsScope.SubSubGroup, MVS=Model.Navigation.Filter.Mvs, VIN=Model.Navigation.Filter.Vin})
                                 </del>
                             }
                         </td>
@@ -56,7 +57,7 @@
                         </td>
                     </tr>
                 }
-                <tr><td>@Html.ActionLink("All drawings", "Detail", "Drawings", new {Model.Navigation.Language, Model.MakeCode, Model.SubMakeCode, Model.ModelCode, Model.CatalogueCode,Model.GroupCode,Model.SubGroupCode,SubSubGroupCode = "ALL", DrawingNumber=0, Scope="SubGroup", MVS=Model.Navigation.Filter.Mvs, VIN=Model.Navigation.Filter.Vin})</td></tr>
+                <tr><td>@Html.ActionLink("All drawings", "Detail", "Drawings", new {Model.Navigation.Language, Model.MakeCode, Model.SubMakeCode, Model.ModelCode, Model.CatalogueCode,Model.GroupCode,Model.SubGroupCode,SubSubGroupCode = "ALL", DrawingNumber=0, Scope=DrawingsScope.SubGroup, MVS=Model.Navigation.Filter.Mvs, VIN=Model.Navigation.Filter.Vin})</td></tr>
 
             </table>
 

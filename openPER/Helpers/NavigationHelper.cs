@@ -13,7 +13,7 @@ namespace openPER.Helpers
             string language, string makeCode, string subMakeCode,
             string modelCode, string catalogueCode, int? groupCode,
             int? subGroupCode, int? subSubGroupCode, int? drawingNumber,
-            string scope, string clichePartNumber, int? clicheDrawingNumber, string vin, string mvs)
+            DrawingsScope? scope, string clichePartNumber, int? clicheDrawingNumber, string vin, string mvs)
         {
             var breadcrumb = new BreadcrumbModel
             {
@@ -64,7 +64,7 @@ namespace openPER.Helpers
             return model;
         }
 
-        internal static NavigationViewModel PopulateNavigationModel(IMapper mapper, IRepository rep, string language, string makeCode, string subMakeCode, string modelCode, string catalogueCode, int groupCode, int subGroupCode, int subSubGroupCode, int drawingNumber, string scope, string clichePartNumber, int clicheDrawingNumber, string vin, string mvs)
+        internal static NavigationViewModel PopulateNavigationModel(IMapper mapper, IRepository rep, string language, string makeCode, string subMakeCode, string modelCode, string catalogueCode, int groupCode, int subGroupCode, int subSubGroupCode, int drawingNumber, DrawingsScope scope, string clichePartNumber, int clicheDrawingNumber, string vin, string mvs)
         {
             return InternalPopulateNavigationModel(mapper, rep, language, makeCode, subMakeCode, modelCode, catalogueCode, groupCode, subGroupCode, subSubGroupCode, drawingNumber, scope, clichePartNumber, clicheDrawingNumber, vin, mvs);
         }
@@ -82,7 +82,7 @@ namespace openPER.Helpers
             return InternalPopulateNavigationModel(mapper, rep, language, makeCode, subMakeCode, modelCode, catalogueCode, null, null, null, null, null, null, null, vin, mvs);
         }
 
-        internal static NavigationViewModel PopulateNavigationModel(IMapper mapper, IRepository rep, string language, string makeCode, string subMakeCode, string modelCode, string catalogueCode, int groupCode, int subGroupCode, int subSubGroupCode, int drawingNumber, string scope, string vin, string mvs)
+        internal static NavigationViewModel PopulateNavigationModel(IMapper mapper, IRepository rep, string language, string makeCode, string subMakeCode, string modelCode, string catalogueCode, int groupCode, int subGroupCode, int subSubGroupCode, int drawingNumber, DrawingsScope scope, string vin, string mvs)
         {
             return InternalPopulateNavigationModel(mapper, rep, language, makeCode, subMakeCode, modelCode, catalogueCode, groupCode, subGroupCode, subSubGroupCode, drawingNumber, scope, null, null, vin, mvs);
         }

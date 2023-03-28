@@ -62,7 +62,7 @@ namespace openPERRepositories.Interfaces
 
         public List<DrawingKeyModel> GetDrawingKeysForPrinting(string makeCode, string modelCode, string catalogueCode,
             int groupCode,
-            int subGroupCode, int subSubGroupCode, int drawingNumber, string scope, string languageCode);
+            int subGroupCode, int subSubGroupCode, int drawingNumber, DrawingsScope scope, string languageCode);
 
     }
 

@@ -1,4 +1,5 @@
 ﻿@using openPER.ViewModels
+@using openPERModels
 @model openPER.ViewModels.DrawingsViewModel
 @{
     ViewData["Title"] = Model.Drawings[Model.TableData.CurrentDrawing].TableDescription[..1].ToUpper() + Model.Drawings[Model.TableData.CurrentDrawing].TableDescription[1..].ToLower();
@@ -116,13 +117,13 @@
                             {
                                 @if (h.LinkSubSubGroupCode != "")
                                 {
-                                    <a href="@Url.Action("Detail", "Drawings", new { language = Model.Navigation.Language, Model.Navigation.Breadcrumb.MakeCode, Model.Navigation.Breadcrumb.SubMakeCode, Model.Navigation.Breadcrumb.ModelCode, Model.Navigation.Breadcrumb.CatalogueCode, GroupCode = h.LinkGroupCode, SubGroupCode = h.LinkSubGroupCode, SubSubGroupCode = h.LinkSubSubGroupCode, DrawingNumber = 0, Scope = "SubSubGroup", VIN = Model.Navigation.Filter.Vin, MVS = Model.Navigation.Filter.Mvs })">
+                                    <a href="@Url.Action("Detail", "Drawings", new { language = Model.Navigation.Language, Model.Navigation.Breadcrumb.MakeCode, Model.Navigation.Breadcrumb.SubMakeCode, Model.Navigation.Breadcrumb.ModelCode, Model.Navigation.Breadcrumb.CatalogueCode, GroupCode = h.LinkGroupCode, SubGroupCode = h.LinkSubGroupCode, SubSubGroupCode = h.LinkSubSubGroupCode, DrawingNumber = 0, Scope = DrawingsScope.SubSubGroup, VIN = Model.Navigation.Filter.Vin, MVS = Model.Navigation.Filter.Mvs })">
                                         <img src="~/SiteImages/HotSpot1x1.png" data-bs-toggle="tooltip" data-bs-placement="auto" data-bs-html="true" data-bs-title="@(h.TooltipText)" style="@(h.PositionHtml)">
                                     </a>
                                 }
                                 else
                                 {
-                                    <a href="@Url.Action("Detail", "Drawings", new { language = Model.Navigation.Language, Model.Navigation.Breadcrumb.MakeCode, Model.Navigation.Breadcrumb.SubMakeCode, Model.Navigation.Breadcrumb.ModelCode, Model.Navigation.Breadcrumb.CatalogueCode, GroupCode = h.LinkGroupCode, SubGroupCode = h.LinkSubGroupCode, SubSubGroupCode = "ALL", DrawingNumber = 0, Scope = "SubGroup", VIN = Model.Navigation.Filter.Vin, MVS = Model.Navigation.Filter.Mvs })">
+                                    <a href="@Url.Action("Detail", "Drawings", new { language = Model.Navigation.Language, Model.Navigation.Breadcrumb.MakeCode, Model.Navigation.Breadcrumb.SubMakeCode, Model.Navigation.Breadcrumb.ModelCode, Model.Navigation.Breadcrumb.CatalogueCode, GroupCode = h.LinkGroupCode, SubGroupCode = h.LinkSubGroupCode, SubSubGroupCode = "ALL", DrawingNumber = 0, Scope =DrawingsScope.SubGroup, VIN = Model.Navigation.Filter.Vin, MVS = Model.Navigation.Filter.Mvs })">
                                         <img src="~/SiteImages/HotSpot1x1.png" data-bs-toggle="tooltip" data-bs-placement="auto" data-bs-html="true" data-bs-title="@(h.TooltipText)" style="@(h.PositionHtml)">
                                     </a>
                                 }
@@ -219,13 +220,13 @@
                             <td>
                                 @if (h.LinkSubSubGroupCode != "")
                                 {
-                                    <a href="@Url.Action("Detail", "Drawings", new { language = Model.Navigation.Language, Model.Navigation.Breadcrumb.MakeCode, Model.Navigation.Breadcrumb.SubMakeCode, Model.Navigation.Breadcrumb.ModelCode, Model.Navigation.Breadcrumb.CatalogueCode, GroupCode = h.LinkGroupCode, SubGroupCode = h.LinkSubGroupCode, SubSubGroupCode = h.LinkSubSubGroupCode, DrawingNumber = 0, Scope = "SubSubGroup", VIN = Model.Navigation.Filter.Vin, MVS = Model.Navigation.Filter.Mvs })">
+                                    <a href="@Url.Action("Detail", "Drawings", new { language = Model.Navigation.Language, Model.Navigation.Breadcrumb.MakeCode, Model.Navigation.Breadcrumb.SubMakeCode, Model.Navigation.Breadcrumb.ModelCode, Model.Navigation.Breadcrumb.CatalogueCode, GroupCode = h.LinkGroupCode, SubGroupCode = h.LinkSubGroupCode, SubSubGroupCode = h.LinkSubSubGroupCode, DrawingNumber = 0, Scope = DrawingsScope.SubSubGroup, VIN = Model.Navigation.Filter.Vin, MVS = Model.Navigation.Filter.Mvs })">
                                         <img src="~/SiteImages/HotSpot1x1.png" data-bs-toggle="tooltip" data-bs-placement="auto" data-bs-html="true" data-bs-title="@(h.TooltipText)" style="@(h.PositionHtml)">@h.Link
                                     </a>
                                 }
                                 else
                                 {
-                                    <a href="@Url.Action("Detail", "Drawings", new { language = Model.Navigation.Language, Model.Navigation.Breadcrumb.MakeCode, Model.Navigation.Breadcrumb.SubMakeCode, Model.Navigation.Breadcrumb.ModelCode, Model.Navigation.Breadcrumb.CatalogueCode, GroupCode = h.LinkGroupCode, SubGroupCode = h.LinkSubGroupCode, SubSubGroupCode ="ALL", DrawingNumber = 0, Scope = "SubGroup", VIN = Model.Navigation.Filter.Vin, MVS = Model.Navigation.Filter.Mvs })">
+                                    <a href="@Url.Action("Detail", "Drawings", new { language = Model.Navigation.Language, Model.Navigation.Breadcrumb.MakeCode, Model.Navigation.Breadcrumb.SubMakeCode, Model.Navigation.Breadcrumb.ModelCode, Model.Navigation.Breadcrumb.CatalogueCode, GroupCode = h.LinkGroupCode, SubGroupCode = h.LinkSubGroupCode, SubSubGroupCode ="ALL", DrawingNumber = 0, Scope = DrawingsScope.SubGroup, VIN = Model.Navigation.Filter.Vin, MVS = Model.Navigation.Filter.Mvs })">
                                         <img src="~/SiteImages/HotSpot1x1.png" data-bs-toggle="tooltip" data-bs-placement="auto" data-bs-html="true" data-bs-title="@(h.TooltipText)" style="@(h.PositionHtml)">@h.Link
                                     </a>
 

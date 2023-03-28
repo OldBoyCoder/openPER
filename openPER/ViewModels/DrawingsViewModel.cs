@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using openPERModels;
 
 namespace openPER.ViewModels
 {
@@ -8,6 +9,6 @@ namespace openPER.ViewModels
         // We need a list of all drawings for this page
         public List<DrawingKeyViewModel> Drawings { get; set; }
         public TableViewModel TableData { get; set; }
-        public string Scope { get; set; }
+        public DrawingsScope Scope { get; set; }
     }
 }

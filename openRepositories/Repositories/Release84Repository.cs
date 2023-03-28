@@ -256,7 +256,7 @@ namespace openPERRepositories.Repositories
 
         public List<DrawingKeyModel> GetDrawingKeysForPrinting(string makeCode, string modelCode, string catalogueCode,
             int groupCode,
-            int subGroupCode, int subSubGroupCode, int drawingNumber, string scope, string languageCode)
+            int subGroupCode, int subSubGroupCode, int drawingNumber, DrawingsScope scope, string languageCode)
         {
             languageCode = openPERHelpers.LanguageSupport.GetFiatLanguageCodeFromString(languageCode);
             var drawings = new List<DrawingKeyModel>();
@@ -267,13 +267,13 @@ namespace openPERRepositories.Repositories
                             JOIN TABLES_DSC TD ON TD.LNG_COD = @p1 AND TD.COD = TABLE_DSC_COD
                             WHERE CAT_COD = @p2 AND GRP_COD = @p3";
             var keys = new object[] { languageCode, catalogueCode, groupCode};
-            if (scope == "SubGroup")
+            if (scope == DrawingsScope.SubGroup)
             {
                 sql += " AND SGRP_COD = @p4 ";
                 keys = new object[] { languageCode, catalogueCode, groupCode, subGroupCode };
             }
 
-            if (scope == "SubSubGroup")
+            if (scope == DrawingsScope.SubSubGroup)
             {
                 sql += "AND SGS_COD = @p5";
                 keys = new object[] { languageCode, catalogueCode, groupCode, subGroupCode, subSubGroupCode };

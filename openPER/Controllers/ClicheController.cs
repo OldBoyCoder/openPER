@@ -23,7 +23,7 @@ namespace openPER.Controllers
             "{language}/Cliche/Detail/{MakeCode}/{SubMakeCode}/{ModelCode}/{CatalogueCode}/{GroupCode}/{SubGroupCode}/{SubSubGroupCode}/{DrawingNumber}/{Scope}/{ClichePartNumber}/{ClicheDrawingNumber}")]
         [ApiExplorerSettings(IgnoreApi = true)]
         public IActionResult Detail(string language, string makeCode, string subMakeCode, string modelCode,
-            string catalogueCode, int groupCode, int subGroupCode, int subSubGroupCode, int drawingNumber, string scope,
+            string catalogueCode, int groupCode, int subGroupCode, int subSubGroupCode, int drawingNumber, DrawingsScope scope,
             string clichePartNumber, int clicheDrawingNumber, string vin = "", string mvs = "")
         {
             language = LanguageSupport.GetIso639CodeFromString(language);

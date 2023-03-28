@@ -26,7 +26,7 @@ namespace openPER.Controllers
         // The most specific route, only the drawings for the lowest level are returned
         [Route("{language}/Drawings/Detail/{MakeCode}/{SubMakeCode}/{ModelCode}/{CatalogueCode}/{GroupCode}/{SubGroupCode}/{SubSubGroupCode}/{DrawingNumber}/{Scope}")]
         [ApiExplorerSettings(IgnoreApi = true)]
-        public IActionResult Detail(string language, string makeCode, string subMakeCode, string modelCode, string catalogueCode, int groupCode, int subGroupCode, int subSubGroupCode, int drawingNumber, string scope, string vin = "", string mvs = "")
+        public IActionResult Detail(string language, string makeCode, string subMakeCode, string modelCode, string catalogueCode, int groupCode, int subGroupCode, int subSubGroupCode, int drawingNumber, DrawingsScope scope, string vin = "", string mvs = "")
         {
             var model = BuildDrawingViewModel(language, makeCode, subMakeCode, modelCode,
                     catalogueCode, groupCode, subGroupCode, subSubGroupCode,
@@ -36,7 +36,7 @@ namespace openPER.Controllers
         }
         [Route("{language}/Drawings/Detail/{MakeCode}/{SubMakeCode}/{ModelCode}/{CatalogueCode}/{GroupCode}/{SubGroupCode}/{SubSubGroupCode}/{Variant}/{Revision}/{Scope}/{HighlightPart?}")]
         [ApiExplorerSettings(IgnoreApi = true)]
-        public IActionResult Detail(string language, string makeCode, string subMakeCode, string modelCode, string catalogueCode, int groupCode, int subGroupCode, int subSubGroupCode, int variant, int revision, string scope, string highlightPart = "~", string vin = "", string mvs = "")
+        public IActionResult Detail(string language, string makeCode, string subMakeCode, string modelCode, string catalogueCode, int groupCode, int subGroupCode, int subSubGroupCode, int variant, int revision, DrawingsScope scope, string highlightPart = "~", string vin = "", string mvs = "")
         {
             var model = BuildDrawingViewModel(language, makeCode, subMakeCode, modelCode,
                 catalogueCode, groupCode, subGroupCode, subSubGroupCode,
@@ -50,7 +50,7 @@ namespace openPER.Controllers
         }
         [Route("{language}/Drawings/Print/{MakeCode}/{SubMakeCode}/{ModelCode}/{CatalogueCode}/{GroupCode}/{SubGroupCode}/{SubSubGroupCode}/{DrawingNumber}/{Scope}")]
         [ApiExplorerSettings(IgnoreApi = true)]
-        public async Task<IActionResult> Print(string language, string makeCode, string subMakeCode, string modelCode, string catalogueCode, int groupCode, int subGroupCode, int subSubGroupCode, int drawingNumber, string scope, string vin = "", string mvs = "")
+        public async Task<IActionResult> Print(string language, string makeCode, string subMakeCode, string modelCode, string catalogueCode, int groupCode, int subGroupCode, int subSubGroupCode, int drawingNumber, DrawingsScope scope, string vin = "", string mvs = "")
         {
             language = LanguageSupport.GetIso639CodeFromString(language);
             ViewData["Language"] = language;
@@ -81,7 +81,7 @@ namespace openPER.Controllers
         }
 
         private DrawingsViewModel BuildDrawingViewModel(string language, string makeCode, string subMakeCode, string modelCode,
-            string catalogueCode, int groupCode, int subGroupCode, int subSubGroupCode, string scope,
+            string catalogueCode, int groupCode, int subGroupCode, int subSubGroupCode, DrawingsScope scope,
             string vin, string mvs, Func<List<DrawingKeyViewModel>, int> getCurrentDrawing)
         {
             language = LanguageSupport.GetIso639CodeFromString(language);
@@ -112,13 +112,13 @@ namespace openPER.Controllers
         }
 
         private List<DrawingKeyModel> GetDrawingKeys(string language, string makeCode, string modelCode, string catalogueCode, int groupCode,
-            int subGroupCode, int subSubGroupCode, string scope)
+            int subGroupCode, int subSubGroupCode, DrawingsScope scope)
         {
             var drawings = scope switch
             {
-                "SubSubGroup" => _rep.GetDrawingKeysForSubSubGroup(makeCode, modelCode, catalogueCode, groupCode,
+                DrawingsScope.SubSubGroup => _rep.GetDrawingKeysForSubSubGroup(makeCode, modelCode, catalogueCode, groupCode,
                     subGroupCode, subSubGroupCode, language),
-                "SubGroup" => _rep.GetDrawingKeysForSubGroup(makeCode, modelCode, catalogueCode, groupCode,
+                DrawingsScope.SubGroup => _rep.GetDrawingKeysForSubGroup(makeCode, modelCode, catalogueCode, groupCode,
                     subGroupCode, language),
                 _ => _rep.GetDrawingKeysForGroup(makeCode, modelCode, catalogueCode, groupCode, language)
             };

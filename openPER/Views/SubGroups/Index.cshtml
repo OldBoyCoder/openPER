@@ -1,4 +1,5 @@
-﻿@model openPER.ViewModels.SubGroupsViewModel
+﻿@using openPERModels
+@model openPER.ViewModels.SubGroupsViewModel
 @{
     ViewData["Title"] = $"Sub groups for {Model.Navigation.Breadcrumb.MakeDescription} {Model.Navigation.Breadcrumb.ModelDescription} {Model.Navigation.Breadcrumb.CatalogueDescription} {Model.Navigation.Breadcrumb.GroupDescription}";
 
@@ -31,7 +32,7 @@
                 }
             </div>
             <p>
-                @Html.ActionLink("All drawings", "Detail", "Drawings", new {Model.Navigation.Language, Model.MakeCode, Model.SubMakeCode, Model.ModelCode, Model.CatalogueCode, Model.GroupCode,SubGroupCode="ALL", SubSubGroupCode="ALL", DrawingNumber = 0, Scope="Group", MVS=Model.Navigation.Filter.Mvs, VIN=Model.Navigation.Filter.Vin})
+                @Html.ActionLink("All drawings", "Detail", "Drawings", new {Model.Navigation.Language, Model.MakeCode, Model.SubMakeCode, Model.ModelCode, Model.CatalogueCode, Model.GroupCode,SubGroupCode="ALL", SubSubGroupCode="ALL", DrawingNumber = 0, Scope=DrawingsScope.Group, MVS=Model.Navigation.Filter.Mvs, VIN=Model.Navigation.Filter.Vin})
 
             </p>
         </div>

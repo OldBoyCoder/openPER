@@ -1,6 +1,7 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using openPER.Helpers;
 using openPERHelpers;
+using openPERModels;
 
 namespace openPER.Controllers
 {
@@ -28,7 +29,7 @@ namespace openPER.Controllers
                 var drawingNumber = "0";
                 if (HttpContext.Request.Query.ContainsKey("DRW_NUM"))
                     drawingNumber = (int.Parse(HttpContext.Request.Query["DRW_NUM"][0] ?? string.Empty) - 1).ToString();
-                var scope = "SubSubGroup";
+                var scope = DrawingsScope.SubSubGroup;
                 return RedirectToAction("Detail", "Drawings", new { Language = language, MakeCode = makeCode, SubMakeCode = subMakeCode, ModelCode = modelCode, CatalogueCode = catalogueCode, GroupCode = groupCode, SubGroupCode = subGroupCode, SubSubGroupCode = subSubGroupCode, DrawingNumber = drawingNumber, Scope = scope });
             }
             if (key == "HOME")
