@@ -17,7 +17,7 @@ namespace openPER.ViewModels
         public int ClichePartDrawingNumber { get; set; }
         public string VariantPattern { get; set; }
         public string RevisionModifications { get; set; }
-        public string Description { get; set; }
+        public string TableDescription { get; set; }
         public string ThumbImagePath { get; set; }
         public string ImagePath { get; set; }
         public bool Visible { get; set; }

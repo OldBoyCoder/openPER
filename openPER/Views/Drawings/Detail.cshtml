@@ -1,7 +1,7 @@
 ﻿@using openPER.ViewModels
 @model openPER.ViewModels.DrawingsViewModel
 @{
-    ViewData["Title"] = Model.Drawings[Model.TableData.CurrentDrawing].Description[..1].ToUpper() + Model.Drawings[Model.TableData.CurrentDrawing].Description[1..].ToLower();
+    ViewData["Title"] = Model.Drawings[Model.TableData.CurrentDrawing].TableDescription[..1].ToUpper() + Model.Drawings[Model.TableData.CurrentDrawing].TableDescription[1..].ToLower();
 }
 @section Navbar
     {
@@ -41,15 +41,15 @@
                 <div class="btn-group mr-2" role="group">
                     <div class="dropdown show">
                         <a class="btn btn-secondary dropdown-toggle" href="#" role="button" id="subGroupMenuLink" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                            @($"{Model.Drawings[Model.TableData.CurrentDrawing].GroupCode:000}{Model.Drawings[Model.TableData.CurrentDrawing].SubGroupCode:00}/{Model.Drawings[Model.TableData.CurrentDrawing].SubSubGroupCode:00} - {Model.Drawings[Model.TableData.CurrentDrawing].Description}")
+                            @($"{Model.Drawings[Model.TableData.CurrentDrawing].GroupCode:000}{Model.Drawings[Model.TableData.CurrentDrawing].SubGroupCode:00}/{Model.Drawings[Model.TableData.CurrentDrawing].SubSubGroupCode:00} - {Model.Drawings[Model.TableData.CurrentDrawing].TableDescription}")
                         </a>
                         <div class="dropdown-menu" aria-labelledby="subGroupMenuLink">
                             @{
-                                @foreach (var drawing in Model.Drawings.GroupBy(x => new { x.MakeCode, x.SubMakeCode, x.ModelCode, x.CatalogueCode, x.GroupCode, x.SubGroupCode, x.SubSubGroupCode, x.Description }, (key, group) => new { key.MakeCode, key.SubMakeCode, key.ModelCode, key.CatalogueCode, key.GroupCode, key.SubGroupCode, key.SubSubGroupCode, key.Description }))
+                                @foreach (var drawing in Model.Drawings.GroupBy(x => new { x.MakeCode, x.SubMakeCode, x.ModelCode, x.CatalogueCode, x.GroupCode, x.SubGroupCode, x.SubSubGroupCode, x.TableDescription }, (key, group) => new { key.MakeCode, key.SubMakeCode, key.ModelCode, key.CatalogueCode, key.GroupCode, key.SubGroupCode, key.SubSubGroupCode, key.TableDescription }))
                                 {
                                     var index = Model.Drawings.FindIndex(x => x.CatalogueCode == drawing.CatalogueCode && x.GroupCode == drawing.GroupCode
                                     && x.SubGroupCode == drawing.SubGroupCode && x.SubSubGroupCode == drawing.SubSubGroupCode);
-                                    @Html.ActionLink($"{drawing.GroupCode:000}{drawing.SubGroupCode:00}/{drawing.SubSubGroupCode:00} - {drawing.Description}", "Detail", "Drawings", new {drawing.MakeCode, drawing.SubMakeCode, drawing.ModelCode, drawing.CatalogueCode, drawing.GroupCode, drawing.SubGroupCode, drawing.SubSubGroupCode, DrawingNumber= index, Model.Scope, MVS=Model.Navigation.Filter.Mvs, VIN=Model.Navigation.Filter.Vin }, new {@class="dropdown-item"})
+                                    @Html.ActionLink($"{drawing.GroupCode:000}{drawing.SubGroupCode:00}/{drawing.SubSubGroupCode:00} - {drawing.TableDescription}", "Detail", "Drawings", new {drawing.MakeCode, drawing.SubMakeCode, drawing.ModelCode, drawing.CatalogueCode, drawing.GroupCode, drawing.SubGroupCode, drawing.SubSubGroupCode, DrawingNumber= index, Model.Scope, MVS=Model.Navigation.Filter.Mvs, VIN=Model.Navigation.Filter.Vin }, new {@class="dropdown-item"})
                                 }
                             }
                         </div>
@@ -252,7 +252,7 @@
                                 <figure class="figure">
                                     <img alt="An image of parts" class="figure-img img-fluid" src="@drawing.ThumbImagePath">
                                     <figcaption class="figure-caption">
-                                        @Html.ActionLink($"{drawing.GroupCode:000}{drawing.SubGroupCode:00}/{drawing.SubSubGroupCode:00} - {drawing.Description} (Var.:{drawing.Variant}/Rev.:{drawing.Revision})", "Detail", "Drawings", new { drawing.MakeCode, drawing.SubMakeCode, drawing.ModelCode, drawing.CatalogueCode, drawing.GroupCode, drawing.SubGroupCode, drawing.SubSubGroupCode, DrawingNumber = ix++, Model.Scope, MVS = Model.Navigation.Filter.Mvs, VIN = Model.Navigation.Filter.Vin })
+                                        @Html.ActionLink($"{drawing.GroupCode:000}{drawing.SubGroupCode:00}/{drawing.SubSubGroupCode:00} - {drawing.TableDescription} (Var.:{drawing.Variant}/Rev.:{drawing.Revision})", "Detail", "Drawings", new { drawing.MakeCode, drawing.SubMakeCode, drawing.ModelCode, drawing.CatalogueCode, drawing.GroupCode, drawing.SubGroupCode, drawing.SubSubGroupCode, DrawingNumber = ix++, Model.Scope, MVS = Model.Navigation.Filter.Mvs, VIN = Model.Navigation.Filter.Vin })
                                     </figcaption>
                                 </figure>
                             </div>

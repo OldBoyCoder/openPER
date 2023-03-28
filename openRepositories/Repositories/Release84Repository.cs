@@ -237,12 +237,12 @@ namespace openPERRepositories.Repositories
                     VariantPattern = reader.GetString(5),
                     Revision = reader.GetInt32(6),
                     RevisionModifications = reader.GetString(7),
-                    Description = reader.GetString(8),
+                    TableDescription = reader.GetString(8),
                     Modifications = reader.IsDBNull(7) ? new List<ModificationModel>() :
                         CreateModificationListFromString(catalogueCode, reader.GetString(7), languageCode),
                     Width = reader.GetInt32(10),
                     Height = reader.GetInt32(11),
-                    ImagePath = PathToCdn +reader.GetString(9)
+                    ImagePath = PathToCdn + reader.GetString(9)
                 };
                 var thumbImagePath = reader.GetString(9);
                 var imageParts = thumbImagePath.Split(new[] { '.' });
@@ -252,6 +252,64 @@ namespace openPERRepositories.Repositories
             }, catalogueCode, groupCode, subGroupCode, subSubGroupCode, languageCode);
 
             return drawings;
+        }
+
+        public List<DrawingKeyModel> GetDrawingKeysForPrinting(string makeCode, string modelCode, string catalogueCode,
+            int groupCode,
+            int subGroupCode, int subSubGroupCode, int drawingNumber, string scope, string languageCode)
+        {
+            languageCode = openPERHelpers.LanguageSupport.GetFiatLanguageCodeFromString(languageCode);
+            var drawings = new List<DrawingKeyModel>();
+            using var connection = new MySqlConnection(PathToDb);
+            var sql =
+                @"SELECT DISTINCT CAT_COD, GRP_COD, SGRP_COD, SGS_COD, VARIANTE, IFNULL( PATTERN, ''), REVISIONE, IFNULL(MODIF, ''), DSC, IMG_PATH, WIDTH, HEIGHT
+                            FROM DRAWINGS
+                            JOIN TABLES_DSC TD ON TD.LNG_COD = @p1 AND TD.COD = TABLE_DSC_COD
+                            WHERE CAT_COD = @p2 AND GRP_COD = @p3";
+            var keys = new object[] { languageCode, catalogueCode, groupCode};
+            if (scope == "SubGroup")
+            {
+                sql += " AND SGRP_COD = @p4 ";
+                keys = new object[] { languageCode, catalogueCode, groupCode, subGroupCode };
+            }
+
+            if (scope == "SubSubGroup")
+            {
+                sql += "AND SGS_COD = @p5";
+                keys = new object[] { languageCode, catalogueCode, groupCode, subGroupCode, subSubGroupCode };
+            }
+
+            sql += " ORDER BY GRP_COD, SGRP_COD, SGS_COD, DRW_NUM";
+            connection.RunSqlAllRows(sql, (reader) =>
+            {
+                var drawing = new DrawingKeyModel()
+                {
+                    MakeCode = makeCode,
+                    ModelCode = modelCode,
+                    CatalogueCode = reader.GetString(0),
+                    GroupCode = reader.GetInt32(1),
+                    SubGroupCode = reader.GetInt32(2),
+                    SubSubGroupCode = reader.GetInt32(3),
+                    Variant = reader.GetInt32(4),
+                    VariantPattern = reader.GetString(5),
+                    Revision = reader.GetInt32(6),
+                    RevisionModifications = reader.GetString(7),
+                    TableDescription = reader.GetString(8),
+                    Modifications = reader.IsDBNull(7) ? new List<ModificationModel>() :
+                        CreateModificationListFromString(catalogueCode, reader.GetString(7), languageCode),
+                    Width = reader.GetInt32(10),
+                    Height = reader.GetInt32(11),
+
+                };
+                var thumbImagePath = reader.GetString(9);
+                var imageParts = thumbImagePath.Split(new[] { '.' });
+                drawing.ThumbImagePath = PathToCdn + imageParts[0] + ".th." + imageParts[1];
+
+                drawings.Add(drawing);
+            }, keys);
+
+            return drawings;
+
         }
         public List<DrawingKeyModel> GetDrawingKeysForSubGroup(string makeCode, string modelCode, string catalogueCode, int groupCode,
             int subGroupCode, string languageCode)
@@ -278,7 +336,7 @@ namespace openPERRepositories.Repositories
                     VariantPattern = reader.GetString(5),
                     Revision = reader.GetInt32(6),
                     RevisionModifications = reader.GetString(7),
-                    Description = reader.GetString(8),
+                    TableDescription = reader.GetString(8),
                     Modifications = reader.IsDBNull(7) ? new List<ModificationModel>() :
                         CreateModificationListFromString(catalogueCode, reader.GetString(7), languageCode),
                     Width = reader.GetInt32(10),
@@ -318,7 +376,7 @@ namespace openPERRepositories.Repositories
                     VariantPattern = reader.GetString(5),
                     Revision = reader.GetInt32(6),
                     RevisionModifications = reader.GetString(7),
-                    Description = reader.GetString(8),
+                    TableDescription = reader.GetString(8),
                     Modifications = reader.IsDBNull(7) ? new List<ModificationModel>() :
                         CreateModificationListFromString(catalogueCode, reader.GetString(7), languageCode),
                     Width = reader.GetInt32(10),
@@ -803,8 +861,8 @@ namespace openPERRepositories.Repositories
             {
                 var mod = new ModificationModel
                 {
-                    Type = part.Substring(0, 1),
-                    Code = int.Parse(part.Substring(1)),
+                    Type = part[..1],
+                    Code = int.Parse(part[1..]),
                     Progression = sequence++
                 };
                 var sql = "SELECT MDF_DSC FROM MODIF_DSC WHERE CAT_COD = @p1 AND MDF_COD = @p2 AND LNG_COD = @p3";
@@ -1332,7 +1390,7 @@ namespace openPERRepositories.Repositories
         }
         public List<VinSearchResultModel> FindMatchesForMvsAndVin(string languageCode, string mvs, string fullVin)
         {
-            languageCode = openPERHelpers.LanguageSupport.GetFiatLanguageCodeFromString(languageCode);
+            //languageCode = openPERHelpers.LanguageSupport.GetFiatLanguageCodeFromString(languageCode);
 
             var rc = new List<VinSearchResultModel>();
             var x = new Release84VinSearch(PathToVindataCh, PathToVindataRt);
@@ -1340,7 +1398,7 @@ namespace openPERRepositories.Repositories
             if (string.IsNullOrEmpty(fullVin) || fullVin.Length != 17)
                 return null;
 
-            var modelCode = mvs.Substring(0, 3);
+            var modelCode = mvs[..3];
             var searchResult = x.FindVehicleByModelAndChassis(modelCode, fullVin.Substring(9, 8));
             if (searchResult != null)
             {

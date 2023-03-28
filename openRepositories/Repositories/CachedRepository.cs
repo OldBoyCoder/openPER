@@ -502,5 +502,12 @@ namespace openPERRepositories.Repositories
             _cache.Set(key, rc, _options);
             return rc;
         }
+        // TODO cache this method
+        public List<DrawingKeyModel> GetDrawingKeysForPrinting(string makeCode, string modelCode, string catalogueCode, int groupCode, int subGroupCode,
+            int subSubGroupCode, int drawingNumber, string scope, string languageCode)
+        {
+            return _rep.GetDrawingKeysForPrinting(makeCode, modelCode, catalogueCode, groupCode, subGroupCode,
+                subSubGroupCode, drawingNumber, scope, languageCode);
+        }
     }
 }

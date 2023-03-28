@@ -55,7 +55,8 @@ namespace openPER.Controllers
             language = LanguageSupport.GetIso639CodeFromString(language);
             ViewData["Language"] = language;
             LanguageSupport.SetCultureBasedOnRoute(language);
-            var drawings = GetDrawingKeys(language, makeCode, modelCode, catalogueCode, groupCode, subGroupCode, subSubGroupCode, scope);
+            var drawings = _rep.GetDrawingKeysForPrinting(makeCode, modelCode, catalogueCode, groupCode, subGroupCode,
+                subSubGroupCode, drawingNumber, scope, language);
 
             var x = new PdfPrint(_rep);
             var catalogue = _rep.GetCatalogue(makeCode, subMakeCode, modelCode, catalogueCode, language);
