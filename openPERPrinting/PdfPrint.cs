@@ -92,29 +92,20 @@ namespace openPERPrinting
             _lastGroup = "";
             var outputStream = new MemoryStream(16 * 1024 * 1024);
 
-            foreach (var group in _options.Catalogue.Groups)
+            foreach (var drawing in _options.Catalogue.Drawings.OrderBy(x => x.GroupCode).ThenBy(x => x.SubGroupCode).ThenBy(x => x.SubSubGroupCode).ThenBy(x => x.Variant).ThenBy(x => x.Revision))
             {
-                foreach (var subgroup in group.SubGroups)
-                {
-                    foreach (var subSubGroup in subgroup.SubSubGroups)
-                    {
-                        foreach (var drawing in subSubGroup.Drawings)
-                        {
-                            _page = NewPage();
-                            var y = GetHeight(_page, 10);
-                            y += DrawStringCentre(
-                                $"{group.Code:000}{subgroup.Code:00}/{subSubGroup.Code:00} - {group.Description} - {subgroup.Description} - {subSubGroup.Description}",
-                                _punchMargin, y, _page.Width - _punchMargin,
-                                _contentsFont);
-                            y += DrawStringCentre(
-                                $"{drawing.ImagePath}",
-                                _punchMargin, y, _page.Width - _punchMargin,
-                                _contentsFont);
-                            y += await DrawDrawingFromStream(drawing.ImagePath, y);
-                        }
-                    }
-                }
-                _groupsPages.Add(group.Code.ToString("000"), _pageNumber);
+                _page = NewPage();
+                var y = GetHeight(_page, 10);
+                y += DrawStringCentre(
+                    $"{drawing.GroupCode:000}{drawing.SubGroupCode:00}/{drawing.SubSubGroupCode:00}",
+                    _punchMargin, y, _page.Width - _punchMargin,
+                    _contentsFont);
+                y += DrawStringCentre(
+                    $"{drawing.ImagePath}",
+                    _punchMargin, y, _page.Width - _punchMargin,
+                    _contentsFont);
+                y += await DrawDrawingFromStream(drawing.ImagePath, y);
+//                _groupsPages.Add(group.Code.ToString("000"), _pageNumber);
                 // Add section header page
                 //DrawSectionHeaderPageHolder();
                 var headerPage = _page;

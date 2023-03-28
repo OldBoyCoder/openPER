@@ -8,7 +8,7 @@
     @await Html.PartialAsync("_Navbar", Model.Navigation)
 }
     @await Html.PartialAsync("_Breadcrumb", Model.Navigation)
-@Html.ActionLink("Print", "SubSubGroup", "Print", new { Model.Navigation.Language, Model.Navigation.Breadcrumb.MakeCode, Model.Navigation.Breadcrumb.SubMakeCode, Model.Navigation.Breadcrumb.ModelCode, Model.Navigation.Breadcrumb.CatalogueCode, Model.Navigation.Breadcrumb.GroupCode, Model.Navigation.Breadcrumb.SubGroupCode, Model.Navigation.Breadcrumb.SubSubGroupCode, MVS=Model.Navigation.Filter.Mvs, VIN=Model.Navigation.Filter.Vin})
+    @Html.ActionLink("Print", "Print", "Drawings", new {language = Model.Navigation.Language,Model.Navigation.Breadcrumb.MakeCode, Model.Navigation.Breadcrumb.SubMakeCode, Model.Navigation.Breadcrumb.ModelCode, Model.Navigation.Breadcrumb.CatalogueCode, Model.Navigation.Breadcrumb.GroupCode, Model.Navigation.Breadcrumb.SubGroupCode, Model.Navigation.Breadcrumb.SubSubGroupCode, DrawingNumber= Model.TableData.CurrentDrawing,Model.Scope, MVS=Model.Navigation.Filter.Mvs, VIN=Model.Navigation.Filter.Vin})
 
     <div class="container-fluid">
         <div class="row">
@@ -217,19 +217,19 @@
                     {
                         <tr>
                             <td>
-                            @if (h.LinkSubSubGroupCode != "")
-                            {
-                                <a href="@Url.Action("Detail", "Drawings", new { language = Model.Navigation.Language, Model.Navigation.Breadcrumb.MakeCode, Model.Navigation.Breadcrumb.SubMakeCode, Model.Navigation.Breadcrumb.ModelCode, Model.Navigation.Breadcrumb.CatalogueCode, GroupCode = h.LinkGroupCode, SubGroupCode = h.LinkSubGroupCode, SubSubGroupCode = h.LinkSubSubGroupCode, DrawingNumber = 0, Scope = "SubSubGroup", VIN = Model.Navigation.Filter.Vin, MVS = Model.Navigation.Filter.Mvs })">
-                                    <img src="~/SiteImages/HotSpot1x1.png" data-bs-toggle="tooltip" data-bs-placement="auto" data-bs-html="true" data-bs-title="@(h.TooltipText)" style="@(h.PositionHtml)">@h.Link
-                                </a>
-                            }
-                            else
-                            {
-                                <a href="@Url.Action("Detail", "Drawings", new { language = Model.Navigation.Language, Model.Navigation.Breadcrumb.MakeCode, Model.Navigation.Breadcrumb.SubMakeCode, Model.Navigation.Breadcrumb.ModelCode, Model.Navigation.Breadcrumb.CatalogueCode, GroupCode = h.LinkGroupCode, SubGroupCode = h.LinkSubGroupCode, SubSubGroupCode ="ALL", DrawingNumber = 0, Scope = "SubGroup", VIN = Model.Navigation.Filter.Vin, MVS = Model.Navigation.Filter.Mvs })">
-                                    <img src="~/SiteImages/HotSpot1x1.png" data-bs-toggle="tooltip" data-bs-placement="auto" data-bs-html="true" data-bs-title="@(h.TooltipText)" style="@(h.PositionHtml)">@h.Link
-                                </a>
+                                @if (h.LinkSubSubGroupCode != "")
+                                {
+                                    <a href="@Url.Action("Detail", "Drawings", new { language = Model.Navigation.Language, Model.Navigation.Breadcrumb.MakeCode, Model.Navigation.Breadcrumb.SubMakeCode, Model.Navigation.Breadcrumb.ModelCode, Model.Navigation.Breadcrumb.CatalogueCode, GroupCode = h.LinkGroupCode, SubGroupCode = h.LinkSubGroupCode, SubSubGroupCode = h.LinkSubSubGroupCode, DrawingNumber = 0, Scope = "SubSubGroup", VIN = Model.Navigation.Filter.Vin, MVS = Model.Navigation.Filter.Mvs })">
+                                        <img src="~/SiteImages/HotSpot1x1.png" data-bs-toggle="tooltip" data-bs-placement="auto" data-bs-html="true" data-bs-title="@(h.TooltipText)" style="@(h.PositionHtml)">@h.Link
+                                    </a>
+                                }
+                                else
+                                {
+                                    <a href="@Url.Action("Detail", "Drawings", new { language = Model.Navigation.Language, Model.Navigation.Breadcrumb.MakeCode, Model.Navigation.Breadcrumb.SubMakeCode, Model.Navigation.Breadcrumb.ModelCode, Model.Navigation.Breadcrumb.CatalogueCode, GroupCode = h.LinkGroupCode, SubGroupCode = h.LinkSubGroupCode, SubSubGroupCode ="ALL", DrawingNumber = 0, Scope = "SubGroup", VIN = Model.Navigation.Filter.Vin, MVS = Model.Navigation.Filter.Mvs })">
+                                        <img src="~/SiteImages/HotSpot1x1.png" data-bs-toggle="tooltip" data-bs-placement="auto" data-bs-html="true" data-bs-title="@(h.TooltipText)" style="@(h.PositionHtml)">@h.Link
+                                    </a>
 
-                            }
+                                }
                             </td>
                             <td>@h.LinkDescription</td>
                         </tr>

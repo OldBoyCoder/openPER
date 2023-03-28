@@ -35,8 +35,8 @@ namespace openPER.Controllers
                 {
                     Code = catalogueCode,
                     Description = catalogue.Description,
-                    ImagePath = catalogue.ImageName,
-                    Groups = _rep.GetGroupsForCatalogue(catalogueCode, language, true)
+                    ImagePath = catalogue.ImageName
+                    
                 }
             };
             var fileStream = await x.CreateDocument(options);
@@ -59,14 +59,10 @@ namespace openPER.Controllers
                 {
                     Code = catalogueCode,
                     Description = catalogue.Description,
-                    ImagePath = catalogue.ImageName,
-                    Groups = _rep.GetGroupsForCatalogue(catalogueCode, language, true)
+                    ImagePath = catalogue.ImageName
+                    
                 }
             };
-            options.Catalogue.Groups = options.Catalogue.Groups.Where(x => x.Code == groupCode).ToList();
-            options.Catalogue.Groups[0].SubGroups = options.Catalogue.Groups[0].SubGroups.Where(x => x.Code == subgroupCode).ToList();
-            options.Catalogue.Groups[0].SubGroups[0].SubSubGroups = options.Catalogue.Groups[0].SubGroups[0]
-                .SubSubGroups.Where(x => x.Code == subSubGroupCode).ToList();
 
             var fileStream = await x.CreateDocument(options);
             return File(fileStream, "application/pdf", "MyDocument.PDF");

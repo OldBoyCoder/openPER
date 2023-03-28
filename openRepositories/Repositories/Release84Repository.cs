@@ -1526,7 +1526,7 @@ namespace openPERRepositories.Repositories
         public List<GroupModel> GetAllSectionsForCatalogue(string languageCode, string catalogueCode)
         {
             languageCode = openPERHelpers.LanguageSupport.GetFiatLanguageCodeFromString(languageCode);
-            var rc = GetGroupsForCatalogue(catalogueCode, languageCode, true);
+            var rc = GetGroupsForCatalogue(catalogueCode, languageCode, false);
             return rc;
         }
     }

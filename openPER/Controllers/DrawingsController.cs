@@ -1,12 +1,15 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading.Tasks;
 using AutoMapper;
 using Microsoft.AspNetCore.Mvc;
 using openPER.Helpers;
 using openPER.ViewModels;
 using openPERHelpers;
 using openPERModels;
+using openPERModels.PrintModels;
+using openPERPrinting;
 using openPERRepositories.Interfaces;
 
 namespace openPER.Controllers
@@ -45,6 +48,36 @@ namespace openPER.Controllers
 
             return View(model);
         }
+        [Route("{language}/Drawings/Print/{MakeCode}/{SubMakeCode}/{ModelCode}/{CatalogueCode}/{GroupCode}/{SubGroupCode}/{SubSubGroupCode}/{DrawingNumber}/{Scope}")]
+        [ApiExplorerSettings(IgnoreApi = true)]
+        public async Task<IActionResult> Print(string language, string makeCode, string subMakeCode, string modelCode, string catalogueCode, int groupCode, int subGroupCode, int subSubGroupCode, int drawingNumber, string scope, string vin = "", string mvs = "")
+        {
+            language = LanguageSupport.GetIso639CodeFromString(language);
+            ViewData["Language"] = language;
+            LanguageSupport.SetCultureBasedOnRoute(language);
+            var drawings = GetDrawingKeys(language, makeCode, modelCode, catalogueCode, groupCode, subGroupCode, subSubGroupCode, scope);
+
+            var x = new PdfPrint(_rep);
+            var catalogue = _rep.GetCatalogue(makeCode, subMakeCode, modelCode, catalogueCode, language);
+
+            var options = new PrintingOptions
+            {
+                PaperSize = PaperSize.A4,
+                TitlePage = true,
+                TableOfContents = true,
+                PrintPagesPerSheet = PrintPagesPerSheet.SingleSided,
+                Catalogue = new CataloguePrintViewModel
+                {
+                    Code = catalogueCode,
+                    Description = catalogue.Description,
+                    ImagePath = catalogue.ImageName,
+                    Drawings = drawings
+                }
+            };
+
+            var fileStream = await x.CreateDocument(options);
+            return File(fileStream, "application/pdf", "MyDocument.PDF");
+        }
 
         private DrawingsViewModel BuildDrawingViewModel(string language, string makeCode, string subMakeCode, string modelCode,
             string catalogueCode, int groupCode, int subGroupCode, int subSubGroupCode, string scope,
@@ -57,14 +90,7 @@ namespace openPER.Controllers
             var model = new DrawingsViewModel();
 
             // We need to get all of the drawing keys for this sub sub group
-            var drawings = scope switch
-            {
-                "SubSubGroup" => _rep.GetDrawingKeysForSubSubGroup(makeCode, modelCode, catalogueCode, groupCode,
-                    subGroupCode, subSubGroupCode, language),
-                "SubGroup" => _rep.GetDrawingKeysForSubGroup(makeCode, modelCode, catalogueCode, groupCode,
-                    subGroupCode, language),
-                _ => _rep.GetDrawingKeysForGroup(makeCode, modelCode, catalogueCode, groupCode, language)
-            };
+            var drawings = GetDrawingKeys(language, makeCode, modelCode, catalogueCode, groupCode, subGroupCode, subSubGroupCode, scope);
 
             model.Drawings = _mapper.Map<List<DrawingKeyModel>, List<DrawingKeyViewModel>>(drawings);
             if (mvs != "")
@@ -82,6 +108,20 @@ namespace openPER.Controllers
                 catalogueCode, groupCode, subGroupCode, subSubGroupCode, drawingNumber, scope, vin, mvs);
 
             return model;
+        }
+
+        private List<DrawingKeyModel> GetDrawingKeys(string language, string makeCode, string modelCode, string catalogueCode, int groupCode,
+            int subGroupCode, int subSubGroupCode, string scope)
+        {
+            var drawings = scope switch
+            {
+                "SubSubGroup" => _rep.GetDrawingKeysForSubSubGroup(makeCode, modelCode, catalogueCode, groupCode,
+                    subGroupCode, subSubGroupCode, language),
+                "SubGroup" => _rep.GetDrawingKeysForSubGroup(makeCode, modelCode, catalogueCode, groupCode,
+                    subGroupCode, language),
+                _ => _rep.GetDrawingKeysForGroup(makeCode, modelCode, catalogueCode, groupCode, language)
+            };
+            return drawings;
         }
 
 
