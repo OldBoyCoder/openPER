@@ -118,13 +118,13 @@
                                 @if (h.LinkSubSubGroupCode != "")
                                 {
                                     <a href="@Url.Action("Detail", "Drawings", new { language = Model.Navigation.Language, Model.Navigation.Breadcrumb.MakeCode, Model.Navigation.Breadcrumb.SubMakeCode, Model.Navigation.Breadcrumb.ModelCode, Model.Navigation.Breadcrumb.CatalogueCode, GroupCode = h.LinkGroupCode, SubGroupCode = h.LinkSubGroupCode, SubSubGroupCode = h.LinkSubSubGroupCode, DrawingNumber = 0, Scope = DrawingsScope.SubSubGroup, VIN = Model.Navigation.Filter.Vin, MVS = Model.Navigation.Filter.Mvs })">
-                                        <img src="~/SiteImages/HotSpot1x1.png" data-bs-toggle="tooltip" data-bs-placement="auto" data-bs-html="true" data-bs-title="@(h.TooltipText)" style="@(h.PositionHtml)">
+                                        <img src="~/SiteImages/HotSpot1x1.png"  style="@(h.PositionHtml)">
                                     </a>
                                 }
                                 else
                                 {
                                     <a href="@Url.Action("Detail", "Drawings", new { language = Model.Navigation.Language, Model.Navigation.Breadcrumb.MakeCode, Model.Navigation.Breadcrumb.SubMakeCode, Model.Navigation.Breadcrumb.ModelCode, Model.Navigation.Breadcrumb.CatalogueCode, GroupCode = h.LinkGroupCode, SubGroupCode = h.LinkSubGroupCode, SubSubGroupCode = "ALL", DrawingNumber = 0, Scope =DrawingsScope.SubGroup, VIN = Model.Navigation.Filter.Vin, MVS = Model.Navigation.Filter.Mvs })">
-                                        <img src="~/SiteImages/HotSpot1x1.png" data-bs-toggle="tooltip" data-bs-placement="auto" data-bs-html="true" data-bs-title="@(h.TooltipText)" style="@(h.PositionHtml)">
+                                        <img src="~/SiteImages/HotSpot1x1.png"  style="@(h.PositionHtml)">
                                     </a>
                                 }
                             }
