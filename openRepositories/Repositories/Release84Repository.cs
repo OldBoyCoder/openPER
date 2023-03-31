@@ -254,7 +254,7 @@ namespace openPERRepositories.Repositories
             return drawings;
         }
 
-        public List<DrawingKeyModel> GetDrawingKeysForPrinting(string makeCode, string modelCode, string catalogueCode,
+        public List<DrawingKeyModel> GetDrawingDataForPrinting(string makeCode, string modelCode, string catalogueCode,
             int groupCode,
             int subGroupCode, int subSubGroupCode, int drawingNumber, DrawingsScope scope, string languageCode)
         {
@@ -262,10 +262,14 @@ namespace openPERRepositories.Repositories
             var drawings = new List<DrawingKeyModel>();
             using var connection = new MySqlConnection(PathToDb);
             var sql =
-                @"SELECT DISTINCT CAT_COD, GRP_COD, SGRP_COD, SGS_COD, VARIANTE, IFNULL( PATTERN, ''), REVISIONE, IFNULL(MODIF, ''), DSC, IMG_PATH, WIDTH, HEIGHT
-                            FROM DRAWINGS
+                @"SELECT DISTINCT D.CAT_COD, D.GRP_COD, D.SGRP_COD, D.SGS_COD, D.VARIANTE, IFNULL( D.PATTERN, ''), D.REVISIONE, IFNULL(D.MODIF, ''), TD.DSC, D.IMG_PATH, D.WIDTH, D.HEIGHT,
+                            GD.GRP_DSC, SGD.SGRP_DSC, CAT.CAT_DSC
+                            FROM DRAWINGS D
                             JOIN TABLES_DSC TD ON TD.LNG_COD = @p1 AND TD.COD = TABLE_DSC_COD
-                            WHERE CAT_COD = @p2 AND GRP_COD = @p3";
+                            JOIN GROUPS_DSC GD ON GD.GRP_COD = D.GRP_COD AND GD.LNG_COD = @p1
+                            JOIN SUBGROUPS_DSC SGD ON SGD.GRP_COD = D.GRP_COD AND SGD.SGRP_COD = D.SGRP_COD AND SGD.LNG_COD = @p1
+                            JOIN CATALOGUES CAT ON CAT.CAT_COD = D.CAT_COD
+                            WHERE D.CAT_COD = @p2 AND D.GRP_COD = @p3";
             var keys = new object[] { languageCode, catalogueCode, groupCode};
             if (scope == DrawingsScope.SubGroup)
             {
@@ -275,7 +279,8 @@ namespace openPERRepositories.Repositories
 
             if (scope == DrawingsScope.SubSubGroup)
             {
-                sql += "AND SGS_COD = @p5";
+                sql += " AND D.SGRP_COD = @p4 ";
+                sql += " AND SGS_COD = @p5 ";
                 keys = new object[] { languageCode, catalogueCode, groupCode, subGroupCode, subSubGroupCode };
             }
 
@@ -299,12 +304,17 @@ namespace openPERRepositories.Repositories
                         CreateModificationListFromString(catalogueCode, reader.GetString(7), languageCode),
                     Width = reader.GetInt32(10),
                     Height = reader.GetInt32(11),
+                    GroupDescription = reader.GetString(12),
+                    SubGroupDescription = reader.GetString(13),
+                    CatalogueDescription = reader.GetString(14),
+                    ImagePath = PathToCdn+reader.GetString(9)
 
                 };
                 var thumbImagePath = reader.GetString(9);
                 var imageParts = thumbImagePath.Split(new[] { '.' });
                 drawing.ThumbImagePath = PathToCdn + imageParts[0] + ".th." + imageParts[1];
-
+                drawing.Parts = GetTableParts(catalogueCode, groupCode, subGroupCode, subSubGroupCode, drawing.Variant,
+                    drawing.Revision, languageCode);
                 drawings.Add(drawing);
             }, keys);
 
@@ -387,6 +397,7 @@ namespace openPERRepositories.Repositories
                 var imageParts = thumbImagePath.Split(new[] { '.' });
                 drawing.ThumbImagePath = PathToCdn + imageParts[0] + ".th." + imageParts[1];
                 drawings.Add(drawing);
+                
             }, catalogueCode, groupCode, languageCode);
 
             return drawings;

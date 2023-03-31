@@ -33,7 +33,7 @@ namespace openPERModels
         public List<ModificationModel> Modifications { get; set; }
         public int Width { get; set; }
         public int Height { get; set; }
-
-
+        public string CatalogueDescription { get; set; }
+        public List<TablePartModel> Parts { get; set; }
     }
 }

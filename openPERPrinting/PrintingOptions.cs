@@ -10,5 +10,5 @@ public class PrintingOptions
     public bool TableOfContents { get; set; }
     public CataloguePrintViewModel Catalogue { get; set; }
     public string OptionsPattern { get; set; }
-
+    public bool IncludeCliches { get; set; }
 }

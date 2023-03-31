@@ -503,10 +503,10 @@ namespace openPERRepositories.Repositories
             return rc;
         }
         // TODO cache this method
-        public List<DrawingKeyModel> GetDrawingKeysForPrinting(string makeCode, string modelCode, string catalogueCode, int groupCode, int subGroupCode,
+        public List<DrawingKeyModel> GetDrawingDataForPrinting(string makeCode, string modelCode, string catalogueCode, int groupCode, int subGroupCode,
             int subSubGroupCode, int drawingNumber, DrawingsScope scope, string languageCode)
         {
-            return _rep.GetDrawingKeysForPrinting(makeCode, modelCode, catalogueCode, groupCode, subGroupCode,
+            return _rep.GetDrawingDataForPrinting(makeCode, modelCode, catalogueCode, groupCode, subGroupCode,
                 subSubGroupCode, drawingNumber, scope, languageCode);
         }
     }

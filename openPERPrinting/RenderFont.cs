@@ -2,7 +2,7 @@
 
 namespace openPERPrinting;
 
-internal class RenderFont
+public class RenderFont
 {
     internal readonly XFont Font;
 

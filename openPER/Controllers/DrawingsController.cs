@@ -55,7 +55,7 @@ namespace openPER.Controllers
             language = LanguageSupport.GetIso639CodeFromString(language);
             ViewData["Language"] = language;
             LanguageSupport.SetCultureBasedOnRoute(language);
-            var drawings = _rep.GetDrawingKeysForPrinting(makeCode, modelCode, catalogueCode, groupCode, subGroupCode,
+            var drawings = _rep.GetDrawingDataForPrinting(makeCode, modelCode, catalogueCode, groupCode, subGroupCode,
                 subSubGroupCode, drawingNumber, scope, language);
 
             var x = new PdfPrint(_rep);
@@ -67,6 +67,7 @@ namespace openPER.Controllers
                 TitlePage = true,
                 TableOfContents = true,
                 PrintPagesPerSheet = PrintPagesPerSheet.SingleSided,
+                IncludeCliches = false,
                 Catalogue = new CataloguePrintViewModel
                 {
                     Code = catalogueCode,
