@@ -33,5 +33,6 @@ namespace openPER.ViewModels
         public string Key => $"{X}:{Y}:{Width}:{Height}";
         public string TooltipText { get; set; }
         public string LinkDescription { get; set; }
+        public int TableOrder { get; internal set; }
     }
 }

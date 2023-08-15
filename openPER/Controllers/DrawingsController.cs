@@ -130,7 +130,8 @@ namespace openPER.Controllers
                             X = h.X,
                             Y = h.Y,
                             Width = h.Width,
-                            Height = h.Height
+                            Height = h.Height,
+                            TableOrder = p.TableOrder
                         };
                         tableData.HotSpots.Add(h.Key, newHotspot);
 
