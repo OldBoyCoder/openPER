@@ -24,7 +24,7 @@ namespace openPER.ViewModels
             get
             {
                 var rc =
-                    $"left: {XPercent}%; top: {YPercent}%; width: {WidthPercent}%; height:{HeightPercent}% display: block; position: absolute";
+                    $"left: {XPercent}%; top: {YPercent}%; width: {WidthPercent}%; height:{HeightPercent}%; display: block; position: absolute";
 
                 return rc;
             }
