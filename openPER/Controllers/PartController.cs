@@ -30,7 +30,7 @@ namespace openPER.Controllers
             language = LanguageSupport.GetIso639CodeFromString(language);
             ViewData["Language"] = language;
             LanguageSupport.SetCultureBasedOnRoute(language);
-            p.Navigation = NavigationHelper.PopulateNavigationModel(_mapper, _rep, language);
+            p.Navigation = NavigationHelper.PopulateNavigationModel(this, _mapper, _rep, language);
 
             p.Language = language;
             if (string.IsNullOrEmpty(partNumber)) return View("Index", p);
@@ -47,7 +47,7 @@ namespace openPER.Controllers
             LanguageSupport.SetCultureBasedOnRoute(language);
             var model = new PartSearchResultsViewModel
             {
-                Navigation = NavigationHelper.PopulateNavigationModel(_mapper, _rep, language),
+                Navigation = NavigationHelper.PopulateNavigationModel(this, _mapper, _rep, language),
                 Language = language
             };
             if (string.IsNullOrEmpty(partModelName) || string.IsNullOrEmpty(partName)) return View("SearchResults", model);

@@ -77,7 +77,7 @@ namespace openPER.Controllers
             // Get the table for this drawing
             model.TableData = PopulateTableViewModelFromDrawing(model.Drawings[drawingNumber], language, mvs, vin);
             model.TableData.CurrentDrawing = drawingNumber;
-            model.Navigation = NavigationHelper.PopulateNavigationModel(_mapper, _rep, language, makeCode, subMakeCode,
+            model.Navigation = NavigationHelper.PopulateNavigationModel(this, _mapper, _rep, language, makeCode, subMakeCode,
                 modelCode,
                 catalogueCode, groupCode, subGroupCode, subSubGroupCode, drawingNumber, scope, vin, mvs);
 

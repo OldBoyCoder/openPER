@@ -8,7 +8,10 @@
     <link rel="stylesheet" href="~/css/site.css" />
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.8.3/font/bootstrap-icons.css">
-
+    @if ((bool)ViewData["AdFree"] == false)
+    {
+        <!-- Some bits for adverts-->   
+    }
 </head>
 <body>
     <header>
@@ -19,7 +22,6 @@
             @RenderBody()
         </main>
     </div>
-
     <footer class="border-top footer text-muted">
         <div class="container-fluid">
             &copy; 2023 - openPER - Source data copyright(c) 2014, Fiat Group Automobiles

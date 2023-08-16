@@ -32,7 +32,7 @@ namespace openPER.Controllers
 
             var model = new ClicheViewModel
             {
-                Navigation = NavigationHelper.PopulateNavigationModel(_mapper, _rep, language, makeCode, subMakeCode, modelCode, catalogueCode, groupCode, subGroupCode, subSubGroupCode, drawingNumber, scope, clichePartNumber, clicheDrawingNumber, vin, mvs)
+                Navigation = NavigationHelper.PopulateNavigationModel(this, _mapper, _rep, language, makeCode, subMakeCode, modelCode, catalogueCode, groupCode, subGroupCode, subSubGroupCode, drawingNumber, scope, clichePartNumber, clicheDrawingNumber, vin, mvs)
             };
 
             List<DrawingKeyModel> drawings = _rep.GetDrawingKeysForCliche(makeCode, subMakeCode, modelCode,

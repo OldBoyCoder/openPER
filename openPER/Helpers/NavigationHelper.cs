@@ -4,12 +4,16 @@ using AutoMapper;
 using System.Collections.Generic;
 using openPERRepositories.Interfaces;
 using System.Linq;
+using Microsoft.AspNetCore.Http;
+using System;
+using Microsoft.AspNetCore.Mvc;
 
 namespace openPER.Helpers
 {
     public class NavigationHelper
     {
-        private static NavigationViewModel InternalPopulateNavigationModel(IMapper mapper, IRepository rep,
+
+        private static NavigationViewModel InternalPopulateNavigationModel(Controller controller, IMapper mapper, IRepository rep,
             string language, string makeCode, string subMakeCode,
             string modelCode, string catalogueCode, int? groupCode,
             int? subGroupCode, int? subSubGroupCode, int? drawingNumber,
@@ -60,46 +64,47 @@ namespace openPER.Helpers
             }
 
             model.AllLinks = rep.GetCatalogueHierarchy(language);
+            model.UserData = GetUserDataFromCookie(controller);
 
             return model;
         }
 
-        internal static NavigationViewModel PopulateNavigationModel(IMapper mapper, IRepository rep, string language, string makeCode, string subMakeCode, string modelCode, string catalogueCode, int groupCode, int subGroupCode, int subSubGroupCode, int drawingNumber, string scope, string clichePartNumber, int clicheDrawingNumber, string vin, string mvs)
+        internal static NavigationViewModel PopulateNavigationModel(Controller controller, IMapper mapper, IRepository rep, string language, string makeCode, string subMakeCode, string modelCode, string catalogueCode, int groupCode, int subGroupCode, int subSubGroupCode, int drawingNumber, string scope, string clichePartNumber, int clicheDrawingNumber, string vin, string mvs)
         {
-            return InternalPopulateNavigationModel(mapper, rep, language, makeCode, subMakeCode, modelCode, catalogueCode, groupCode, subGroupCode, subSubGroupCode, drawingNumber, scope, clichePartNumber, clicheDrawingNumber, vin, mvs);
+            return InternalPopulateNavigationModel(controller, mapper, rep, language, makeCode, subMakeCode, modelCode, catalogueCode, groupCode, subGroupCode, subSubGroupCode, drawingNumber, scope, clichePartNumber, clicheDrawingNumber, vin, mvs);
         }
 
-        internal static NavigationViewModel PopulateNavigationModel(IMapper mapper, IRepository rep, string language, string makeCode, string subMakeCode, string modelCode, string catalogueCode, int groupCode, string vin, string mvs)
+        internal static NavigationViewModel PopulateNavigationModel(Controller controller, IMapper mapper, IRepository rep, string language, string makeCode, string subMakeCode, string modelCode, string catalogueCode, int groupCode, string vin, string mvs)
         {
-            return InternalPopulateNavigationModel(mapper, rep, language, makeCode, subMakeCode, modelCode, catalogueCode, groupCode, null, null, null, null, null, null, vin, mvs);
+            return InternalPopulateNavigationModel(controller, mapper, rep, language, makeCode, subMakeCode, modelCode, catalogueCode, groupCode, null, null, null, null, null, null, vin, mvs);
         }
-        internal static NavigationViewModel PopulateNavigationModel(IMapper mapper, IRepository rep, string language, string makeCode, string subMakeCode, string modelCode, string catalogueCode, int groupCode, int subGroupCode, string vin, string mvs)
+        internal static NavigationViewModel PopulateNavigationModel(Controller controller, IMapper mapper, IRepository rep, string language, string makeCode, string subMakeCode, string modelCode, string catalogueCode, int groupCode, int subGroupCode, string vin, string mvs)
         {
-            return InternalPopulateNavigationModel(mapper, rep, language, makeCode, subMakeCode, modelCode, catalogueCode, groupCode, subGroupCode, null, null, null, null, null, vin, mvs);
+            return InternalPopulateNavigationModel(controller, mapper, rep, language, makeCode, subMakeCode, modelCode, catalogueCode, groupCode, subGroupCode, null, null, null, null, null, vin, mvs);
         }
-        internal static NavigationViewModel PopulateNavigationModel(IMapper mapper, IRepository rep, string language, string makeCode, string subMakeCode, string modelCode, string catalogueCode, string vin, string mvs)
+        internal static NavigationViewModel PopulateNavigationModel(Controller controller, IMapper mapper, IRepository rep, string language, string makeCode, string subMakeCode, string modelCode, string catalogueCode, string vin, string mvs)
         {
-            return InternalPopulateNavigationModel(mapper, rep, language, makeCode, subMakeCode, modelCode, catalogueCode, null, null, null, null, null, null, null, vin, mvs);
-        }
-
-        internal static NavigationViewModel PopulateNavigationModel(IMapper mapper, IRepository rep, string language, string makeCode, string subMakeCode, string modelCode, string catalogueCode, int groupCode, int subGroupCode, int subSubGroupCode, int drawingNumber, string scope, string vin, string mvs)
-        {
-            return InternalPopulateNavigationModel(mapper, rep, language, makeCode, subMakeCode, modelCode, catalogueCode, groupCode, subGroupCode, subSubGroupCode, drawingNumber, scope, null, null, vin, mvs);
+            return InternalPopulateNavigationModel(controller, mapper, rep, language, makeCode, subMakeCode, modelCode, catalogueCode, null, null, null, null, null, null, null, vin, mvs);
         }
 
-        internal static NavigationViewModel PopulateNavigationModel(IMapper mapper, IRepository rep, string language, string makeCode, string subMakeCode, string modelCode)
+        internal static NavigationViewModel PopulateNavigationModel(Controller controller, IMapper mapper, IRepository rep, string language, string makeCode, string subMakeCode, string modelCode, string catalogueCode, int groupCode, int subGroupCode, int subSubGroupCode, int drawingNumber, string scope, string vin, string mvs)
         {
-            return InternalPopulateNavigationModel(mapper, rep, language, makeCode, subMakeCode, modelCode, null, null, null, null, null, null, null, null, null, null);
+            return InternalPopulateNavigationModel(controller, mapper, rep, language, makeCode, subMakeCode, modelCode, catalogueCode, groupCode, subGroupCode, subSubGroupCode, drawingNumber, scope, null, null, vin, mvs);
         }
 
-        internal static NavigationViewModel PopulateNavigationModel(IMapper mapper, IRepository rep, string language, string makeCode, string subMakeCode)
+        internal static NavigationViewModel PopulateNavigationModel(Controller controller, IMapper mapper, IRepository rep, string language, string makeCode, string subMakeCode, string modelCode)
         {
-            return InternalPopulateNavigationModel(mapper, rep, language, makeCode, subMakeCode, null, null, null, null, null, null, null, null, null, null, null);
+            return InternalPopulateNavigationModel(controller, mapper, rep, language, makeCode, subMakeCode, modelCode, null, null, null, null, null, null, null, null, null, null);
         }
 
-        internal static NavigationViewModel PopulateNavigationModel(IMapper mapper, IRepository rep, string language)
+        internal static NavigationViewModel PopulateNavigationModel(Controller controller, IMapper mapper, IRepository rep, string language, string makeCode, string subMakeCode)
         {
-            return InternalPopulateNavigationModel(mapper, rep, language, null, null, null, null, null, null, null, null, null, null, null, null, null);
+            return InternalPopulateNavigationModel(controller, mapper, rep, language, makeCode, subMakeCode, null, null, null, null, null, null, null, null, null, null, null);
+        }
+
+        internal static NavigationViewModel PopulateNavigationModel(Controller controller, IMapper mapper, IRepository rep, string language)
+        {
+            return InternalPopulateNavigationModel(controller, mapper, rep, language, null, null, null, null, null, null, null, null, null, null, null, null, null);
         }
         public static FilterModel PopulateFilterModel(IMapper mapper, IRepository rep, string language, string catalogueCode, string mvs, string vin)
         {
@@ -137,7 +142,7 @@ namespace openPER.Helpers
                 o.Present = true;
                 if (key.StartsWith("!"))
                 {
-                    key = key.Substring(1);
+                    key = key[1..];
                     o.Present = false;
                 }
                 var opt = potentialOptions.FirstOrDefault(x => x.TypeCodePair == key);
@@ -151,6 +156,18 @@ namespace openPER.Helpers
                     rc.Options.Add(o);
                 }
             }
+            return rc;
+        }
+
+        internal static UserDataViewModel GetUserDataFromCookie(Controller controller)
+        {
+            var rc = new UserDataViewModel
+            {
+                AdvertFree = false,
+                UserId = 12345
+            };
+            rc.Vehicles.Add(new UserVehicleDataViewModel("ZFA18300000040598", "Silver Barchetta"));
+            controller.ViewData["AdFree"] = rc.AdvertFree;
             return rc;
         }
     }

@@ -38,7 +38,7 @@ namespace openPER.Controllers
                 CatalogueCode = catalogueCode,
                 GroupCode = groupCode,
                 ImagePath = mapDetails.ImageName,
-                Navigation = NavigationHelper.PopulateNavigationModel(_mapper, _rep, language, makeCode, subMakeCode, modelCode, catalogueCode, groupCode, vin, mvs),
+                Navigation = NavigationHelper.PopulateNavigationModel(this,_mapper, _rep, language, makeCode, subMakeCode, modelCode, catalogueCode, groupCode, vin, mvs),
 
             };
 

@@ -29,9 +29,9 @@ namespace openPER.Controllers
             var model = new MakesViewModel
             {
                 Makes = _mapper.Map<List<MakeModel>, List<MakeViewModel>>(_rep.GetAllMakes()),
-                Navigation = NavigationHelper.PopulateNavigationModel(_mapper, _rep, language)
-
+                Navigation = NavigationHelper.PopulateNavigationModel(this, _mapper, _rep, language),
             };
+            ViewData["AdFree"] = true;
             return View(model);
         }
     }

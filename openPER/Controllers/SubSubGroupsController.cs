@@ -36,7 +36,7 @@ namespace openPER.Controllers
                 CatalogueCode = catalogueCode,
                 GroupCode = groupCode,
                 SubGroupCode = subGroupCode,
-                Navigation = NavigationHelper.PopulateNavigationModel(_mapper, _rep, language, makeCode, subMakeCode, modelCode, catalogueCode, groupCode, subGroupCode, vin, mvs)
+                Navigation = NavigationHelper.PopulateNavigationModel(this, _mapper, _rep, language, makeCode, subMakeCode, modelCode, catalogueCode, groupCode, subGroupCode, vin, mvs)
             };
             if (mvs != "")
             {
