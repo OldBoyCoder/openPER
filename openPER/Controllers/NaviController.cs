@@ -7,6 +7,7 @@ namespace openPER.Controllers
     public class NaviController : Controller
     {
         [Route("/eper/navi")]
+        [Route("/navi")]
         [ApiExplorerSettings(IgnoreApi = true)]
         public IActionResult Index()
         {
@@ -80,6 +81,13 @@ namespace openPER.Controllers
                 var groupCode = HttpContext.Request.Query["GRP_COD"][0];
                 var subGroupCode = HttpContext.Request.Query["SGRP_COD"][0];
                 return RedirectToAction("Index", "SubSubGroups", new { Language = language, MakeCode = makeCode, SubMakeCode = subMakeCode, ModelCode = modelCode, CatalogueCode = catalogueCode, GroupCode = groupCode, SubGroupCode = subGroupCode });
+            }
+            if (key == "FORM")
+            {
+                var language = HttpContext.Request.Query["LANGUAGE"][0];
+                language = LanguageSupport.GetIso639CodeFromString(language);
+                var vin = HttpContext.Request.Query["CHASSIS_NO"][0];
+                return RedirectToAction("SearchByFullVin", "VinSearch", new {Language=language, fullVIn=vin });
             }
 
             return RedirectToAction("Index", "Home");
