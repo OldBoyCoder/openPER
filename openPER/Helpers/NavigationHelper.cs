@@ -4,9 +4,10 @@ using AutoMapper;
 using System.Collections.Generic;
 using openPERRepositories.Interfaces;
 using System.Linq;
-using Microsoft.AspNetCore.Http;
 using System;
 using Microsoft.AspNetCore.Mvc;
+using Newtonsoft.Json;
+using Microsoft.Extensions.Configuration;
 
 namespace openPER.Helpers
 {
@@ -161,13 +162,45 @@ namespace openPER.Helpers
 
         internal static UserDataViewModel GetUserDataFromCookie(Controller controller)
         {
-            var rc = new UserDataViewModel
+            var rc = new UserDataViewModel();
+            var ourCookie = controller.Request.Cookies["xf_eper"];
+            rc.Vehicles = new List<UserVehicleDataViewModel>();
+            controller.ViewData["AdFree"] = false;
+
+            if (ourCookie == null)
             {
-                AdvertFree = false,
-                UserId = 12345
-            };
-            rc.Vehicles.Add(new UserVehicleDataViewModel("ZFA18300000040598", "Silver Barchetta"));
-            controller.ViewData["AdFree"] = rc.AdvertFree;
+                rc.AdvertFree = false;
+                rc.UserId = 0;
+                return rc;
+            }
+            try
+            {
+                var pwd = ConfigurationHelper.config["CookiePassword"];
+                if (string.IsNullOrEmpty(pwd)) { throw new Exception("No cookie password found"); }
+                var jsonCookie = CookieHelper.DecryptString(ourCookie, pwd);
+                dynamic o = JsonConvert.DeserializeObject(jsonCookie);
+                rc.AdvertFree = o.a;
+                controller.ViewData["AdFree"] = rc.AdvertFree;
+                rc.UserId = o.u;
+                dynamic v = o["v"];
+                foreach (var item in v)
+                {
+                    var car = new UserVehicleDataViewModel(item.Name, (string)item.Value);
+                    rc.Vehicles.Add(car);
+                }
+
+            }
+            catch (Exception ex)
+            {
+
+                rc.CookieError = ex.Message;
+            }
+
+            return rc;
+        }
+        internal static List<SearchEngineViewModel> GetSearchEnginesFromConfig(IConfiguration config)
+        {
+            var rc = config.GetSection("SearchUrls").Get<List<SearchEngineViewModel>>();
             return rc;
         }
     }

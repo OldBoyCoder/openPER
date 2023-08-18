@@ -137,6 +137,7 @@
 
                     var cls = "table-secondary";
                     var lastCode = 0;
+                    var partId = 0;
                     @foreach (var item in Model.TableData.Parts)
                     {
                         @if (lastCode != item.TableOrder)
@@ -154,12 +155,28 @@
                                 @if (!item.Visible)
                                 {
                                     <del>
-                                        @Html.ActionLink(item.PartNumber,"SearchPartByPartNumber", "Part", new {Model.Navigation.Language, item.PartNumber },new {@class="product-link", @data_id=item.PartNumber} ) @Html.Raw(item.SearchLink(Model.Navigation.Breadcrumb.MakeDescription))
+                                        @{
+                                            @Html.ActionLink(item.PartNumber,"SearchPartByPartNumber", "Part", new {Model.Navigation.Language, item.PartNumber },new {@class="product-link", @data_id=item.PartNumber} )
+                                            var searchHtml = "";
+                                            @foreach (var url in Model.PartSearchUrl)
+                                            {
+                                                var formattedUrl = string.Format(url.UrlFormatString, Model.Navigation.Breadcrumb.MakeDescription, item.PartNumber);
+                                                searchHtml += $"<a target = '_blank' href='{formattedUrl}'>{url.Description}</a></br>";
+                                            }
+                                            <span class="bi bi-search" data-bs-toggle="tooltip" data-bs-trigger="click" data-bs-placement="auto" data-bs-html="true" data-bs-title="@searchHtml"></span>
+                                        }
                                     </del>
                                 }
                                 else
                                 {
-                                    @Html.ActionLink(item.PartNumber,"SearchPartByPartNumber", "Part", new {Model.Navigation.Language, item.PartNumber },new {@class="product-link", @data_id=item.PartNumber} ) @Html.Raw(item.SearchLink(Model.Navigation.Breadcrumb.MakeDescription))
+                                    @Html.ActionLink(item.PartNumber,"SearchPartByPartNumber", "Part", new {Model.Navigation.Language, item.PartNumber },new {@class="product-link", @data_id=item.PartNumber} )
+                                    var searchHtml = "";
+                                    @foreach (var url in Model.PartSearchUrl)
+                                    {
+                                        var formattedUrl = string.Format(url.UrlFormatString, Model.Navigation.Breadcrumb.MakeDescription, item.PartNumber);
+                                        searchHtml += $"<a target = '_blank' href='{formattedUrl}'>{url.Description}</a></br>";
+                                    }
+                                    <span class="bi bi-search" data-bs-toggle="tooltip" data-bs-trigger="click" data-bs-placement="auto" data-bs-html="true" data-bs-title="@searchHtml"></span>
                                 }
 
                             </td>
@@ -203,6 +220,7 @@
                             </td>
 
                         </tr>
+                        partId++;
                     }
                 }
             </table>

@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using AutoMapper;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Configuration;
 using openPER.Helpers;
 using openPER.ViewModels;
 using openPERHelpers;
@@ -15,10 +16,13 @@ namespace openPER.Controllers
     {
         readonly IRepository _rep;
         readonly IMapper _mapper;
-        public DrawingsController(IRepository rep, IMapper mapper)
+        readonly List<SearchEngineViewModel> PartSearchUrl;
+
+        public DrawingsController(IRepository rep, IMapper mapper, IConfiguration config)
         {
             _rep = rep;
             _mapper = mapper;
+            PartSearchUrl = NavigationHelper.GetSearchEnginesFromConfig(config);
         }
         // The most specific route, only the drawings for the lowest level are returned
         [Route("{language}/Drawings/Detail/{MakeCode}/{SubMakeCode}/{ModelCode}/{CatalogueCode}/{GroupCode}/{SubGroupCode}/{SubSubGroupCode}/{DrawingNumber}/{Scope}")]
@@ -80,6 +84,7 @@ namespace openPER.Controllers
             model.Navigation = NavigationHelper.PopulateNavigationModel(this, _mapper, _rep, language, makeCode, subMakeCode,
                 modelCode,
                 catalogueCode, groupCode, subGroupCode, subSubGroupCode, drawingNumber, scope, vin, mvs);
+            model.PartSearchUrl = PartSearchUrl;
 
             return model;
         }

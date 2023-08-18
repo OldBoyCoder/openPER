@@ -9,5 +9,6 @@ namespace openPER.ViewModels
         public List<DrawingKeyViewModel> Drawings { get; set; }
         public TableViewModel TableData { get; set; }
         public string Scope { get; set; }
+        public List<SearchEngineViewModel> PartSearchUrl { get; internal set; }
     }
 }

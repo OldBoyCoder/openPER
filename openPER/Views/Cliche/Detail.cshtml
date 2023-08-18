@@ -9,7 +9,7 @@
     ViewData["Title"] = "Index";
 }
 @section Navbar
-{
+    {
     @await Html.PartialAsync("_Navbar", Model.Navigation)
 }
 
@@ -54,7 +54,17 @@
                     {
                         <tr>
                             <td>@Html.DisplayFor(model => item.TableOrder)</td>
-                            <td>@Html.ActionLink(item.PartNumber ,"SearchPartByPartNumber", "Part", new {Model.Navigation.Breadcrumb.Language, item.PartNumber }) <a href="https://www.google.com/search?q=FIAT+@item.PartNumber" target="_blank" class="bi bi-search"></a></td>
+                            <td>@Html.ActionLink(item.PartNumber ,"SearchPartByPartNumber", "Part", new {Model.Navigation.Breadcrumb.Language, item.PartNumber })
+                            @{
+                                var searchHtml = "";
+                                @foreach (var url in Model.PartSearchUrl)
+                                {
+                                        var formattedUrl = string.Format(url.UrlFormatString,  Model.Navigation.Breadcrumb.MakeDescription, item.PartNumber);
+                                    searchHtml += $"<a target = '_blank' href='{formattedUrl}'>{url.Description}</a></br>";
+                                }
+                                <span class="bi bi-search" data-bs-toggle="tooltip" data-bs-trigger="click" data-bs-placement="auto" data-bs-html="true" data-bs-title="@searchHtml"></span>
+                            }
+                            </td>
                             <td>@item.Description @item.FurtherDescription</td>
                             <td>@Html.DisplayFor(model => item.Compatibility)</td>
                             <td>

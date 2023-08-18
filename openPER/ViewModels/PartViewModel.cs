@@ -26,13 +26,6 @@ namespace openPER.ViewModels
         public string FullDescription => $"{Description} {FurtherDescription}";
         public string CompatibilityTooltip { get; set; }
 
-        public string SearchLink(string makeDescription)
-        {
-            var rc =
-                $"<a href=\"https://www.google.com/search?q={makeDescription}+{PartNumber}\" target=\"_blank\" class=\"bi bi-search\"></a>";
-
-            return rc;
-        }
     }
 
 }
