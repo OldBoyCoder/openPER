@@ -12,5 +12,6 @@ namespace openPER.ViewModels
         public int CurrentDrawing { get; set; }
 
         public ClicheDrawingViewModel CurrentClicheDrawing { get; set; }
+        public List<SearchEngineViewModel> PartSearchUrl { get; internal set; }
     }
 }

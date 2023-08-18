@@ -15,6 +15,18 @@
                         Vehicles
                     </a>
                     <ul class="dropdown-menu">
+                        @if (Model.UserData != null && Model.UserData.Vehicles != null && Model.UserData.Vehicles.Count > 0)
+                        {
+                            <li class="py-0 my-0">
+                                <span class="dropdown-item-text fw-bold py-0 my-0">My vehicles</span>
+                            </li>
+                            @foreach (var vehicle in Model.UserData.Vehicles)
+                            {
+                                <li class="py-0 my-0">
+                                    @Html.ActionLink($"{vehicle.VIN} - {vehicle.Description}", "SearchByFullVin", "VinSearch", new { Model.Language, fullVIN=vehicle.VIN }, new { @class = "dropdown-item py-0 my-0" })
+                                </li>
+                            }
+                        }
                         @foreach (var make in Model.AllLinks)
                         {
                             <li class="py-0 my-0">

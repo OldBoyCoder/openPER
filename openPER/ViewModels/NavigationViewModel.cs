@@ -11,5 +11,6 @@ namespace openPER.ViewModels
         public string Language { get; set; }
         public FilterModel Filter { get; set; }
         public List<MakeModel> AllLinks { get; set; }
+        public UserDataViewModel UserData { get; set; }
     }
 }

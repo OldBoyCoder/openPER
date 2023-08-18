@@ -36,7 +36,7 @@ namespace openPER.Controllers
                 SubMakeCode = subMakeCode,
                 CatalogueCode = catalogueCode,
                 ImagePath = mapAndImage.ImageName,
-                Navigation = NavigationHelper.PopulateNavigationModel(_mapper, _rep, language, makeCode, subMakeCode, modelCode, catalogueCode, vin, mvs),
+                Navigation = NavigationHelper.PopulateNavigationModel(this, _mapper, _rep, language, makeCode, subMakeCode, modelCode, catalogueCode, vin, mvs),
                 ModelVariants = _mapper.Map<List<CatalogueVariantsModel>, List<CatalogueVariantsViewModel>>(_rep.GetCatalogueVariants(catalogueCode)),
                 Modifications = _mapper.Map<List<ModificationModel>, List<ModificationViewModel>>(_rep.GetCatalogueModifications(catalogueCode, language))
             };

@@ -1,6 +1,8 @@
 ﻿using System.Collections.Generic;
+using System.Linq;
 using AutoMapper;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Configuration;
 using openPER.Helpers;
 using openPER.ViewModels;
 using openPERHelpers;
@@ -14,10 +16,12 @@ namespace openPER.Controllers
     {
         private readonly IRepository _rep;
         private readonly IMapper _mapper;
-        public ClicheController(IRepository rep, IMapper mapper)
+        readonly List<SearchEngineViewModel> PartSearchUrl;
+        public ClicheController(IRepository rep, IMapper mapper, IConfiguration config)
         {
             _rep = rep;
             _mapper = mapper;
+            PartSearchUrl = NavigationHelper.GetSearchEnginesFromConfig(config);
         }
         [Route(
             "{language}/Cliche/Detail/{MakeCode}/{SubMakeCode}/{ModelCode}/{CatalogueCode}/{GroupCode}/{SubGroupCode}/{SubSubGroupCode}/{DrawingNumber}/{Scope}/{ClichePartNumber}/{ClicheDrawingNumber}")]
@@ -32,7 +36,7 @@ namespace openPER.Controllers
 
             var model = new ClicheViewModel
             {
-                Navigation = NavigationHelper.PopulateNavigationModel(_mapper, _rep, language, makeCode, subMakeCode, modelCode, catalogueCode, groupCode, subGroupCode, subSubGroupCode, drawingNumber, scope, clichePartNumber, clicheDrawingNumber, vin, mvs)
+                Navigation = NavigationHelper.PopulateNavigationModel(this, _mapper, _rep, language, makeCode, subMakeCode, modelCode, catalogueCode, groupCode, subGroupCode, subSubGroupCode, drawingNumber, scope, clichePartNumber, clicheDrawingNumber, vin, mvs)
             };
 
             List<DrawingKeyModel> drawings = _rep.GetDrawingKeysForCliche(makeCode, subMakeCode, modelCode,
@@ -47,6 +51,8 @@ namespace openPER.Controllers
             };
             List<TablePartModel> parts = _rep.GetPartsForCliche(catalogueCode, clichePartNumber, clicheDrawingNumber, language);
             model.CurrentClicheDrawing.Parts = _mapper.Map<List<TablePartModel>, List<PartViewModel>>(parts);
+            model.PartSearchUrl = PartSearchUrl;
+
             return View(model);
         }
     }

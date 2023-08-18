@@ -30,10 +30,10 @@ namespace openPER.Controllers
             language = LanguageSupport.GetIso639CodeFromString(language);
             ViewData["Language"] = language;
             LanguageSupport.SetCultureBasedOnRoute(language);
-            p.Navigation = NavigationHelper.PopulateNavigationModel(_mapper, _rep, language);
+            p.Navigation = NavigationHelper.PopulateNavigationModel(this, _mapper, _rep, language);
 
             p.Language = language;
-            if (partNumber == null) return View("Index", null);
+            if (string.IsNullOrEmpty(partNumber)) return View("Index", p);
             p.PartNumberSearch = partNumber;
 
             p.Result = _rep.GetPartDetails(p.PartNumberSearch, language);
@@ -45,14 +45,14 @@ namespace openPER.Controllers
             language = LanguageSupport.GetIso639CodeFromString(language);
             ViewData["Language"] = language;
             LanguageSupport.SetCultureBasedOnRoute(language);
-            if (string.IsNullOrEmpty(partModelName) || string.IsNullOrEmpty(partName)) return NotFound();
-
-            var parts = _rep.GetBasicPartSearch(partModelName, partName, language);
             var model = new PartSearchResultsViewModel
             {
-                Navigation = NavigationHelper.PopulateNavigationModel(_mapper, _rep, language),
+                Navigation = NavigationHelper.PopulateNavigationModel(this, _mapper, _rep, language),
                 Language = language
             };
+            if (string.IsNullOrEmpty(partModelName) || string.IsNullOrEmpty(partName)) return View("SearchResults", model);
+
+            var parts = _rep.GetBasicPartSearch(partModelName, partName, language);
 
             foreach (var p in parts)
             {

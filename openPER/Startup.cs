@@ -6,6 +6,7 @@ using Microsoft.Extensions.Hosting;
 using System.Reflection;
 using openPERRepositories.Interfaces;
 using openPERRepositories.Repositories;
+using openPER.Helpers;
 
 namespace openPER
 {
@@ -26,6 +27,7 @@ namespace openPER
             services.AddAutoMapper(Assembly.GetExecutingAssembly());
             services.AddEndpointsApiExplorer();
             services.AddSwaggerGen();
+            ConfigurationHelper.Initialize(Configuration);
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

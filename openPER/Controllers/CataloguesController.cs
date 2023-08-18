@@ -30,7 +30,7 @@ namespace openPER.Controllers
             var model = new CataloguesViewModel
             {
                 Catalogues = _mapper.Map<List<CatalogueModel>, List<CatalogueViewModel>>(_rep.GetAllCatalogues(makeCode, subMakeCode, modelCode, language)),
-                Navigation = NavigationHelper.PopulateNavigationModel(_mapper, _rep, language, makeCode, subMakeCode, modelCode),
+                Navigation = NavigationHelper.PopulateNavigationModel(this, _mapper, _rep, language, makeCode, subMakeCode, modelCode),
                 ImagePath = _rep.GetImageNameForModel(makeCode, subMakeCode, modelCode),
                 Models = _mapper.Map<List<ModelModel>, List<ModelViewModel>>(_rep.GetAllModelsForMake(makeCode,
                     subMakeCode))

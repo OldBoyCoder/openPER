@@ -24,7 +24,7 @@ namespace openPER.ViewModels
             get
             {
                 var rc =
-                    $"left: {XPercent}%; top: {YPercent}%; width: {WidthPercent}%; height:{HeightPercent}% display: block; position: absolute";
+                    $"left: {XPercent}%; top: {YPercent}%; width: {WidthPercent}%; height:{HeightPercent}%; display: block; position: absolute";
 
                 return rc;
             }
@@ -33,5 +33,6 @@ namespace openPER.ViewModels
         public string Key => $"{X}:{Y}:{Width}:{Height}";
         public string TooltipText { get; set; }
         public string LinkDescription { get; set; }
+        public int TableOrder { get; internal set; }
     }
 }

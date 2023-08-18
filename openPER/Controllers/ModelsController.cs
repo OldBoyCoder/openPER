@@ -30,7 +30,7 @@ namespace openPER.Controllers
             {
                 Models = _mapper.Map<List<ModelModel>, List<ModelViewModel>>(_rep.GetAllModelsForMake(makeCode, subMakeCode)),
                 MakeCode = makeCode,
-                Navigation = NavigationHelper.PopulateNavigationModel(_mapper, _rep, language, makeCode, subMakeCode)
+                Navigation = NavigationHelper.PopulateNavigationModel(this, _mapper, _rep, language, makeCode, subMakeCode)
             };
             return View(model);
 

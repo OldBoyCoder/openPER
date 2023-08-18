@@ -30,11 +30,14 @@ namespace openPER.Controllers
             LanguageSupport.SetCultureBasedOnRoute(language);
             var results = new VinSearchResultsViewModel
             {
-                Navigation = NavigationHelper.PopulateNavigationModel(_mapper, _rep, language)
+                Navigation = NavigationHelper.PopulateNavigationModel(this, _mapper, _rep, language)
             };
 
             if (string.IsNullOrEmpty(fullVin) || fullVin.Length != 17)
+            {
+                results.Results = new List<VinSearchResultViewModel>();
                 return View("Index", results);
+            }
             var searchResults = _rep.FindMatchesForVin(language, fullVin);
             results.Results = _mapper.Map<List<VinSearchResultModel>, List<VinSearchResultViewModel>>(searchResults);
             foreach (var result in results.Results)
