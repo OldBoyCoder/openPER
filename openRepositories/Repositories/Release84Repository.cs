@@ -50,13 +50,12 @@ namespace openPERRepositories.Repositories
             languageCode = openPERHelpers.LanguageSupport.GetFiatLanguageCodeFromString(languageCode);
             var map = new List<GroupImageMapEntryModel>();
             using var connection = new MySqlConnection(PathToDb);
-            var sql = @"select MPG_TX, MPG_TY, MPG_INDEX, M.GRP_COD, GRP_DSC from CATALOGUES C
-                        JOIN MAP_GRP M ON M.MAP_NAME = C.MAP_NAME
-                        JOIN MAP_INFO MI ON MI.MAP_NAME = C.MAP_NAME
-                        JOIN GROUPS_DSC GD ON GD.GRP_COD = M.GRP_COD AND LNG_COD = @p2
+            var sql = @"select X1, Y1, NULL, CODE, GRP_DSC from CATALOGUES C
+                        JOIN HS_FIGURINI H ON H.IMG_NAME = C.IMG_NAME
+                        JOIN GROUPS_DSC GD ON GD.GRP_COD = H.CODE AND LNG_COD = @p2
                         WHERE C.CAT_COD = @p1
-                            AND M.GRP_COD IN (SELECT DISTINCT GRP_COD FROM DRAWINGS WHERE CAT_COD = @p1)
-                        ORDER BY MPG_TY, MPG_TX, MPG_INDEX";
+                            AND H.CODE IN (SELECT DISTINCT GRP_COD FROM DRAWINGS WHERE CAT_COD = @p1)
+                        ORDER BY X1, X2";
             connection.RunSqlAllRows(sql, (reader) =>
             {
                 var m = new GroupImageMapEntryModel
@@ -64,7 +63,7 @@ namespace openPERRepositories.Repositories
                     X = reader.GetInt32(0),
                     Y = reader.GetInt32(1),
                     Index = reader.IsDBNull(2) ? 0 : reader.GetInt32(2),
-                    GroupCode = reader.GetInt32(3),
+                    GroupCode = int.Parse(reader.GetString(3)),
                     Description = reader.GetString(4)
                 };
                 map.Add(m);
@@ -73,7 +72,7 @@ namespace openPERRepositories.Repositories
 
         }
 
-        public MapImageModel GetMapForCatalogueGroup(string make, string subMake, string model, string catalogue, int group)
+                public MapImageModel GetMapForCatalogueGroup(string make, string subMake, string model, string catalogue, int group)
         {
             var map = new MapImageModel();
             using var connection = new MySqlConnection(PathToDb);
@@ -106,11 +105,11 @@ namespace openPERRepositories.Repositories
             using var connection = new MySqlConnection(PathToDb);
             // sloppy should pass this down
             var mapDetails = GetMapForCatalogueGroup(null, null, null, catalogueCode, groupCode);
-            var sql = @"select POINT_X, POINT_Y, M.SGRP_COD, SGRP_DSC from MAP_SGRP M
-                        JOIN SUBGROUPS_DSC S ON S.GRP_COD = @p1 AND S.SGRP_COD = M.SGRP_COD AND S.LNG_COD = @p4
-                        WHERE M.GRP_COD = @p1 AND MAP_NAME = @p2 AND M.SGRP_COD IN (
-                            select distinct T.SGRP_COD FROM DRAWINGS T
-                            WHERE CAT_COD = @p3 AND T.GRP_COD = @p1)";
+            var sql = @"SELECT X1, Y1, S.SGRP_COD, S.SGRP_DSC
+                        FROM groups G
+                        JOIN subgroups_dsc S ON S.GRP_COD = G.GRP_COD AND S.LNG_COD = @p4
+                        JOIN hs_figurini H ON H.IMG_NAME = G.IMG_NAME AND H.CODE = CONCAT(CONVERT(G.GRP_COD, VARCHAR(3)), RIGHT(CONCAT('00',CONVERT(S.SGRP_COD, VARCHAR(2))),2))
+                        WHERE G.CAT_COD = @p3 AND G.GRP_COD = @p1";
             connection.RunSqlAllRows(sql, (reader) =>
             {
                 var m = new SubGroupImageMapEntryModel
