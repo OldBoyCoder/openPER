@@ -103,13 +103,11 @@ namespace openPERRepositories.Repositories
             languageCode = openPERHelpers.LanguageSupport.GetFiatLanguageCodeFromString(languageCode);
             var map = new List<SubGroupImageMapEntryModel>();
             using var connection = new MySqlConnection(PathToDb);
-            // sloppy should pass this down
-            var mapDetails = GetMapForCatalogueGroup(null, null, null, catalogueCode, groupCode);
             var sql = @"SELECT X1, Y1, S.SGRP_COD, S.SGRP_DSC
                         FROM groups G
-                        JOIN subgroups_dsc S ON S.GRP_COD = G.GRP_COD AND S.LNG_COD = @p4
+                        JOIN subgroups_dsc S ON S.GRP_COD = G.GRP_COD AND S.LNG_COD = @p3
                         JOIN hs_figurini H ON H.IMG_NAME = G.IMG_NAME AND H.CODE = CONCAT(CONVERT(G.GRP_COD, VARCHAR(3)), RIGHT(CONCAT('00',CONVERT(S.SGRP_COD, VARCHAR(2))),2))
-                        WHERE G.CAT_COD = @p3 AND G.GRP_COD = @p1";
+                        WHERE G.CAT_COD = @p2 AND G.GRP_COD = @p1";
             connection.RunSqlAllRows(sql, (reader) =>
             {
                 var m = new SubGroupImageMapEntryModel
@@ -121,7 +119,7 @@ namespace openPERRepositories.Repositories
                     Description = reader.GetString(3)
                 };
                 map.Add(m);
-            }, groupCode, mapDetails.MapName, catalogueCode, languageCode);
+            }, groupCode, catalogueCode, languageCode);
             return map;
         }
 
