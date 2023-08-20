@@ -107,7 +107,8 @@ namespace openPERRepositories.Repositories
                         FROM groups G
                         JOIN subgroups_dsc S ON S.GRP_COD = G.GRP_COD AND S.LNG_COD = @p3
                         JOIN hs_figurini H ON H.IMG_NAME = G.IMG_NAME AND H.CODE = CONCAT(CONVERT(G.GRP_COD, VARCHAR(3)), RIGHT(CONCAT('00',CONVERT(S.SGRP_COD, VARCHAR(2))),2))
-                        WHERE G.CAT_COD = @p2 AND G.GRP_COD = @p1";
+                        WHERE G.CAT_COD = @p2 AND G.GRP_COD = @p1
+                            AND S.SGRP_COD IN (SELECT SGRP_COD FROM subgroups_by_cat WHERE CAT_COD = @p2 AND GRP_COD = @p1)";
             connection.RunSqlAllRows(sql, (reader) =>
             {
                 var m = new SubGroupImageMapEntryModel
