@@ -23,8 +23,6 @@
         public string SubSubGroupDescription { get; set; }
         public string Language { get; set; }
         public string Scope { get; set; }
-
-
-
+        public string ForumLink { get; internal set; }
     }
 }

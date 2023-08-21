@@ -28,6 +28,7 @@ namespace openPER
             services.AddEndpointsApiExplorer();
             services.AddSwaggerGen();
             ConfigurationHelper.Initialize(Configuration);
+            ForumLinkHelper.Initialize(Configuration);
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

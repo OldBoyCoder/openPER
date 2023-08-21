@@ -66,6 +66,10 @@ namespace openPER.Helpers
 
             model.AllLinks = rep.GetCatalogueHierarchy(language);
             model.UserData = GetUserDataFromCookie(controller);
+            if (!string.IsNullOrEmpty(model.Breadcrumb.ModelCode) && !string.IsNullOrEmpty(model.Breadcrumb.CatalogueCode))
+                model.Breadcrumb.ForumLink = ForumLinkHelper.GetForumLink(model.Breadcrumb.ModelCode, model.Breadcrumb.CatalogueCode);
+            if (!string.IsNullOrEmpty(model.Breadcrumb.ModelCode) && string.IsNullOrEmpty(model.Breadcrumb.ForumLink))
+                model.Breadcrumb.ForumLink = ForumLinkHelper.GetForumLink(model.Breadcrumb.ModelCode, "");
 
             return model;
         }
