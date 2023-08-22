@@ -29,6 +29,26 @@ namespace openPER.Controllers
         {
             return Index("en");
         }
+        [ApiExplorerSettings(IgnoreApi = true)]
+        public IActionResult About()
+        {
+            return About("en");
+        }
+        [ApiExplorerSettings(IgnoreApi = true)]
+        [Route("{language=en}/Home/About")]
+        public IActionResult About(string language)
+        {
+            language = LanguageSupport.GetIso639CodeFromString(language);
+            ViewData["Language"] = language;
+            LanguageSupport.SetCultureBasedOnRoute(language);
+            var model = new MakesViewModel
+            {
+                Makes = _mapper.Map<List<MakeModel>, List<MakeViewModel>>(_rep.GetAllMakes()),
+                Navigation = NavigationHelper.PopulateNavigationModel(this, _mapper, _rep, language)
+            };
+
+            return View(model);
+        }
 
         [ApiExplorerSettings(IgnoreApi = true)]
         [Route("{language=en}/Home/Index")]

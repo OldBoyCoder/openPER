@@ -1,0 +1,35 @@
+﻿@using openPER.ViewModels
+@model MakesViewModel
+@{
+    ViewData["Title"] = "About";
+}
+@section Navbar
+{
+    @await Html.PartialAsync("_Navbar", Model.Navigation)
+}
+@await Html.PartialAsync("_Breadcrumb", Model.Navigation)
+<div class="container-fluid">
+    <div class="row">
+        <div class="col-lg-3 col-md-3 col-sm-12 col-12">
+            @await Html.PartialAsync("_SidebarMenu", Model.Navigation)
+        </div>
+        <div class="col-lg-9 col-md-9 col-sm-12 col-12">
+            <h5>What is openPER</h5>
+            <p>openPER is an open-source web application that gives access to the data and drawings from release 84 of ePER.  It was developed so that FIAT (and Lancia, Alfa and Abarth) owners can access the parts information from the last version of ePER released on DVD.
+            <p>The current forum version of ePER is a tweaked version of the FIAT ePer software, cannot be easily modified and is quite out of date.  openPER is an entirely new application based on more recent ePER data, as such it is easier to host as a web site and it has been possible to make it more mobile friendly.</p>
+            <p>Not every feature of ePER has been recreated, I have focussed on those features most useful to me.  It should be possible to extend the features based on what the community wants.</p>
+            <p>One of the hardest features to implement has been filtering of drawings and parts lists after a VIN search, the logic for this is complex so please try this area out to see if works for you.</p>
+            <p>One feature currently missing is a decent print option.  The ability to download a drawing or set of drawings as a PDF is currently under development but is on hold while this, initial version is made ready.</p>
+            <p>In the main I have just tried to copy the structure of ePER as that made it easy to test side by side but there are some areas where I have strayed from that.  My skills as a front-end designer are limited so I’m hugely grateful for the work Ben has done in taking my rough and ready UI and massively improving it.  I’m also grateful to him for embracing the project and giving me somewhere to host it.</p>
+            <p>Please give it a try and let us know what you think, are there features missing you need, did it crash, are there features you’d like that ePER doesn’t have?  All feedback is welcome.</p>
+            <h5>Technical background</h5>
+            <p>openPER has been reverse-engineered from release 84 of ePER.  Readers with a technical background may be interested in the technology involved.</p>
+            <p>Most of the information you see in ePER is held in a Microsoft Access database that is shipped on the DVD.  There are about 45 tables in the database.  The images of parts are held in a series of very large ZIP files and are referenced by a GUID from within the Access database. Information about VINs is held in two large binary files that have their own indexes.</p>
+            <p>Having access to the underlying DB tables does give us the option for supporting queries and features that weren’t in the original ePER.</p>
+            <p>The ePER software is written in Java and you can happily put that through a decompiler if you like.  For openPER I spent very little time looking at the Java code, mostly I just analysed the database tables to work out what was going on.</p>
+            <p>For openPER we have moved away from Access to MariaDB as that is better for a shared web application.  The tables have largely been copied across as-is but with some extra indices added as well as a few extra columns to make my life easier.</p>
+            <p>openPER itself is written as a C# .NET Core web application.  For the last few years of my programming life, I was a C# developer but did not work on many web applications.  I chose to write openPER as an MVC application as a learning exercise, more experienced .NET web developers are free to pass whatever comments they wish on the software!</p>
+            <p><a target="_blank" href="https://github.com/OldBoyCoder/openPER">Source code</a></p>
+        </div>
+    </div>
+</div>
