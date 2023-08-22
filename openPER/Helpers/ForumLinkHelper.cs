@@ -24,14 +24,17 @@ namespace openPER.Helpers
             }
             baseUrl = config["ForumBaseUrl"];
         }
-        public static string GetForumLink(string model, string catalogue)
+        public static string GetForumLink(string make, string model, string catalogue)
         {
             var key = $"{model}/{catalogue}";
             if (forumLinks.ContainsKey(key))
-                return baseUrl + forumLinks[key];
+                return baseUrl + forumLinks[key]+"/";
             if (forumLinks.ContainsKey(model))
-                return baseUrl + forumLinks[model];
-            return baseUrl;
+                return baseUrl + forumLinks[model] + "/";
+            if (make == "F" || make == "C")
+                return baseUrl;
+
+            return null;
         }
     }
 }
