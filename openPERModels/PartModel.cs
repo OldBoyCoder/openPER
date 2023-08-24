@@ -20,5 +20,6 @@ namespace openPERModels
         public bool Orderable { get; set; }
         public bool Replaced { get; set; }
         public bool Exhausted { get; set; }
+        public List<PartPriceModel> Prices { get; set; }
     }
 }

@@ -30,7 +30,7 @@ namespace openPER.ViewModels
         public bool Orderable { get; set; }
         public bool Replaced { get; set; }
         public bool Exhausted { get; set; }
-
+        public List<PartPriceViewModel> Prices { get; set; }
 
     }
 

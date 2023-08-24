@@ -29,6 +29,7 @@ namespace openPER.AutoMapper
             CreateMap<CatalogueVariantsModel, CatalogueVariantsViewModel>();
             CreateMap<ColourModel, ColourViewModel>();
             CreateMap<PartHotspotModel, PartHotspotViewModel>();
+            CreateMap<PartPriceModel, PartPriceViewModel>();
 
         }
     }

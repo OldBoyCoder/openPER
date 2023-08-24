@@ -938,10 +938,34 @@ namespace openPERRepositories.Repositories
                 p.Drawings = GetDrawingsForPartNumber(p.PartNumber, languageCode);
                 p.ReplacedBy = GetReplacedByForPartNumber(p.PartNumber, languageCode);
                 p.Replaces = GetReplacesForPartNumber(p.PartNumber, languageCode);
+                p.Prices = GetPricesForPartNumber(p.PartNumber, languageCode);
             }
             return p;
         }
+        private List<PartPriceModel> GetPricesForPartNumber(string partNumber, string languageCode)
+        {
+            var rc = new List<PartPriceModel>();
+            using var connection = new MySqlConnection(PathToDb);
+            var sql = @"SELECT P.MKT_COD, DISCOUNT_COD, PRICE, TAX, MKT_LONG_DSC, MKT_CURR_COD 
+                            FROM PRICES P JOIN markets M ON M.MKT_COD = P.MKT_COD
+                            WHERE PRT_COD = @p1
+                            ORDER BY MKT_LONG_DSC";
+            connection.RunSqlAllRows(sql, (reader) =>
+            {
+                var p = new PartPriceModel
+                {
+                    MarketCode = reader.GetInt32(0),
+                    DiscountCode = reader.GetString(1),
+                    Price = reader.GetDouble(2),
+                    Tax = reader.GetDouble(3),
+                    MarketDescription = reader.GetString(4),
+                    CurrencyCode = reader.GetString(5)
+                };
+                rc.Add(p);
+            }, partNumber);
+            return rc;
 
+        }
         private List<PartReplacementModel> GetReplacedByForPartNumber(string partNumber, string languageCode)
         {
             var rc = new List<PartReplacementModel>();
