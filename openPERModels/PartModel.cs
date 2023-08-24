@@ -15,5 +15,10 @@ namespace openPERModels
         public List<PartReplacementModel> ReplacedBy { get; set; }
         public string CatalogueDescription { get; set; }
         public string CatalogueCode { get; set; }
+        public bool Refurbished { get; set; }
+        public bool Accessory { get; set; }
+        public bool Orderable { get; set; }
+        public bool Replaced { get; set; }
+        public bool Exhausted { get; set; }
     }
 }

@@ -27,6 +27,9 @@
                         <tr><td>Family</td><td>@Model.Result.FamilyCode - @Model.Result.FamilyDescription</td><td></td><td></td></tr>
                         <tr><td>Weight (grams)</td><td>@Model.Result.Weight</td><td></td><td></td></tr>
                         <tr><td>Measurement unit</td><td>@Model.Result.UnitOfSale</td><td></td><td></td></tr>
+                        <tr><td>Refurbished</td><td>@(Model.Result.Refurbished?"Yes":"No")</td><td>Accessory</td><td>@(Model.Result.Accessory?"Yes":"No")</td></tr>
+                        <tr><td>Can be ordered</td><td>@(Model.Result.Orderable?"Yes":"No")</td><td>Replaced</td><td>@(Model.Result.Replaced?"Yes":"No")</td></tr>
+                        <tr><td>Supply exhausted</td><td>@(Model.Result.Exhausted?"Yes":"No")</td><td></td><td></td></tr>
                     </table>
                     <h3>Replacements</h3>
                     <table class="table table-sm">

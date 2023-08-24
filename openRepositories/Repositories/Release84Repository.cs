@@ -907,7 +907,7 @@ namespace openPERRepositories.Repositories
             PartModel p = null;
             using (var connection = new MySqlConnection(PathToDb))
             {
-                var sql = @"select P.PRT_COD, C.CDS_COD, C.CDS_DSC,F.FAM_COD, F.FAM_DSC, U.UM_COD, U.UM_DSC, PRT_WEIGHT  from PARTS P 
+                var sql = @"select P.PRT_COD, C.CDS_COD, C.CDS_DSC,F.FAM_COD, F.FAM_DSC, U.UM_COD, U.UM_DSC, PRT_WEIGHT, PRT_MASK_MAK  from PARTS P 
                                 JOIN CODES_DSC C ON C.CDS_COD = P.CDS_COD AND C.LNG_COD = @p2
                                 JOIN FAM_DSC F ON F.FAM_COD = P.PRT_FAM_COD AND F.LNG_COD = @p2
                                 LEFT OUTER  JOIN UN_OF_MEAS U ON U.UM_COD = P.UM_COD
@@ -915,6 +915,7 @@ namespace openPERRepositories.Repositories
                                 where P.PRT_COD = @p1";
                 connection.RunSqlFirstRowOnly(sql, (reader) =>
                 {
+                    var mask = reader.GetInt32(8);
                     p = new PartModel
                     {
                         PartNumber = reader.GetString(0),
@@ -922,7 +923,12 @@ namespace openPERRepositories.Repositories
                         FamilyCode = reader.GetString(3),
                         FamilyDescription = reader.GetString(4),
                         UnitOfSale = reader.GetString(5) + " " + reader.GetString(6),
-                        Weight = reader.GetInt32(7)
+                        Weight = reader.GetInt32(7),
+                        Refurbished = ((mask & 0x100) != 0),
+                        Accessory = ((mask & 0x400) != 0),
+                        Orderable = ((mask & 0x800) != 0),
+                        Replaced = ((mask & 0x2000) != 0),
+                        Exhausted = ((mask & 0x4000) != 0)
                     };
                 }, partNumberSearch, languageCode);
 
