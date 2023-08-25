@@ -1,0 +1,41 @@
+﻿@using openPER.ViewModels
+@model CatalogueModificationsViewModel
+@{
+    ViewData["Title"] = $"Models for {Model.Navigation.Breadcrumb.MakeDescription}";
+
+}
+@section Navbar
+{
+    @await Html.PartialAsync("_Navbar", Model.Navigation)
+}
+
+@await Html.PartialAsync("_Breadcrumb", Model.Navigation)
+<div class="container-fluid">
+    <div class="row">
+        <div class="col-lg-3 col-md-3 col-sm-12 col-12">
+            @await Html.PartialAsync("_SidebarMenu", Model.Navigation)
+        </div>
+        <div class="col-lg-9 col-md-9 col-sm-12 col-12">
+            <div class="container-fluid">
+                <div class="row">
+                    <h5>Modification detail</h5>
+                    <p>@Model.Details.FullDescription</p>
+                    <h5>Affected drawings</h5>
+                    <table>
+                    @{
+                        foreach (var d in Model.ChangedDrawings)
+                        {
+                            <tr>
+                            <td>
+                                    @Html.ActionLink($"{d.GroupCode:000}{d.SubGroupCode:00}/{d.SubSubGroupCode:00}", "Detail", "Drawings", new {Model.Navigation.Language, Model.Navigation.Breadcrumb.MakeCode,Model.Navigation.Breadcrumb.SubMakeCode, Model.Navigation.Breadcrumb.ModelCode, Model.Navigation.Breadcrumb.CatalogueCode, d.GroupCode, d.SubGroupCode, d.SubSubGroupCode, DrawingNumber=d.DrawingNumber-1, Scope="SubSubGroup", MVS=Model.Navigation.Filter.Mvs, VIN=Model.Navigation.Filter.Vin})
+                                    </td>
+                                    <td>@d.GroupDescription @d.SubGroupDescription @d.SubSubGroupDescription</td>
+                            </tr>
+                        }
+                    }
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

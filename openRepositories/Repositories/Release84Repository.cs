@@ -6,6 +6,7 @@ using openPERModels;
 using openPERRepositories.Interfaces;
 using System;
 using VinSearcher;
+using System.Data;
 
 // ReSharper disable StringLiteralTypo
 
@@ -1487,6 +1488,21 @@ namespace openPERRepositories.Repositories
             }, catalogueCode, languageCode);
             return rc;
         }
+        public ModificationModel GetCatalogueModificationDetail(string catalogueCode, string languageCode, int modification)
+        {
+            languageCode = openPERHelpers.LanguageSupport.GetFiatLanguageCodeFromString(languageCode);
+            var rc = new ModificationModel();
+            var sql = @"SELECT MDF_COD, MDF_DSC FROM MODIF_DSC WHERE CAT_COD = @p1 AND LNG_COD = @p2 AND MDF_COD = @p3";
+            using var connection = new MySqlConnection(PathToDb);
+            connection.RunSqlFirstRowOnly(sql, (reader) =>
+            {
+                rc.Code = reader.GetInt32(0);
+                rc.Description = reader.IsDBNull(1) ? "" : reader.GetString(1);
+                rc.Activations = GetActivationsForModification(catalogueCode, rc.Code);
+
+            }, catalogueCode, languageCode, modification);
+            return rc;
+        }
 
         public List<MakeModel> GetCatalogueHierarchy(string languageCode)
         {
@@ -1519,6 +1535,44 @@ namespace openPERRepositories.Repositories
             {
                 group.SubGroups = GetSubGroupsForCatalogueGroup(catalogueCode, group.Code, languageCode);
             }
+            return rc;
+        }
+        public List<ModifiedDrawingModel> GetAllDrawingsForModification(string languageCode, string catalogueCode, int modificationNumber)
+        {
+            languageCode = openPERHelpers.LanguageSupport.GetFiatLanguageCodeFromString(languageCode);
+            var rc = new List<ModifiedDrawingModel>();
+            var sql = @"
+                            SELECT DISTINCT CAT_COD, AD.GRP_COD, AD.SGRP_COD, SGS_COD, DRW_NUM, GRP_DSC, SGRP_DSC, TD.DSC FROM
+                            (
+		                            SELECT CAT_COD, GRP_COD, SGRP_COD, SGS_COD, DRW_NUM, TABLE_DSC_COD AS TAB_COD FROM drawings
+		                            WHERE cat_cod = @p1 AND MODIF LIKE '%" + modificationNumber + "%'";
+            sql += @"
+	                            UNION
+		                            (
+		                            SELECT D.CAT_COD, D.GRP_COD, D.SGRP_COD, D.SGS_COD, D.DRW_NUM, TABLE_DSC_COD AS TAB_COD FROM tbdata T
+		                            JOIN drawings D ON D.GRP_COD = T.GRP_COD AND D.SGRP_COD = T.SGRP_COD AND D.CAT_COD = T.CAT_COD AND D.SGS_COD = T.SGS_COD AND T.VARIANTE = D.DRW_NUM
+		                             WHERE T.cat_cod = @p1 AND T.MODIF LIKE '%" + modificationNumber + "%'))";
+            sql+=@"		                            AD
+                            JOIN groups_dsc G ON AD.GRP_COD = G.GRP_COD AND G.LNG_COD = @p3
+                            JOIN subgroups_dsc SG ON AD.GRP_COD = SG.GRP_COD AND AD.SGRP_COD = SG.SGRP_COD AND SG.LNG_COD = @p3
+                            LEFT OUTER JOIN tables_dsc TD ON TD.COD = TAB_COD AND TD.LNG_COD = @p3
+                            ORDER BY AD.GRP_COD, AD.SGRP_COD, AD.SGS_COD";
+            using var connection = new MySqlConnection(PathToDb);
+            connection.RunSqlAllRows(sql, (reader) =>
+            {
+                var m = new ModifiedDrawingModel()
+                {
+                    GroupCode = reader.GetInt32(1),
+                    SubGroupCode = reader.GetInt32(2),
+                    SubSubGroupCode = reader.GetInt32(3),
+                    DrawingNumber = reader.GetInt32(4),
+                    GroupDescription = reader.GetString(5),
+                    SubGroupDescription = reader.GetString(6),
+                    SubSubGroupDescription = reader.GetString(7)
+                };
+                rc.Add(m);
+
+            }, catalogueCode, modificationNumber, languageCode);
             return rc;
         }
     }

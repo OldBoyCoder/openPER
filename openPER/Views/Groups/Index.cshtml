@@ -71,7 +71,9 @@
                     @foreach (var mod in Model.Modifications.OrderBy(x => x.Code))
                     {
                         <tr>
-                            <td>@mod.Code</td>
+                            <td>
+                                @Html.ActionLink(mod.Code.ToString(), "Index", "Modification", new { Model.Navigation.Language, Model.Navigation.Breadcrumb.MakeCode, Model.Navigation.Breadcrumb.SubMakeCode, Model.Navigation.Breadcrumb.ModelCode, Model.Navigation.Breadcrumb.CatalogueCode, ModificationNumber = @mod.Code, Model.Navigation.Filter.Vin, Model.Navigation.Filter.Mvs})
+                                </td>
                             <td>@mod.Description</td>
                             <td>
                                 @foreach (var act in mod.Activations)

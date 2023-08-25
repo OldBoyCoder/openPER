@@ -488,5 +488,31 @@ namespace openPERRepositories.Repositories
             return rc;
 
         }
+        public List<ModifiedDrawingModel> GetAllDrawingsForModification(string languageCode, string catalogueCode, int modificationNumber)
+        {
+            var key = ("GetAllDrawingsForModification", languageCode, catalogueCode, modificationNumber);
+            if (_cache.TryGetValue(key, out List<ModifiedDrawingModel> cacheValue))
+            {
+                return cacheValue;
+            }
+
+            var rc = _rep.GetAllDrawingsForModification(languageCode, catalogueCode,modificationNumber);
+            _cache.Set(key, rc, _options);
+            return rc;
+
+        }
+        public ModificationModel GetCatalogueModificationDetail(string catalogueCode, string languageCode, int modification)
+        {
+            var key = ("GetCatalogueModificationDetail", catalogueCode, languageCode, modification);
+            if (_cache.TryGetValue(key, out ModificationModel cacheValue))
+            {
+                return cacheValue;
+            }
+
+            var rc = _rep.GetCatalogueModificationDetail(catalogueCode, languageCode, modification);
+            _cache.Set(key, rc, _options);
+            return rc;
+
+        }
     }
 }
