@@ -24,6 +24,34 @@
 </li>
 <li><hr class="dropdown-divider"></li>
 <li>
+    @using (Html.BeginForm("SearchByModelAndChassis", "VinSearch", FormMethod.Get, new { @class = " p-4", role = "form" }))
+    {
+        <div class="row">
+            <input id="languageId" name="language" hidden value="@Model.Language" />
+            <div class=col-3>
+                <label for="searchByVIN">@Resources.FrontEnd.SearchByModelAndChassis</label>
+            </div>
+            <div class=col-4>
+                <div class="form-floating">
+                    @Html.TextBoxFor(m => m.SelectedModel, new { @class = "form-control", type = "search", placeholder = "Model", id = "searchByModel" })
+                    <label for="searchByVIN">@Resources.FrontEnd.SearchByModel</label>
+                </div>
+            </div>
+            <div class=col-4>
+                <div class="form-floating">
+                    @Html.TextBoxFor(m => m.ChassisNumber, new { @class = "form-control", type = "search", placeholder = "Chassis", id = "searchByChassis" })
+                    <label for="searchByVIN">@Resources.FrontEnd.SearchByChassis</label>
+                </div>
+            </div>
+            <div class=col-1>
+                <button type="submit" class="btn btn-outline-primary"><i class="fa fa-search"></i></button>
+            </div>
+        </div>
+
+    }
+</li>
+<li><hr class="dropdown-divider"></li>
+<li>
     @using (Html.BeginForm("SearchPartByPartNumber", "Part", FormMethod.Get, new { @class = " p-4", role = "form" }))
     {
         <div class="row">

@@ -151,6 +151,33 @@ namespace Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Chassis#.
+        /// </summary>
+        public static string SearchByChassis {
+            get {
+                return ResourceManager.GetString("SearchByChassis", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Model.
+        /// </summary>
+        public static string SearchByModel {
+            get {
+                return ResourceManager.GetString("SearchByModel", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Model &amp; Chassis.
+        /// </summary>
+        public static string SearchByModelAndChassis {
+            get {
+                return ResourceManager.GetString("SearchByModelAndChassis", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Part number.
         /// </summary>
         public static string SearchByPart {
