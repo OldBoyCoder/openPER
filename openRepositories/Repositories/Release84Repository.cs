@@ -377,11 +377,12 @@ namespace openPERRepositories.Repositories
         {
             var parts = new List<TablePartModel>();
             var sql = @"SELECT TBD_RIF, PRT_COD, TBD_QTY, CDS_DSC, 
-                                        TBD_SEQ, NTS_DSC, TBD_VAL_FORMULA, DAD.DSC, MODIF, COL_COD, HOTSPOTS
+                                        TBD_SEQ, NTS_DSC, TBD_VAL_FORMULA, DAD.DSC, MODIF, COL_COD, HOTSPOTS, RCP_RECOND, RCP_WRECK
                                         FROM TBDATA
                                         JOIN CODES_DSC ON TBDATA.CDS_COD = CODES_DSC.CDS_COD AND CODES_DSC.LNG_COD = @p1
                                         LEFT OUTER JOIN NOTES_DSC ON NOTES_DSC.NTS_COD = TBDATA.NTS_COD AND NOTES_DSC.LNG_COD = @p1
                                         LEFT OUTER JOIN DESC_AGG_DSC DAD ON DAD.COD = TBD_AGG_DSC AND DAD.LNG_COD = @p1
+                                        LEFT OUTER JOIN REC_PARTS RP ON RP.RCP_COD = PRT_COD
                                         WHERE VARIANTE = @p2 AND SGS_COD = @p3 AND SGRP_COD = @p4 AND GRP_COD = @p5 AND CAT_COD = @p6 AND REVISIONE = @p7
                                         ORDER BY TBD_RIF,TBD_SEQ";
             using var connection = new MySqlConnection(PathToDb);
@@ -397,7 +398,10 @@ namespace openPERRepositories.Repositories
                     Notes = reader.IsDBNull(5) ? "" : reader.GetString(5),
                     Compatibility = reader.IsDBNull(6) ? "" : reader.GetString(6),
                     FurtherDescription = reader.IsDBNull(7) ? "" : reader.GetString(7).ToString(),
-                    Colour = reader.IsDBNull(9) ? "" : reader.GetString(9).Replace(",", " ")
+                    Colour = reader.IsDBNull(9) ? "" : reader.GetString(9).Replace(",", " "),
+                    RecondPartNumber = reader.IsDBNull(11) ? "" : reader.GetString(11),
+                    WreckPartNumber = reader.IsDBNull(12) ? "" : reader.GetString(12)
+
                 };
                 if (!reader.IsDBNull(8))
                     part.Modifications = GetPartModifications(catalogueCode, reader.GetString(8), languageCode);

@@ -31,6 +31,9 @@ namespace openPER.ViewModels
         public bool Replaced { get; set; }
         public bool Exhausted { get; set; }
         public List<PartPriceViewModel> Prices { get; set; }
+        public string RecondPartNumber { get; set; }
+        public string WreckPartNumber { get; set; }
+
 
     }
 
