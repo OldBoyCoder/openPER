@@ -148,6 +148,15 @@
   <data name="MenuItemSubSubGroups" xml:space="preserve">
     <value>Tables</value>
   </data>
+  <data name="SearchByChassis" xml:space="preserve">
+    <value>Chassis#</value>
+  </data>
+  <data name="SearchByModel" xml:space="preserve">
+    <value>Model</value>
+  </data>
+  <data name="SearchByModelAndChassis" xml:space="preserve">
+    <value>Model &amp; Chassis</value>
+  </data>
   <data name="SearchByPart" xml:space="preserve">
     <value>Part number</value>
   </data>

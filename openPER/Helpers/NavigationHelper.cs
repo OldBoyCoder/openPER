@@ -8,6 +8,7 @@ using System;
 using Microsoft.AspNetCore.Mvc;
 using Newtonsoft.Json;
 using Microsoft.Extensions.Configuration;
+using Microsoft.AspNetCore.Http;
 
 namespace openPER.Helpers
 {
@@ -66,6 +67,10 @@ namespace openPER.Helpers
 
             model.AllLinks = rep.GetCatalogueHierarchy(language);
             model.UserData = GetUserDataFromCookie(controller);
+            if (!string.IsNullOrEmpty(model.Breadcrumb.ModelCode) && !string.IsNullOrEmpty(model.Breadcrumb.CatalogueCode))
+                model.Breadcrumb.ForumLink = ForumLinkHelper.GetForumLink(model.Breadcrumb.MakeCode, model.Breadcrumb.ModelCode, model.Breadcrumb.CatalogueCode);
+            if (!string.IsNullOrEmpty(model.Breadcrumb.ModelCode) && string.IsNullOrEmpty(model.Breadcrumb.ForumLink))
+                model.Breadcrumb.ForumLink = ForumLinkHelper.GetForumLink(model.Breadcrumb.MakeCode, model.Breadcrumb.ModelCode, "");
 
             return model;
         }
@@ -188,7 +193,16 @@ namespace openPER.Helpers
                     var car = new UserVehicleDataViewModel(item.Name, (string)item.Value);
                     rc.Vehicles.Add(car);
                 }
+                if (rc.UserId != 0)
+                {
+                    controller.Response.GetTypedHeaders().CacheControl = new Microsoft.Net.Http.Headers.CacheControlHeaderValue
+                    {
+                        Public = true,
+                        NoStore = true,
+                        MaxAge = TimeSpan.FromSeconds(0)
+                    };
 
+                }
             }
             catch (Exception ex)
             {
@@ -203,5 +217,6 @@ namespace openPER.Helpers
             var rc = config.GetSection("SearchUrls").Get<List<SearchEngineViewModel>>();
             return rc;
         }
+        
     }
 }

@@ -76,7 +76,7 @@ namespace openPERHelpers
             if (inputCode.Length == 2)
             {
                 // AN ISO code so find the ePer code for this
-                if (Cultures.Count(x => x.culture == inputCode) > 0)
+                if (Cultures.Any(x => x.culture == inputCode))
                     return Cultures.Find(x => x.culture == inputCode).ePerCode; ;
                 // Otherwise fallback to English
                 return "3";
@@ -84,7 +84,7 @@ namespace openPERHelpers
             if (inputCode.Length == 1)
             {
                 // Already a Fiat code so just make sure it is one we know
-                if (Cultures.Count(x => x.ePerCode == inputCode) > 0)
+                if (Cultures.Any(x => x.ePerCode == inputCode))
                     return inputCode;
                 // Otherwise fallback to English
                 return "3";

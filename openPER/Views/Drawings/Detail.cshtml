@@ -132,7 +132,7 @@
         </div>
         <div class="col-lg-7 col-md-12 col-sm-12 col-12">
             <table class="table table-sm">
-                <tr><th>code</th><th>Prod. code</th><th>Description</th><th>Compat.</th><th>Modif.</th><th>Qty</th><th>Notes</th><th>Components</th><th>Colour</th></tr>
+                <tr><th>code</th><th>Prod. code</th><th>Description</th><th>Compat.</th><th>Modif.</th><th>Qty</th><th>Notes</th><th>Components</th><th>Colour</th><th>Reman.</th></tr>
                 @{
 
                     var cls = "table-secondary";
@@ -218,6 +218,17 @@
                                     <button type="button" data-bs-toggle="modal" data-bs-target="#colour@(code)">@colour.Code </button>
                                 }
                             </td>
+                            <td>
+                            @if (!string.IsNullOrEmpty(item.RecondPartNumber))
+                                {
+                                    @Html.ActionLink(item.RecondPartNumber,"SearchPartByPartNumber", "Part", new {Model.Navigation.Language, PartNumber = item.RecondPartNumber },new {@class="product-link", @data_id=item.RecondPartNumber} )
+                                    
+                                }
+                                &nbsp;
+                                @if (!string.IsNullOrEmpty(item.WreckPartNumber))
+                                {
+                                    @Html.ActionLink(item.WreckPartNumber,"SearchPartByPartNumber", "Part", new {Model.Navigation.Language, PartNumber = item.WreckPartNumber },new {@class="product-link", @data_id=item.WreckPartNumber} )
+                                }
 
                         </tr>
                         partId++;

@@ -17,5 +17,7 @@ namespace openPERModels
         public string Colour { get; set; }
         public List<ColourModel> Colours { get; set; }
         public List<PartHotspotModel> Hotspots { get; set; }
+        public string RecondPartNumber { get; set; }
+        public string WreckPartNumber { get; set; }
     }
 }

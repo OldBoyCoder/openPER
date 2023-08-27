@@ -89,6 +89,9 @@
   </ItemGroup>
 
   <ItemGroup>
+    <None Update="Data\Release84\ForumLinks.txt">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
     <None Update="Data\Release84\SP.CH.04210.FCTLR">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>

@@ -53,7 +53,8 @@ namespace openPERRepositories.Interfaces
 
         public List<MakeModel> GetCatalogueHierarchy(string languageCode);
         public List<GroupModel> GetAllSectionsForCatalogue(string languageCode, string catalogueCode);
-
+        public List<ModifiedDrawingModel> GetAllDrawingsForModification(string languageCode, string catalogueCode, int modificationNumber);
+        public ModificationModel GetCatalogueModificationDetail(string catalogueCode, string languageCode, int modification);
     }
 
 }

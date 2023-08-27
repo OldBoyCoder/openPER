@@ -25,6 +25,15 @@ namespace openPER.ViewModels
 
         public string FullDescription => $"{Description} {FurtherDescription}";
         public string CompatibilityTooltip { get; set; }
+        public bool Refurbished { get; set; }
+        public bool Accessory { get; set; }
+        public bool Orderable { get; set; }
+        public bool Replaced { get; set; }
+        public bool Exhausted { get; set; }
+        public List<PartPriceViewModel> Prices { get; set; }
+        public string RecondPartNumber { get; set; }
+        public string WreckPartNumber { get; set; }
+
 
     }
 

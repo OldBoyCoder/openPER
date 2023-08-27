@@ -55,5 +55,46 @@ namespace openPER.Controllers
             }
             return View("Index", results);
         }
+
+        [HttpGet]
+        public IActionResult SearchByModelAndChassis(string language, string selectedModel, string chassisNumber)
+        {
+
+            language = LanguageSupport.GetIso639CodeFromString(language);
+            ViewData["Language"] = language;
+            LanguageSupport.SetCultureBasedOnRoute(language);
+            var results = new VinSearchResultsViewModel
+            {
+                Navigation = NavigationHelper.PopulateNavigationModel(this, _mapper, _rep, language)
+            };
+
+            if (string.IsNullOrEmpty(selectedModel) || selectedModel.Length != 3)
+            {
+                results.Results = new List<VinSearchResultViewModel>();
+                return View("Index", results);
+            }
+            if (string.IsNullOrEmpty(chassisNumber) || chassisNumber.Length <2)
+            {
+                results.Results = new List<VinSearchResultViewModel>();
+                return View("Index", results);
+            }
+            var fullVin = $"ZFA{selectedModel}" + chassisNumber.PadLeft(11, '0');
+            var searchResults = _rep.FindMatchesForVin(language, fullVin);
+            results.Results = _mapper.Map<List<VinSearchResultModel>, List<VinSearchResultViewModel>>(searchResults);
+            foreach (var result in results.Results)
+            {
+                result.Models = _mapper.Map<List<MvsDataModel>, List<MvsDataViewModel>>(_rep.GetMvsDetails(result.Mvs));
+
+                if (result.Models.Count > 0)
+                    result.InteriorColourDescription = _rep.GetInteriorColourDescription(result.Models[0].CatalogueCode, result.InteriorColourCode, language);
+                foreach (var model in result.Models)
+                {
+                    model.Language = language;
+                    var f = NavigationHelper.PopulateFilterModel(_mapper, _rep, language, model.CatalogueCode, model.Sincom, fullVin);
+                    model.FilterOptions = f;
+                }
+            }
+            return View("Index", results);
+        }
     }
 }

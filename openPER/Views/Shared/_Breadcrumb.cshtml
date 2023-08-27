@@ -46,6 +46,10 @@
                     }
                 }
             }
+            @if(!string.IsNullOrEmpty(Model.Breadcrumb.ForumLink))
+            {
+                <li>&nbsp;<a target ="_blank" href="@Model.Breadcrumb.ForumLink">Fiat Forum</a></li>
+            }
         </ol>
     </nav>
     @if (!string.IsNullOrEmpty(Model.Filter.Mvs))
