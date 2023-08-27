@@ -11,11 +11,6 @@ namespace openPER.Controllers
         [ApiExplorerSettings(IgnoreApi = true)]
         public IActionResult NaRead(string src, string type, string key)
         {
-            //https://eper.fiatforum.com/cgi-bin/naread.exe?src=e:/SP.NA.00976.FCTLR/rw8.na&type=N&key=1025802005
-            //"https://data-20-eper.fiatforum.com/SP.NA.00976.FCTLR/fpk/N/4430100003.png"
-            //http://eper.fiatforum.com/cgi-bin/naread.exe?src=D:/Fiat/ePER/data/SP.NA.00976.FCTLR/fnm.na&type=N&key=7012900001
-            //http://eper.fiatforum.com/cgi-bin/naread.exe?src=D:/Fiat/ePER/data/SP.NA.00976.FCTLR/fnm.na&type=N&key=7012900001
-            //https://data-20-eper.fiatforum.com/SP.NA.00976.FCTLR/fnm/N/7012900001.png
             var a = new Regex(@".*/SP.NA.00976.FCTLR/([a-zA-Z0-9]*).na");
             var m = a.Match(src);
             if (m.Success)
@@ -23,7 +18,6 @@ namespace openPER.Controllers
                 var s = m.Groups[1];
                 return Redirect($"https://data-20-eper.fiatforum.com/SP.NA.00976.FCTLR/{s}/{type}/{key}.png");
             }
-            // http://eper.fiatforum.com/cgi-bin/naread.exe?src=D:/Fiat/ePER/data/SP.MP.00976.FCTLR/a3.jpg
             a = new Regex(@".*/(SP.[a-zA-Z0-9.]*)/{1,2}(.*)");
             m = a.Match(src);
             if (m.Success)
@@ -32,13 +26,6 @@ namespace openPER.Controllers
                 var s2 = m.Groups[2];
                 return Redirect($"https://data-20-eper.fiatforum.com/{s1}/{s2}");
             }
-#if false
-            * # Rewrite NAREAD.EXE
-            RewriteCond %{QUERY_STRING} src=.*/SP\.NA\.00976\.FCTLR / ([a - zA - Z0 - 9] *)\.na & type = (N | T) & key = (\d +)
-            RewriteRule ^ cgi - bin / naread.exe https://data-20-eper.fiatforum.com/SP.NA.00976.FCTLR/%1/%2/%3.png? [NC,L,R=301]
-            RewriteCond %{ QUERY_STRING} src =.*/(SP\.[a-zA - Z0 - 9\.]*)/{ 1,2} (.*)
-            RewriteRule ^ cgi - bin / naread.exe https://data-20-eper.fiatforum.com/%1/%2? [NC,L,R=301]
-#endif
             return NotFound();
         }
         [Route("/eper/navi")]
