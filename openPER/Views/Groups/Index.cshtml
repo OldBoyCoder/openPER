@@ -4,7 +4,7 @@
     ViewData["Title"] = $"Groups for {Model.Navigation.Breadcrumb.MakeDescription} {Model.Navigation.Breadcrumb.ModelDescription} {Model.Navigation.Breadcrumb.CatalogueDescription}";
 }
 @section Navbar
-{
+    {
     @await Html.PartialAsync("_Navbar", Model.Navigation)
 }
 
@@ -29,63 +29,75 @@
 
                 }
             </div>
-            <details>
-                <summary>All categories</summary>
-                <table class="table-sm">
-                    @foreach (var group in Model.Groups.OrderBy(x => x.Code))
-                    {
-                        <tr>
-                            <td>@group.Code - @group.Description</td>
-                            <td>@Html.ActionLink("Go to group", "Index", "SubGroups", new { Model.Navigation.Language, Model.Navigation.Breadcrumb.MakeCode, Model.Navigation.Breadcrumb.SubMakeCode, Model.Navigation.Breadcrumb.ModelCode, Model.Navigation.Breadcrumb.CatalogueCode,GroupCode=group.Code, VIN=Model.Navigation.Filter.Vin, MVS=Model.Navigation.Filter.Mvs  })
-                        </tr>
-                        @foreach (var subgroup in group.SubGroups.OrderBy(x => x.Code))
-                        {
-                            <tr>
-                                <td>@subgroup.FullDisplayCode - @subgroup.Description</td>
-                                <td>@Html.ActionLink("Go to sub group", "Index", "SubSubGroups", new { Model.Navigation.Language, Model.Navigation.Breadcrumb.MakeCode, Model.Navigation.Breadcrumb.SubMakeCode, Model.Navigation.Breadcrumb.ModelCode, Model.Navigation.Breadcrumb.CatalogueCode, GroupCode=group.Code, SubGroupCode=subgroup.Code, VIN=Model.Navigation.Filter.Vin, MVS=Model.Navigation.Filter.Mvs  })
-                            </tr>
-                        }
-                    }
-                </table>
-            </details>
-            @if (string.IsNullOrEmpty(Model.Navigation.Filter.Mvs))
-            {
-                <details>
-                    <summary>All variants</summary>
+            <ul class="nav nav-tabs" id="catalogueTab" role="tablist">
+                <li class="nav-item" role="presentation">
+                    <button class="nav-link active" id="category-tab" data-bs-toggle="tab" data-bs-target="#cat" type="button" role="tab" aria-controls="cat" aria-selected="true">All categories</button>
+                </li>
+                @if (string.IsNullOrEmpty(Model.Navigation.Filter.Mvs))
+                {
+                    <li class="nav-item" role="presentation">
+                        <button class="nav-link " id="variants-tab" data-bs-toggle="tab" data-bs-target="#var" type="button" role="tab" aria-controls="var" aria-selected="false">All variants</button>
+                    </li>
+                }
+                <li class="nav-item" role="presentation">
+                    <button class="nav-link " id="mod-tab" data-bs-toggle="tab" data-bs-target="#mod" type="button" role="tab" aria-controls="mod" aria-selected="false">All modifications</button>
+                </li>
+            </ul>
+            <div class="tab-content" id="catalogueTabContent">
+                <div class="tab-pane fade show active" id="cat" role="tabpanel" aria-labelledby="category-tab">
                     <table class="table-sm">
-                        @foreach (var variant in Model.ModelVariants.OrderBy(x => x.Description))
+                        @foreach (var group in Model.Groups.OrderBy(x => x.Code))
                         {
                             <tr>
-                                <td>@variant.Description</td>
-                                <td>@variant.Sincom</td>
-                                <td>@Html.ActionLink("Go to catalogue", "Index", "Groups", new { Model.Navigation.Language, Model.Navigation.Breadcrumb.MakeCode, Model.Navigation.Breadcrumb.SubMakeCode, Model.Navigation.Breadcrumb.ModelCode, Model.Navigation.Breadcrumb.CatalogueCode, VIN="", MVS=variant.Sincom })
+                                <td>@group.Code - @group.Description</td>
+                                <td>@Html.ActionLink("Go to group", "Index", "SubGroups", new { Model.Navigation.Language, Model.Navigation.Breadcrumb.MakeCode, Model.Navigation.Breadcrumb.SubMakeCode, Model.Navigation.Breadcrumb.ModelCode, Model.Navigation.Breadcrumb.CatalogueCode,GroupCode=group.Code, VIN=Model.Navigation.Filter.Vin, MVS=Model.Navigation.Filter.Mvs  })
+                            </tr>
+                            @foreach (var subgroup in group.SubGroups.OrderBy(x => x.Code))
+                            {
+                                <tr>
+                                    <td>@subgroup.FullDisplayCode - @subgroup.Description</td>
+                                    <td>@Html.ActionLink("Go to sub group", "Index", "SubSubGroups", new { Model.Navigation.Language, Model.Navigation.Breadcrumb.MakeCode, Model.Navigation.Breadcrumb.SubMakeCode, Model.Navigation.Breadcrumb.ModelCode, Model.Navigation.Breadcrumb.CatalogueCode, GroupCode=group.Code, SubGroupCode=subgroup.Code, VIN=Model.Navigation.Filter.Vin, MVS=Model.Navigation.Filter.Mvs  })
+                                </tr>
+                            }
+                        }
+                    </table>
+                </div>
+                @if (string.IsNullOrEmpty(Model.Navigation.Filter.Mvs))
+                {
+                    <div class="tab-pane fade" id="var" role="tabpanel" aria-labelledby="variants-tab">
+                        <table class="table-sm">
+                            @foreach (var variant in Model.ModelVariants.OrderBy(x => x.Description))
+                            {
+                                <tr>
+                                    <td>@variant.Description</td>
+                                    <td>@variant.Sincom</td>
+                                    <td>@Html.ActionLink("Go to catalogue", "Index", "Groups", new { Model.Navigation.Language, Model.Navigation.Breadcrumb.MakeCode, Model.Navigation.Breadcrumb.SubMakeCode, Model.Navigation.Breadcrumb.ModelCode, Model.Navigation.Breadcrumb.CatalogueCode, VIN="", MVS=variant.Sincom })
+                                </tr>
+                            }
+                        </table>
+                    </div>
+                }
+                <div class="tab-pane fade" id="mod" role="tabpanel" aria-labelledby="mod-tab">
+                    <table class="table-sm">
+                        <tr><th>Modification</th><th>Description</th><th>Activations</th></tr>
+                        @foreach (var mod in Model.Modifications.OrderBy(x => x.Code))
+                        {
+                            <tr>
+                                <td>
+                                    @Html.ActionLink(mod.Code.ToString(), "Index", "Modification", new { Model.Navigation.Language, Model.Navigation.Breadcrumb.MakeCode, Model.Navigation.Breadcrumb.SubMakeCode, Model.Navigation.Breadcrumb.ModelCode, Model.Navigation.Breadcrumb.CatalogueCode, ModificationNumber = @mod.Code, Model.Navigation.Filter.Vin, Model.Navigation.Filter.Mvs})
+                                </td>
+                                <td>@mod.Description</td>
+                                <td>
+                                    @foreach (var act in mod.Activations)
+                                    {
+                                        <span>@act.ActivationDescription </span>
+                                    }
+                                </td>
                             </tr>
                         }
                     </table>
-                </details>
-            }
-            <details>
-                <summary>Modification History</summary>
-                <table class="table-sm">
-                    <tr><th>Modification</th><th>Description</th><th>Activations</th></tr>
-                    @foreach (var mod in Model.Modifications.OrderBy(x => x.Code))
-                    {
-                        <tr>
-                            <td>
-                                @Html.ActionLink(mod.Code.ToString(), "Index", "Modification", new { Model.Navigation.Language, Model.Navigation.Breadcrumb.MakeCode, Model.Navigation.Breadcrumb.SubMakeCode, Model.Navigation.Breadcrumb.ModelCode, Model.Navigation.Breadcrumb.CatalogueCode, ModificationNumber = @mod.Code, Model.Navigation.Filter.Vin, Model.Navigation.Filter.Mvs})
-                                </td>
-                            <td>@mod.Description</td>
-                            <td>
-                                @foreach (var act in mod.Activations)
-                                {
-                                    <span>@act.ActivationDescription </span>
-                                }
-                            </td>
-                        </tr>
-                    }
-                </table>
-            </details>
-
+                </div>
+            </div>
         </div>
     </div>
 
