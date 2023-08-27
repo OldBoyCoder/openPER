@@ -12,12 +12,6 @@ namespace VinSearcher
             _pathToVinDataRt = pathToVinDataRt;
         }
 
-        public List<VinResult> FindVehiclesByFullVin(string vinNumber)
-        {
-            var vehicles = new List<VinResult>();
-
-            return vehicles;
-        }
         public VinResult FindVehicleByModelAndChassis(string modelNumber, string chassisNumber)
         {
             var x = new KtdReader.KtdReader();
