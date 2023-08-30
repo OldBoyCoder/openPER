@@ -171,6 +171,11 @@ namespace openPER.Helpers
             var ourCookie = controller.Request.Cookies["xf_eper"];
             rc.Vehicles = new List<UserVehicleDataViewModel>();
             controller.ViewData["AdFree"] = false;
+            controller.Response.GetTypedHeaders().CacheControl = new Microsoft.Net.Http.Headers.CacheControlHeaderValue
+            {
+                Public = true,
+                MaxAge = TimeSpan.FromDays(7)
+            };
 
             if (ourCookie == null)
             {
@@ -197,9 +202,8 @@ namespace openPER.Helpers
                 {
                     controller.Response.GetTypedHeaders().CacheControl = new Microsoft.Net.Http.Headers.CacheControlHeaderValue
                     {
-                        Public = true,
-                        NoStore = true,
-                        MaxAge = TimeSpan.FromSeconds(0)
+                        Private = true,
+                        MaxAge = TimeSpan.FromDays(7)
                     };
 
                 }
