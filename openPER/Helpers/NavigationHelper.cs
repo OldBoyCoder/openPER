@@ -203,7 +203,7 @@ namespace openPER.Helpers
                     controller.Response.GetTypedHeaders().CacheControl = new Microsoft.Net.Http.Headers.CacheControlHeaderValue
                     {
                         Private = true,
-                        MaxAge = TimeSpan.FromDays(7)
+                        MaxAge = TimeSpan.FromSeconds(60)
                     };
 
                 }
