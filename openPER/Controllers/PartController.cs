@@ -107,7 +107,7 @@ namespace openPER.Controllers
             return File(b, "text/tab-separated-values", $"AllParts_{catalogueCode}_{language}.txt");
         }
 
-        public FileResult AllPartsFiltered(string language, string catalogueCode, string mvs, string vin)
+        public FileResult AllPartsFiltered(string language, string catalogueCode, string vin, string mvs)
         {
             //https://localhost:44329/Part/AllPartsFiltered?language=en&catalogueCode=PK&MVS=183.829.0.0&VIN=ZFA18300000040598
             language = LanguageSupport.GetIso639CodeFromString(language);

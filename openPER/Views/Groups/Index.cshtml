@@ -29,6 +29,16 @@
 
                 }
             </div>
+            @if (string.IsNullOrEmpty(Model.Navigation.Filter.Mvs))
+            {
+                <a href="@Url.Action("AllParts", "Part", new{language = Model.Navigation.Language, catalogueCode = Model.CatalogueCode})">Download parts list</a>
+            }
+            else
+            {
+                <a href="@Url.Action("AllPartsFiltered", "Part", new{language = Model.Navigation.Language, catalogueCode = Model.CatalogueCode, vin=Model.Navigation.Filter.Vin, mvs = Model.Navigation.Filter.Mvs})">Download parts list</a>
+
+            }
+
             <ul class="nav nav-tabs" id="catalogueTab" role="tablist">
                 <li class="nav-item" role="presentation">
                     <button class="nav-link active" id="category-tab" data-bs-toggle="tab" data-bs-target="#cat" type="button" role="tab" aria-controls="cat" aria-selected="true">All categories</button>
