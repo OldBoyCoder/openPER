@@ -1583,7 +1583,7 @@ namespace openPERRepositories.Repositories
         {
             languageCode = openPERHelpers.LanguageSupport.GetFiatLanguageCodeFromString(languageCode);
             var rc = new List<PartExportModel>();
-            var sql = @"SELECT T.TABLE_COD, GRP_DSC, SGRP_DSC, T.PRT_COD, CD.CDS_DSC, IFNULL(DAD.DSC, ''), IFNULL(ND.NTS_DSC, ''),  T.VARIANTE, TBD_RIF, IFNULL(TBD_VAL_FORMULA, ''), IFNULL(T.MODIF, ''), IFNULL(D.PATTERN, ''), IFNULL(D.MODIF, ''), TBD_QTY  FROM tbdata T
+            var sql = @"SELECT T.TABLE_COD, GRP_DSC, SGRP_DSC, T.PRT_COD, CD.CDS_DSC, IFNULL(DAD.DSC, ''), IFNULL(ND.NTS_DSC, ''),  T.VARIANTE, TBD_RIF, IFNULL(TBD_VAL_FORMULA, ''), IFNULL(T.MODIF, ''), IFNULL(D.PATTERN, ''), IFNULL(D.MODIF, ''), IFNULL(TBD_QTY, '')  FROM tbdata T
                 JOIN groups_dsc GD ON GD.GRP_COD = T.GRP_COD  AND GD.LNG_COD = @p2
                 JOIN subgroups_dsc SGD ON SGD.GRP_COD = T.GRP_COD AND SGD.SGRP_COD = T.SGRP_COD AND SGD.LNG_COD = @p2
                 JOIN drawings D ON D.CAT_COD = T.CAT_COD AND D.GRP_COD = T.GRP_COD AND D.SGRP_COD = T.SGRP_COD AND D.SGS_COD = T.SGS_COD AND D.DRW_NUM = T.VARIANTE
@@ -1612,6 +1612,24 @@ namespace openPERRepositories.Repositories
                     TableModification = reader.GetString(12),
                     Quantity = reader.GetString(13)
                 };
+                m.Modifications = new List<ModificationModel>();
+                var mods = new List<string>();
+                if (!string.IsNullOrEmpty(m.PartModification))
+                {
+                    foreach (var mod in m.PartModification.Split(","))
+                    {
+                        if (!mods.Contains(mod)) mods.Add(mod);
+                    }
+                }
+                if (!string.IsNullOrEmpty(m.TableModification))
+                {
+                    foreach (var mod in m.TableModification.Split(","))
+                    {
+                        if (!mods.Contains(mod)) mods.Add(mod);
+                    }
+                }
+                m.Modifications = CreateModificationListFromString(catalogueCode, string.Join(",", mods), languageCode);
+
                 rc.Add(m);
 
             }, catalogueCode, languageCode);

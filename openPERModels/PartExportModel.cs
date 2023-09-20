@@ -1,4 +1,6 @@
-﻿namespace openPERModels
+﻿using System.Collections.Generic;
+
+namespace openPERModels
 {
     public class PartExportModel
     {
@@ -16,5 +18,6 @@
         public string TablePattern { get; set; }
         public string TableModification { get; set; }
         public string Quantity { get; set; }
+        public List<ModificationModel> Modifications { get; set; }
     }
 }
