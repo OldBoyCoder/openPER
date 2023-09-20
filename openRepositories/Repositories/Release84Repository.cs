@@ -1593,6 +1593,7 @@ namespace openPERRepositories.Repositories
                 WHERE T.CAT_COD = @p1
                 ORDER BY T.TABLE_COD, T.VARIANTE, TBD_RIF";
             using var connection = new MySqlConnection(PathToDb);
+            var modcache = new Dictionary<string, List<ModificationModel>>();
             connection.RunSqlAllRows(sql, (reader) =>
             {
                 var m = new PartExportModel()
@@ -1628,7 +1629,10 @@ namespace openPERRepositories.Repositories
                         if (!mods.Contains(mod)) mods.Add(mod);
                     }
                 }
-                m.Modifications = CreateModificationListFromString(catalogueCode, string.Join(",", mods), languageCode);
+                var key = string.Join(",", mods);
+                if (!modcache.ContainsKey(key))
+                    modcache[key] = CreateModificationListFromString(catalogueCode, key, languageCode);
+                m.Modifications = modcache[key];
 
                 rc.Add(m);
 
