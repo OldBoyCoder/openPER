@@ -4,6 +4,8 @@ using openPER.Helpers;
 using openPER.ViewModels;
 using openPERHelpers;
 using openPERRepositories.Interfaces;
+using System.Text;
+using System.Threading.Tasks;
 
 namespace openPER.Controllers
 {
@@ -72,6 +74,36 @@ namespace openPER.Controllers
 
             }
             return View("SearchResults", model);
+        }
+
+        public FileResult AllParts(string language, string catalogueCode)
+        {
+            language = LanguageSupport.GetIso639CodeFromString(language);
+            ViewData["Language"] = language;
+            LanguageSupport.SetCultureBasedOnRoute(language);
+            var parts = _rep.GetAllPartsForCatalogue(language, catalogueCode);
+            var contents = "";
+            foreach (var p in parts)
+            {
+                contents += p.TableCode + "\t"
+                    + p.GroupDescription + "\t"
+                    + p.SubGroupDescription + "\t"
+                    + p.PartCode + "\t"
+                    + p.CodeDescription + "\t"
+                    + p.ExtraDescription + "\t"
+                    + p.Notes + "\t"
+                    + p.DrawingNumber + "\t"
+                    + p.Rif + "\t"
+                    + p.PartPattern + "\t"
+                    + p.PartModification + "\t"
+                    + p.TablePattern + "\t"
+                    + p.TableModification + "\t"
+                    + p.Quantity +"\r\n";
+
+            }
+            var b = Encoding.UTF8.GetBytes(contents);
+            return File(b, "text/tab-separated-values", $"AllParts{catalogueCode}{language}.txt");
+
         }
     }
 }

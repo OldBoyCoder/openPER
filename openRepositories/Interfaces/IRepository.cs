@@ -55,6 +55,8 @@ namespace openPERRepositories.Interfaces
         public List<GroupModel> GetAllSectionsForCatalogue(string languageCode, string catalogueCode);
         public List<ModifiedDrawingModel> GetAllDrawingsForModification(string languageCode, string catalogueCode, int modificationNumber);
         public ModificationModel GetCatalogueModificationDetail(string catalogueCode, string languageCode, int modification);
+        public List<PartExportModel> GetAllPartsForCatalogue(string languageCode, string catalogueCode);
+
     }
 
 }

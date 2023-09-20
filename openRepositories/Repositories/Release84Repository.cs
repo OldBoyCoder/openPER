@@ -73,7 +73,7 @@ namespace openPERRepositories.Repositories
 
         }
 
-                public MapImageModel GetMapForCatalogueGroup(string make, string subMake, string model, string catalogue, int group)
+        public MapImageModel GetMapForCatalogueGroup(string make, string subMake, string model, string catalogue, int group)
         {
             var map = new MapImageModel();
             using var connection = new MySqlConnection(PathToDb);
@@ -1556,7 +1556,7 @@ namespace openPERRepositories.Repositories
 		                            SELECT D.CAT_COD, D.GRP_COD, D.SGRP_COD, D.SGS_COD, D.DRW_NUM, TABLE_DSC_COD AS TAB_COD FROM tbdata T
 		                            JOIN drawings D ON D.GRP_COD = T.GRP_COD AND D.SGRP_COD = T.SGRP_COD AND D.CAT_COD = T.CAT_COD AND D.SGS_COD = T.SGS_COD AND T.VARIANTE = D.DRW_NUM
 		                             WHERE T.cat_cod = @p1 AND T.MODIF LIKE '%" + modificationNumber + "%'))";
-            sql+=@"		                            AD
+            sql += @"		                            AD
                             JOIN groups_dsc G ON AD.GRP_COD = G.GRP_COD AND G.LNG_COD = @p3
                             JOIN subgroups_dsc SG ON AD.GRP_COD = SG.GRP_COD AND AD.SGRP_COD = SG.SGRP_COD AND SG.LNG_COD = @p3
                             LEFT OUTER JOIN tables_dsc TD ON TD.COD = TAB_COD AND TD.LNG_COD = @p3
@@ -1577,6 +1577,44 @@ namespace openPERRepositories.Repositories
                 rc.Add(m);
 
             }, catalogueCode, modificationNumber, languageCode);
+            return rc;
+        }
+        public List<PartExportModel> GetAllPartsForCatalogue(string languageCode, string catalogueCode)
+        {
+            languageCode = openPERHelpers.LanguageSupport.GetFiatLanguageCodeFromString(languageCode);
+            var rc = new List<PartExportModel>();
+            var sql = @"SELECT T.TABLE_COD, GRP_DSC, SGRP_DSC, T.PRT_COD, CD.CDS_DSC, IFNULL(DAD.DSC, ''), IFNULL(ND.NTS_DSC, ''),  T.VARIANTE, TBD_RIF, IFNULL(TBD_VAL_FORMULA, ''), IFNULL(T.MODIF, ''), IFNULL(D.PATTERN, ''), IFNULL(D.MODIF, ''), TBD_QTY  FROM tbdata T
+                JOIN groups_dsc GD ON GD.GRP_COD = T.GRP_COD  AND GD.LNG_COD = @p2
+                JOIN subgroups_dsc SGD ON SGD.GRP_COD = T.GRP_COD AND SGD.SGRP_COD = T.SGRP_COD AND SGD.LNG_COD = @p2
+                JOIN drawings D ON D.CAT_COD = T.CAT_COD AND D.GRP_COD = T.GRP_COD AND D.SGRP_COD = T.SGRP_COD AND D.SGS_COD = T.SGS_COD AND D.DRW_NUM = T.VARIANTE
+                LEFT OUTER JOIN codes_dsc CD ON CD.CDS_COD = T.CDS_COD AND CD.LNG_COD = @p2
+                LEFT OUTER JOIN notes_dsc ND ON ND.NTS_COD = T.NTS_COD AND ND.LNG_COD = @p2
+                LEFT OUTER JOIN desc_agg_dsc DAD ON DAD.COD = T.TBD_AGG_DSC AND DAD.LNG_COD = @p2
+                WHERE T.CAT_COD = @p1
+                ORDER BY T.TABLE_COD, T.VARIANTE, TBD_RIF";
+            using var connection = new MySqlConnection(PathToDb);
+            connection.RunSqlAllRows(sql, (reader) =>
+            {
+                var m = new PartExportModel()
+                {
+                    TableCode = reader.GetString(0),
+                    GroupDescription = reader.GetString(1),
+                    SubGroupDescription = reader.GetString(2),
+                    PartCode = reader.GetString(3),
+                    CodeDescription = reader.GetString(4),
+                    ExtraDescription = reader.GetString(5),
+                    Notes = reader.GetString(6),
+                    DrawingNumber = reader.GetInt32(7),
+                    Rif = reader.GetInt32(8),
+                    PartPattern = reader.GetString(9),
+                    PartModification = reader.GetString(10),
+                    TablePattern = reader.GetString(11),
+                    TableModification = reader.GetString(12),
+                    Quantity = reader.GetString(13)
+                };
+                rc.Add(m);
+
+            }, catalogueCode, languageCode);
             return rc;
         }
     }
