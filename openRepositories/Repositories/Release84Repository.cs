@@ -1049,6 +1049,37 @@ namespace openPERRepositories.Repositories
             }, languageCode);
             return rc;
         }
+        public List<PartModel> GetPartSearchForCatalogue(string catalogueCode, string partDescription, string languageCode)
+        {
+            languageCode = openPERHelpers.LanguageSupport.GetFiatLanguageCodeFromString(languageCode);
+            var rc = new List<PartModel>();
+            using var connection = new MySqlConnection(PathToDb);
+            var sql = @"select P.PRT_COD, C.CDS_COD, C.CDS_DSC,F.FAM_COD, F.FAM_DSC, U.UM_COD, U.UM_DSC, PRT_WEIGHT, CT.CAT_DSC  from PARTS P 
+                                JOIN CODES_DSC C ON C.CDS_COD = P.CDS_COD AND C.LNG_COD = @p1
+                                JOIN FAM_DSC F ON F.FAM_COD = P.PRT_FAM_COD AND F.LNG_COD = @p1
+                                JOIN APPLICABILITY A ON A.PRT_COD = P.PRT_COD 
+                                JOIN catalogues CT ON CT.CAT_COD = A.CAT_COD
+                                LEFT OUTER  JOIN UN_OF_MEAS U ON U.UM_COD = P.UM_COD
+                                LEFT OUTER JOIN RPLNT R ON R.RPL_COD = P.PRT_COD
+                                where C.CDS_DSC LIKE '%" + partDescription + "%' AND CT.CAT_COD = @p2";
+            connection.RunSqlAllRows(sql, (reader) =>
+            {
+                var p = new PartModel
+                {
+                    PartNumber = reader.GetString(0),
+                    Description = reader.GetString(2),
+                    FamilyCode = reader.GetString(3),
+                    FamilyDescription = reader.GetString(4),
+                    UnitOfSale = reader.GetString(6),
+                    Weight = reader.GetInt32(7),
+                    CatalogueCode = catalogueCode,
+                    CatalogueDescription = reader.GetString(8)
+                };
+                p.Drawings = GetDrawingsForPartNumberAndCatalogue(p.CatalogueCode, p.PartNumber, languageCode);
+                rc.Add(p);
+            }, languageCode, catalogueCode);
+            return rc;
+        }
         public List<PartModel> GetBasicPartSearch(string modelName, string partDescription, string languageCode)
         {
             languageCode = openPERHelpers.LanguageSupport.GetFiatLanguageCodeFromString(languageCode);
@@ -1143,6 +1174,73 @@ namespace openPERRepositories.Repositories
                 };
                 drawings.Add(p);
             }, partNumber, languageCode);
+
+            return drawings;
+        }
+        private List<PartDrawing> GetDrawingsForPartNumberAndCatalogue(string catalogueCode, string partNumber, string languageCode)
+        {
+            var drawings = new List<PartDrawing>();
+            using var connection = new MySqlConnection(PathToDb);
+            var sql = @"select A.CAT_COD, C.CAT_DSC, A.GRP_COD, A.SGRP_COD, T.SGS_COD, T.VARIANTE, SGRP_DSC, MK_COD, CMG_COD, MK2_COD, REVISIONE  
+                            FROM APPLICABILITY A
+							JOIN CATALOGUES C ON C.CAT_COD = A.CAT_COD
+							JOIN TBDATA T ON T.PRT_COD = A.PRT_COD AND T.CAT_COD = A.CAT_COD AND T.GRP_COD = A.GRP_COD AND T.SGRP_COD = A.SGRP_COD
+							JOIN SUBGROUPS_DSC SD ON SD.SGRP_COD = T.SGRP_COD AND SD.GRP_COD = T.GRP_COD AND SD.LNG_COD = @p2
+							where A.prt_cod = @p1 AND A.CAT_COD = @p3";
+            connection.RunSqlAllRows(sql, (reader) =>
+            {
+                var p = new PartDrawing
+                {
+                    Make = reader.GetString(7),
+                    SubMake = reader.GetString(9),
+                    Model = reader.GetString(8),
+                    CatalogueCode = reader.GetString(0),
+                    CatalogueDescription = reader.GetString(1),
+                    GroupCode = reader.GetInt32(2),
+                    SubGroupCode = reader.GetInt32(3),
+                    SubSubGroupCode = reader.GetInt32(4),
+                    Variant = reader.GetInt32(5),
+                    SubGroupDescription = reader.GetString(6),
+                    Revision = reader.GetInt32(10),
+                    ClichePart = false
+                };
+                drawings.Add(p);
+            }, partNumber, languageCode, catalogueCode);
+
+            // This could be a part in a cliche
+            sql = @"select DISTINCT 
+	                A.CAT_COD, CT.CAT_DSC , A.GRP_COD, A.SGRP_COD, T.SGS_COD, T.VARIANTE, SGRP_DSC, CT.MK_COD, CMG_COD, MK2_COD,
+	                CDS.CDS_DSC, T.PRT_COD, C.PRT_COD, C.CPD_NUM, T.REVISIONE
+                        from CPXDATA C
+                        JOIN APPLICABILITY A ON C.PRT_COD = A.PRT_COD
+                        JOIN CATALOGUES CT ON CT.CAT_COD = A.CAT_COD
+                        JOIN CODES_DSC CDS ON CDS.CDS_COD = A.CDS_COD AND CDS.LNG_COD = @p2
+                        JOIN TBDATA T ON T.PRT_COD = C.CPLX_PRT_COD AND T.CAT_COD = A.CAT_COD
+	                        AND A.GRP_COD = T.GRP_COD AND A.SGRP_COD = T.SGRP_COD
+                        JOIN SUBGROUPS_DSC SD ON SD.GRP_COD = T.GRP_COD AND SD.SGRP_COD = T.SGRP_COD AND SD.LNG_COD = @p2
+
+                        WHERE C.PRT_COD = @p1 AND A.CAT_COD = @p3";
+            connection.RunSqlAllRows(sql, (reader) =>
+            {
+                var p = new PartDrawing
+                {
+                    Make = reader.GetString(7),
+                    SubMake = reader.GetString(9),
+                    Model = reader.GetString(8),
+                    CatalogueCode = reader.GetString(0),
+                    CatalogueDescription = reader.GetString(1),
+                    GroupCode = reader.GetInt32(2),
+                    SubGroupCode = reader.GetInt32(3),
+                    SubSubGroupCode = reader.GetInt32(4),
+                    Variant = reader.GetInt32(5),
+                    SubGroupDescription = reader.GetString(6),
+                    ClichePartNumber = reader.GetString(11),
+                    ClichePartDrawingNumber = reader.GetInt32(13),
+                    Revision = reader.GetInt32(14),
+                    ClichePart = true
+                };
+                drawings.Add(p);
+            }, partNumber, languageCode, catalogueCode);
 
             return drawings;
         }

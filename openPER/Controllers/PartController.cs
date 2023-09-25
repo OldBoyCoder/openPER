@@ -76,6 +76,39 @@ namespace openPER.Controllers
             }
             return View("SearchResults", model);
         }
+        public IActionResult SearchPartByCatalogueAndCode(string language, string catalogueCode,string mvs, string vin, string searchText)
+        {
+            language = LanguageSupport.GetIso639CodeFromString(language);
+            ViewData["Language"] = language;
+            LanguageSupport.SetCultureBasedOnRoute(language);
+            var model = new PartSearchResultsViewModel
+            {
+                Navigation = NavigationHelper.PopulateNavigationModel(this, _mapper, _rep, language),
+                Language = language
+            };
+            if (string.IsNullOrEmpty(searchText) || string.IsNullOrEmpty(catalogueCode)) return View("SearchResults", model);
+
+            var parts = _rep.GetPartSearchForCatalogue(catalogueCode, searchText, language);
+
+            foreach (var p in parts)
+            {
+                var v = new PartSearchResultViewModel
+                {
+                    Description = p.Description,
+                    FamilyCode = p.FamilyCode,
+                    FamilyDescription = p.FamilyDescription,
+                    PartNumber = p.PartNumber,
+                    UnitOfSale = p.UnitOfSale,
+                    Weight = p.Weight,
+                    CatalogueCode = p.CatalogueCode,
+                    CatalogueDescription = p.CatalogueDescription,
+                    Drawings = p.Drawings
+                };
+                model.Results.Add(v);
+
+            }
+            return View("SearchResults", model);
+        }
 
         public FileResult AllParts(string language, string catalogueCode)
         {

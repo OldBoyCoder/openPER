@@ -29,6 +29,27 @@
 
                 }
             </div>
+            @using (Html.BeginForm("SearchPartByCatalogueAndCode", "Part", FormMethod.Get, new { @class = " p-4", role = "form" }))
+            {
+                <div class="row">
+                    <input id="languageId" name="language" hidden value="@Model.Navigation.Language" />
+                    <input id="catalogueCode" name="catalogueCode" hidden value="@Model.Navigation.Breadcrumb.CatalogueCode" />
+                    <input id="mvs" name="Mvs" hidden value="@Model.Navigation.Filter.Mvs" />
+                    <input id="vin" name="Vin" hidden value="@Model.Navigation.Filter.Vin" />
+                    <div class=col-3>
+                        <label>Find parts</label>
+                    </div>
+                    <div class="col-8">
+                        <div class="form-floating">
+                            @Html.TextBox("searchText",null,new { @class = "form-control", type = "search", placeholder = "Part name", id = "searchByPart" })
+                            <label for="searchByPart">@Resources.FrontEnd.SearchByPartPartDescription</label>
+                        </div>
+                    </div>
+                    <div class="col-1">
+                        <button type="submit" class="btn btn-outline-primary"><i class="fa fa-search"></i></button>
+                    </div>
+                </div>
+            }
             @if (string.IsNullOrEmpty(Model.Navigation.Filter.Mvs))
             {
                 <a href="@Url.Action("AllParts", "Part", new{language = Model.Navigation.Language, catalogueCode = Model.CatalogueCode})">Download parts list</a>
