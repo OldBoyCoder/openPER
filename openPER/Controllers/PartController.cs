@@ -142,6 +142,9 @@ namespace openPER.Controllers
 
         public FileResult AllPartsFiltered(string language, string catalogueCode, string vin, string mvs)
         {
+            // Must have VIN and MVS to get a filtered list otherwise performance is dire.
+            if (string.IsNullOrEmpty(vin) || string.IsNullOrEmpty(mvs))
+                return AllParts(language, catalogueCode);
             //https://localhost:44329/Part/AllPartsFiltered?language=en&catalogueCode=PK&MVS=183.829.0.0&VIN=ZFA18300000040598
             language = LanguageSupport.GetIso639CodeFromString(language);
             ViewData["Language"] = language;
