@@ -36,7 +36,7 @@ namespace openPER.Helpers
             }
             return EvaluateRule(pattern, values, vmkCodes, preciseMatch);
         }
-        public static Dictionary<string, bool> GetSymbolsFromPattern(string pattern,out string  newPattern)
+        public static Dictionary<string, bool> GetSymbolsFromPattern(string pattern, out string newPattern)
         {
             var symbol = false;
             var symbolName = "";
@@ -89,6 +89,34 @@ namespace openPER.Helpers
             var dt = new DataTable();
             bool v;
             var allSymbols = GetSymbolsFromPattern(pattern, out var newPattern);
+            // Enhance the values list by adding in extra ones with the prefix from the vmk_dsc table
+            // This is beacuse often the CARATT has stuff like E008+E152+...
+            // but the values held against the VIN are 008 152 etc
+            // this is a hack to basically take all the 008 style numbers, see if there is
+            // a VMK value that ends in that and then add an extra value with the VIN value set to the
+            // same true/false as the VIN
+            var newValues = new Dictionary<string, bool>();
+            foreach (var item in values)
+            {
+                if (item.Key.Length == 3)
+                {
+                    if (int.TryParse(item.Key, out int tmp))
+                    {
+                        var m = allSymbols.FirstOrDefault(x => x.Key.EndsWith(item.Key));
+                        if (m.Key != null  && !values.ContainsKey(m.Key))
+                            newValues[m.Key] = item.Value;
+                    }
+                }
+            }
+            foreach (var item in newValues)
+            {
+                values[item.Key] = item.Value;
+            }
+            // Fake in LHD and RHD values as we don't have a user option for these
+            if (!values.ContainsKey("GD")) values["GD"] = true;
+            if (!values.ContainsKey("GS")) values["GS"] = true;
+            if (!values.ContainsKey("GDX")) values["GDX"] = true;
+            if (!values.ContainsKey("GSX")) values["GSX"] = true;
             foreach (var item in values)
             {
                 newPattern = newPattern.Replace($"|{item.Key}|", item.Value ? " true " : " false ");
@@ -97,52 +125,41 @@ namespace openPER.Helpers
             pattern = newPattern;
             if (!preciseMatch && allSymbols.Count > 0)
             {
-                // We have symbols for which we have no value.  Try the pattern with them both True and False
-                var comb = (Math.Pow(2, (allSymbols.Count)));
-                var basePattern = pattern;
-                for (int i = 0; i < comb; i++)
+                for (int j = 0; j < allSymbols.Count; j++)
                 {
-                    // i now is the bit pattern for the symbols true/false
-                    for (int j = 0; j < allSymbols.Count; j++)
+                    var key = allSymbols.ElementAt(j).Key;
+                    var vmkElement = vmkCodes.FirstOrDefault(x => (x.Type + x.Code) == key);
+                    if (vmkElement is { MultiValue: true })
+                        allSymbols[key] = false;
+                    else
                     {
-                        var key = allSymbols.ElementAt(j).Key;
-                        var vmkElement = vmkCodes.FirstOrDefault(x => (x.Type + x.Code) == key);
-                        if (vmkElement is { MultiValue: true })
-                            allSymbols[key] = false;
-                        else
-                        {
-                            if ((i & (int)Math.Pow(2, j)) != 0)
-                                allSymbols[key] = true;
-                            else
-                                allSymbols[key] = false;
-                        }
+                        allSymbols[key] = true;
                     }
-                    // Now try the pattern
-                    pattern = basePattern;
-                    foreach (var item in allSymbols)
-                    {
-                        pattern = pattern.Replace($"|{item.Key}|", item.Value ? " true " : " false ");
-                    }
-                    pattern = pattern.Replace(",", " OR ");
-                    pattern = pattern.Replace("+", " AND ");
-                    pattern = pattern.Replace("!", " NOT ");
-                    pattern = pattern.Replace("(", " ( ");
-                    pattern = pattern.Replace(")", " ) ");
-                    pattern = " " + pattern + " ";
-
-                    try
-                    {
-                        v = (bool)dt.Compute(pattern, "");
-                    }
-                    catch (Exception)
-                    {
-                        // return true if there is an exception as we want to err on
-                        // the side of including items.
-                        return true;
-                    }
-                    if (v) return true;
-
                 }
+                // Now try the pattern
+                foreach (var item in allSymbols)
+                {
+                    pattern = pattern.Replace($"|{item.Key}|", item.Value ? " true " : " false ");
+                }
+                pattern = pattern.Replace(",", " OR ");
+                pattern = pattern.Replace("+", " AND ");
+                pattern = pattern.Replace("!", " NOT ");
+                pattern = pattern.Replace("(", " ( ");
+                pattern = pattern.Replace(")", " ) ");
+                pattern = " " + pattern + " ";
+
+                try
+                {
+                    v = (bool)dt.Compute(pattern, "");
+                }
+                catch (Exception)
+                {
+                    // return true if there is an exception as we want to err on
+                    // the side of including items.
+                    return true;
+                }
+                if (v) return true;
+
                 return false;
             }
             foreach (var item in allSymbols)
@@ -169,13 +186,40 @@ namespace openPER.Helpers
             return v;
 
         }
+        public static string ConsolidatePatterns(string sinComPattern, string vehiclePattern)
+        {
+            string consolidatedPattern;
+            if (string.IsNullOrEmpty(vehiclePattern))
+            {
+                consolidatedPattern = sinComPattern;
+            }
+            else
+            {
+                consolidatedPattern = vehiclePattern.Replace("|", "").Replace("\r", "").Replace("\n", "");
+                var sp = sinComPattern.Replace("\r", "").Replace("\n", "").Replace("|", "");
+                var sincomElements = sp.Split("+");
+                foreach (var item in sincomElements)
+                {
+                    var key = item.Replace("!", "");
+                    if (!consolidatedPattern.Contains(key))
+                        consolidatedPattern += "+" + item;
 
+                }
+
+
+            }
+            return consolidatedPattern;
+
+        }
         public static bool ApplyPatternAndModificationRules(string pattern, string sinComPattern, List<VmkModel> vmkCodes,
             string vehiclePattern, List<ModificationViewModel> modifications, Dictionary<string, string> vehicleModificationFilters)
         {
+            // If we have a vehicle pattern then we need to merge the SINCOM pattern into it as there are some attributes not 
+            // duplicated into vehicle pattern
+            var consolidatedPattern = ConsolidatePatterns(sinComPattern, vehiclePattern);
             if (!string.IsNullOrEmpty(pattern))
             {
-                if (!EvaluateRule(pattern, sinComPattern, vmkCodes, !string.IsNullOrEmpty(vehiclePattern)))
+                if (!EvaluateRule(pattern, consolidatedPattern, vmkCodes, !string.IsNullOrEmpty(vehiclePattern)))
                     return false;
             }
 
@@ -184,7 +228,7 @@ namespace openPER.Helpers
                 foreach (var rule in mod.Activations)
                 {
                     // Does this apply to this vehicle
-                    if (EvaluateRule(rule.ActivationPattern, sinComPattern, vmkCodes,
+                    if (EvaluateRule(rule.ActivationPattern, consolidatedPattern, vmkCodes,
                             !string.IsNullOrEmpty(vehiclePattern)))
                     {
                         // Does this vehicle have the data needed

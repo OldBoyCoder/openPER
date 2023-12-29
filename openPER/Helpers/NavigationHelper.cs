@@ -134,7 +134,7 @@ namespace openPER.Helpers
             rc.DataSource = FilterDataSource.Sincom;
             if (!string.IsNullOrEmpty(vehiclePattern))
             {
-                pattern = vehiclePattern;
+                pattern = PatternMatchHelper.ConsolidatePatterns(sinComPattern, vehiclePattern);
                 rc.DataSource = FilterDataSource.Vin;
             }
             var potentialOptions = rep.GetMvsDetailsForCatalogue(catalogueCode, language);
@@ -151,7 +151,7 @@ namespace openPER.Helpers
                     key = key[1..];
                     o.Present = false;
                 }
-                var opt = potentialOptions.FirstOrDefault(x => x.TypeCodePair == key);
+                var opt = potentialOptions.FirstOrDefault(x => x.TypeCodePair.EndsWith(key));
                 if (opt != null)
                 {
                     o.MultiValue = !string.IsNullOrEmpty(opt.TypeDescription);

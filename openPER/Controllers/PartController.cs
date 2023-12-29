@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Mvc;
 using openPER.Helpers;
 using openPER.ViewModels;
 using openPERHelpers;
+using openPERModels;
 using openPERRepositories.Interfaces;
 using System.Collections.Generic;
 using System.Text;
@@ -152,7 +153,6 @@ namespace openPER.Controllers
             var sinComPattern = _rep.GetSincomPattern(mvs);
             var vmkCodes = _rep.GetVmkDataForCatalogue(catalogueCode, language);
             var vehiclePattern = _rep.GetVehiclePattern(language, vin);
-            if (vehiclePattern != "") sinComPattern = vehiclePattern;
             var vehicleModificationFilters = _rep.GetFiltersForVehicle(language, vin, mvs);
 
             var parts = _rep.GetAllPartsForCatalogue(language, catalogueCode);
@@ -162,70 +162,34 @@ namespace openPER.Controllers
             {
                 var omitPart = false;
                 var pattern = p.TablePattern;
+                var cacheKey = pattern + "|" + p.TableModification + "|" + p.PartModification;
                 if (!string.IsNullOrEmpty(pattern))
                 {
                     var b = false;
-                    if (RuleCache.ContainsKey(pattern))
-                        b = RuleCache[pattern];
+                    if (RuleCache.ContainsKey(cacheKey))
+                        b = RuleCache[cacheKey];
                     else
                     {
-                        b = PatternMatchHelper.EvaluateRule(pattern, sinComPattern, vmkCodes, !string.IsNullOrEmpty(vehiclePattern));
-                        RuleCache[pattern] = b;
+                        b = PatternMatchHelper.ApplyPatternAndModificationRules(pattern, sinComPattern, vmkCodes, vehiclePattern,_mapper.Map<List<ModificationModel>, List<ModificationViewModel>>(p.Modifications), vehicleModificationFilters);
+                        RuleCache[cacheKey] = b;
                     }
                     if (!b) omitPart = true;
                 }
                 pattern = p.PartPattern;
+                cacheKey = pattern + "|" + p.TableModification + "|" + p.PartModification;
                 if (!string.IsNullOrEmpty(pattern))
                 {
                     var b = false;
-                    if (RuleCache.ContainsKey(pattern))
-                        b = RuleCache[pattern];
+                    if (RuleCache.ContainsKey(cacheKey))
+                        b = RuleCache[cacheKey];
                     else
                     {
-                        b = PatternMatchHelper.EvaluateRule(pattern, sinComPattern, vmkCodes, !string.IsNullOrEmpty(vehiclePattern));
-                        RuleCache[pattern] = b;
+                        b = PatternMatchHelper.ApplyPatternAndModificationRules(pattern, sinComPattern, vmkCodes, vehiclePattern, _mapper.Map<List<ModificationModel>, List<ModificationViewModel>>(p.Modifications), vehicleModificationFilters);
+                        RuleCache[cacheKey] = b;
                     }
                     if (!b) omitPart = true;
                 }
 
-                var modifications = p.Modifications;
-                foreach (var mod in modifications)
-                {
-                    foreach (var rule in mod.Activations)
-                    {
-                        var b = false;
-                        if (RuleCache.ContainsKey(rule.ActivationPattern))
-                            b = RuleCache[rule.ActivationPattern];
-                        else
-                        {
-                            b = PatternMatchHelper.EvaluateRule(rule.ActivationPattern, sinComPattern, vmkCodes, !string.IsNullOrEmpty(vehiclePattern));
-                            RuleCache[pattern] = b;
-                        }
-                        // Does this apply to this vehicle
-                        if (b)
-                        {
-                            // Does this vehicle have the data needed
-                            if (vehicleModificationFilters.ContainsKey(rule.ActivationCode))
-                            {
-                                // Before or after rule?
-                                if (mod.Type == "C" &&
-                                    int.Parse(rule.ActivationSpec) <= int.Parse(vehicleModificationFilters[rule.ActivationCode]))
-                                {
-                                    // C means stops at so if data is past this then it is invisible
-                                    omitPart = true;
-                                }
-                                if (mod.Type == "D" &&
-                                    int.Parse(rule.ActivationSpec) > int.Parse(vehicleModificationFilters[rule.ActivationCode]))
-                                {
-                                    // D means after a date if data is before this then it is invisible
-                                    omitPart = true;
-                                }
-                            }
-                        }
-                        if (omitPart) break;
-                    }
-                    if (omitPart) break;
-                }
                 if (!omitPart)
                 {
                     var line = p.TableCode + "\t"
