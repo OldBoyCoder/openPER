@@ -197,7 +197,7 @@ namespace openPER.Controllers
             foreach (var p in tableData.Parts)
             {
                 var pattern = p.Compatibility;
-                if (!string.IsNullOrEmpty(pattern))
+                if (!string.IsNullOrEmpty(pattern) || p.Modifications.Count > 0)
                 {
                     if (!PatternMatchHelper.ApplyPatternAndModificationRules(pattern, sinComPattern, vmkCodes, vehiclePattern,p.Modifications,vehicleModificationFilters))
                         p.Visible = false;

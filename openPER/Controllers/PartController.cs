@@ -163,7 +163,7 @@ namespace openPER.Controllers
                 var omitPart = false;
                 var pattern = p.TablePattern;
                 var cacheKey = pattern + "|" + p.TableModification + "|" + p.PartModification;
-                if (!string.IsNullOrEmpty(pattern))
+                if (!string.IsNullOrEmpty(pattern) || !string.IsNullOrEmpty(p.TableModification) || !string.IsNullOrEmpty(p.PartModification))
                 {
                     var b = false;
                     if (RuleCache.ContainsKey(cacheKey))
@@ -177,7 +177,7 @@ namespace openPER.Controllers
                 }
                 pattern = p.PartPattern;
                 cacheKey = pattern + "|" + p.TableModification + "|" + p.PartModification;
-                if (!string.IsNullOrEmpty(pattern))
+                if (!string.IsNullOrEmpty(pattern) || !string.IsNullOrEmpty(p.TableModification) || !string.IsNullOrEmpty(p.PartModification))
                 {
                     var b = false;
                     if (RuleCache.ContainsKey(cacheKey))
