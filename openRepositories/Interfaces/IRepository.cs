@@ -58,6 +58,8 @@ namespace openPERRepositories.Interfaces
         public List<PartExportModel> GetAllPartsForCatalogue(string languageCode, string catalogueCode);
         public List<PartModel> GetPartSearchForCatalogue(string catalogueCode, string partDescription, string languageCode);
 
+        public string GetModCodeForCatalogue(string catalogueCode);
+
     }
 
 }

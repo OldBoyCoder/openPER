@@ -50,7 +50,7 @@ namespace openPER.Controllers
             return View(model);
         }
 
-        private DrawingsViewModel BuildDrawingViewModel(string language, string makeCode, string subMakeCode, string modelCode,
+        public DrawingsViewModel BuildDrawingViewModel(string language, string makeCode, string subMakeCode, string modelCode,
             string catalogueCode, int groupCode, int subGroupCode, int subSubGroupCode, string scope,
             string vin, string mvs, Func<List<DrawingKeyViewModel>, int> getCurrentDrawing)
         {

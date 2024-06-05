@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.Data;
 using openPER.ViewModels;
 using openPERModels;
+using openPERHelpers;
 
 namespace openPER.Helpers
 {
@@ -86,6 +87,55 @@ namespace openPER.Helpers
         }
         public static bool EvaluateRule(string pattern, Dictionary<string, bool> values, List<VmkModel> vmkCodes, bool preciseMatch)
         {
+            bool v;
+            if (string.IsNullOrEmpty(pattern)) return true;
+            var allSymbols = GetSymbolsFromPattern(pattern, out var newPattern);
+            // Enhance the values list by adding in extra ones with the prefix from the vmk_dsc table
+            // This is beacuse often the CARATT has stuff like E008+E152+...
+            // but the values held against the VIN are 008 152 etc
+            // this is a hack to basically take all the 008 style numbers, see if there is
+            // a VMK value that ends in that and then add an extra value with the VIN value set to the
+            // same true/false as the VIN
+            var newValues = new Dictionary<string, openPERBoolean>();
+            foreach (var item in values)
+            {
+                newValues[item.Key] = item.Value ? openPERBoolean.True : openPERBoolean.False;
+                if (item.Key.Length == 3)
+                {
+                    if (int.TryParse(item.Key, out int tmp))
+                    {
+                        var m = allSymbols.FirstOrDefault(x => x.Key.EndsWith(item.Key));
+                        if (m.Key != null && !values.ContainsKey(m.Key))
+                            newValues[m.Key] = item.Value ? openPERBoolean.True : openPERBoolean.False;
+                    }
+                }
+            }
+            // Fake in LHD and RHD values as we don't have a user option for these
+//            if (!newValues.ContainsKey("GD")) newValues["GD"] = openPERBoolean.True;
+            if (!newValues.ContainsKey("GS")) newValues["GS"] = openPERBoolean.True;
+  //          if (!newValues.ContainsKey("GDX")) newValues["GDX"] = openPERBoolean.True;
+            if (!newValues.ContainsKey("GSX")) newValues["GSX"] = openPERBoolean.True;
+            foreach (var item in newValues)
+            {
+                allSymbols.Remove(item.Key);
+            }
+            if (!preciseMatch && allSymbols.Count > 0)
+            {
+                for (int j = 0; j < allSymbols.Count; j++)
+                {
+                    var key = allSymbols.ElementAt(j).Key;
+                    var vmkElement = vmkCodes.FirstOrDefault(x => (x.Type + x.Code) == key);
+                    if (vmkElement is { MultiValue: true })
+                        newValues.Add(key, openPERBoolean.False);
+                    else
+                        newValues.Add(key, openPERBoolean.Unknown);
+                }
+            }
+            var x = new openPERHelpers.ExpressionEvaluater();
+            return x.Evaluate(pattern, newValues);
+        }
+        public static bool EvaluateRuleOld(string pattern, Dictionary<string, bool> values, List<VmkModel> vmkCodes, bool preciseMatch)
+        {
             var dt = new DataTable();
             bool v;
             var allSymbols = GetSymbolsFromPattern(pattern, out var newPattern);
@@ -103,7 +153,7 @@ namespace openPER.Helpers
                     if (int.TryParse(item.Key, out int tmp))
                     {
                         var m = allSymbols.FirstOrDefault(x => x.Key.EndsWith(item.Key));
-                        if (m.Key != null  && !values.ContainsKey(m.Key))
+                        if (m.Key != null && !values.ContainsKey(m.Key))
                             newValues[m.Key] = item.Value;
                     }
                 }

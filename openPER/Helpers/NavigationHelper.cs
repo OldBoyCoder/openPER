@@ -168,6 +168,8 @@ namespace openPER.Helpers
         internal static UserDataViewModel GetUserDataFromCookie(Controller controller)
         {
             var rc = new UserDataViewModel();
+            if (controller.Request == null)
+                return rc;
             var ourCookie = controller.Request.Cookies["xf_eper"];
             rc.Vehicles = new List<UserVehicleDataViewModel>();
             controller.ViewData["AdFree"] = false;
