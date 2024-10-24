@@ -1737,18 +1737,5 @@ namespace openPERRepositories.Repositories
             }, catalogueCode, languageCode);
             return rc;
         }
-
-        public string GetModCodeForCatalogue(string catalogueCode)
-        {
-            var rc = "";
-            var sql = @"SELECT MOD_COD FROM MVS WHERE CAT_COD = @p1";
-            using var connection = new MySqlConnection(PathToDb);
-            connection.RunSqlFirstRowOnly(sql, (reader) =>
-            {
-                rc = reader.GetString(0);
-
-            }, catalogueCode);
-            return rc;
-        }
     }
 }

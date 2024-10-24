@@ -522,18 +522,5 @@ namespace openPERRepositories.Repositories
         {
             return _rep.GetPartSearchForCatalogue(catalogueCode, partDescription, languageCode);
         }
-
-        public string GetModCodeForCatalogue(string catalogueCode)
-        {
-            var key = ("GetModCodeForCatalogue", catalogueCode);
-            if (_cache.TryGetValue(key, out string cacheValue))
-            {
-                return cacheValue;
-            }
-
-            var rc = _rep.GetModCodeForCatalogue(catalogueCode);
-            _cache.Set(key, rc, _options);
-            return rc;
-        }
     }
 }

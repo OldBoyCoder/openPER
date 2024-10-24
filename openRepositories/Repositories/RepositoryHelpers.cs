@@ -8,7 +8,7 @@ namespace openPERRepositories.Repositories
     {
         internal static void RunSqlAllRows(this MySqlConnection connection, string sql, Action<MySqlDataReader> rowHandler, params object[] parameters)
         {
-//            var stopWatch = new Stopwatch();
+            var stopWatch = new Stopwatch();
             if (connection.State != System.Data.ConnectionState.Open)
                 connection.Open();
             var command = connection.CreateCommand();
@@ -22,14 +22,14 @@ namespace openPERRepositories.Repositories
             }
 
 
-//            stopWatch.Start();
+            stopWatch.Start();
             using var reader = command.ExecuteReader();
             while (reader.Read())
             {
                 rowHandler(reader);
             }
-//            stopWatch.Stop();
-//            Console.WriteLine($"{sql} {stopWatch.ElapsedMilliseconds}");
+            stopWatch.Stop();
+            Console.WriteLine($"{sql} {stopWatch.ElapsedMilliseconds}");
         }
         internal static void RunSqlFirstRowOnly(this MySqlConnection connection, string sql, Action<MySqlDataReader> rowHandler, params object[] parameters)
         {
@@ -45,15 +45,15 @@ namespace openPERRepositories.Repositories
                 }
             }
 
-//            var stopWatch = new Stopwatch();
-//            stopWatch.Start();
+            var stopWatch = new Stopwatch();
+            stopWatch.Start();
             using var reader = command.ExecuteReader();
             if (reader.Read())
             {
                 rowHandler(reader);
             }
-//            stopWatch.Stop();
-//            Console.WriteLine($"{sql} {stopWatch.ElapsedMilliseconds}");
+            stopWatch.Stop();
+            Console.WriteLine($"{sql} {stopWatch.ElapsedMilliseconds}");
         }
 
     }
