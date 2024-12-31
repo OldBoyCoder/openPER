@@ -134,7 +134,7 @@ namespace openPER.Helpers
             rc.DataSource = FilterDataSource.Sincom;
             if (!string.IsNullOrEmpty(vehiclePattern))
             {
-                pattern = vehiclePattern;
+                pattern = PatternMatchHelper.ConsolidatePatterns(sinComPattern, vehiclePattern);
                 rc.DataSource = FilterDataSource.Vin;
             }
             var potentialOptions = rep.GetMvsDetailsForCatalogue(catalogueCode, language);
@@ -151,7 +151,7 @@ namespace openPER.Helpers
                     key = key[1..];
                     o.Present = false;
                 }
-                var opt = potentialOptions.FirstOrDefault(x => x.TypeCodePair == key);
+                var opt = potentialOptions.FirstOrDefault(x => x.TypeCodePair.EndsWith(key));
                 if (opt != null)
                 {
                     o.MultiValue = !string.IsNullOrEmpty(opt.TypeDescription);
@@ -171,6 +171,11 @@ namespace openPER.Helpers
             var ourCookie = controller.Request.Cookies["xf_eper"];
             rc.Vehicles = new List<UserVehicleDataViewModel>();
             controller.ViewData["AdFree"] = false;
+            controller.Response.GetTypedHeaders().CacheControl = new Microsoft.Net.Http.Headers.CacheControlHeaderValue
+            {
+                Public = true,
+                MaxAge = TimeSpan.FromDays(7)
+            };
 
             if (ourCookie == null)
             {
@@ -197,9 +202,9 @@ namespace openPER.Helpers
                 {
                     controller.Response.GetTypedHeaders().CacheControl = new Microsoft.Net.Http.Headers.CacheControlHeaderValue
                     {
-                        Public = true,
-                        NoStore = true,
-                        MaxAge = TimeSpan.FromSeconds(0)
+                        Private = true,
+                        Public = false,
+                        MaxAge = TimeSpan.FromSeconds(60)
                     };
 
                 }

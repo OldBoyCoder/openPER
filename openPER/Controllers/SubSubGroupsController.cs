@@ -46,10 +46,6 @@ namespace openPER.Controllers
                     vehiclePattern= _rep.GetVehiclePattern(language, vin);
                 var vmkCodes = _rep.GetVmkDataForCatalogue(catalogueCode, language);
                 var vehicleModificationFilters = new Dictionary<string, string>();
-                if (vehiclePattern != "")
-                {
-                    sinComPattern = vehiclePattern;
-                }
                 if (!string.IsNullOrEmpty(vin))
                     vehicleModificationFilters = _rep.GetFiltersForVehicle(language, vin, mvs);
                 foreach (var d in model.SubSubGroups)

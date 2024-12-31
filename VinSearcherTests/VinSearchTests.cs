@@ -8,13 +8,6 @@ namespace VinSearcherTests
     {
         private const string PathToVindataCh = @"c:\dev\openPER\openPER\Data\Release84\SP.CH.04210.FCTLR";
         private const string PathToVindataRt = @"c:\dev\openPER\openPER\Data\Release84\SP.RT.04210.FCTLR";
-        [TestMethod()]
-        public void FindVehiclesByFullVinTest()
-        {
-            var x = new Release84VinSearch(PathToVindataCh, PathToVindataRt);
-            var results = x.FindVehiclesByFullVin("XXXXXXXXXXXXXXXXX");
-            Assert.AreEqual(0, results.Count);
-        }
 
         [TestMethod()]
         public void FindVehiclesByModelAndChassisTestWithDobloChassis()

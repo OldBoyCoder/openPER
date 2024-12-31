@@ -11,17 +11,20 @@ namespace openPER.Controllers
         [ApiExplorerSettings(IgnoreApi = true)]
         public IActionResult NaRead(string src, string type, string key)
         {
-            //https://eper.fiatforum.com/cgi-bin/naread.exe?src=e:/SP.NA.00976.FCTLR/rw8.na&type=N&key=1025802005
-            //"https://data-20-eper.fiatforum.com/SP.NA.00976.FCTLR/fpk/N/4430100003.png"
-            //http://eper.fiatforum.com/cgi-bin/naread.exe?src=D:/Fiat/ePER/data/SP.NA.00976.FCTLR/fnm.na&type=N&key=7012900001
-            //http://eper.fiatforum.com/cgi-bin/naread.exe?src=D:/Fiat/ePER/data/SP.NA.00976.FCTLR/fnm.na&type=N&key=7012900001
-            //https://data-20-eper.fiatforum.com/SP.NA.00976.FCTLR/fnm/N/7012900001.png
             var a = new Regex(@".*/SP.NA.00976.FCTLR/([a-zA-Z0-9]*).na");
             var m = a.Match(src);
             if (m.Success)
             {
                 var s = m.Groups[1];
                 return Redirect($"https://data-20-eper.fiatforum.com/SP.NA.00976.FCTLR/{s}/{type}/{key}.png");
+            }
+            a = new Regex(@".*/(SP.[a-zA-Z0-9.]*)/{1,2}(.*)");
+            m = a.Match(src);
+            if (m.Success)
+            {
+                var s1 = m.Groups[1];
+                var s2 = m.Groups[2];
+                return Redirect($"https://data-20-eper.fiatforum.com/{s1}/{s2}");
             }
             return NotFound();
         }

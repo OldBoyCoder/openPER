@@ -514,5 +514,13 @@ namespace openPERRepositories.Repositories
             return rc;
 
         }
+        public List<PartExportModel> GetAllPartsForCatalogue(string languageCode, string catalogueCode)
+        {
+            return _rep.GetAllPartsForCatalogue(languageCode, catalogueCode);
+        }
+        public List<PartModel> GetPartSearchForCatalogue(string catalogueCode, string partDescription, string languageCode)
+        {
+            return _rep.GetPartSearchForCatalogue(catalogueCode, partDescription, languageCode);
+        }
     }
 }

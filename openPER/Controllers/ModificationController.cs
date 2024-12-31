@@ -26,10 +26,12 @@ namespace openPER.Controllers
             language = LanguageSupport.GetIso639CodeFromString(language);
             ViewData["Language"] = language;
             LanguageSupport.SetCultureBasedOnRoute(language);
-            var model = new CatalogueModificationsViewModel();
-            model.Navigation = NavigationHelper.PopulateNavigationModel(this, _mapper, _rep, language, makeCode, subMakeCode, modelCode, catalogueCode, vin, mvs);
-            model.Details = _mapper.Map<ModificationModel, ModificationViewModel>( _rep.GetCatalogueModificationDetail(catalogueCode, language, modificationNumber));
-            model.ChangedDrawings = _mapper.Map<List<ModifiedDrawingModel>, List<ModifiedDrawingViewModel>>(_rep.GetAllDrawingsForModification(language, catalogueCode, modificationNumber));
+            var model = new CatalogueModificationsViewModel
+            {
+                Navigation = NavigationHelper.PopulateNavigationModel(this, _mapper, _rep, language, makeCode, subMakeCode, modelCode, catalogueCode, vin, mvs),
+                Details = _mapper.Map<ModificationModel, ModificationViewModel>(_rep.GetCatalogueModificationDetail(catalogueCode, language, modificationNumber)),
+                ChangedDrawings = _mapper.Map<List<ModifiedDrawingModel>, List<ModifiedDrawingViewModel>>(_rep.GetAllDrawingsForModification(language, catalogueCode, modificationNumber))
+            };
             return View(model);
         }
     }
