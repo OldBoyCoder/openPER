@@ -73,8 +73,8 @@
 </li>
 <li><hr class="dropdown-divider"></li>
 <li>
-        @using (Html.BeginForm("SearchPartByModelAndName", "Part", FormMethod.Get, new { @class = " p-4", role = "form" }))
-        {
+    @using (Html.BeginForm("SearchPartByModelAndName", "Part", FormMethod.Get, new { @class = " p-4", role = "form" }))
+    {
         <div class="row">
             <input id="languageId" name="language" hidden value="@Model.Language" />
             <div class="col-3">
@@ -82,13 +82,13 @@
             </div>
             <div class="col-4">
                 <div class="form-floating">
-                        @Html.TextBoxFor(m=>m.PartModelName, new {@class="form-control", type="search", placeholder="Model name", id="searchByPartModel"})
+                    @Html.TextBoxFor(m => m.PartModelName, new { @class = "form-control", type = "search", placeholder = "Model name", id = "searchByPartModel" })
                     <label for="searchByPartModel">@Resources.FrontEnd.SearchByPartModelName</label>
                 </div>
             </div>
             <div class="col-4">
                 <div class="form-floating ">
-                        @Html.TextBoxFor(m=>m.PartName, new {@class="form-control", type="search", placeholder="Part name", id="searchByPartName"})
+                    @Html.TextBoxFor(m => m.PartName, new { @class = "form-control", type = "search", placeholder = "Part name", id = "searchByPartName" })
                     <label for="searchByPartName">@Resources.FrontEnd.SearchByPartPartDescription</label>
                 </div>
             </div>
@@ -99,5 +99,36 @@
             </div>
         </div>
 
-        }
+    }
+</li>
+<li><hr class="dropdown-divider"></li>
+<li>
+    <!--    public IActionResult SearchPartByCataloguesAndCode(string language, string[] catalogueCodes, string mvs, string vin, string searchText) -->
+    @using (Html.BeginForm("SearchPartByCataloguesAndCode", "Part", FormMethod.Get, new { @class = " p-4", role = "form" }))
+    {
+        <div class="row">
+            <input id="languageId" name="language" hidden value="@Model.Language" />
+            <div class="col-3">
+                <label>Find part by catalogue</label>
+            </div>
+            <div class="col-4">
+                <div class="form-floating ">
+                    @Html.TextBox("catalogueCodes", Model.CurrentCatalogue, new { @class = "form-control", type = "search", placeholder = "Catalogue", id = "searchByCatcatalogue"})
+                    <label for="searchByPartName">@Resources.FrontEnd.SearchByCatalogueCatalogue</label>
+                </div>
+            </div>
+            <div class="col-4">
+                <div class="form-floating ">
+                    @Html.TextBoxFor(m => m.CatSearchPartName, new { @class = "form-control", type = "search", placeholder = "Part name", id = "searchByCatPartName" })
+                    <label for="searchByPartName">@Resources.FrontEnd.SearchByPartPartDescription</label>
+                </div>
+            </div>
+            <div class="col-1">
+                <div class="form-floating ">
+                    <button type="submit" class="btn btn-outline-primary"><i class="fa fa-search"></i></button>
+                </div>
+            </div>
+        </div>
+
+    }
 </li>

@@ -148,6 +148,9 @@
   <data name="MenuItemSubSubGroups" xml:space="preserve">
     <value>Tables</value>
   </data>
+  <data name="SearchByCatalogueCatalogue" xml:space="preserve">
+    <value>Catalogue</value>
+  </data>
   <data name="SearchByChassis" xml:space="preserve">
     <value>Chassis#</value>
   </data>

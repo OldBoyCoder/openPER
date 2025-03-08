@@ -11,7 +11,7 @@ namespace openPER.Views.Shared.Components.SearchWidget
         {
             _rep = rep;
         }
-        public IViewComponentResult Invoke(string language)
+        public IViewComponentResult Invoke(string language, string currentCatalogue)
         {
             var model = new SearchViewModel
             {
@@ -19,7 +19,9 @@ namespace openPER.Views.Shared.Components.SearchWidget
                 VinSearch =
                 {
                     Models = _rep.GetAllVinModels()
-                }
+                },
+                AllLinks = _rep.GetCatalogueHierarchy(language),
+                CurrentCatalogue = currentCatalogue
             };
             return View("Default", model);
         }

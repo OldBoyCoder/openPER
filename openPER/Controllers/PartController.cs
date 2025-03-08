@@ -110,7 +110,7 @@ namespace openPER.Controllers
             }
             return View("SearchResults", model);
         }
-        public IActionResult SearchPartByCataloguesAndCode(string language, string[] catalogueCodes, string mvs, string vin, string searchText)
+        public IActionResult SearchPartByCataloguesAndCode(string language, string[] catalogueCodes, string mvs, string vin, string catSearchPartName)
         {
             language = LanguageSupport.GetIso639CodeFromString(language);
             ViewData["Language"] = language;
@@ -120,10 +120,10 @@ namespace openPER.Controllers
                 Navigation = NavigationHelper.PopulateNavigationModel(this, _mapper, _rep, language),
                 Language = language
             };
-            if (string.IsNullOrEmpty(searchText) || catalogueCodes.Length == 0) return View("SearchResults", model);
+            if (string.IsNullOrEmpty(catSearchPartName) || catalogueCodes.Length == 0) return View("SearchResults", model);
             foreach (var catalogueCode in catalogueCodes)
             {
-                var parts = _rep.GetPartSearchForCatalogue(catalogueCode, searchText, language);
+                var parts = _rep.GetPartSearchForCatalogue(catalogueCode, catSearchPartName, language);
 
                 foreach (var p in parts)
                 {

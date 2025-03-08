@@ -151,6 +151,15 @@ namespace Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Catalogue.
+        /// </summary>
+        public static string SearchByCatalogueCatalogue {
+            get {
+                return ResourceManager.GetString("SearchByCatalogueCatalogue", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Chassis#.
         /// </summary>
         public static string SearchByChassis {
